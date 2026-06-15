@@ -30,7 +30,7 @@ export default function AdminWithdrawals() {
     setLoading(true)
     const res = await getAdminWithdrawals()
     if (res.error) setTableError(res.error)
-    else setItems(res.data as Withdrawal[])
+    else setItems(res.data as unknown as Withdrawal[])
     setLoading(false)
   }
 

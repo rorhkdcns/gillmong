@@ -34,7 +34,7 @@ export default function AdminDreams() {
   async function load() {
     setLoading(true)
     const data = await getAdminDreams(category || undefined, isSold || undefined)
-    setDreams(data as Dream[])
+    setDreams(data as unknown as Dream[])
     setLoading(false)
   }
 

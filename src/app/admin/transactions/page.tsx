@@ -23,7 +23,7 @@ export default function AdminTransactions() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    getAdminTransactions().then((data) => { setTxs(data as Tx[]); setLoading(false) })
+    getAdminTransactions().then((data) => { setTxs(data as unknown as Tx[]); setLoading(false) })
   }, [])
 
   return (
