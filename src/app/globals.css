@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  font-size: 18px; /* 기본 폰트 크기 — 여기서 전체 크기를 조절하세요 */
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ============================================================
+   길몽상점 브랜드 컬러
+   색상을 바꾸려면 아래 값만 수정하세요.
+   ============================================================ */
+@theme {
+  /* 배경 */
+  --color-brand-page:    #F7F7F5;   /* 아이보리 흰색 — 전체 페이지 배경 */
+  --color-brand-surface: #FFFFFF;   /* 순백 — 카드·섹션 배경 */
+
+  /* 골드 포인트 — 버튼·뱃지·강조 */
+  --color-brand-primary:        #C9A84C;   /* 골드 */
+  --color-brand-primary-hover:  #B08A30;   /* 골드 hover */
+  --color-brand-primary-light:  #FAF3E0;   /* 연한 골드 배경 */
+  --color-brand-primary-border: #E0C87A;   /* 골드 테두리 */
+
+  /* 로고·딥 네이비 — 헤더·푸터·히어로 */
+  --color-brand-logo:    #01273A;
+  --color-brand-dark:    #01273A;
+
+  /* 텍스트 */
+  --color-brand-heading: #01273A;   /* 딥 네이비 — 제목 */
+  --color-brand-body:    #333333;   /* 본문 */
+  --color-brand-muted:   #666666;   /* 보조 */
+  --color-brand-link:    #C9A84C;   /* 골드 링크 */
+
+  /* 구분선·테두리 */
+  --color-brand-border:  #E8E8E4;   /* 연한 회색 */
+}
