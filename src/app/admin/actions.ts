@@ -127,12 +127,16 @@ export async function getAdminStats() {
 }
 
 // ── 회원 관리 ──────────────────────────────────────────────────
-export async function getAdminUsers(search?: string) {
+export async function getAdminUsers(search?: string): Promise<{ data: unknown[]; error?: string }> {
   const admin = createAdminClient()
   let q = admin.from('profiles').select('id, nickname, username, real_name, phone, email, points, created_at').order('created_at', { ascending: false })
   if (search) q = q.or(`nickname.ilike.%${search}%,username.ilike.%${search}%`)
-  const { data } = await q
-  return data ?? []
+  const { data, error } = await q
+  if (error) {
+    console.error('[Admin] getAdminUsers error:', error.message)
+    return { data: [], error: error.message }
+  }
+  return { data: data ?? [] }
 }
 
 export async function adminAdjustPoints(
@@ -185,14 +189,18 @@ export async function adminDeleteUser(
 }
 
 // ── 꿈 관리 ───────────────────────────────────────────────────
-export async function getAdminDreams(category?: string, isSold?: string): Promise<unknown[]> {
+export async function getAdminDreams(category?: string, isSold?: string): Promise<{ data: unknown[]; error?: string }> {
   const admin = createAdminClient()
   let q = admin.from('dreams').select('id, title, grade, category, price, is_sold, created_at, profiles!user_id(nickname, username)').order('created_at', { ascending: false })
   if (category) q = q.eq('category', category)
   if (isSold === 'true')  q = q.eq('is_sold', true)
   if (isSold === 'false') q = q.eq('is_sold', false)
-  const { data } = await q
-  return (data ?? []) as unknown[]
+  const { data, error } = await q
+  if (error) {
+    console.error('[Admin] getAdminDreams error:', error.message)
+    return { data: [], error: error.message }
+  }
+  return { data: (data ?? []) as unknown[] }
 }
 
 export async function adminDeleteDreamById(

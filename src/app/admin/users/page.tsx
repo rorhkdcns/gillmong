@@ -14,6 +14,7 @@ export default function AdminUsers() {
   const [users, setUsers]       = useState<User[]>([])
   const [search, setSearch]     = useState('')
   const [loading, setLoading]   = useState(true)
+  const [loadError, setLoadError] = useState('')
 
   const [modal, setModal] = useState<{ user: User; type: 'points' | 'reset' | 'delete' } | null>(null)
   const [amount, setAmount]   = useState('')
@@ -24,7 +25,10 @@ export default function AdminUsers() {
 
   async function load(q?: string) {
     setLoading(true)
-    setUsers(await getAdminUsers(q))
+    setLoadError('')
+    const res = await getAdminUsers(q)
+    if (res.error) setLoadError(res.error)
+    setUsers(res.data as User[])
     setLoading(false)
   }
 
@@ -94,6 +98,12 @@ export default function AdminUsers() {
           </button>
         )}
       </div>
+
+      {loadError && (
+        <div className="mb-4 rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+          데이터 로드 오류: {loadError}
+        </div>
+      )}
 
       {/* 테이블 */}
       <div className="overflow-hidden rounded border border-gray-200 bg-white">

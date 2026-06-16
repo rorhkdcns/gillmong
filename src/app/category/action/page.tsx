@@ -7,6 +7,7 @@ export default async function ActionPage() {
     .from('dreams')
     .select('id, title, summary, grade, price, is_sold, profiles(nickname)')
     .eq('category', 'action')
+    .eq('is_public', true)
     .order('created_at', { ascending: false })
 
   const cards = (data ?? []).map((d) => ({

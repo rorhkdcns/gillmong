@@ -25,6 +25,7 @@ function formatDate(iso: string) {
 export default function AdminDreams() {
   const [dreams, setDreams]     = useState<Dream[]>([])
   const [loading, setLoading]   = useState(true)
+  const [loadError, setLoadError] = useState('')
   const [category, setCategory] = useState('')
   const [isSold, setIsSold]     = useState('')
   const [confirm, setConfirm]   = useState<Dream | null>(null)
@@ -33,8 +34,10 @@ export default function AdminDreams() {
 
   async function load() {
     setLoading(true)
-    const data = await getAdminDreams(category || undefined, isSold || undefined)
-    setDreams(data as unknown as Dream[])
+    setLoadError('')
+    const res = await getAdminDreams(category || undefined, isSold || undefined)
+    if (res.error) setLoadError(res.error)
+    setDreams(res.data as unknown as Dream[])
     setLoading(false)
   }
 
@@ -68,6 +71,12 @@ export default function AdminDreams() {
           <option value="true">판매 완료</option>
         </select>
       </div>
+
+      {loadError && (
+        <div className="mb-4 rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+          데이터 로드 오류: {loadError}
+        </div>
+      )}
 
       {/* 테이블 */}
       <div className="overflow-hidden rounded border border-gray-200 bg-white">
