@@ -94,6 +94,17 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     setPriceError(validatePrice(val))
   }
 
+  async function checkDailyLimit(supabase: ReturnType<typeof createClient>, userId: string): Promise<boolean> {
+    const todayStart = new Date()
+    todayStart.setHours(0, 0, 0, 0)
+    const { count } = await supabase
+      .from('dreams')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .gte('created_at', todayStart.toISOString())
+    return (count ?? 0) >= 3
+  }
+
   async function ensureProfile(supabase: ReturnType<typeof createClient>, user: { id: string; email?: string; user_metadata?: Record<string, unknown> }) {
     const { data: existing } = await supabase.from('profiles').select('id').eq('id', user.id).single()
     if (existing) return true
@@ -111,6 +122,12 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setSavingPrivate(false); setSaveError('로그인이 필요합니다.'); return }
+
+    if (await checkDailyLimit(supabase, user.id)) {
+      setSavingPrivate(false)
+      setSaveError('오늘 꿈 등록 한도(하루 3개)에 도달했습니다. 내일 다시 시도해주세요.')
+      return
+    }
 
     await ensureProfile(supabase, user)
 
@@ -157,6 +174,12 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     if (!user) {
       setSaving(false)
       setSaveError('로그인이 필요합니다.')
+      return
+    }
+
+    if (await checkDailyLimit(supabase, user.id)) {
+      setSaving(false)
+      setSaveError('오늘 꿈 등록 한도(하루 3개)에 도달했습니다. 내일 다시 시도해주세요.')
       return
     }
 
