@@ -129,7 +129,7 @@ export async function getAdminStats() {
 // ── 회원 관리 ──────────────────────────────────────────────────
 export async function getAdminUsers(search?: string): Promise<{ data: unknown[]; error?: string }> {
   const admin = createAdminClient()
-  let q = admin.from('profiles').select('id, nickname, username, real_name, phone, email, points, created_at').order('created_at', { ascending: false })
+  let q = admin.from('profiles').select('*').order('created_at', { ascending: false })
   if (search) q = q.or(`nickname.ilike.%${search}%,username.ilike.%${search}%`)
   const { data, error } = await q
   if (error) {
@@ -191,16 +191,42 @@ export async function adminDeleteUser(
 // ── 꿈 관리 ───────────────────────────────────────────────────
 export async function getAdminDreams(category?: string, isSold?: string): Promise<{ data: unknown[]; error?: string }> {
   const admin = createAdminClient()
-  let q = admin.from('dreams').select('id, title, grade, category, price, is_sold, created_at, profiles!user_id(nickname, username)').order('created_at', { ascending: false })
+  let q = admin.from('dreams')
+    .select('id, title, grade, category, price, is_sold, created_at, user_id')
+    .order('created_at', { ascending: false })
   if (category) q = q.eq('category', category)
   if (isSold === 'true')  q = q.eq('is_sold', true)
   if (isSold === 'false') q = q.eq('is_sold', false)
-  const { data, error } = await q
+  const { data: dreams, error } = await q
   if (error) {
     console.error('[Admin] getAdminDreams error:', error.message)
     return { data: [], error: error.message }
   }
-  return { data: (data ?? []) as unknown[] }
+  if (!dreams || dreams.length === 0) return { data: [] }
+
+  const userIds = [...new Set(dreams.map((d) => d.user_id).filter(Boolean))]
+  const { data: profileRows } = await admin
+    .from('profiles')
+    .select('id, nickname, username')
+    .in('id', userIds)
+
+  const profileMap: Record<string, { nickname: string; username: string }> = {}
+  for (const p of profileRows ?? []) {
+    profileMap[p.id] = { nickname: p.nickname, username: p.username }
+  }
+
+  return {
+    data: dreams.map((d) => ({
+      id: d.id,
+      title: d.title,
+      grade: d.grade,
+      category: d.category,
+      price: d.price,
+      is_sold: d.is_sold,
+      created_at: d.created_at,
+      profiles: profileMap[d.user_id] ?? null,
+    })),
+  }
 }
 
 export async function adminDeleteDreamById(

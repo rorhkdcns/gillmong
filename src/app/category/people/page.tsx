@@ -5,9 +5,8 @@ export default async function PeoplePage() {
   const supabase = await createClient()
   const { data } = await supabase
     .from('dreams')
-    .select('id, title, summary, grade, price, is_sold, profiles(nickname)')
+    .select('id, title, summary, grade, price, is_sold, profiles!left(nickname)')
     .eq('category', 'people')
-    .eq('is_public', true)
     .order('created_at', { ascending: false })
 
   const cards = (data ?? []).map((d) => ({
@@ -17,7 +16,7 @@ export default async function PeoplePage() {
     grade: d.grade,
     price: d.price,
     is_sold: d.is_sold,
-    nickname: (d.profiles as { nickname: string } | null)?.nickname,
+    nickname: (d.profiles as unknown as { nickname: string } | null)?.nickname,
   }))
 
   return (
