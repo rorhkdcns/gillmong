@@ -61,23 +61,30 @@ ${dream.trim()}
 grade 기준: A=최고의 길몽, B=좋은 길몽, C=평범한 꿈, D=주의가 필요한 꿈, E=흉몽의 기운, F=해석 불가
 type: "길몽" | "흉몽" | "중립" 중 하나`
 
-  const res = await fetch(`${GEMINI_URL}?key=${GEMINI_API_KEY}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: {
-        temperature: 0.75,
-        responseMimeType: 'application/json',
-      },
-    }),
+  const body = JSON.stringify({
+    contents: [{ parts: [{ text: prompt }] }],
+    generationConfig: { temperature: 0.75, responseMimeType: 'application/json' },
   })
 
-  if (!res.ok) {
-    const errText = await res.text()
-    console.error(`[Gemini API error] model=${GEMINI_MODEL} status=${res.status} url=${GEMINI_URL}`)
+  let res: Response | null = null
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    res = await fetch(`${GEMINI_URL}?key=${GEMINI_API_KEY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+    })
+    if (res.ok || (res.status !== 503 && res.status !== 529)) break
+    if (attempt < 3) await new Promise((r) => setTimeout(r, attempt * 1500))
+  }
+
+  if (!res || !res.ok) {
+    const errText = await res?.text()
+    console.error(`[Gemini API error] model=${GEMINI_MODEL} status=${res?.status}`)
     console.error('[Gemini API error body]', errText)
-    return NextResponse.json({ error: `Gemini API 오류 (${res.status})` }, { status: 500 })
+    return NextResponse.json(
+      { error: `잠시 후 다시 시도해주세요. (Gemini API 오류 ${res?.status})` },
+      { status: 500 }
+    )
   }
 
   const geminiData = await res.json()
