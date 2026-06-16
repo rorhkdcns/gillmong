@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import DreamDetail from './_components/DreamDetail'
 import type { DbDream } from '@/lib/supabase/types'
 
@@ -11,16 +12,23 @@ export default async function DreamDetailPage({
   const { id } = await params
   const supabase = await createClient()
 
-  // 꿈 데이터 + 작성자 닉네임 조회
+  // 꿈 데이터 조회 (JOIN 없이 - JOIN 실패 시 dream이 null이 되는 문제 방지)
   const { data: dream } = await supabase
     .from('dreams')
-    .select('*, profiles!left(nickname)')
+    .select('*')
     .eq('id', id)
     .single()
 
   if (!dream) notFound()
 
-  const nickname = (dream.profiles as unknown as { nickname: string } | null)?.nickname ?? ''
+  // 작성자 닉네임 별도 조회 (admin client로 RLS 우회)
+  const admin = createAdminClient()
+  const { data: profile } = await admin
+    .from('profiles')
+    .select('nickname')
+    .eq('id', dream.user_id)
+    .single()
+  const nickname = profile?.nickname ?? ''
 
   // 현재 로그인 사용자
   const { data: { user } } = await supabase.auth.getUser()
