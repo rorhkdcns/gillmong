@@ -16,26 +16,33 @@ const GRADE_STYLE: Record<string, { bg: string; text: string; label: string }> =
   F: { bg: 'bg-gray-400',    text: 'text-gray-500',    label: '해석 불가' },
 }
 
-const PLACEHOLDER_REPORT = `이 꿈은 무의식 깊은 곳에서 보내는 강력한 메시지입니다.
+const TYPE_STYLE: Record<string, string> = {
+  길몽: 'bg-emerald-50 text-emerald-600 border-emerald-200',
+  흉몽: 'bg-red-50 text-red-500 border-red-200',
+  중립: 'bg-gray-100 text-gray-500 border-gray-200',
+}
 
-꿈속에 등장한 존재와 상황은 현재 당신이 직면한 내면의 갈등과 욕망을 상징합니다. 특히 꿈의 전개 방식은 당신이 현실에서 어떤 선택의 기로에 서 있음을 암시하며, 잠재의식이 그 해답을 이미 알고 있음을 보여줍니다.
-
-가까운 미래에 예상치 못한 변화나 기회가 찾아올 가능성이 높습니다. 이 꿈은 그 변화를 준비하라는 신호로 해석됩니다. 두려움보다는 열린 마음으로 새로운 가능성을 받아들이는 것이 중요합니다.
-
-대인관계에서는 신뢰할 수 있는 사람이 나타날 조짐이 보이며, 재물운 측면에서도 긍정적인 흐름이 감지됩니다.`
+export interface AnalysisResult {
+  grade: string
+  type: string
+  title: string
+  summary: string
+  interpretation: string
+  advice: string
+  lucky_numbers: number[]
+}
 
 interface ResultModalProps {
   dream: string
-  grade: string
-  luckyNumbers: number[]
+  analysis: AnalysisResult
   onClose: () => void
 }
 
-export default function ResultModal({ dream, grade, luckyNumbers, onClose }: ResultModalProps) {
+export default function ResultModal({ dream, analysis, onClose }: ResultModalProps) {
   const router = useRouter()
-  const gradeStyle = GRADE_STYLE[grade]
+  const gradeStyle = GRADE_STYLE[analysis.grade] ?? GRADE_STYLE['C']
 
-  const [title, setTitle]       = useState('')
+  const [title, setTitle]       = useState(analysis.title)
   const [category, setCategory] = useState('')
   const [price, setPrice]       = useState('5000')
   const [priceError, setPriceError] = useState('')
@@ -80,7 +87,6 @@ export default function ResultModal({ dream, grade, luckyNumbers, onClose }: Res
       return
     }
 
-    // profiles 행 확인 — 트리거가 안 탄 계정은 직접 생성
     const { data: existingProfile } = await supabase
       .from('profiles')
       .select('id')
@@ -92,22 +98,18 @@ export default function ResultModal({ dream, grade, luckyNumbers, onClose }: Res
         (user.user_metadata?.username as string) ??
         user.email?.replace('@gillmong.com', '') ??
         user.id.slice(0, 8)
-      const nickname =
-        (user.user_metadata?.nickname as string) ?? username
+      const nickname = (user.user_metadata?.nickname as string) ?? username
 
       const { error: profileError } = await supabase
         .from('profiles')
         .insert({ id: user.id, username, nickname })
 
       if (profileError) {
-        console.error('[profiles insert]', profileError)
         setSaving(false)
         setSaveError(`프로필 생성 오류: ${profileError.message}`)
         return
       }
     }
-
-    const summary = dream.trim().slice(0, 100) + (dream.length > 100 ? '...' : '')
 
     const { data: inserted, error } = await supabase
       .from('dreams')
@@ -115,11 +117,11 @@ export default function ResultModal({ dream, grade, luckyNumbers, onClose }: Res
         user_id:       user.id,
         title:         title.trim(),
         content:       dream.trim(),
-        summary,
-        grade,
+        summary:       analysis.summary || dream.trim().slice(0, 100),
+        grade:         analysis.grade,
         category:      CATEGORY_DB[category] ?? 'etc',
         price:         Number(price),
-        lucky_numbers: luckyNumbers,
+        lucky_numbers: analysis.lucky_numbers,
       })
       .select('id')
       .single()
@@ -127,7 +129,6 @@ export default function ResultModal({ dream, grade, luckyNumbers, onClose }: Res
     setSaving(false)
 
     if (error) {
-      console.error('[dreams insert]', error)
       setSaveError(`등록 오류: ${error.message}`)
       return
     }
@@ -162,12 +163,15 @@ export default function ResultModal({ dream, grade, luckyNumbers, onClose }: Res
             길몽상점 감정 결과
           </h2>
 
-          {/* 등급 */}
-          <div className="mb-6 flex flex-col items-center gap-2">
+          {/* 등급 + 유형 */}
+          <div className="mb-6 flex flex-col items-center gap-3">
             <div className={`flex h-24 w-24 items-center justify-center rounded-full ${gradeStyle.bg} shadow-lg`}>
-              <span className="text-5xl font-black text-white">{grade}</span>
+              <span className="text-5xl font-black text-white">{analysis.grade}</span>
             </div>
             <span className={`text-base font-bold ${gradeStyle.text}`}>{gradeStyle.label}</span>
+            <span className={`rounded-full border px-3 py-0.5 text-sm font-semibold ${TYPE_STYLE[analysis.type] ?? TYPE_STYLE['중립']}`}>
+              {analysis.type}
+            </span>
           </div>
 
           <hr className="mb-6 border-brand-border" />
@@ -180,19 +184,41 @@ export default function ResultModal({ dream, grade, luckyNumbers, onClose }: Res
             </div>
           </section>
 
-          {/* 해몽 결과 */}
-          <section className="mb-6">
-            <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">해몽 결과</h3>
-            <div className="rounded-xl border border-[#CCCCCC] p-4 text-sm leading-relaxed text-brand-body whitespace-pre-line">
-              {PLACEHOLDER_REPORT}
-            </div>
-          </section>
+          {/* 해몽 요약 */}
+          {analysis.summary && (
+            <section className="mb-5">
+              <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">해몽 요약</h3>
+              <div className="rounded-xl border border-[#CCCCCC] bg-amber-50/30 p-4 text-sm leading-relaxed text-brand-body">
+                {analysis.summary}
+              </div>
+            </section>
+          )}
+
+          {/* 상세 해몽 */}
+          {analysis.interpretation && (
+            <section className="mb-5">
+              <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">상세 해몽</h3>
+              <div className="rounded-xl border border-[#CCCCCC] p-4 text-sm leading-relaxed text-brand-body whitespace-pre-line">
+                {analysis.interpretation}
+              </div>
+            </section>
+          )}
+
+          {/* 실생활 조언 */}
+          {analysis.advice && (
+            <section className="mb-6">
+              <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">실생활 조언</h3>
+              <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 text-sm leading-relaxed text-brand-body">
+                {analysis.advice}
+              </div>
+            </section>
+          )}
 
           {/* 행운의 추천 번호 */}
           <section className="mb-6">
             <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-brand-muted">행운의 추천 번호</h3>
             <div className="flex flex-wrap gap-2">
-              {luckyNumbers.map((num) => (
+              {analysis.lucky_numbers.map((num) => (
                 <div
                   key={num}
                   className="flex h-11 w-11 items-center justify-center rounded-full bg-[#E07B2A] text-base font-black text-white shadow"

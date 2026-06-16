@@ -3,23 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import ResultModal from '@/app/_components/ResultModal'
-
-const GRADES = ['A', 'B', 'C', 'D', 'E', 'F']
-
-function randomGrade() {
-  return GRADES[Math.floor(Math.random() * GRADES.length)]
-}
-
-function randomLuckyNumbers() {
-  const pool = Array.from({ length: 45 }, (_, i) => i + 1)
-  const result: number[] = []
-  while (result.length < 6) {
-    const idx = Math.floor(Math.random() * pool.length)
-    result.push(pool.splice(idx, 1)[0])
-  }
-  return result.sort((a, b) => a - b)
-}
+import ResultModal, { type AnalysisResult } from '@/app/_components/ResultModal'
 
 const guides = [
   { label: '누가/무엇이', desc: '나 외에 등장한 특별한 존재나 기묘한 생명체, 인물은?' },
@@ -34,7 +18,7 @@ export default function FloatingDreamButton() {
   const [dream, setDream]       = useState('')
   const [dreamError, setDreamError] = useState('')
   const [loading, setLoading]   = useState(false)
-  const [result, setResult]     = useState<{ grade: string; luckyNumbers: number[] } | null>(null)
+  const [result, setResult]     = useState<AnalysisResult | null>(null)
 
   async function handleOpen() {
     const supabase = createClient()
@@ -51,13 +35,26 @@ export default function FloatingDreamButton() {
     setLoading(false)
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!dream.trim()) { setDreamError('꿈 내용을 입력해주세요.'); return }
+    setDreamError('')
     setLoading(true)
-    setTimeout(() => {
+
+    try {
+      const res = await fetch('/api/analyze-dream', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dream }),
+      })
+      const data = await res.json()
+      if (!res.ok || data.error) throw new Error(data.error ?? '분석 실패')
+      setResult(data as AnalysisResult)
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : '알 수 없는 오류'
+      setDreamError(`해몽 분석 중 오류가 발생했습니다: ${msg}`)
+    } finally {
       setLoading(false)
-      setResult({ grade: randomGrade(), luckyNumbers: randomLuckyNumbers() })
-    }, 2500)
+    }
   }
 
   return (
@@ -74,7 +71,7 @@ export default function FloatingDreamButton() {
       </button>
 
       {/* 꿈 입력 모달 */}
-      {open && !result && (
+      {open && !result && !loading && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
           onClick={(e) => { if (e.target === e.currentTarget) handleClose() }}
@@ -122,7 +119,8 @@ export default function FloatingDreamButton() {
 
             <button
               onClick={handleSubmit}
-              className="mt-4 w-full rounded-xl bg-[#01273A] py-4 text-lg font-black text-white transition-all hover:brightness-90"
+              disabled={loading}
+              className="mt-4 w-full rounded-xl bg-[#01273A] py-4 text-lg font-black text-white transition-all hover:brightness-90 disabled:opacity-60"
             >
               나의 꿈 감정하기
             </button>
@@ -134,10 +132,10 @@ export default function FloatingDreamButton() {
       {loading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="flex w-full max-w-sm flex-col items-center gap-6 rounded-2xl bg-white px-8 py-12 shadow-2xl text-center">
-            <div className="h-14 w-14 animate-spin rounded-full border-4 border-gray-200 border-t-gray-400" />
+            <div className="h-14 w-14 animate-spin rounded-full border-4 border-gray-200 border-t-[#01273A]" />
             <div>
               <p className="text-lg font-black text-[#01273A]">무의식의 서사를 분석하고 있습니다...</p>
-              <p className="mt-2 text-base text-[#777777]">해몽 결과와 가치를 산정하는 중입니다.</p>
+              <p className="mt-2 text-base text-[#777777]">AI가 꿈의 상징과 의미를 해석하는 중입니다.</p>
             </div>
           </div>
         </div>
@@ -147,8 +145,7 @@ export default function FloatingDreamButton() {
       {result && (
         <ResultModal
           dream={dream}
-          grade={result.grade}
-          luckyNumbers={result.luckyNumbers}
+          analysis={result}
           onClose={handleClose}
         />
       )}
