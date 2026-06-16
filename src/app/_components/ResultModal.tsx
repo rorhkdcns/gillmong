@@ -97,12 +97,12 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
   async function checkDailyLimit(supabase: ReturnType<typeof createClient>, userId: string): Promise<boolean> {
     const todayStart = new Date()
     todayStart.setHours(0, 0, 0, 0)
-    const { count } = await supabase
-      .from('dreams')
-      .select('id', { count: 'exact', head: true })
-      .eq('user_id', userId)
-      .gte('created_at', todayStart.toISOString())
-    return (count ?? 0) >= 3
+    const todayISO = todayStart.toISOString()
+    const [dreamsRes, savedRes] = await Promise.all([
+      supabase.from('dreams').select('id', { count: 'exact', head: true }).eq('user_id', userId).gte('created_at', todayISO),
+      supabase.from('saved_dreams').select('id', { count: 'exact', head: true }).eq('user_id', userId).gte('created_at', todayISO),
+    ])
+    return ((dreamsRes.count ?? 0) + (savedRes.count ?? 0)) >= 3
   }
 
   async function ensureProfile(supabase: ReturnType<typeof createClient>, user: { id: string; email?: string; user_metadata?: Record<string, unknown> }) {
@@ -131,8 +131,8 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
 
     await ensureProfile(supabase, user)
 
-    const { data: inserted, error } = await supabase
-      .from('dreams')
+    const { error } = await supabase
+      .from('saved_dreams')
       .insert({
         user_id:        user.id,
         title:          title.trim(),
@@ -142,19 +142,14 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
         type:           analysis.type,
         interpretation: analysis.interpretation,
         advice:         analysis.advice,
-        category:       'etc',
-        price:          0,
         lucky_numbers:  analysis.lucky_numbers,
-        is_public:      false,
       })
-      .select('id')
-      .single()
 
     setSavingPrivate(false)
     if (error) { setSaveError(`저장 오류: ${error.message}`); return }
 
     onClose()
-    router.push(`/dream/${inserted.id}?owner=1`)
+    router.push('/mypage')
     router.refresh()
   }
 
@@ -188,18 +183,14 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     const { data: inserted, error } = await supabase
       .from('dreams')
       .insert({
-        user_id:        user.id,
-        title:          title.trim(),
-        content:        dream.trim(),
-        summary:        analysis.summary || dream.trim().slice(0, 100),
-        grade:          analysis.grade,
-        type:           analysis.type,
-        interpretation: analysis.interpretation,
-        advice:         analysis.advice,
-        category:       CATEGORY_DB[category] ?? 'etc',
-        price:          Number(price),
-        lucky_numbers:  analysis.lucky_numbers,
-        is_public:      true,
+        user_id:       user.id,
+        title:         title.trim(),
+        content:       dream.trim(),
+        summary:       analysis.summary || dream.trim().slice(0, 100),
+        grade:         analysis.grade,
+        category:      CATEGORY_DB[category] ?? 'etc',
+        price:         Number(price),
+        lucky_numbers: analysis.lucky_numbers,
       })
       .select('id')
       .single()

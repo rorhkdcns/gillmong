@@ -36,12 +36,12 @@ export async function POST(req: NextRequest) {
 
   const todayStart = new Date()
   todayStart.setHours(0, 0, 0, 0)
-  const { count } = await supabase
-    .from('dreams')
-    .select('id', { count: 'exact', head: true })
-    .eq('user_id', user.id)
-    .gte('created_at', todayStart.toISOString())
-  if ((count ?? 0) >= 3) {
+  const todayISO = todayStart.toISOString()
+  const [dreamsCount, savedCount] = await Promise.all([
+    supabase.from('dreams').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('created_at', todayISO),
+    supabase.from('saved_dreams').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('created_at', todayISO),
+  ])
+  if ((dreamsCount.count ?? 0) + (savedCount.count ?? 0) >= 3) {
     return NextResponse.json(
       { error: '오늘 해몽 분석 한도(하루 3회)에 도달했습니다. 내일 다시 시도해주세요.' },
       { status: 429 }

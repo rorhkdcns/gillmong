@@ -55,8 +55,8 @@ export default async function MyPage() {
   // 프로필 + 공개 꿈 + 개인 저장 꿈 + 구매한 꿈 + 판매한 꿈 병렬 조회
   const [profileRes, myDreamsRes, privateDreamsRes, purchasedRes, soldRes] = await Promise.all([
     supabase.from('profiles').select('nickname, username, points').eq('id', user.id).single(),
-    supabase.from('dreams').select('id, title, grade, price, is_sold').eq('user_id', user.id).eq('is_public', true).order('created_at', { ascending: false }),
-    supabase.from('dreams').select('id, title, grade').eq('user_id', user.id).eq('is_public', false).order('created_at', { ascending: false }),
+    supabase.from('dreams').select('id, title, grade, price, is_sold').eq('user_id', user.id).order('created_at', { ascending: false }),
+    supabase.from('saved_dreams').select('id, title, grade').eq('user_id', user.id).order('created_at', { ascending: false }),
     supabase.from('purchases').select('price, created_at, dreams(id, title, grade, price)').eq('buyer_id', user.id).order('created_at', { ascending: false }),
     supabase.from('dreams').select('id, title, grade, price, purchases(price, created_at)').eq('user_id', user.id).eq('is_sold', true).order('created_at', { ascending: false }),
   ])
@@ -138,7 +138,7 @@ export default async function MyPage() {
                 <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_COLOR[d.grade] ?? 'bg-gray-400'}`}>
                   {d.grade}
                 </span>
-                <a href={`/dream/${d.id}?owner=1`} className="text-base text-[#333333] hover:text-[#01273A] hover:underline">
+                <a href={`/saved/${d.id}`} className="text-base text-[#333333] hover:text-[#01273A] hover:underline">
                   {d.title}
                 </a>
                 <span className="ml-auto shrink-0 rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-[#888888]">비공개</span>

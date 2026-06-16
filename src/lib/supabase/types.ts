@@ -8,11 +8,21 @@ export interface DbDream {
   category: string
   price: number
   lucky_numbers: number[]
+  is_sold: boolean
+  created_at: string
+}
+
+export interface DbSavedDream {
+  id: number
+  user_id: string
+  title: string
+  content: string
+  summary: string
+  grade: string
   type: string
   interpretation: string
   advice: string
-  is_sold: boolean
-  is_public: boolean
+  lucky_numbers: number[]
   created_at: string
 }
 
