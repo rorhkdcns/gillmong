@@ -162,10 +162,10 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
             )}
 
             {/* 5. 상세 해몽 */}
-            {sections.length > 0 && (
-              <section className="mb-5">
-                <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">상세 해몽</h3>
-                <div className="rounded-xl border border-[#CCCCCC] overflow-hidden">
+            <section className="mb-5">
+              <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">상세 해몽</h3>
+              {sections.length > 0 ? (
+                <div className={`rounded-xl border border-[#CCCCCC] overflow-hidden ${!purchased ? 'select-none blur-sm' : ''}`}>
                   {sections.map((sec, i) => (
                     <div key={i}>
                       {i > 0 && <hr style={{ borderColor: '#EEEEEE' }} />}
@@ -176,18 +176,22 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                     </div>
                   ))}
                 </div>
-              </section>
-            )}
+              ) : (
+                <p className="text-sm text-gray-400">이 꿈은 감정 분석 데이터가 없습니다.</p>
+              )}
+            </section>
 
             {/* 6. 실생활 조언 */}
-            {dream.advice && (
-              <section className="mb-6">
-                <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">실생활 조언</h3>
-                <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 text-sm leading-relaxed text-brand-body">
+            <section className="mb-6">
+              <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">실생활 조언</h3>
+              {dream.advice ? (
+                <div className={`rounded-xl border border-blue-100 bg-blue-50/40 p-4 text-sm leading-relaxed text-brand-body ${!purchased ? 'select-none blur-sm' : ''}`}>
                   {dream.advice}
                 </div>
-              </section>
-            )}
+              ) : (
+                <p className="text-sm text-gray-400">이 꿈은 감정 분석 데이터가 없습니다.</p>
+              )}
+            </section>
 
             {/* 7. 행운의 번호 */}
             {dream.lucky_numbers?.length > 0 && (
@@ -238,6 +242,11 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                 <p className="mt-2 text-center text-xs text-gray-400">구매 후 원문을 확인할 수 있습니다</p>
               )}
             </section>
+
+            {/* 분석 데이터 없는 꿈: dream_type도 없으면 안내 */}
+            {!dream.dream_type && !dream.interpretation && !dream.advice && (
+              <p className="mt-4 text-center text-sm text-gray-400">이 꿈은 감정 분석 데이터가 없습니다.</p>
+            )}
 
             {/* 10. 수정/삭제 (본인 + 미판매) */}
             {isOwner && !dream.is_sold && (
