@@ -51,9 +51,10 @@ interface Props {
   dream: DbDream
   isOwner: boolean
   isPurchased: boolean
+  nickname?: string
 }
 
-export default function DreamDetail({ dream, isOwner, isPurchased: initialPurchased }: Props) {
+export default function DreamDetail({ dream, isOwner, isPurchased: initialPurchased, nickname }: Props) {
   const router = useRouter()
   const [showModal, setShowModal]   = useState(false)
   const [purchased, setPurchased]   = useState(initialPurchased || isOwner)
@@ -143,7 +144,10 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
             </div>
 
             {/* 제목 */}
-            <h1 className="mb-6 text-center text-2xl font-black leading-snug text-[#01273A]">{dream.title}</h1>
+            <h1 className="mb-2 text-center text-2xl font-black leading-snug text-[#01273A]">{dream.title}</h1>
+            {nickname && (
+              <p className="mb-6 text-center text-sm text-gray-400">@{nickname}</p>
+            )}
 
             <hr className="mb-6 border-brand-border" />
 

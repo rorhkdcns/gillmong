@@ -18,6 +18,7 @@ export interface DreamCard {
   grade: string
   price: number
   is_sold: boolean
+  nickname?: string
 }
 
 interface Props {
@@ -118,6 +119,9 @@ export default function CategoryPage({ title, description, activePath, cards }: 
                     <p className={`text-base font-bold ${card.is_sold ? 'text-gray-400' : 'text-[#E07B2A]'}`}>
                       {card.price.toLocaleString()} P
                     </p>
+                    {card.nickname && (
+                      <p className="mt-0.5 text-xs text-gray-400">@{card.nickname}</p>
+                    )}
                   </div>
                   {card.is_sold ? (
                     <span className="rounded-full border border-gray-300 px-5 py-2 text-sm font-semibold text-gray-400 cursor-not-allowed">

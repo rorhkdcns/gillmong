@@ -5,7 +5,7 @@ export default async function NaturePage() {
   const supabase = await createClient()
   const { data } = await supabase
     .from('dreams')
-    .select('id, title, summary, grade, price, is_sold')
+    .select('id, title, summary, grade, price, is_sold, profiles(nickname)')
     .eq('category', 'nature')
     .order('created_at', { ascending: false })
 
@@ -16,6 +16,7 @@ export default async function NaturePage() {
     grade: d.grade,
     price: d.price,
     is_sold: d.is_sold,
+    nickname: (d.profiles as { nickname: string } | null)?.nickname,
   }))
 
   return (
