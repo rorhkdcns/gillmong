@@ -203,7 +203,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     }
 
     onClose()
-    router.push(`/dream/${inserted.id}?owner=1`)
+    router.push('/mypage')
     router.refresh()
   }
 
