@@ -129,7 +129,7 @@ export async function getAdminStats() {
 // ── 회원 관리 ──────────────────────────────────────────────────
 export async function getAdminUsers(search?: string) {
   const admin = createAdminClient()
-  let q = admin.from('profiles').select('id, nickname, username, points, created_at').order('created_at', { ascending: false })
+  let q = admin.from('profiles').select('id, nickname, username, real_name, phone, email, points, created_at').order('created_at', { ascending: false })
   if (search) q = q.or(`nickname.ilike.%${search}%,username.ilike.%${search}%`)
   const { data } = await q
   return data ?? []

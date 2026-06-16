@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { getAdminUsers, adminAdjustPoints, adminSendPasswordReset, adminDeleteUser } from '../actions'
 
-type User = { id: string; nickname: string; username: string; points: number; created_at: string }
+type User = { id: string; nickname: string; username: string; real_name: string; phone: string; email: string; points: number; created_at: string }
 
 function formatDate(iso: string) {
   const d = new Date(iso)
@@ -100,25 +100,31 @@ export default function AdminUsers() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
-              <th className="px-6 py-3">닉네임</th>
-              <th className="px-6 py-3">아이디</th>
-              <th className="px-6 py-3">포인트</th>
-              <th className="px-6 py-3">가입일</th>
-              <th className="px-6 py-3">관리</th>
+              <th className="px-4 py-3">닉네임</th>
+              <th className="px-4 py-3">아이디</th>
+              <th className="px-4 py-3">실명</th>
+              <th className="px-4 py-3">전화번호</th>
+              <th className="px-4 py-3">이메일</th>
+              <th className="px-4 py-3">포인트</th>
+              <th className="px-4 py-3">가입일</th>
+              <th className="px-4 py-3">관리</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
             {loading ? (
-              <tr><td colSpan={5} className="py-12 text-center text-sm text-[#999]">불러오는 중...</td></tr>
+              <tr><td colSpan={8} className="py-12 text-center text-sm text-[#999]">불러오는 중...</td></tr>
             ) : users.length === 0 ? (
-              <tr><td colSpan={5} className="py-12 text-center text-sm text-[#999]">회원이 없습니다</td></tr>
+              <tr><td colSpan={8} className="py-12 text-center text-sm text-[#999]">회원이 없습니다</td></tr>
             ) : users.map((u) => (
               <tr key={u.id} className="hover:bg-gray-50">
-                <td className="px-6 py-3 font-medium text-[#333]">{u.nickname}</td>
-                <td className="px-6 py-3 text-[#777]">@{u.username}</td>
-                <td className="px-6 py-3 text-[#E07B2A]">{u.points.toLocaleString()} P</td>
-                <td className="px-6 py-3 text-[#999]">{formatDate(u.created_at)}</td>
-                <td className="px-6 py-3">
+                <td className="px-4 py-3 font-medium text-[#333]">{u.nickname}</td>
+                <td className="px-4 py-3 text-[#777]">@{u.username}</td>
+                <td className="px-4 py-3 text-[#333]">{u.real_name || <span className="text-gray-300">-</span>}</td>
+                <td className="px-4 py-3 text-[#555]">{u.phone || <span className="text-gray-300">-</span>}</td>
+                <td className="px-4 py-3 text-[#555]">{u.email || <span className="text-gray-300">-</span>}</td>
+                <td className="px-4 py-3 text-[#E07B2A]">{u.points.toLocaleString()} P</td>
+                <td className="px-4 py-3 text-[#999]">{formatDate(u.created_at)}</td>
+                <td className="px-4 py-3">
                   <div className="flex gap-2">
                     <button onClick={() => openModal(u, 'points')} className="rounded bg-[#01273A] px-3 py-1 text-xs text-white hover:brightness-90">포인트</button>
                     <button onClick={() => openModal(u, 'reset')}  className="rounded border border-gray-300 px-3 py-1 text-xs text-[#555] hover:border-[#01273A]">비번 초기화</button>
