@@ -2,6 +2,8 @@ import { createClient } from '@/lib/supabase/server'
 import DreamInput from './_components/DreamInput'
 import SiteHeader from '@/components/SiteHeader'
 
+export const dynamic = 'force-dynamic'
+
 const GRADE_COLOR: Record<string, string> = {
   A: 'bg-emerald-500',
   B: 'bg-blue-500',

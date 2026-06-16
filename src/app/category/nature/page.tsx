@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import CategoryPage from '../_components/CategoryPage'
 
+export const dynamic = 'force-dynamic'
+
 export default async function NaturePage() {
   const supabase = await createClient()
   const { data } = await supabase
