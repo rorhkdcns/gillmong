@@ -3,9 +3,13 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { CATEGORY_DB } from '@/lib/supabase/types'
-
-const CATEGORIES = ['인물·신체', '동물·식물', '자연·사물', '행동·상황', '기타']
+const CATEGORIES = [
+  { label: '인물·신체', value: 'people'  },
+  { label: '동물·식물', value: 'animals' },
+  { label: '자연·사물', value: 'nature'  },
+  { label: '행동·상황', value: 'action'  },
+  { label: '기타',      value: 'etc'     },
+]
 
 const INTERP_SECTIONS = [
   { pattern: /한국\s*전통\s*해몽\s*관점\s*:/, color: '#01273A' },
@@ -188,7 +192,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
         content:       dream.trim(),
         summary:       analysis.summary || dream.trim().slice(0, 100),
         grade:         analysis.grade,
-        category:      CATEGORY_DB[category] ?? 'etc',
+        category:      category || 'etc',
         price:         Number(price),
         lucky_numbers: analysis.lucky_numbers,
       })
@@ -339,7 +343,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
               >
                 <option value="">카테고리를 선택해주세요</option>
                 {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
+                  <option key={cat.value} value={cat.value}>{cat.label}</option>
                 ))}
               </select>
             </div>
