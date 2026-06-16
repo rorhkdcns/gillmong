@@ -8,6 +8,30 @@ import { CATEGORY_PATH } from '@/lib/supabase/types'
 import SiteHeader from '@/components/SiteHeader'
 import { purchaseDream, deleteDream } from '../actions'
 
+const INTERP_SECTIONS = [
+  { pattern: /한국\s*전통\s*해몽\s*관점\s*:/, color: '#01273A' },
+  { pattern: /아시아\s*관점[^:]*:/,            color: '#E07B2A' },
+  { pattern: /서양\s*심리학적\s*관점\s*:/,     color: '#6B96A8' },
+  { pattern: /종합\s*해석\s*:/,                color: '#01273A' },
+]
+
+function parseInterpretation(text: string) {
+  const lines = text.split('\n')
+  const sections: { title: string; content: string; color: string }[] = []
+  let cur: { title: string; lines: string[]; color: string } | null = null
+  for (const line of lines) {
+    const matched = INTERP_SECTIONS.find((s) => s.pattern.test(line.trim()))
+    if (matched) {
+      if (cur) sections.push({ title: cur.title, content: cur.lines.join('\n').trim(), color: cur.color })
+      cur = { title: line.trim(), lines: [], color: matched.color }
+    } else if (cur) {
+      cur.lines.push(line)
+    }
+  }
+  if (cur) sections.push({ title: cur.title, content: cur.lines.join('\n').trim(), color: cur.color })
+  return sections
+}
+
 const GRADE_STYLE: Record<string, { bg: string; text: string; label: string }> = {
   A: { bg: 'bg-emerald-500', text: 'text-emerald-600', label: '최고의 길몽' },
   B: { bg: 'bg-blue-500',    text: 'text-blue-600',    label: '좋은 길몽' },
@@ -15,6 +39,12 @@ const GRADE_STYLE: Record<string, { bg: string; text: string; label: string }> =
   D: { bg: 'bg-orange-400',  text: 'text-orange-500',  label: '주의가 필요한 꿈' },
   E: { bg: 'bg-red-400',     text: 'text-red-500',     label: '흉몽의 기운' },
   F: { bg: 'bg-gray-400',    text: 'text-gray-500',    label: '해석 불가' },
+}
+
+const TYPE_STYLE: Record<string, string> = {
+  길몽: 'bg-emerald-50 text-emerald-600 border-emerald-200',
+  흉몽: 'bg-red-50 text-red-500 border-red-200',
+  중립: 'bg-gray-100 text-gray-500 border-gray-200',
 }
 
 interface Props {
@@ -39,6 +69,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
   const categoryPath = CATEGORY_PATH[dream.category] ?? '/'
   const afterBalance = myPoints !== null ? myPoints - dream.price : null
   const gradeStyle   = GRADE_STYLE[dream.grade] ?? GRADE_STYLE['C']
+  const sections     = dream.interpretation ? parseInterpretation(dream.interpretation) : []
 
   async function openPurchaseModal() {
     setLoadingPoints(true)
@@ -99,15 +130,20 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
         <div className="mx-auto max-w-[800px]">
           <div className="rounded-2xl border border-gray-200 bg-white p-7 shadow-sm">
 
-            {/* 등급 원형 + 라벨 + 유형 뱃지 */}
+            {/* 1. 등급 원형 + 라벨 + 유형 뱃지 */}
             <div className="mb-6 flex flex-col items-center gap-3">
               <div className={`flex h-24 w-24 items-center justify-center rounded-full ${gradeStyle.bg} shadow-lg`}>
                 <span className="text-5xl font-black text-white">{dream.grade}</span>
               </div>
               <span className={`text-base font-bold ${gradeStyle.text}`}>{gradeStyle.label}</span>
+              {dream.dream_type && (
+                <span className={`rounded-full border px-3 py-0.5 text-sm font-semibold ${TYPE_STYLE[dream.dream_type] ?? TYPE_STYLE['중립']}`}>
+                  {dream.dream_type}
+                </span>
+              )}
             </div>
 
-            {/* 제목 */}
+            {/* 3. 제목 + 닉네임 */}
             <h1 className="mb-2 text-center text-2xl font-black leading-snug text-[#01273A]">{dream.title}</h1>
             {nickname && (
               <p className="mb-6 text-center text-sm text-gray-400">@{nickname}</p>
@@ -115,21 +151,49 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
 
             <hr className="mb-6 border-brand-border" />
 
-            {/* 해몽 요약 */}
+            {/* 4. 해몽 요약 */}
             {dream.summary && (
               <section className="mb-5">
                 <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">해몽 요약</h3>
-                <div className={`rounded-xl border border-[#CCCCCC] bg-amber-50/30 p-4 text-sm leading-relaxed text-brand-body ${!purchased ? 'select-none blur-sm' : ''}`}>
+                <div className="rounded-xl border border-[#CCCCCC] bg-amber-50/30 p-4 text-sm leading-relaxed text-brand-body">
                   {dream.summary}
                 </div>
               </section>
             )}
 
-            {/* 행운의 번호 */}
+            {/* 5. 상세 해몽 */}
+            {sections.length > 0 && (
+              <section className="mb-5">
+                <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">상세 해몽</h3>
+                <div className="rounded-xl border border-[#CCCCCC] overflow-hidden">
+                  {sections.map((sec, i) => (
+                    <div key={i}>
+                      {i > 0 && <hr style={{ borderColor: '#EEEEEE' }} />}
+                      <div className="p-4">
+                        <p className="mb-1.5 text-sm font-bold" style={{ color: sec.color }}>{sec.title}</p>
+                        <p className="text-sm leading-relaxed text-brand-body whitespace-pre-line">{sec.content}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* 6. 실생활 조언 */}
+            {dream.advice && (
+              <section className="mb-6">
+                <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">실생활 조언</h3>
+                <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 text-sm leading-relaxed text-brand-body">
+                  {dream.advice}
+                </div>
+              </section>
+            )}
+
+            {/* 7. 행운의 번호 */}
             {dream.lucky_numbers?.length > 0 && (
               <section className="mb-6">
                 <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-brand-muted">행운의 추천 번호</h3>
-                <div className={`flex flex-wrap gap-2 ${!purchased ? 'select-none blur-sm' : ''}`}>
+                <div className="flex flex-wrap gap-2">
                   {dream.lucky_numbers.map((num) => (
                     <div key={num} className="flex h-11 w-11 items-center justify-center rounded-full bg-[#E07B2A] text-base font-black text-white shadow">
                       {num}
@@ -141,41 +205,41 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
 
             <hr className="mb-6 border-brand-border" />
 
-            {/* 감정가 + 구매 영역 */}
+            {/* 8. 감정가 + 9. 구매 버튼 */}
             <div className="mb-6 flex flex-col items-center gap-4 rounded-xl bg-brand-page px-6 py-6">
-                <div className="flex flex-col items-center">
-                  <span className="mb-1 text-sm font-semibold text-[#555555]">감정가</span>
-                  <span className="text-3xl font-black text-[#E07B2A]">{dream.price.toLocaleString()} P</span>
-                </div>
-                {!purchased && !dream.is_sold && (
-                  <button
-                    onClick={openPurchaseModal}
-                    disabled={loadingPoints}
-                    className="w-full max-w-xs rounded-xl bg-[#01273A] py-3 font-bold text-white transition-all hover:brightness-90 disabled:opacity-60"
-                  >
-                    {loadingPoints ? '잔액 확인 중...' : '구매하고 전체 내용 보기'}
-                  </button>
-                )}
-                {!purchased && dream.is_sold && (
-                  <span className="rounded-full bg-gray-400 px-5 py-1.5 text-sm font-bold text-white">판매완료</span>
-                )}
-                {purchased && !isOwner && (
-                  <span className="text-sm text-emerald-600 font-semibold">구매 완료 ✓</span>
-                )}
+              <div className="flex flex-col items-center">
+                <span className="mb-1 text-sm font-semibold text-[#555555]">감정가</span>
+                <span className="text-3xl font-black text-[#E07B2A]">{dream.price.toLocaleString()} P</span>
               </div>
+              {!purchased && !dream.is_sold && (
+                <button
+                  onClick={openPurchaseModal}
+                  disabled={loadingPoints}
+                  className="w-full max-w-xs rounded-xl bg-[#01273A] py-3 font-bold text-white transition-all hover:brightness-90 disabled:opacity-60"
+                >
+                  {loadingPoints ? '잔액 확인 중...' : '구매하고 원문 보기'}
+                </button>
+              )}
+              {!purchased && dream.is_sold && (
+                <span className="rounded-full bg-gray-400 px-5 py-1.5 text-sm font-bold text-white">판매완료</span>
+              )}
+              {purchased && !isOwner && (
+                <span className="text-sm text-emerald-600 font-semibold">구매 완료 ✓</span>
+              )}
+            </div>
 
-            {/* 꿈 원문 */}
+            {/* 9. 꿈 원문 (구매 후 공개) */}
             <section>
               <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">꿈 원문</h3>
               <div className={`min-h-32 rounded-xl border border-gray-200 p-5 text-sm leading-relaxed text-[#555555] ${!purchased ? 'select-none blur-sm' : ''}`}>
                 {dream.content}
               </div>
               {!purchased && (
-                <p className="mt-2 text-center text-xs text-gray-400">구매 후 전체 내용을 확인할 수 있습니다</p>
+                <p className="mt-2 text-center text-xs text-gray-400">구매 후 원문을 확인할 수 있습니다</p>
               )}
             </section>
 
-            {/* 수정/삭제 (본인 + 미판매) */}
+            {/* 10. 수정/삭제 (본인 + 미판매) */}
             {isOwner && !dream.is_sold && (
               <div className="mt-6 flex items-center justify-end gap-4 border-t border-gray-100 pt-4">
                 <button

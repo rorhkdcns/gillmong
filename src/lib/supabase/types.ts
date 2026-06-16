@@ -5,6 +5,9 @@ export interface DbDream {
   content: string
   summary: string
   grade: string
+  dream_type: string
+  interpretation: string
+  advice: string
   category: string
   price: number
   lucky_numbers: number[]

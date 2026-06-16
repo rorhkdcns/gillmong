@@ -187,14 +187,17 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     const { data: inserted, error } = await supabase
       .from('dreams')
       .insert({
-        user_id:       user.id,
-        title:         title.trim(),
-        content:       dream.trim(),
-        summary:       analysis.summary || dream.trim().slice(0, 100),
-        grade:         analysis.grade,
-        category:      category || 'etc',
-        price:         Number(price),
-        lucky_numbers: analysis.lucky_numbers,
+        user_id:        user.id,
+        title:          title.trim(),
+        content:        dream.trim(),
+        summary:        analysis.summary || dream.trim().slice(0, 100),
+        grade:          analysis.grade,
+        dream_type:     analysis.type,
+        interpretation: analysis.interpretation,
+        advice:         analysis.advice,
+        category:       category || 'etc',
+        price:          Number(price),
+        lucky_numbers:  analysis.lucky_numbers,
       })
       .select('id')
       .single()
