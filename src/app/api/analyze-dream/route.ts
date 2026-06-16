@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY
+const GEMINI_MODEL = 'gemini-2.5-flash'
 const GEMINI_URL =
-  'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
+  `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`
 
 function fallbackLuckyNumbers(): number[] {
   const pool = Array.from({ length: 45 }, (_, i) => i + 1)
@@ -72,7 +73,8 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
 
   if (!res.ok) {
     const errText = await res.text()
-    console.error('[Gemini API error]', errText)
+    console.error(`[Gemini API error] model=${GEMINI_MODEL} status=${res.status} url=${GEMINI_URL}`)
+    console.error('[Gemini API error body]', errText)
     return NextResponse.json({ error: `Gemini API 오류 (${res.status})` }, { status: 500 })
   }
 

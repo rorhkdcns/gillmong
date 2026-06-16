@@ -7,6 +7,31 @@ import { CATEGORY_DB } from '@/lib/supabase/types'
 
 const CATEGORIES = ['인물·신체', '동물·식물', '자연·사물', '행동·상황', '기타']
 
+const INTERP_SECTIONS = [
+  { pattern: /한국\s*전통\s*해몽\s*관점\s*:/, color: '#01273A' },
+  { pattern: /아시아\s*관점[^:]*:/,            color: '#E07B2A' },
+  { pattern: /서양\s*심리학적\s*관점\s*:/,     color: '#6B96A8' },
+  { pattern: /종합\s*해석\s*:/,                color: '#01273A' },
+]
+
+function parseInterpretation(text: string) {
+  const lines = text.split('\n')
+  const sections: { title: string; content: string; color: string }[] = []
+  let cur: { title: string; lines: string[]; color: string } | null = null
+
+  for (const line of lines) {
+    const matched = INTERP_SECTIONS.find((s) => s.pattern.test(line.trim()))
+    if (matched) {
+      if (cur) sections.push({ title: cur.title, content: cur.lines.join('\n').trim(), color: cur.color })
+      cur = { title: line.trim(), lines: [], color: matched.color }
+    } else if (cur) {
+      cur.lines.push(line)
+    }
+  }
+  if (cur) sections.push({ title: cur.title, content: cur.lines.join('\n').trim(), color: cur.color })
+  return sections
+}
+
 const GRADE_STYLE: Record<string, { bg: string; text: string; label: string }> = {
   A: { bg: 'bg-emerald-500', text: 'text-emerald-600', label: '최고의 길몽' },
   B: { bg: 'bg-blue-500',    text: 'text-blue-600',    label: '좋은 길몽' },
@@ -143,7 +168,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
     >
-      <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white shadow-2xl">
+      <div className="relative max-h-[90vh] w-full max-w-lg md:max-w-[860px] overflow-y-auto rounded-2xl bg-white shadow-2xl">
 
         {/* X 버튼 */}
         <button
@@ -195,14 +220,29 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
           )}
 
           {/* 상세 해몽 */}
-          {analysis.interpretation && (
-            <section className="mb-5">
-              <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">상세 해몽</h3>
-              <div className="rounded-xl border border-[#CCCCCC] p-4 text-sm leading-relaxed text-brand-body whitespace-pre-line">
-                {analysis.interpretation}
-              </div>
-            </section>
-          )}
+          {analysis.interpretation && (() => {
+            const sections = parseInterpretation(analysis.interpretation)
+            return (
+              <section className="mb-5">
+                <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">상세 해몽</h3>
+                <div className="rounded-xl border border-[#CCCCCC] overflow-hidden">
+                  {sections.length > 0 ? sections.map((sec, i) => (
+                    <div key={i}>
+                      {i > 0 && <hr style={{ borderColor: '#EEEEEE' }} />}
+                      <div className="p-4">
+                        <p className="mb-1.5 text-sm font-bold" style={{ color: sec.color }}>{sec.title}</p>
+                        <p className="text-sm leading-relaxed text-brand-body whitespace-pre-line">{sec.content}</p>
+                      </div>
+                    </div>
+                  )) : (
+                    <div className="p-4 text-sm leading-relaxed text-brand-body whitespace-pre-line">
+                      {analysis.interpretation}
+                    </div>
+                  )}
+                </div>
+              </section>
+            )
+          })()}
 
           {/* 실생활 조언 */}
           {analysis.advice && (

@@ -11,26 +11,21 @@ interface Props {
   dream: DbDream
 }
 
-const CATEGORY_OPTIONS = Object.entries(CATEGORY_LABEL).map(([key, label]) => ({ key, label }))
-
 export default function DreamEditForm({ dream }: Props) {
   const router = useRouter()
-  const [title, setTitle]     = useState(dream.title)
-  const [summary, setSummary] = useState(dream.summary)
-  const [content, setContent] = useState(dream.content)
-  const [price, setPrice]     = useState(String(dream.price))
-  const [category, setCategory] = useState(dream.category)
-  const [saving, setSaving]   = useState(false)
-  const [error, setError]     = useState('')
-  const [saved, setSaved]     = useState(false)
+  const [title, setTitle] = useState(dream.title)
+  const [price, setPrice] = useState(String(dream.price))
+  const [saving, setSaving] = useState(false)
+  const [error, setError]   = useState('')
+  const [saved, setSaved]   = useState(false)
 
   const categoryPath = CATEGORY_PATH[dream.category] ?? '/'
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     const parsedPrice = parseInt(price, 10)
-    if (!title.trim() || !summary.trim() || !content.trim()) {
-      setError('제목, 요약, 내용을 모두 입력해주세요.')
+    if (!title.trim()) {
+      setError('제목을 입력해주세요.')
       return
     }
     if (isNaN(parsedPrice) || parsedPrice <= 0) {
@@ -41,10 +36,10 @@ export default function DreamEditForm({ dream }: Props) {
     setError('')
     const result = await updateDream(dream.id, {
       title: title.trim(),
-      summary: summary.trim(),
-      content: content.trim(),
+      summary: dream.summary,
+      content: dream.content,
       price: parsedPrice,
-      category,
+      category: dream.category,
     })
     setSaving(false)
     if (result.error) {
@@ -94,35 +89,23 @@ export default function DreamEditForm({ dream }: Props) {
 
               <div>
                 <label className="mb-1 block text-sm font-semibold text-[#555555]">카테고리</label>
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="w-full border border-gray-200 px-4 py-3 text-[#333333] outline-none focus:border-[#6B96A8]"
-                >
-                  {CATEGORY_OPTIONS.map(({ key, label }) => (
-                    <option key={key} value={key}>{label}</option>
-                  ))}
-                </select>
+                <div className="w-full border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-[#888888]">
+                  {CATEGORY_LABEL[dream.category] ?? dream.category}
+                </div>
               </div>
 
               <div>
                 <label className="mb-1 block text-sm font-semibold text-[#555555]">꿈 요약</label>
-                <textarea
-                  value={summary}
-                  onChange={(e) => setSummary(e.target.value)}
-                  rows={3}
-                  className="w-full resize-none border border-gray-200 px-4 py-3 text-[#333333] outline-none focus:border-[#6B96A8]"
-                />
+                <div className="w-full resize-none border border-gray-200 bg-gray-50 px-4 py-3 text-sm leading-relaxed text-[#888888]">
+                  {dream.summary}
+                </div>
               </div>
 
               <div>
                 <label className="mb-1 block text-sm font-semibold text-[#555555]">꿈 원문</label>
-                <textarea
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  rows={7}
-                  className="w-full resize-none border border-gray-200 px-4 py-3 text-[#333333] outline-none focus:border-[#6B96A8]"
-                />
+                <div className="w-full whitespace-pre-line border border-gray-200 bg-gray-50 px-4 py-3 text-sm leading-relaxed text-[#888888]">
+                  {dream.content}
+                </div>
               </div>
 
               <div>
