@@ -155,7 +155,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
             {dream.summary && (
               <section className="mb-5">
                 <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">해몽 요약</h3>
-                <div className="rounded-xl border border-[#CCCCCC] bg-amber-50/30 p-4 text-sm leading-relaxed text-brand-body">
+                <div className={`rounded-xl border border-[#CCCCCC] bg-amber-50/30 p-4 text-sm leading-relaxed text-brand-body ${!purchased ? 'select-none blur-sm' : ''}`}>
                   {dream.summary}
                 </div>
               </section>
@@ -165,7 +165,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
             {sections.length > 0 && (
               <section className="mb-5">
                 <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">상세 해몽</h3>
-                <div className="rounded-xl border border-[#CCCCCC] overflow-hidden">
+                <div className={`rounded-xl border border-[#CCCCCC] overflow-hidden ${!purchased ? 'select-none blur-sm' : ''}`}>
                   {sections.map((sec, i) => (
                     <div key={i}>
                       {i > 0 && <hr style={{ borderColor: '#EEEEEE' }} />}
@@ -183,7 +183,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
             {dream.advice && (
               <section className="mb-6">
                 <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">실생활 조언</h3>
-                <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 text-sm leading-relaxed text-brand-body">
+                <div className={`rounded-xl border border-blue-100 bg-blue-50/40 p-4 text-sm leading-relaxed text-brand-body ${!purchased ? 'select-none blur-sm' : ''}`}>
                   {dream.advice}
                 </div>
               </section>
@@ -193,7 +193,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
             {dream.lucky_numbers?.length > 0 && (
               <section className="mb-6">
                 <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-brand-muted">행운의 추천 번호</h3>
-                <div className="flex flex-wrap gap-2">
+                <div className={`flex flex-wrap gap-2 ${!purchased ? 'select-none blur-sm' : ''}`}>
                   {dream.lucky_numbers.map((num) => (
                     <div key={num} className="flex h-11 w-11 items-center justify-center rounded-full bg-[#E07B2A] text-base font-black text-white shadow">
                       {num}
@@ -218,7 +218,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                     disabled={loadingPoints}
                     className="w-full max-w-xs rounded-xl bg-[#01273A] py-3 font-bold text-white transition-all hover:brightness-90 disabled:opacity-60"
                   >
-                    {loadingPoints ? '잔액 확인 중...' : '구매하기'}
+                    {loadingPoints ? '잔액 확인 중...' : '구매하고 전체 내용 보기'}
                   </button>
                 )}
                 {!purchased && dream.is_sold && (
@@ -230,19 +230,15 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
               </div>
             )}
 
-            {/* 꿈 원문 (구매 후 공개) */}
+            {/* 꿈 원문 */}
             <section>
               <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">꿈 원문</h3>
-              <div className="relative overflow-hidden rounded-xl border border-gray-200">
-                <div className={`min-h-32 p-5 text-sm leading-relaxed text-[#555555] ${!purchased ? 'pointer-events-none select-none blur-sm' : ''}`}>
-                  {dream.content}
-                </div>
-                {!purchased && (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-white/80 backdrop-blur-[2px]">
-                    <p className="text-sm text-[#777777]">꿈의 원문은 구매 후 열람할 수 있습니다</p>
-                  </div>
-                )}
+              <div className={`min-h-32 rounded-xl border border-gray-200 p-5 text-sm leading-relaxed text-[#555555] ${!purchased ? 'select-none blur-sm' : ''}`}>
+                {dream.content}
               </div>
+              {!purchased && (
+                <p className="mt-2 text-center text-xs text-gray-400">구매 후 전체 내용을 확인할 수 있습니다</p>
+              )}
             </section>
 
             {/* 수정/삭제 (본인 + 미판매) */}
