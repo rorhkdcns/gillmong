@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import DreamInput from './_components/DreamInput'
 import SiteHeader from '@/components/SiteHeader'
 
@@ -23,7 +23,7 @@ const GRADE_LABEL: Record<string, string> = {
 }
 
 export default async function Home() {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { data: recentDreams } = await supabase
     .from('dreams')
     .select('id, title, summary, grade, price')

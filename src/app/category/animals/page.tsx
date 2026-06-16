@@ -1,10 +1,10 @@
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import CategoryPage from '../_components/CategoryPage'
 
 export const dynamic = 'force-dynamic'
 
 export default async function AnimalsPage() {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { data } = await supabase
     .from('dreams')
     .select('id, title, summary, grade, price, is_sold, profiles!left(nickname)')
