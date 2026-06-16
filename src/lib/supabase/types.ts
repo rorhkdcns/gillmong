@@ -20,6 +20,9 @@ export interface DbProfile {
   id: string
   username: string
   nickname: string
+  real_name: string
+  phone: string
+  email: string
   points: number
   created_at: string
 }

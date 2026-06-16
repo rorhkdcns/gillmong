@@ -9,14 +9,32 @@ function usernameToEmail(username: string) {
   return `${username.trim().toLowerCase()}@gillmong.com`
 }
 
+function Field({
+  label, required, children,
+}: { label: string; required?: boolean; children: React.ReactNode }) {
+  return (
+    <div>
+      <label className="mb-1 block text-sm text-[#555555]">
+        {label} {required && <span className="text-red-400">*</span>}
+      </label>
+      {children}
+    </div>
+  )
+}
+
+const INPUT = 'w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#01273A]'
+
 export default function SignupPage() {
   const router = useRouter()
-  const [username, setUsername] = useState('')
-  const [nickname, setNickname] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [done, setDone] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [username,  setUsername]  = useState('')
+  const [password,  setPassword]  = useState('')
+  const [nickname,  setNickname]  = useState('')
+  const [realName,  setRealName]  = useState('')
+  const [phone,     setPhone]     = useState('')
+  const [email,     setEmail]     = useState('')
+  const [error,     setError]     = useState('')
+  const [done,      setDone]      = useState(false)
+  const [loading,   setLoading]   = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -26,27 +44,50 @@ export default function SignupPage() {
       setError('아이디는 영문·숫자·밑줄(_) 3~20자로 입력해주세요.')
       return
     }
+    if (password.length < 6) {
+      setError('비밀번호는 6자리 이상 입력해주세요.')
+      return
+    }
+    if (!nickname.trim()) {
+      setError('닉네임을 입력해주세요.')
+      return
+    }
+    if (!realName.trim()) {
+      setError('이름(실명)을 입력해주세요.')
+      return
+    }
+    if (phone && !/^[0-9\-+\s]{7,15}$/.test(phone)) {
+      setError('전화번호 형식이 올바르지 않습니다.')
+      return
+    }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('이메일 형식이 올바르지 않습니다.')
+      return
+    }
 
     setLoading(true)
 
     const supabase = createClient()
-    const email = usernameToEmail(username)
+    const authEmail = usernameToEmail(username)
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email: authEmail,
       password,
       options: {
         data: {
-          username: username.trim().toLowerCase(),
-          nickname: nickname.trim(),
+          username:  username.trim().toLowerCase(),
+          nickname:  nickname.trim(),
+          real_name: realName.trim(),
+          phone:     phone.trim(),
+          email:     email.trim(),
         },
       },
     })
 
     setLoading(false)
 
-    if (error) {
-      if (error.message.includes('already registered') || error.message.includes('already been registered')) {
+    if (signUpError) {
+      if (signUpError.message.includes('already registered') || signUpError.message.includes('already been registered')) {
         setError('이미 사용 중인 아이디입니다.')
       } else {
         setError('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.')
@@ -54,7 +95,6 @@ export default function SignupPage() {
       return
     }
 
-    // 이메일 인증 OFF 상태면 session 즉시 반환 → 마이페이지로 이동
     if (data.session) {
       router.push('/mypage')
       router.refresh()
@@ -107,32 +147,20 @@ export default function SignupPage() {
           <p className="mb-10 text-center text-sm text-[#777777]">길몽상점과 함께 꿈을 거래해보세요</p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div>
-              <label className="mb-1 block text-sm text-[#555555]">아이디</label>
+
+            <Field label="아이디" required>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="영문·숫자·밑줄 3~20자"
                 required
-                className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#01273A]"
+                className={INPUT}
               />
-            </div>
+              <p className="mt-1 text-xs text-gray-400">로그인에 사용됩니다 (영문·숫자·밑줄만 허용)</p>
+            </Field>
 
-            <div>
-              <label className="mb-1 block text-sm text-[#555555]">닉네임</label>
-              <input
-                type="text"
-                value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
-                placeholder="표시될 이름"
-                required
-                className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#01273A]"
-              />
-            </div>
-
-            <div>
-              <label className="mb-1 block text-sm text-[#555555]">비밀번호</label>
+            <Field label="비밀번호" required>
               <input
                 type="password"
                 value={password}
@@ -140,9 +168,51 @@ export default function SignupPage() {
                 placeholder="6자리 이상"
                 required
                 minLength={6}
-                className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#01273A]"
+                className={INPUT}
               />
-            </div>
+            </Field>
+
+            <Field label="닉네임" required>
+              <input
+                type="text"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                placeholder="다른 사용자에게 표시될 이름"
+                required
+                className={INPUT}
+              />
+            </Field>
+
+            <Field label="이름 (실명)" required>
+              <input
+                type="text"
+                value={realName}
+                onChange={(e) => setRealName(e.target.value)}
+                placeholder="홍길동"
+                required
+                className={INPUT}
+              />
+            </Field>
+
+            <Field label="전화번호">
+              <input
+                type="tel"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="010-0000-0000"
+                className={INPUT}
+              />
+            </Field>
+
+            <Field label="이메일 주소">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="example@email.com"
+                className={INPUT}
+              />
+            </Field>
 
             {error && (
               <p className="text-sm text-red-500">{error}</p>
