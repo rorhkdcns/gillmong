@@ -166,11 +166,12 @@ export default function SearchPage() {
       <footer className="border-t border-gray-200 bg-white px-6 py-10 text-[13px]">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col gap-1 text-[#555555]">
-            <span>대표: 홍길몽</span>
-            <span>사업자등록번호: 000-00-00000</span>
-            <span>통신판매업신고: 제2024-서울-00000호</span>
-            <span>주소: 서울특별시 강남구 테헤란로 123</span>
-            <span className="mt-2">고객센터: 1588-0000 · 평일 10:00 – 18:00 (점심 12:00–13:00, 주말·공휴일 휴무)</span>
+            <span>상호명: 티에이치 컴퍼니</span>
+            <span>대표자: 유태현</span>
+            <span>사업자등록번호: 795-44-00873</span>
+            <span>통신판매업신고: 제2026-수원팔달-0211호</span>
+            <span>주소: 경기도 수원시 팔달구 정조로900번길 23, 104호</span>
+            <span className="mt-2">고객센터: 이메일 문의 (gillmong@nate.com) · 평일 10:00 ~ 18:00</span>
           </div>
           <div className="mt-8 flex flex-col gap-2">
             <div className="flex flex-wrap gap-5 text-[#555555]">
