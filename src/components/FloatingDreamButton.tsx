@@ -47,6 +47,7 @@ export default function FloatingDreamButton() {
         body: JSON.stringify({ dream }),
       })
       const data = await res.json()
+      if (res.status === 429) { setDreamError(data.error); return }
       if (!res.ok || data.error) throw new Error(data.error ?? '분석 실패')
       setResult(data as AnalysisResult)
     } catch (err) {
