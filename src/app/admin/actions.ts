@@ -122,7 +122,7 @@ export async function getAdminStats() {
     totalTransactions: purchasesRes.count ?? 0,
     totalPoints,
     recentUsers:  recentUsersRes.data ?? [],
-    recentTx:     recentTxRes.data ?? [],
+    recentTx:     (recentTxRes.data ?? []) as unknown[],
   }
 }
 
@@ -185,14 +185,14 @@ export async function adminDeleteUser(
 }
 
 // ── 꿈 관리 ───────────────────────────────────────────────────
-export async function getAdminDreams(category?: string, isSold?: string) {
+export async function getAdminDreams(category?: string, isSold?: string): Promise<unknown[]> {
   const admin = createAdminClient()
   let q = admin.from('dreams').select('id, title, grade, category, price, is_sold, created_at, profiles!user_id(nickname, username)').order('created_at', { ascending: false })
   if (category) q = q.eq('category', category)
   if (isSold === 'true')  q = q.eq('is_sold', true)
   if (isSold === 'false') q = q.eq('is_sold', false)
   const { data } = await q
-  return data ?? []
+  return (data ?? []) as unknown[]
 }
 
 export async function adminDeleteDreamById(
@@ -207,13 +207,13 @@ export async function adminDeleteDreamById(
 }
 
 // ── 거래 내역 ──────────────────────────────────────────────────
-export async function getAdminTransactions() {
+export async function getAdminTransactions(): Promise<unknown[]> {
   const admin = createAdminClient()
   const { data } = await admin
     .from('purchases')
     .select('id, price, created_at, dreams(id, title, grade), profiles!buyer_id(nickname, username)')
     .order('created_at', { ascending: false })
-  return data ?? []
+  return (data ?? []) as unknown[]
 }
 
 // ── 출금 신청 ──────────────────────────────────────────────────

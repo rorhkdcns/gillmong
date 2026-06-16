@@ -85,7 +85,7 @@ export default function AdminDashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {(stats.recentTx as Array<{ id: number; price: number; created_at: string; dreams: { title: string } | null; profiles: { nickname: string } | null }>).map((tx) => (
+              {(stats.recentTx as unknown as Array<{ id: number; price: number; created_at: string; dreams: { title: string } | null; profiles: { nickname: string } | null }>).map((tx) => (
                 <tr key={tx.id}>
                   <td className="px-6 py-3 text-[#333]">{tx.profiles?.nickname ?? '-'}</td>
                   <td className="max-w-[160px] truncate px-6 py-3 text-[#777]">{tx.dreams?.title ?? '-'}</td>
