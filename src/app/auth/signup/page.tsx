@@ -56,11 +56,19 @@ export default function SignupPage() {
       setError('이름(실명)을 입력해주세요.')
       return
     }
-    if (phone && !/^[0-9\-+\s]{7,15}$/.test(phone)) {
+    if (!phone.trim()) {
+      setError('전화번호를 입력해주세요.')
+      return
+    }
+    if (!/^[0-9\-+\s]{7,15}$/.test(phone)) {
       setError('전화번호 형식이 올바르지 않습니다.')
       return
     }
-    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!email.trim()) {
+      setError('이메일 주소를 입력해주세요.')
+      return
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError('이메일 형식이 올바르지 않습니다.')
       return
     }
@@ -194,22 +202,24 @@ export default function SignupPage() {
               />
             </Field>
 
-            <Field label="전화번호">
+            <Field label="전화번호" required>
               <input
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="010-0000-0000"
+                required
                 className={INPUT}
               />
             </Field>
 
-            <Field label="이메일 주소">
+            <Field label="이메일 주소" required>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="example@email.com"
+                required
                 className={INPUT}
               />
             </Field>
