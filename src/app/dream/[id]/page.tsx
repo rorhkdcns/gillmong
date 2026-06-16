@@ -14,13 +14,13 @@ export default async function DreamDetailPage({
   // 꿈 데이터 + 작성자 닉네임 조회
   const { data: dream } = await supabase
     .from('dreams')
-    .select('*, profiles(nickname)')
+    .select('*, profiles!left(nickname)')
     .eq('id', id)
     .single()
 
   if (!dream) notFound()
 
-  const nickname = (dream.profiles as { nickname: string } | null)?.nickname ?? ''
+  const nickname = (dream.profiles as unknown as { nickname: string } | null)?.nickname ?? ''
 
   // 현재 로그인 사용자
   const { data: { user } } = await supabase.auth.getUser()
