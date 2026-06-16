@@ -71,8 +71,9 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
   const [category, setCategory] = useState('')
   const [price, setPrice]       = useState('5000')
   const [priceError, setPriceError] = useState('')
-  const [saving, setSaving]     = useState(false)
-  const [saveError, setSaveError] = useState('')
+  const [saving, setSaving]         = useState(false)
+  const [savingPrivate, setSavingPrivate] = useState(false)
+  const [saveError, setSaveError]   = useState('')
 
   function validatePrice(val: number): string {
     if (!val || isNaN(val)) return '올바른 금액을 입력해주세요.'
@@ -91,6 +92,50 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     const val = Number(price)
     if (!price || isNaN(val)) { setPrice('5000'); setPriceError(''); return }
     setPriceError(validatePrice(val))
+  }
+
+  async function ensureProfile(supabase: ReturnType<typeof createClient>, user: { id: string; email?: string; user_metadata?: Record<string, unknown> }) {
+    const { data: existing } = await supabase.from('profiles').select('id').eq('id', user.id).single()
+    if (existing) return true
+    const username = (user.user_metadata?.username as string) ?? user.email?.replace('@gillmong.com', '') ?? user.id.slice(0, 8)
+    const nickname = (user.user_metadata?.nickname as string) ?? username
+    const { error } = await supabase.from('profiles').insert({ id: user.id, username, nickname })
+    return !error
+  }
+
+  async function handlePrivateSave() {
+    if (!title.trim()) { setSaveError('꿈 제목을 입력해주세요.'); return }
+    setSaveError('')
+    setSavingPrivate(true)
+
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { setSavingPrivate(false); setSaveError('로그인이 필요합니다.'); return }
+
+    await ensureProfile(supabase, user)
+
+    const { data: inserted, error } = await supabase
+      .from('dreams')
+      .insert({
+        user_id:       user.id,
+        title:         title.trim(),
+        content:       dream.trim(),
+        summary:       analysis.summary || dream.trim().slice(0, 100),
+        grade:         analysis.grade,
+        category:      'etc',
+        price:         0,
+        lucky_numbers: analysis.lucky_numbers,
+        is_public:     false,
+      })
+      .select('id')
+      .single()
+
+    setSavingPrivate(false)
+    if (error) { setSaveError(`저장 오류: ${error.message}`); return }
+
+    onClose()
+    router.push(`/dream/${inserted.id}?owner=1`)
+    router.refresh()
   }
 
   async function handleRegister() {
@@ -112,29 +157,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
       return
     }
 
-    const { data: existingProfile } = await supabase
-      .from('profiles')
-      .select('id')
-      .eq('id', user.id)
-      .single()
-
-    if (!existingProfile) {
-      const username =
-        (user.user_metadata?.username as string) ??
-        user.email?.replace('@gillmong.com', '') ??
-        user.id.slice(0, 8)
-      const nickname = (user.user_metadata?.nickname as string) ?? username
-
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({ id: user.id, username, nickname })
-
-      if (profileError) {
-        setSaving(false)
-        setSaveError(`프로필 생성 오류: ${profileError.message}`)
-        return
-      }
-    }
+    await ensureProfile(supabase, user)
 
     const { data: inserted, error } = await supabase
       .from('dreams')
@@ -147,6 +170,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
         category:      CATEGORY_DB[category] ?? 'etc',
         price:         Number(price),
         lucky_numbers: analysis.lucky_numbers,
+        is_public:     true,
       })
       .select('id')
       .single()
@@ -324,14 +348,21 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
             <div className="flex gap-3">
               <button
                 onClick={handleRegister}
-                disabled={saving || !!priceError}
+                disabled={saving || savingPrivate || !!priceError}
                 className="flex-1 rounded-xl bg-[#01273A] py-3 text-base font-bold text-white transition-colors hover:brightness-90 disabled:opacity-60"
               >
                 {saving ? '등록 중...' : '마켓에 등록하기'}
               </button>
               <button
+                onClick={handlePrivateSave}
+                disabled={saving || savingPrivate}
+                className="flex-1 rounded-xl border-2 border-[#01273A] bg-white py-3 text-base font-bold text-[#01273A] transition-colors hover:bg-[#01273A] hover:text-white disabled:opacity-60"
+              >
+                {savingPrivate ? '저장 중...' : '개인 저장'}
+              </button>
+              <button
                 onClick={onClose}
-                className="flex-1 rounded-xl border-2 border-brand-dark py-3 text-base font-bold text-brand-dark transition-colors hover:bg-brand-dark hover:text-white"
+                className="rounded-xl border-2 border-gray-300 px-5 py-3 text-base font-bold text-gray-400 transition-colors hover:border-gray-400 hover:text-gray-500"
               >
                 닫기
               </button>

@@ -9,6 +9,7 @@ export interface DbDream {
   price: number
   lucky_numbers: number[]
   is_sold: boolean
+  is_public: boolean
   created_at: string
 }
 
