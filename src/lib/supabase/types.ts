@@ -8,6 +8,9 @@ export interface DbDream {
   category: string
   price: number
   lucky_numbers: number[]
+  type: string
+  interpretation: string
+  advice: string
   is_sold: boolean
   is_public: boolean
   created_at: string

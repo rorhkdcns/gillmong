@@ -117,15 +117,18 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     const { data: inserted, error } = await supabase
       .from('dreams')
       .insert({
-        user_id:       user.id,
-        title:         title.trim(),
-        content:       dream.trim(),
-        summary:       analysis.summary || dream.trim().slice(0, 100),
-        grade:         analysis.grade,
-        category:      'etc',
-        price:         0,
-        lucky_numbers: analysis.lucky_numbers,
-        is_public:     false,
+        user_id:        user.id,
+        title:          title.trim(),
+        content:        dream.trim(),
+        summary:        analysis.summary || dream.trim().slice(0, 100),
+        grade:          analysis.grade,
+        type:           analysis.type,
+        interpretation: analysis.interpretation,
+        advice:         analysis.advice,
+        category:       'etc',
+        price:          0,
+        lucky_numbers:  analysis.lucky_numbers,
+        is_public:      false,
       })
       .select('id')
       .single()
@@ -162,15 +165,18 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     const { data: inserted, error } = await supabase
       .from('dreams')
       .insert({
-        user_id:       user.id,
-        title:         title.trim(),
-        content:       dream.trim(),
-        summary:       analysis.summary || dream.trim().slice(0, 100),
-        grade:         analysis.grade,
-        category:      CATEGORY_DB[category] ?? 'etc',
-        price:         Number(price),
-        lucky_numbers: analysis.lucky_numbers,
-        is_public:     true,
+        user_id:        user.id,
+        title:          title.trim(),
+        content:        dream.trim(),
+        summary:        analysis.summary || dream.trim().slice(0, 100),
+        grade:          analysis.grade,
+        type:           analysis.type,
+        interpretation: analysis.interpretation,
+        advice:         analysis.advice,
+        category:       CATEGORY_DB[category] ?? 'etc',
+        price:          Number(price),
+        lucky_numbers:  analysis.lucky_numbers,
+        is_public:      true,
       })
       .select('id')
       .single()
@@ -192,7 +198,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
     >
-      <div className="relative max-h-[90vh] w-full max-w-lg md:max-w-[860px] overflow-y-auto rounded-2xl bg-white shadow-2xl">
+      <div className="relative max-h-[90vh] w-full max-w-lg md:max-w-[800px] overflow-y-auto rounded-2xl bg-white shadow-2xl">
 
         {/* X 버튼 */}
         <button

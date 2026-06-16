@@ -66,7 +66,7 @@ export default async function Home() {
 
       {/* ───── 꿈 감정소 ───── */}
       <section className="px-6 pt-16 pb-20">
-        <div className="mx-auto max-w-2xl">
+        <div className="mx-auto max-w-[800px]">
           <div className="rounded-2xl border border-brand-border bg-white p-8 shadow-sm">
             <div className="mb-6 text-center">
               <span className="text-3xl text-[#F5A66D]">★</span>
