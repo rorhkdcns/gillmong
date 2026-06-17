@@ -48,12 +48,27 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const { dream } = await req.json()
-  if (!dream?.trim()) {
+  const body = await req.json()
+  const answers = body.answers as { who?: string; when?: string; how?: string; memory?: string } | undefined
+  const hasInput = answers && Object.values(answers).some((v) => typeof v === 'string' && v.trim())
+  if (!hasInput) {
     return NextResponse.json({ error: '꿈 내용이 없습니다.' }, { status: 400 })
   }
 
+  const who    = answers?.who?.trim()    || '(없음)'
+  const when   = answers?.when?.trim()   || '(없음)'
+  const how    = answers?.how?.trim()    || '(없음)'
+  const memory = answers?.memory?.trim() || '(없음)'
+
   const prompt = `너는 한국 전통 해몽, 동양(중국/일본) 철학적 해몽, 서양 융/프로이트 심리학적 꿈 해석을 모두 통달한 30년 경력의 전문 해몽가야.
+
+아래 4가지 꿈 단서를 자연스러운 하나의 꿈 이야기로 재구성한 뒤, 그 꿈을 해몽해줘.
+
+【꿈 단서】
+- 누가/무엇이: ${who}
+- 언제/어디서: ${when}
+- 어떻게/왜: ${how}
+- 강렬한 기억: ${memory}
 
 꿈의 각 요소를 깊이 분석하되, 아래 문화권별 해몽 원칙을 반드시 지켜야 해:
 - 한국 전통: 죽는 꿈은 길몽(재물·변화의 상징), 이가 빠지는 꿈은 흉몽(가족 우환 암시), 돼지꿈은 길몽, 뱀꿈은 재물 또는 위험 양면성 등 민간 전통 해몽을 정확히 적용
@@ -63,13 +78,9 @@ export async function POST(req: NextRequest) {
 절대 모든 꿈을 긍정적으로만 해석하지 마. 꿈의 맥락, 감정, 분위기에 따라 정직하게 길몽/흉몽/중립을 판정해.
 흉몽이나 경고성 꿈은 솔직하게 흉몽으로 판정하되, 대처 방법을 함께 제시해.
 
-꿈 내용:
-"""
-${dream.trim()}
-"""
-
 아래 JSON 형식으로만 응답해. 다른 설명 없이 JSON만:
 {
+  "reconstructedDream": "4가지 단서를 바탕으로 재구성한 자연스러운 꿈 이야기 (3~5문장, 1인칭 서술)",
   "grade": "A",
   "type": "길몽",
   "title": "꿈을 한 줄로 표현한 제목 (20자 이내)",
@@ -82,7 +93,7 @@ ${dream.trim()}
 grade 기준: A=최고의 길몽, B=좋은 길몽, C=평범한 꿈, D=주의가 필요한 꿈, E=흉몽의 기운, F=해석 불가
 type: "길몽" | "흉몽" | "중립" 중 하나`
 
-  const body = JSON.stringify({
+  const reqBody = JSON.stringify({
     contents: [{ parts: [{ text: prompt }] }],
     generationConfig: { temperature: 0.75, responseMimeType: 'application/json' },
   })
@@ -92,7 +103,7 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
     res = await fetch(`${GEMINI_URL}?key=${GEMINI_API_KEY}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body,
+      body: reqBody,
     })
     if (res.ok || (res.status !== 503 && res.status !== 529)) break
     if (attempt < 3) await new Promise((r) => setTimeout(r, attempt * 1500))
@@ -113,7 +124,6 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
 
   let parsed: Record<string, unknown>
   try {
-    // 혹시 마크다운 코드 펜스가 붙어도 제거
     const clean = rawText.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim()
     parsed = JSON.parse(clean)
   } catch {
@@ -125,6 +135,7 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
   const VALID_TYPES  = ['길몽', '흉몽', '중립']
 
   const result = {
+    reconstructedDream: String(parsed.reconstructedDream ?? '').trim() || `${who} / ${when} / ${how} / ${memory}`,
     grade:          VALID_GRADES.includes(String(parsed.grade)) ? String(parsed.grade) : 'C',
     type:           VALID_TYPES.includes(String(parsed.type))   ? String(parsed.type)  : '중립',
     title:          String(parsed.title  ?? '').slice(0, 50),

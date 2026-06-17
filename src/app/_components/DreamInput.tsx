@@ -5,43 +5,74 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import ResultModal, { type AnalysisResult } from './ResultModal'
 
-const guides = [
-  { label: '누가/무엇이', desc: '나 외에 등장한 특별한 존재나 기묘한 생명체, 인물은?' },
-  { label: '언제/어디서', desc: '배경은 언제쯤, 어떤 공간이었나요?' },
-  { label: '어떻게/왜',   desc: '어떤 신비롭거나 두려운 사건이 일어났고 어떻게 전개되었나요?' },
-  { label: '강렬한 기억', desc: '잠에서 깨어난 순간에도 생생한 감정, 감각, 혹은 기억나는 대사는?' },
+const FIELDS = [
+  {
+    key: 'who' as const,
+    label: '누가/무엇이',
+    desc: '나 외에 등장한 특별한 존재나 기묘한 생명체, 인물은?',
+    placeholder: '예) 거대한 용, 돌아가신 할머니, 낯선 남자...',
+  },
+  {
+    key: 'when' as const,
+    label: '언제/어디서',
+    desc: '배경은 언제쯤, 어떤 공간이었나요?',
+    placeholder: '예) 깊은 밤, 낯선 폐건물 안, 어릴 적 살던 집...',
+  },
+  {
+    key: 'how' as const,
+    label: '어떻게/왜',
+    desc: '어떤 신비롭거나 두려운 사건이 일어났고 어떻게 전개되었나요?',
+    placeholder: '예) 갑자기 쫓기다가 날아올랐고, 하늘에서 빛이 쏟아졌어요...',
+  },
+  {
+    key: 'memory' as const,
+    label: '강렬한 기억',
+    desc: '잠에서 깨어난 순간에도 생생한 감정, 감각, 혹은 기억나는 대사는?',
+    placeholder: '예) 심장이 두근거렸고 "돌아오지 마"라는 목소리가 들렸어요...',
+  },
 ]
+
+type Answers = { who: string; when: string; how: string; memory: string }
 
 export default function DreamInput() {
   const router = useRouter()
-  const [dream, setDream]           = useState('')
-  const [dreamError, setDreamError] = useState('')
-  const [loading, setLoading]       = useState(false)
-  const [modal, setModal]           = useState<AnalysisResult | null>(null)
+  const [answers, setAnswers] = useState<Answers>({ who: '', when: '', how: '', memory: '' })
+  const [inputError, setInputError]             = useState('')
+  const [loading, setLoading]                   = useState(false)
+  const [modal, setModal]                       = useState<AnalysisResult | null>(null)
+  const [reconstructedDream, setReconstructedDream] = useState('')
+
+  function handleChange(key: keyof Answers, value: string) {
+    setAnswers((prev) => ({ ...prev, [key]: value }))
+    setInputError('')
+  }
 
   async function handleSubmit() {
-    if (!dream.trim()) { setDreamError('꿈 내용을 입력해주세요.'); return }
+    const hasInput = Object.values(answers).some((v) => v.trim())
+    if (!hasInput) { setInputError('최소 하나 이상의 항목을 입력해주세요.'); return }
 
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { router.push('/auth/login'); return }
 
-    setDreamError('')
+    setInputError('')
     setLoading(true)
 
     try {
       const res = await fetch('/api/analyze-dream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dream }),
+        body: JSON.stringify({ answers }),
       })
       const data = await res.json()
-      if (res.status === 429) { setDreamError(data.error); return }
+      if (res.status === 429) { setInputError(data.error); return }
       if (!res.ok || data.error) throw new Error(data.error ?? '분석 실패')
-      setModal(data as AnalysisResult)
+      const { reconstructedDream: rd, ...analysis } = data
+      setReconstructedDream(rd ?? '')
+      setModal(analysis as AnalysisResult)
     } catch (err) {
       const msg = err instanceof Error ? err.message : '알 수 없는 오류'
-      setDreamError(`해몽 분석 중 오류가 발생했습니다: ${msg}`)
+      setInputError(`해몽 분석 중 오류가 발생했습니다: ${msg}`)
     } finally {
       setLoading(false)
     }
@@ -49,40 +80,27 @@ export default function DreamInput() {
 
   return (
     <>
-      <div className="flex flex-col gap-5">
-        {/* 5W1H 가이드 박스 */}
-        <div className="rounded-xl border border-gray-200 bg-gray-50 p-5">
-          <p className="mb-4 text-base font-bold text-gray-500">
-            스토리 완성 가이드 (5W1H)
-          </p>
-          <ul className="flex flex-col gap-3">
-            {guides.map((g) => (
-              <li key={g.label} className="flex gap-2 text-base leading-snug">
-                <span className="mt-0.5 shrink-0 text-gray-300">◆</span>
-                <span>
-                  <span className="font-bold text-gray-600">{g.label}:</span>{' '}
-                  <span className="text-gray-400">({g.desc})</span>
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div className="flex flex-col gap-4">
+        {FIELDS.map((field) => (
+          <div key={field.key}>
+            <label className="mb-1.5 block text-base font-bold text-[#01273A]">
+              {field.label}
+              <span className="ml-1 font-normal text-sm text-gray-400">({field.desc})</span>
+            </label>
+            <textarea
+              value={answers[field.key]}
+              onChange={(e) => handleChange(field.key, e.target.value)}
+              placeholder={field.placeholder}
+              rows={2}
+              className="w-full resize-none rounded-xl border border-brand-border bg-white px-4 py-3 text-base text-brand-heading placeholder:text-[#BBBBBB] outline-none focus:border-[#01273A]"
+            />
+          </div>
+        ))}
 
-        {/* 텍스트에어리어 */}
-        <textarea
-          value={dream}
-          onChange={(e) => { setDream(e.target.value); setDreamError('') }}
-          placeholder={`꿈의 내용을 최대한 자세하게 적어주세요.\n\n예) 어젯밤 꿈에서 커다란 뱀이 나타나 나를 쫓아왔어요. 처음엔 무서웠지만 뱀이 갑자기 황금빛으로 빛나더니...`}
-          rows={7}
-          className="w-full resize-none rounded-xl border border-brand-border bg-white px-5 py-4 text-base text-brand-heading placeholder:text-[#BBBBBB] outline-none"
-        />
-
-        {/* 에러 메시지 */}
-        {dreamError && (
-          <p className="text-sm text-red-500">{dreamError}</p>
+        {inputError && (
+          <p className="text-sm text-red-500">{inputError}</p>
         )}
 
-        {/* 버튼 */}
         <button
           type="button"
           onClick={handleSubmit}
@@ -110,9 +128,9 @@ export default function DreamInput() {
       {/* 결과 모달 */}
       {modal && (
         <ResultModal
-          dream={dream}
+          dream={reconstructedDream}
           analysis={modal}
-          onClose={() => setModal(null)}
+          onClose={() => { setModal(null); setReconstructedDream('') }}
         />
       )}
     </>
