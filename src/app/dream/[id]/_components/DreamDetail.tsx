@@ -56,20 +56,21 @@ interface Props {
 
 export default function DreamDetail({ dream, isOwner, isPurchased: initialPurchased, nickname }: Props) {
   const router = useRouter()
-  const [showModal, setShowModal]   = useState(false)
-  const [purchased, setPurchased]   = useState(initialPurchased || isOwner)
-  const [buying, setBuying]         = useState(false)
-  const [buyError, setBuyError]     = useState('')
-  const [myPoints, setMyPoints]     = useState<number | null>(null)
+  const [showModal, setShowModal]         = useState(false)
+  const [purchased, setPurchased]         = useState(initialPurchased || isOwner)
+  const [buying, setBuying]               = useState(false)
+  const [buyError, setBuyError]           = useState('')
+  const [myPoints, setMyPoints]           = useState<number | null>(null)
   const [loadingPoints, setLoadingPoints] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [deleting, setDeleting]             = useState(false)
-  const [deleteError, setDeleteError]       = useState('')
+  const [deleting, setDeleting]               = useState(false)
+  const [deleteError, setDeleteError]         = useState('')
 
   const categoryPath = CATEGORY_PATH[dream.category] ?? '/'
   const afterBalance = myPoints !== null ? myPoints - dream.price : null
   const gradeStyle   = GRADE_STYLE[dream.grade] ?? GRADE_STYLE['C']
   const sections     = dream.interpretation ? parseInterpretation(dream.interpretation) : []
+  const hasAnalysis  = !!(dream.dream_type || dream.interpretation || dream.advice)
 
   async function openPurchaseModal() {
     setLoadingPoints(true)
@@ -130,20 +131,18 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
         <div className="mx-auto max-w-[800px]">
           <div className="rounded-2xl border border-gray-200 bg-white p-7 shadow-sm">
 
-            {/* 1. 등급 원형 + 라벨 + 유형 뱃지 */}
+            {/* 1. 등급 원형 + 등급 설명 + 유형 뱃지 */}
             <div className="mb-6 flex flex-col items-center gap-3">
               <div className={`flex h-24 w-24 items-center justify-center rounded-full ${gradeStyle.bg} shadow-lg`}>
                 <span className="text-5xl font-black text-white">{dream.grade}</span>
               </div>
               <span className={`text-base font-bold ${gradeStyle.text}`}>{gradeStyle.label}</span>
-              {dream.dream_type && (
-                <span className={`rounded-full border px-3 py-0.5 text-sm font-semibold ${TYPE_STYLE[dream.dream_type] ?? TYPE_STYLE['중립']}`}>
-                  {dream.dream_type}
-                </span>
-              )}
+              <span className={`rounded-full border px-3 py-0.5 text-sm font-semibold ${TYPE_STYLE[dream.dream_type] ?? TYPE_STYLE['중립']}`}>
+                {dream.dream_type || '중립'}
+              </span>
             </div>
 
-            {/* 3. 제목 + 닉네임 */}
+            {/* 2. 꿈 제목 + 작성자 닉네임 */}
             <h1 className="mb-2 text-center text-2xl font-black leading-snug text-[#01273A]">{dream.title}</h1>
             {nickname && (
               <p className="mb-6 text-center text-sm text-gray-400">@{nickname}</p>
@@ -151,7 +150,31 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
 
             <hr className="mb-6 border-brand-border" />
 
-            {/* 4. 해몽 요약 */}
+            {/* 3. 나의 꿈 기록 (원문) - 비구매시 블러 */}
+            <section className="mb-6">
+              <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">나의 꿈 기록 (원문)</h3>
+              <div className="relative">
+                <div className={`min-h-[80px] rounded-xl bg-brand-page p-4 text-sm leading-relaxed text-brand-body ${!purchased ? 'select-none blur-sm' : ''}`}>
+                  {dream.content}
+                </div>
+                {!purchased && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-xl">
+                    <p className="text-sm font-semibold text-[#01273A]">꿈을 구입하시면 원문을 보실 수 있습니다</p>
+                    {!dream.is_sold && (
+                      <button
+                        onClick={openPurchaseModal}
+                        disabled={loadingPoints}
+                        className="rounded-xl bg-[#01273A] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
+                      >
+                        {loadingPoints ? '잔액 확인 중...' : '구매하기'}
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+            </section>
+
+            {/* 4. 해몽 요약 - 항상 공개 */}
             {dream.summary && (
               <section className="mb-5">
                 <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">해몽 요약</h3>
@@ -161,39 +184,75 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
               </section>
             )}
 
-            {/* 5. 상세 해몽 */}
+            {/* 5. 상세 해몽 - 비구매시 블러 */}
             <section className="mb-5">
               <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">상세 해몽</h3>
-              {sections.length > 0 ? (
-                <div className={`rounded-xl border border-[#CCCCCC] overflow-hidden ${!purchased ? 'select-none blur-sm' : ''}`}>
-                  {sections.map((sec, i) => (
-                    <div key={i}>
-                      {i > 0 && <hr style={{ borderColor: '#EEEEEE' }} />}
-                      <div className="p-4">
-                        <p className="mb-1.5 text-sm font-bold" style={{ color: sec.color }}>{sec.title}</p>
-                        <p className="text-sm leading-relaxed text-brand-body whitespace-pre-line">{sec.content}</p>
+              {hasAnalysis && dream.interpretation ? (
+                <div className="relative">
+                  <div className={`rounded-xl border border-[#CCCCCC] overflow-hidden ${!purchased ? 'select-none blur-sm' : ''}`}>
+                    {sections.length > 0 ? sections.map((sec, i) => (
+                      <div key={i}>
+                        {i > 0 && <hr style={{ borderColor: '#EEEEEE' }} />}
+                        <div className="p-4">
+                          <p className="mb-1.5 text-sm font-bold" style={{ color: sec.color }}>{sec.title}</p>
+                          <p className="text-sm leading-relaxed text-brand-body whitespace-pre-line">{sec.content}</p>
+                        </div>
                       </div>
+                    )) : (
+                      <div className="p-4 text-sm leading-relaxed text-brand-body whitespace-pre-line">
+                        {dream.interpretation}
+                      </div>
+                    )}
+                  </div>
+                  {!purchased && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-xl">
+                      <p className="text-sm font-semibold text-[#01273A]">꿈을 구입하시면 원문을 보실 수 있습니다</p>
+                      {!dream.is_sold && (
+                        <button
+                          onClick={openPurchaseModal}
+                          disabled={loadingPoints}
+                          className="rounded-xl bg-[#01273A] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
+                        >
+                          {loadingPoints ? '잔액 확인 중...' : '구매하기'}
+                        </button>
+                      )}
                     </div>
-                  ))}
+                  )}
                 </div>
               ) : (
                 <p className="text-sm text-gray-400">이 꿈은 감정 분석 데이터가 없습니다.</p>
               )}
             </section>
 
-            {/* 6. 실생활 조언 */}
+            {/* 6. 실생활 조언 - 비구매시 블러 */}
             <section className="mb-6">
               <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">실생활 조언</h3>
-              {dream.advice ? (
-                <div className={`rounded-xl border border-blue-100 bg-blue-50/40 p-4 text-sm leading-relaxed text-brand-body ${!purchased ? 'select-none blur-sm' : ''}`}>
-                  {dream.advice}
+              {hasAnalysis && dream.advice ? (
+                <div className="relative">
+                  <div className={`rounded-xl border border-blue-100 bg-blue-50/40 p-4 text-sm leading-relaxed text-brand-body ${!purchased ? 'select-none blur-sm' : ''}`}>
+                    {dream.advice}
+                  </div>
+                  {!purchased && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-xl">
+                      <p className="text-sm font-semibold text-[#01273A]">꿈을 구입하시면 원문을 보실 수 있습니다</p>
+                      {!dream.is_sold && (
+                        <button
+                          onClick={openPurchaseModal}
+                          disabled={loadingPoints}
+                          className="rounded-xl bg-[#01273A] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
+                        >
+                          {loadingPoints ? '잔액 확인 중...' : '구매하기'}
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <p className="text-sm text-gray-400">이 꿈은 감정 분석 데이터가 없습니다.</p>
               )}
             </section>
 
-            {/* 7. 행운의 번호 */}
+            {/* 7. 행운의 추천 번호 6개 - 항상 공개 */}
             {dream.lucky_numbers?.length > 0 && (
               <section className="mb-6">
                 <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-brand-muted">행운의 추천 번호</h3>
@@ -209,7 +268,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
 
             <hr className="mb-6 border-brand-border" />
 
-            {/* 8. 감정가 + 9. 구매 버튼 */}
+            {/* 8. 감정가 + 구매하기 버튼 */}
             <div className="mb-6 flex flex-col items-center gap-4 rounded-xl bg-brand-page px-6 py-6">
               <div className="flex flex-col items-center">
                 <span className="mb-1 text-sm font-semibold text-[#555555]">감정가</span>
@@ -232,25 +291,9 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
               )}
             </div>
 
-            {/* 9. 꿈 원문 (구매 후 공개) */}
-            <section>
-              <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">꿈 원문</h3>
-              <div className={`min-h-32 rounded-xl border border-gray-200 p-5 text-sm leading-relaxed text-[#555555] ${!purchased ? 'select-none blur-sm' : ''}`}>
-                {dream.content}
-              </div>
-              {!purchased && (
-                <p className="mt-2 text-center text-xs text-gray-400">구매 후 원문을 확인할 수 있습니다</p>
-              )}
-            </section>
-
-            {/* 분석 데이터 없는 꿈: dream_type도 없으면 안내 */}
-            {!dream.dream_type && !dream.interpretation && !dream.advice && (
-              <p className="mt-4 text-center text-sm text-gray-400">이 꿈은 감정 분석 데이터가 없습니다.</p>
-            )}
-
-            {/* 10. 수정/삭제 (본인 + 미판매) */}
+            {/* 수정/삭제 (본인 + 미판매) */}
             {isOwner && !dream.is_sold && (
-              <div className="mt-6 flex items-center justify-end gap-4 border-t border-gray-100 pt-4">
+              <div className="flex items-center justify-end gap-4 border-t border-gray-100 pt-4">
                 <button
                   onClick={() => router.push(`/dream/${dream.id}/edit`)}
                   className="text-sm text-[#777777] transition-colors hover:text-[#333333]"
