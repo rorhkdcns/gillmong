@@ -2,6 +2,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import DreamInput from './_components/DreamInput'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
+import BannerSlider from '@/components/BannerSlider'
 
 export const dynamic = 'force-dynamic'
 
@@ -25,18 +26,29 @@ const GRADE_LABEL: Record<string, string> = {
 
 export default async function Home() {
   const supabase = createAdminClient()
-  const { data: recentDreams } = await supabase
-    .from('dreams')
-    .select('id, title, summary, grade, price')
-    .order('created_at', { ascending: false })
-    .limit(6)
 
-  const dreams = recentDreams ?? []
+  const [{ data: recentDreams }, { data: activeBanners }] = await Promise.all([
+    supabase
+      .from('dreams')
+      .select('id, title, summary, grade, price')
+      .order('created_at', { ascending: false })
+      .limit(6),
+    supabase
+      .from('banners')
+      .select('id, image_url, link_url')
+      .eq('is_active', true)
+      .order('order', { ascending: true }),
+  ])
+
+  const dreams  = recentDreams  ?? []
+  const banners = activeBanners ?? []
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-page">
 
       <SiteHeader />
+
+      <BannerSlider banners={banners} />
 
       {/* ───── 히어로 섹션 ───── */}
       <section

@@ -83,41 +83,41 @@ export default function CategoryPage({ title, description, activePath, cards }: 
       </div>
 
       {/* ───── 카드 그리드 ───── */}
-      <section className="flex-1 px-6 py-12">
+      <section className="flex-1 px-4 py-8 md:px-6 md:py-12">
         <div className="mx-auto max-w-6xl">
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid grid-cols-2 gap-3 md:gap-6 md:grid-cols-3">
             {visible.map((card) => (
               <article
                 key={card.id}
-                className={`flex flex-col rounded-2xl border p-6 shadow-sm transition-shadow ${
+                className={`flex flex-col rounded-xl border p-4 shadow-sm transition-shadow md:rounded-2xl md:p-6 ${
                   card.is_sold
                     ? 'border-gray-200 bg-gray-50 opacity-70'
                     : 'border-gray-200 bg-white hover:shadow-md'
                 }`}
               >
                 {/* 등급 뱃지 + 판매완료 뱃지 */}
-                <div className="mb-3 flex items-center gap-2">
-                  <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_COLOR[card.grade] ?? 'bg-gray-400'}`}>
+                <div className="mb-2 flex items-center gap-1.5 md:mb-3 md:gap-2">
+                  <span className={`flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white md:h-6 md:w-6 ${GRADE_COLOR[card.grade] ?? 'bg-gray-400'}`}>
                     {card.grade}
                   </span>
                   {card.is_sold && (
-                    <span className="rounded-full bg-gray-400 px-2.5 py-0.5 text-xs font-bold text-white">
+                    <span className="rounded-full bg-gray-400 px-2 py-0.5 text-xs font-bold text-white">
                       판매완료
                     </span>
                   )}
                 </div>
 
                 {/* 제목 */}
-                <h3 className="mb-3 text-lg font-semibold text-[#555555] leading-snug">{card.title}</h3>
+                <h3 className="mb-2 text-sm font-semibold leading-snug text-[#555555] line-clamp-2 md:mb-3 md:text-lg md:line-clamp-none">{card.title}</h3>
 
                 {/* 내용 요약 */}
-                <p className="mb-5 flex-1 text-sm leading-relaxed text-[#555555] line-clamp-3">{card.body}</p>
+                <p className="mb-3 flex-1 text-xs leading-relaxed text-[#555555] line-clamp-2 md:mb-5 md:text-sm md:line-clamp-3">{card.body}</p>
 
                 {/* 감정가 + 버튼 */}
-                <div className="flex items-center justify-between border-t border-gray-100 pt-4">
+                <div className="flex items-center justify-between border-t border-gray-100 pt-3 md:pt-4">
                   <div>
                     <span className="text-xs text-gray-400">감정가</span>
-                    <p className={`text-base font-bold ${card.is_sold ? 'text-gray-400' : 'text-[#E07B2A]'}`}>
+                    <p className={`text-sm font-bold md:text-base ${card.is_sold ? 'text-gray-400' : 'text-[#E07B2A]'}`}>
                       {card.price.toLocaleString()} P
                     </p>
                     {card.nickname && (
@@ -125,15 +125,15 @@ export default function CategoryPage({ title, description, activePath, cards }: 
                     )}
                   </div>
                   {card.is_sold ? (
-                    <span className="rounded-full border border-gray-300 px-5 py-2 text-sm font-semibold text-gray-400 cursor-not-allowed">
+                    <span className="rounded-full border border-gray-300 px-3 py-1.5 text-xs font-semibold text-gray-400 cursor-not-allowed md:px-5 md:py-2 md:text-sm">
                       판매완료
                     </span>
                   ) : (
                     <a
                       href={`/dream/${card.id}`}
-                      className="rounded-full bg-[#6B96A8] px-5 py-2 text-sm font-semibold text-white transition-all hover:brightness-90"
+                      className="rounded-full bg-[#6B96A8] px-3 py-1.5 text-xs font-semibold text-white transition-all hover:brightness-90 md:px-5 md:py-2 md:text-sm"
                     >
-                      자세히 보기
+                      보기
                     </a>
                   )}
                 </div>
