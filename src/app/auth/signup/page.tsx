@@ -36,6 +36,10 @@ export default function SignupPage() {
   const [done,      setDone]      = useState(false)
   const [loading,   setLoading]   = useState(false)
 
+  const [usernameError,    setUsernameError]    = useState('')
+  const [usernameStatus,   setUsernameStatus]   = useState<'idle' | 'available' | 'taken'>('idle')
+  const [checkingUsername, setCheckingUsername] = useState(false)
+
   const [agreeTerms,   setAgreeTerms]   = useState(false)
   const [agreePrivacy, setAgreePrivacy] = useState(false)
   const [agreeAge,     setAgreeAge]     = useState(false)
@@ -43,6 +47,32 @@ export default function SignupPage() {
 
   const allRequired = agreeTerms && agreePrivacy && agreeAge
   const allChecked  = allRequired && agreeMarketing
+
+  function validateUsernameFormat(val: string) {
+    if (!val) return ''
+    if (!/^[a-zA-Z0-9_]{3,20}$/.test(val)) return '영문·숫자·밑줄(_) 3~20자로 입력해주세요.'
+    return ''
+  }
+
+  function handleUsernameChange(val: string) {
+    setUsername(val)
+    setUsernameStatus('idle')
+    setUsernameError(validateUsernameFormat(val))
+  }
+
+  async function checkUsername() {
+    const formatErr = validateUsernameFormat(username)
+    if (formatErr) { setUsernameError(formatErr); return }
+    setCheckingUsername(true)
+    const supabase = createClient()
+    const { data } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('username', username.trim().toLowerCase())
+      .maybeSingle()
+    setCheckingUsername(false)
+    setUsernameStatus(data ? 'taken' : 'available')
+  }
 
   function handleAgreeAll() {
     const next = !allChecked
@@ -58,6 +88,10 @@ export default function SignupPage() {
 
     if (!/^[a-zA-Z0-9_]{3,20}$/.test(username)) {
       setError('아이디는 영문·숫자·밑줄(_) 3~20자로 입력해주세요.')
+      return
+    }
+    if (usernameStatus !== 'available') {
+      setError('아이디 중복 확인을 완료해주세요.')
       return
     }
     if (password.length < 6) {
@@ -173,15 +207,36 @@ export default function SignupPage() {
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
             <Field label="아이디" required>
-              <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="영문·숫자·밑줄 3~20자"
-                required
-                className={INPUT}
-              />
-              <p className="mt-1 text-xs text-gray-400">로그인에 사용됩니다 (영문·숫자·밑줄만 허용)</p>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => handleUsernameChange(e.target.value)}
+                  placeholder="영문·숫자·밑줄 3~20자"
+                  required
+                  className={INPUT}
+                />
+                <button
+                  type="button"
+                  onClick={checkUsername}
+                  disabled={checkingUsername || !username}
+                  className="shrink-0 whitespace-nowrap border border-[#01273A] px-4 py-3 text-sm font-semibold text-[#01273A] transition-all hover:bg-[#01273A] hover:text-white disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {checkingUsername ? '확인 중...' : '중복 확인'}
+                </button>
+              </div>
+              {usernameError && (
+                <p className="mt-1 text-xs text-red-500">{usernameError}</p>
+              )}
+              {!usernameError && usernameStatus === 'available' && (
+                <p className="mt-1 text-xs text-emerald-600">사용 가능한 아이디입니다.</p>
+              )}
+              {usernameStatus === 'taken' && (
+                <p className="mt-1 text-xs text-red-500">이미 사용 중인 아이디입니다.</p>
+              )}
+              {!usernameError && usernameStatus === 'idle' && (
+                <p className="mt-1 text-xs text-gray-400">로그인에 사용됩니다 (영문·숫자·밑줄만 허용)</p>
+              )}
             </Field>
 
             <Field label="비밀번호" required>
