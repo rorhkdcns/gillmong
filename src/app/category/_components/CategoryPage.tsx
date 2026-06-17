@@ -95,44 +95,62 @@ export default function CategoryPage({ title, description, activePath, cards }: 
                     : 'border-gray-200 bg-white hover:shadow-md'
                 }`}
               >
-                {/* 등급 뱃지 + 판매완료 뱃지 */}
+                {/* 등급 + 닉네임 */}
                 <div className="mb-2 flex items-center gap-1.5 md:mb-3 md:gap-2">
-                  <span className={`flex h-5 w-5 items-center justify-center rounded-full text-xs font-bold text-white md:h-6 md:w-6 ${GRADE_COLOR[card.grade] ?? 'bg-gray-400'}`}>
+                  <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white md:h-6 md:w-6 ${GRADE_COLOR[card.grade] ?? 'bg-gray-400'}`}>
                     {card.grade}
                   </span>
-                  {card.is_sold && (
-                    <span className="rounded-full bg-gray-400 px-2 py-0.5 text-xs font-bold text-white">
-                      판매완료
-                    </span>
-                  )}
+                  {card.is_sold ? (
+                    <span className="rounded-full bg-gray-400 px-2 py-0.5 text-xs font-bold text-white">판매완료</span>
+                  ) : card.nickname ? (
+                    <span className="truncate text-xs text-gray-400 md:text-sm">@{card.nickname}</span>
+                  ) : null}
                 </div>
 
                 {/* 제목 */}
-                <h3 className="mb-2 text-sm font-semibold leading-snug text-[#555555] line-clamp-2 md:mb-3 md:text-lg md:line-clamp-none">{card.title}</h3>
+                <h3 className="mb-2 text-sm font-semibold leading-snug text-[#555555] line-clamp-2 md:mb-3 md:text-lg">{card.title}</h3>
 
                 {/* 내용 요약 */}
-                <p className="mb-3 flex-1 text-xs leading-relaxed text-[#555555] line-clamp-2 md:mb-5 md:text-sm md:line-clamp-3">{card.body}</p>
+                <p className="flex-1 text-xs leading-relaxed text-[#555555] line-clamp-2 md:text-sm md:line-clamp-3">{card.body}</p>
 
                 {/* 감정가 + 버튼 */}
-                <div className="flex items-center justify-between border-t border-gray-100 pt-3 md:pt-4">
-                  <div>
-                    <span className="text-xs text-gray-400">감정가</span>
-                    <p className={`text-sm font-bold md:text-base ${card.is_sold ? 'text-gray-400' : 'text-[#E07B2A]'}`}>
-                      {card.price.toLocaleString()} P
-                    </p>
-                    {card.nickname && (
-                      <p className="mt-0.5 text-xs text-gray-400">@{card.nickname}</p>
+                <div className="mt-3 border-t border-gray-100 pt-3 md:mt-4 md:pt-4">
+                  {/* 모바일: 세로 배치 */}
+                  <div className="flex flex-col gap-2 md:hidden">
+                    <div>
+                      <span className="text-xs text-gray-400">감정가</span>
+                      <p className={`text-sm font-bold ${card.is_sold ? 'text-gray-400' : 'text-[#E07B2A]'}`}>
+                        {card.price.toLocaleString()} P
+                      </p>
+                    </div>
+                    {card.is_sold ? (
+                      <span className="w-full rounded-full border border-gray-300 py-2 text-center text-xs font-semibold text-gray-400 cursor-not-allowed">
+                        판매완료
+                      </span>
+                    ) : (
+                      <a href={`/dream/${card.id}`} className="w-full rounded-full bg-[#6B96A8] py-2 text-center text-xs font-semibold text-white transition-all hover:brightness-90">
+                        자세히 보기
+                      </a>
                     )}
                   </div>
-                  {card.is_sold ? (
-                    <span className="rounded-full border border-gray-300 px-3 py-1.5 text-xs font-semibold text-gray-400 cursor-not-allowed md:px-5 md:py-2 md:text-sm">
-                      판매완료
-                    </span>
-                  ) : (
-                    <a href={`/dream/${card.id}`} className="rounded-full bg-[#6B96A8] px-5 py-2 text-sm font-semibold text-white transition-all hover:brightness-90">
-                      자세히 보기
-                    </a>
-                  )}
+                  {/* PC: 가로 배치 */}
+                  <div className="hidden items-center justify-between md:flex">
+                    <div>
+                      <span className="text-xs text-gray-400">감정가</span>
+                      <p className={`text-base font-bold ${card.is_sold ? 'text-gray-400' : 'text-[#E07B2A]'}`}>
+                        {card.price.toLocaleString()} P
+                      </p>
+                    </div>
+                    {card.is_sold ? (
+                      <span className="rounded-full border border-gray-300 px-5 py-2 text-sm font-semibold text-gray-400 cursor-not-allowed">
+                        판매완료
+                      </span>
+                    ) : (
+                      <a href={`/dream/${card.id}`} className="rounded-full bg-[#6B96A8] px-5 py-2 text-sm font-semibold text-white transition-all hover:brightness-90">
+                        자세히 보기
+                      </a>
+                    )}
+                  </div>
                 </div>
               </article>
             ))}

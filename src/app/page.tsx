@@ -108,29 +108,40 @@ export default async function Home() {
               <p className="mt-2 text-sm text-[#999]">첫 번째 꿈을 감정하고 마켓에 등록해보세요</p>
             </div>
           ) : (
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 md:gap-6 md:grid-cols-3">
               {dreams.map((dream) => (
                 <article
                   key={dream.id}
-                  className="flex flex-col rounded-2xl border border-brand-border bg-brand-surface p-6 shadow-sm transition-shadow hover:shadow-md hover:border-brand-primary"
+                  className="flex flex-col rounded-xl border border-brand-border bg-brand-surface p-4 shadow-sm transition-shadow hover:shadow-md hover:border-brand-primary md:rounded-2xl md:p-6"
                 >
-                  {/* 등급 */}
-                  <div className="mb-3 flex items-center gap-2">
-                    <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_COLOR[dream.grade] ?? 'bg-gray-400'}`}>
+                  {/* 등급 + 라벨 */}
+                  <div className="mb-2 flex items-center gap-1.5 md:mb-3 md:gap-2">
+                    <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white md:h-6 md:w-6 ${GRADE_COLOR[dream.grade] ?? 'bg-gray-400'}`}>
                       {dream.grade}
                     </span>
-                    <span className="text-sm text-[#777777]">{GRADE_LABEL[dream.grade] ?? ''}</span>
+                    <span className="truncate text-xs text-[#777777] md:text-sm">{GRADE_LABEL[dream.grade] ?? ''}</span>
                   </div>
 
                   {/* 제목 */}
-                  <h3 className="mb-3 text-xl font-bold text-[#333333]">{dream.title}</h3>
+                  <h3 className="mb-2 text-sm font-bold leading-snug text-[#333333] line-clamp-2 md:mb-3 md:text-xl">{dream.title}</h3>
 
                   {/* 요약 */}
-                  <p className="flex-1 text-base leading-relaxed text-brand-body line-clamp-3">{dream.summary}</p>
+                  <p className="flex-1 text-xs leading-relaxed text-brand-body line-clamp-2 md:text-base md:line-clamp-3">{dream.summary}</p>
 
-                  {/* 감정가 + 링크 */}
-                  <div className="mt-5 border-t border-brand-border pt-4">
-                    <div className="flex items-center justify-between">
+                  {/* 감정가 + 버튼 */}
+                  <div className="mt-3 border-t border-brand-border pt-3 md:mt-5 md:pt-4">
+                    {/* 모바일: 세로 배치 */}
+                    <div className="flex flex-col gap-2 md:hidden">
+                      <div>
+                        <span className="text-xs text-gray-400">감정가</span>
+                        <p className="text-sm font-bold text-[#E07B2A]">{dream.price.toLocaleString()} P</p>
+                      </div>
+                      <a href={`/dream/${dream.id}`} className="w-full rounded-full bg-[#6B96A8] py-2 text-center text-xs font-semibold text-white transition-all hover:brightness-90">
+                        자세히 보기
+                      </a>
+                    </div>
+                    {/* PC: 가로 배치 */}
+                    <div className="hidden items-center justify-between md:flex">
                       <div>
                         <span className="text-xs text-gray-400">감정가</span>
                         <p className="text-base font-bold text-[#E07B2A]">{dream.price.toLocaleString()} P</p>
