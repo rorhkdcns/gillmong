@@ -131,8 +131,8 @@ export default async function Home() {
                   {/* 감정가 + 버튼 */}
                   <div className="mt-3 border-t border-gray-100 pt-3 md:mt-4 md:pt-4">
                     {/* 모바일: 세로 배치 */}
-                    <div className="flex flex-col gap-2 md:hidden">
-                      <div>
+                    <div className="flex flex-col items-center gap-2 md:hidden">
+                      <div className="text-center">
                         <span className="text-xs text-gray-400">감정가</span>
                         <p className="text-sm font-bold text-[#E07B2A]">{dream.price.toLocaleString()} P</p>
                       </div>
