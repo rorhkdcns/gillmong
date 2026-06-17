@@ -135,8 +135,8 @@ export default async function Home() {
                         <span className="text-xs text-gray-400">감정가</span>
                         <p className="text-base font-bold text-[#E07B2A]">{dream.price.toLocaleString()} P</p>
                       </div>
-                      <a href={`/dream/${dream.id}`} className="text-base font-semibold text-[#6B96A8] hover:underline">
-                        자세히 보기 →
+                      <a href={`/dream/${dream.id}`} className="rounded-full bg-[#6B96A8] px-5 py-2 text-sm font-semibold text-white transition-all hover:brightness-90">
+                        자세히 보기
                       </a>
                     </div>
                   </div>

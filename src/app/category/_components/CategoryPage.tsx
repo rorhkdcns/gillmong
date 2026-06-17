@@ -129,8 +129,8 @@ export default function CategoryPage({ title, description, activePath, cards }: 
                       판매완료
                     </span>
                   ) : (
-                    <a href={`/dream/${card.id}`} className="text-base font-semibold text-[#6B96A8] hover:underline">
-                      자세히 보기 →
+                    <a href={`/dream/${card.id}`} className="rounded-full bg-[#6B96A8] px-5 py-2 text-sm font-semibold text-white transition-all hover:brightness-90">
+                      자세히 보기
                     </a>
                   )}
                 </div>
