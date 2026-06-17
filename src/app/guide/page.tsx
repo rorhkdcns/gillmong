@@ -55,12 +55,6 @@ const grades = [
   { grade: 'C', label: '일반 등급',   desc: '긍정적인 의미를 담은 좋은 꿈',   color: 'bg-amber-400' },
 ]
 
-const roadmap = [
-  { step: 'Step 1', title: 'MVP 제작 및 초기 트래픽 확보',     desc: '핵심 기능 구현 및 베타 유저 확보' },
-  { step: 'Step 2', title: '정식 서비스 런칭 및 고도화',        desc: 'AI 고도화 및 마켓 기능 완성' },
-  { step: 'Step 3', title: '글로벌 시장 진출 및 문화권별 확장', desc: '다국어 지원 및 해외 서비스 확장' },
-  { step: 'Step 4', title: '독보적인 꿈 데이터 플랫폼 구축',   desc: '꿈 빅데이터 기반 신규 사업 확장' },
-]
 
 export default function GuidePage() {
   return (
@@ -79,9 +73,9 @@ export default function GuidePage() {
           <div className="grid gap-8 text-left md:grid-cols-2">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-10">
               <Sparkles className="mb-6 text-[#FFD700]" size={32} strokeWidth={1.5} />
-              <h3 className="mb-4 text-white" style={{ fontSize: '22px' }}>AI 해몽 & 이미지</h3>
+              <h3 className="mb-4 text-white" style={{ fontSize: '22px' }}>AI 해몽 분석</h3>
               <p className="leading-relaxed text-white/85" style={{ fontSize: '17px' }}>
-                당신의 꿈을 GILLMONG AI가 정밀 분석하여 운세 등급을 매기고 이를 환상적인 무드 이미지로 시각화합니다.
+                당신의 꿈을 GILLMONG AI가 한국 전통·동양·서양 심리학적 관점으로 정밀 분석하여 운세 등급과 해몽을 제공합니다.
               </p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-10">
@@ -136,8 +130,8 @@ export default function GuidePage() {
             <ul className="flex flex-col gap-6">
               {[
                 '상징, 요약, 운세 등급 확인',
-                'AI 무드 이미지로 분위기 파악',
-                '포인트 결제 시 행운의 상징물 소유',
+                '해몽 및 행운 번호 제공',
+                '포인트 결제 시 해몽 전문 열람',
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-4">
                   <span
@@ -273,38 +267,6 @@ export default function GuidePage() {
                 <div>
                   <p className="mb-1 text-[#01273A]" style={{ fontSize: '18px' }}>{g.label}</p>
                   <p className="text-[#333333]" style={{ fontSize: '16px' }}>{g.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ───── 8. 로드맵 ───── */}
-      <section className="bg-white px-8 py-28">
-        <div className="mx-auto max-w-2xl">
-          <div className="mb-20 text-center">
-            <p className="mb-4 tracking-widest text-[#555555]" style={{ fontSize: '16px' }}>ROADMAP</p>
-            <h2 className="text-[#01273A]" style={{ fontSize: '32px' }}>GILLMONG 로드맵</h2>
-          </div>
-          <div className="flex flex-col">
-            {roadmap.map((item, i) => (
-              <div key={i} className="flex gap-8">
-                <div className="flex flex-col items-center">
-                  <div
-                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#E07B2A] text-white shadow"
-                    style={{ fontSize: '16px' }}
-                  >
-                    {i + 1}
-                  </div>
-                  {i < roadmap.length - 1 && (
-                    <div className="my-2 w-px flex-1 bg-gray-200" style={{ minHeight: '2.5rem' }} />
-                  )}
-                </div>
-                <div className="pb-12">
-                  <p className="mb-2 text-[#E07B2A]" style={{ fontSize: '16px' }}>{item.step}</p>
-                  <p className="mb-2 text-[#01273A]" style={{ fontSize: '20px' }}>{item.title}</p>
-                  <p className="leading-relaxed text-[#333333]" style={{ fontSize: '17px' }}>{item.desc}</p>
                 </div>
               </div>
             ))}
