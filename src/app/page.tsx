@@ -112,24 +112,24 @@ export default async function Home() {
               {dreams.map((dream) => (
                 <article
                   key={dream.id}
-                  className="flex flex-col rounded-xl border border-brand-border bg-brand-surface p-4 shadow-sm transition-shadow hover:shadow-md hover:border-brand-primary md:rounded-2xl md:p-6"
+                  className="flex flex-col rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md md:rounded-2xl md:p-6"
                 >
                   {/* 등급 + 라벨 */}
                   <div className="mb-2 flex items-center gap-1.5 md:mb-3 md:gap-2">
                     <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white md:h-6 md:w-6 ${GRADE_COLOR[dream.grade] ?? 'bg-gray-400'}`}>
                       {dream.grade}
                     </span>
-                    <span className="truncate text-xs text-[#777777] md:text-sm">{GRADE_LABEL[dream.grade] ?? ''}</span>
+                    <span className="truncate text-xs text-gray-400 md:text-sm">{GRADE_LABEL[dream.grade] ?? ''}</span>
                   </div>
 
                   {/* 제목 */}
-                  <h3 className="mb-2 text-sm font-bold leading-snug text-[#333333] line-clamp-2 md:mb-3 md:text-xl">{dream.title}</h3>
+                  <h3 className="mb-2 text-sm font-semibold leading-snug text-[#555555] line-clamp-2 md:mb-3 md:text-lg">{dream.title}</h3>
 
                   {/* 요약 */}
-                  <p className="flex-1 text-xs leading-relaxed text-brand-body line-clamp-2 md:text-base md:line-clamp-3">{dream.summary}</p>
+                  <p className="flex-1 text-xs leading-relaxed text-[#555555] line-clamp-2 md:text-sm md:line-clamp-3">{dream.summary}</p>
 
                   {/* 감정가 + 버튼 */}
-                  <div className="mt-3 border-t border-brand-border pt-3 md:mt-5 md:pt-4">
+                  <div className="mt-3 border-t border-gray-100 pt-3 md:mt-4 md:pt-4">
                     {/* 모바일: 세로 배치 */}
                     <div className="flex flex-col gap-2 md:hidden">
                       <div>
