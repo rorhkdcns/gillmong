@@ -15,22 +15,13 @@ const GRADE_COLOR: Record<string, string> = {
   F: 'bg-gray-400',
 }
 
-const GRADE_LABEL: Record<string, string> = {
-  A: '최고의 길몽',
-  B: '좋은 길몽',
-  C: '평범한 꿈',
-  D: '주의가 필요한 꿈',
-  E: '흉몽의 기운',
-  F: '해석 불가',
-}
-
 export default async function Home() {
   const supabase = createAdminClient()
 
   const [{ data: recentDreams }, { data: activeBanners }] = await Promise.all([
     supabase
       .from('dreams')
-      .select('id, title, summary, grade, price')
+      .select('id, title, summary, grade, price, user_id')
       .order('created_at', { ascending: false })
       .limit(6),
     supabase
@@ -40,8 +31,17 @@ export default async function Home() {
       .order('order', { ascending: true }),
   ])
 
-  const dreams  = recentDreams  ?? []
-  const banners = activeBanners ?? []
+  const rawDreams = recentDreams ?? []
+  const banners   = activeBanners ?? []
+
+  const userIds = [...new Set(rawDreams.map((d) => d.user_id).filter(Boolean))]
+  const { data: profiles } = userIds.length
+    ? await supabase.from('profiles').select('id, nickname').in('id', userIds)
+    : { data: [] }
+  const nickMap: Record<string, string> = {}
+  for (const p of profiles ?? []) nickMap[p.id] = p.nickname
+
+  const dreams = rawDreams.map((d) => ({ ...d, nickname: nickMap[d.user_id] ?? null }))
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-page">
@@ -114,12 +114,14 @@ export default async function Home() {
                   key={dream.id}
                   className="flex flex-col rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md md:rounded-2xl md:p-6"
                 >
-                  {/* 등급 + 라벨 */}
+                  {/* 등급 + 닉네임 */}
                   <div className="mb-2 flex items-center gap-1.5 md:mb-3 md:gap-2">
                     <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white md:h-6 md:w-6 ${GRADE_COLOR[dream.grade] ?? 'bg-gray-400'}`}>
                       {dream.grade}
                     </span>
-                    <span className="truncate text-xs text-gray-400 md:text-sm">{GRADE_LABEL[dream.grade] ?? ''}</span>
+                    {dream.nickname && (
+                      <span className="truncate text-xs text-gray-400 md:text-sm">@{dream.nickname}</span>
+                    )}
                   </div>
 
                   {/* 제목 */}
