@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
@@ -16,13 +16,28 @@ function LoginForm() {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const [error, setError]       = useState('')
+  const [loading, setLoading]   = useState(false)
+  const [saveId, setSaveId]     = useState(false)
+
+  useEffect(() => {
+    const saved = localStorage.getItem('savedUsername')
+    if (saved) {
+      setUsername(saved)
+      setSaveId(true)
+    }
+  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
     setLoading(true)
+
+    if (saveId) {
+      localStorage.setItem('savedUsername', username.trim().toLowerCase())
+    } else {
+      localStorage.removeItem('savedUsername')
+    }
 
     const supabase = createClient()
     const email = usernameToEmail(username)
@@ -74,6 +89,16 @@ function LoginForm() {
             className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#01273A]"
           />
         </div>
+
+        <label className="flex cursor-pointer items-center gap-2">
+          <input
+            type="checkbox"
+            checked={saveId}
+            onChange={(e) => setSaveId(e.target.checked)}
+            className="h-4 w-4 accent-[#01273A]"
+          />
+          <span className="text-sm text-[#555555]">아이디 저장</span>
+        </label>
 
         {error && (
           <p className="text-sm text-red-500">{error}</p>
