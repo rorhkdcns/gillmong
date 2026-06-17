@@ -1,10 +1,10 @@
--- ── profiles에 is_admin 컬럼 추가 ─────────────────────────────
+-- profiles에 is_admin 컬럼 추가
 ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS is_admin boolean NOT NULL DEFAULT false;
 
 -- 관리자 계정 설정 (아이디가 yoopromise인 계정)
 UPDATE public.profiles SET is_admin = true WHERE username = 'yoopromise';
 
--- ── notices 테이블 ─────────────────────────────────────────────
+-- notices 테이블
 CREATE TABLE IF NOT EXISTS public.notices (
   id         bigserial PRIMARY KEY,
   title      text NOT NULL,
@@ -27,7 +27,7 @@ CREATE POLICY "notices_admin" ON public.notices
   USING  ((SELECT is_admin FROM public.profiles WHERE id = auth.uid()))
   WITH CHECK ((SELECT is_admin FROM public.profiles WHERE id = auth.uid()));
 
--- ── inquiries 테이블 ───────────────────────────────────────────
+-- inquiries 테이블
 CREATE TABLE IF NOT EXISTS public.inquiries (
   id          bigserial PRIMARY KEY,
   user_id     uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,

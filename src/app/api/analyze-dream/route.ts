@@ -37,13 +37,14 @@ export async function POST(req: NextRequest) {
   const todayStart = new Date()
   todayStart.setHours(0, 0, 0, 0)
   const todayISO = todayStart.toISOString()
-  const [dreamsCount, savedCount] = await Promise.all([
-    supabase.from('dreams').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('created_at', todayISO),
-    supabase.from('saved_dreams').select('id', { count: 'exact', head: true }).eq('user_id', user.id).gte('created_at', todayISO),
-  ])
-  if ((dreamsCount.count ?? 0) + (savedCount.count ?? 0) >= 3) {
+  const { count: usedCount } = await supabase
+    .from('analysis_logs')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', user.id)
+    .gte('created_at', todayISO)
+  if ((usedCount ?? 0) >= 3) {
     return NextResponse.json(
-      { error: '오늘 해몽 분석 한도(하루 3회)에 도달했습니다. 내일 다시 시도해주세요.' },
+      { error: `오늘 해몽 횟수를 모두 사용했습니다 (3/3)` },
       { status: 429 }
     )
   }
@@ -150,6 +151,8 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
     advice:         String(parsed.advice ?? ''),
     lucky_numbers:  sanitizeLuckyNumbers(parsed.lucky_numbers),
   }
+
+  await supabase.from('analysis_logs').insert({ user_id: user.id })
 
   return NextResponse.json(result)
 }

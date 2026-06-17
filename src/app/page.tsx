@@ -154,13 +154,23 @@ export default async function Home() {
             <span>주소: 경기도 수원시 팔달구 정조로900번길 23, 104호</span>
             <span className="mt-2">고객센터: 이메일 문의 (gillmong@nate.com) · 평일 10:00 ~ 18:00</span>
           </div>
-          <div className="mt-8 flex flex-col gap-2">
+          <div className="mt-8 flex flex-col gap-3">
             <div className="flex flex-wrap gap-5 text-sm text-[#555555]">
               {[
                 { label: '이용약관',        href: '/terms' },
                 { label: '개인정보처리방침', href: '/privacy' },
                 { label: '이용안내',        href: '/guide' },
                 { label: '제휴문의',        href: '#' },
+              ].map(({ label, href }) => (
+                <a key={label} href={href} className="hover:underline">{label}</a>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-5 text-sm text-[#555555]">
+              {[
+                { label: '공지사항', href: '/notice' },
+                { label: 'FAQ',     href: '/faq' },
+                { label: '고객센터', href: '/support' },
+                { label: '1:1 문의', href: '/inquiry' },
               ].map(({ label, href }) => (
                 <a key={label} href={href} className="hover:underline">{label}</a>
               ))}
