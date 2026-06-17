@@ -218,7 +218,6 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
-      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
     >
       <div className="relative max-h-[90vh] w-full max-w-lg md:max-w-[800px] overflow-y-auto rounded-2xl bg-white shadow-2xl">
 
