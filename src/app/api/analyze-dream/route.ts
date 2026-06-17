@@ -106,13 +106,19 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
       body: reqBody,
     })
     if (res.ok || (res.status !== 503 && res.status !== 529)) break
-    if (attempt < 3) await new Promise((r) => setTimeout(r, attempt * 1500))
+    if (attempt < 3) await new Promise((r) => setTimeout(r, 1000))
   }
 
   if (!res || !res.ok) {
     const errText = await res?.text()
     console.error(`[Gemini API error] model=${GEMINI_MODEL} status=${res?.status}`)
     console.error('[Gemini API error body]', errText)
+    if (res?.status === 503 || res?.status === 529) {
+      return NextResponse.json(
+        { error: '서버가 혼잡합니다. 잠시 후 다시 시도해주세요.', retryable: true },
+        { status: 503 }
+      )
+    }
     return NextResponse.json(
       { error: `잠시 후 다시 시도해주세요. (Gemini API 오류 ${res?.status})` },
       { status: 500 }

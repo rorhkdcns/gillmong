@@ -38,6 +38,7 @@ export default function DreamInput() {
   const router = useRouter()
   const [answers, setAnswers] = useState<Answers>({ who: '', when: '', how: '', memory: '' })
   const [inputError, setInputError]             = useState('')
+  const [isRetryable, setIsRetryable]           = useState(false)
   const [loading, setLoading]                   = useState(false)
   const [modal, setModal]                       = useState<AnalysisResult | null>(null)
   const [reconstructedDream, setReconstructedDream] = useState('')
@@ -45,6 +46,7 @@ export default function DreamInput() {
   function handleChange(key: keyof Answers, value: string) {
     setAnswers((prev) => ({ ...prev, [key]: value }))
     setInputError('')
+    setIsRetryable(false)
   }
 
   async function handleSubmit() {
@@ -56,6 +58,7 @@ export default function DreamInput() {
     if (!user) { router.push('/auth/login'); return }
 
     setInputError('')
+    setIsRetryable(false)
     setLoading(true)
 
     try {
@@ -66,6 +69,7 @@ export default function DreamInput() {
       })
       const data = await res.json()
       if (res.status === 429) { setInputError(data.error); return }
+      if (res.status === 503) { setInputError(data.error); setIsRetryable(true); return }
       if (!res.ok || data.error) throw new Error(data.error ?? '분석 실패')
       const { reconstructedDream: rd, ...analysis } = data
       setReconstructedDream(rd ?? '')
@@ -98,7 +102,19 @@ export default function DreamInput() {
         ))}
 
         {inputError && (
-          <p className="text-sm text-red-500">{inputError}</p>
+          <div className="flex flex-col gap-2">
+            <p className="text-sm text-red-500">{inputError}</p>
+            {isRetryable && (
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={loading}
+                className="self-start rounded-lg border border-red-300 px-4 py-1.5 text-sm font-semibold text-red-500 hover:bg-red-50 disabled:opacity-60"
+              >
+                재시도
+              </button>
+            )}
+          </div>
         )}
 
         <button

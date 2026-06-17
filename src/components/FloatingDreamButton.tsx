@@ -39,6 +39,7 @@ export default function FloatingDreamButton() {
   const [open, setOpen]     = useState(false)
   const [answers, setAnswers] = useState<Answers>({ who: '', when: '', how: '', memory: '' })
   const [inputError, setInputError]                 = useState('')
+  const [isRetryable, setIsRetryable]               = useState(false)
   const [loading, setLoading]                       = useState(false)
   const [result, setResult]                         = useState<AnalysisResult | null>(null)
   const [reconstructedDream, setReconstructedDream] = useState('')
@@ -54,6 +55,7 @@ export default function FloatingDreamButton() {
     setOpen(false)
     setAnswers({ who: '', when: '', how: '', memory: '' })
     setInputError('')
+    setIsRetryable(false)
     setResult(null)
     setReconstructedDream('')
     setLoading(false)
@@ -62,12 +64,14 @@ export default function FloatingDreamButton() {
   function handleChange(key: keyof Answers, value: string) {
     setAnswers((prev) => ({ ...prev, [key]: value }))
     setInputError('')
+    setIsRetryable(false)
   }
 
   async function handleSubmit() {
     const hasInput = Object.values(answers).some((v) => v.trim())
     if (!hasInput) { setInputError('최소 하나 이상의 항목을 입력해주세요.'); return }
     setInputError('')
+    setIsRetryable(false)
     setLoading(true)
 
     try {
@@ -78,6 +82,7 @@ export default function FloatingDreamButton() {
       })
       const data = await res.json()
       if (res.status === 429) { setInputError(data.error); setLoading(false); return }
+      if (res.status === 503) { setInputError(data.error); setIsRetryable(true); setLoading(false); return }
       if (!res.ok || data.error) throw new Error(data.error ?? '분석 실패')
       const { reconstructedDream: rd, ...analysis } = data
       setReconstructedDream(rd ?? '')
@@ -139,7 +144,19 @@ export default function FloatingDreamButton() {
               ))}
 
               {inputError && (
-                <p className="text-sm text-red-500">{inputError}</p>
+                <div className="flex flex-col gap-2">
+                  <p className="text-sm text-red-500">{inputError}</p>
+                  {isRetryable && (
+                    <button
+                      type="button"
+                      onClick={handleSubmit}
+                      disabled={loading}
+                      className="self-start rounded-lg border border-red-300 px-4 py-1.5 text-sm font-semibold text-red-500 hover:bg-red-50 disabled:opacity-60"
+                    >
+                      재시도
+                    </button>
+                  )}
+                </div>
               )}
 
               <button
