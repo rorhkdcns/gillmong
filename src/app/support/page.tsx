@@ -1,4 +1,5 @@
 import SiteHeader from '@/components/SiteHeader'
+import SiteFooter from '@/components/SiteFooter'
 
 export default function SupportPage() {
   return (
@@ -113,16 +114,7 @@ export default function SupportPage() {
           </div>
         </div>
       </main>
-      <footer className="border-t border-gray-200 bg-white px-6 py-10 text-[13px]">
-        <div className="mx-auto max-w-6xl">
-          <div className="flex flex-wrap gap-5 text-[#555555]">
-            {[['이용약관','/terms'],['개인정보처리방침','/privacy'],['공지사항','/notice'],['FAQ','/faq'],['고객센터','/support'],['1:1문의','/inquiry']].map(([label,href]) => (
-              <a key={label} href={href} className="hover:underline">{label}</a>
-            ))}
-          </div>
-          <p className="mt-4 text-gray-400">© 2026 길몽상점. All rights reserved.</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   )
 }

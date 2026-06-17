@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Image from 'next/image'
+import SiteFooter from '@/components/SiteFooter'
 import { createClient } from '@/lib/supabase/client'
 
 function usernameToEmail(username: string) {
@@ -149,12 +150,7 @@ export default function LoginPage() {
         </Suspense>
       </main>
 
-      {/* 푸터 */}
-      <footer className="border-t border-gray-200 bg-white px-6 py-6 text-[13px]">
-        <div className="mx-auto max-w-6xl">
-          <p className="text-gray-400">© 2024 길몽상점. All rights reserved.</p>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   )
 }
