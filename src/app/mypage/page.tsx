@@ -4,6 +4,11 @@ import SiteHeader from '@/components/SiteHeader'
 import LogoutButton from './_components/LogoutButton'
 import PointTabs from './_components/PointTabs'
 
+function formatDate(iso: string) {
+  const d = new Date(iso)
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`
+}
+
 const GRADE_COLOR: Record<string, string> = {
   A: 'bg-emerald-500',
   B: 'bg-blue-500',
@@ -53,18 +58,20 @@ export default async function MyPage() {
   if (!user) redirect('/auth/login')
 
   // 프로필 + 공개 꿈 + 개인 저장 꿈 + 구매한 꿈 + 판매한 꿈 병렬 조회
-  const [profileRes, myDreamsRes, privateDreamsRes, purchasedRes, soldRes] = await Promise.all([
+  const [profileRes, myDreamsRes, privateDreamsRes, purchasedRes, soldRes, inquiriesRes] = await Promise.all([
     supabase.from('profiles').select('nickname, username, points').eq('id', user.id).single(),
     supabase.from('dreams').select('id, title, grade, price, is_sold').eq('user_id', user.id).order('created_at', { ascending: false }),
     supabase.from('saved_dreams').select('id, title, grade').eq('user_id', user.id).order('created_at', { ascending: false }),
     supabase.from('purchases').select('price, created_at, dreams(id, title, grade, price)').eq('buyer_id', user.id).order('created_at', { ascending: false }),
     supabase.from('dreams').select('id, title, grade, price, purchases(price, created_at)').eq('user_id', user.id).eq('is_sold', true).order('created_at', { ascending: false }),
+    supabase.from('inquiries').select('id, title, status, created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(10),
   ])
 
   const profile       = profileRes.data
   const myDreams      = myDreamsRes.data ?? []
   const privateDreams = (privateDreamsRes.data ?? []) as Array<{ id: number; title: string; grade: string }>
   const purchased     = purchasedRes.data ?? []
+  const myInquiries   = (inquiriesRes.data ?? []) as Array<{ id: number; title: string; status: string; created_at: string }>
   const soldDreams = (soldRes.data ?? []) as Array<{
     id: number
     title: string
@@ -188,7 +195,32 @@ export default async function MyPage() {
             )}
           </section>
 
-          {/* 7. 하단 링크 */}
+          {/* 7. 1:1 문의 내역 */}
+          <section className="border border-gray-200 bg-white p-8">
+            <div className="mb-5 flex items-center justify-between">
+              <h2 className="text-lg text-[#01273A]">1:1 문의 내역</h2>
+              <a href="/inquiry" className="text-sm text-[#6B96A8] hover:underline">+ 문의하기</a>
+            </div>
+            {myInquiries.length === 0 ? (
+              <p className="py-6 text-center text-sm text-[#999]">문의 내역이 없습니다</p>
+            ) : (
+              <ul className="divide-y divide-gray-100">
+                {myInquiries.map((inq) => (
+                  <li key={inq.id} className="flex items-center justify-between py-4">
+                    <span className="text-base text-[#333333] truncate mr-3">{inq.title}</span>
+                    <div className="flex shrink-0 items-center gap-3">
+                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${inq.status === 'answered' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                        {inq.status === 'answered' ? '답변완료' : '대기중'}
+                      </span>
+                      <span className="text-xs text-[#999]">{formatDate(inq.created_at)}</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+
+          {/* 8. 하단 링크 */}
           <div className="flex items-center justify-center gap-6 pb-4 text-sm text-[#777777]">
             <a href="/mypage/edit" className="hover:text-[#01273A] hover:underline">정보 변경</a>
             <span className="text-gray-300">|</span>

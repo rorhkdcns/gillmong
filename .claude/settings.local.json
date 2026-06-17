@@ -11,7 +11,13 @@
       "Bash(git branch *)",
       "Bash(git push *)",
       "WebSearch",
-      "WebFetch(domain:ai.google.dev)"
+      "WebFetch(domain:ai.google.dev)",
+      "Bash(git commit *)",
+      "Bash(npx tsc *)",
+      "Bash(gh run *)",
+      "Bash(npx next *)",
+      "Bash(curl -s \"https://api.github.com/repos/rorhkdcns/gillmong/commits/main/status\")",
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d['state'], d['statuses'][0]['description'] if d['statuses'] else 'no status'\\)\")"
     ]
   }
 }

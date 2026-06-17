@@ -250,6 +250,64 @@ export async function getAdminTransactions(): Promise<unknown[]> {
   return (data ?? []) as unknown[]
 }
 
+// ── 공지사항 ───────────────────────────────────────────────────
+export async function getAdminNotices() {
+  const admin = createAdminClient()
+  const { data } = await admin
+    .from('notices')
+    .select('id, title, is_pinned, created_at')
+    .order('is_pinned', { ascending: false })
+    .order('created_at', { ascending: false })
+  return data ?? []
+}
+
+export async function createAdminNotice(
+  title: string, content: string, isPinned: boolean,
+): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const { error } = await admin.from('notices').insert({ title, content, is_pinned: isPinned })
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function deleteAdminNotice(id: number): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const { error } = await admin.from('notices').delete().eq('id', id)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+// ── 1:1 문의 ───────────────────────────────────────────────────
+export async function getAdminInquiries() {
+  const admin = createAdminClient()
+  const { data: inquiries } = await admin
+    .from('inquiries')
+    .select('id, title, content, status, answer, created_at, answered_at, user_id')
+    .order('created_at', { ascending: false })
+
+  if (!inquiries || inquiries.length === 0) return []
+
+  const userIds = [...new Set(inquiries.map((i) => i.user_id).filter(Boolean))]
+  const { data: profiles } = await admin.from('profiles').select('id, nickname, username').in('id', userIds)
+  const profileMap: Record<string, { nickname: string; username: string }> = {}
+  for (const p of profiles ?? []) profileMap[p.id] = { nickname: p.nickname, username: p.username }
+
+  return inquiries.map((i) => ({ ...i, profiles: profileMap[i.user_id] ?? null }))
+}
+
+export async function adminAnswerInquiry(
+  id: number, answer: string,
+): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const { error } = await admin.from('inquiries').update({
+    answer,
+    status: 'answered',
+    answered_at: new Date().toISOString(),
+  }).eq('id', id)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
 // ── 출금 신청 ──────────────────────────────────────────────────
 export async function getAdminWithdrawals() {
   const admin = createAdminClient()

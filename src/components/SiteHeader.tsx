@@ -229,7 +229,7 @@ export default function SiteHeader({ activePath }: { activePath?: string }) {
         </div>
 
         {/* 구분선 + 네비 메뉴 */}
-        <div className="flex flex-col gap-1 px-5 py-3">
+        <div className="flex flex-col gap-1 px-5 py-3 border-b border-gray-100">
           {navItems.map((item) => (
             <a
               key={item.label}
@@ -240,6 +240,26 @@ export default function SiteHeader({ activePath }: { activePath?: string }) {
                   ? 'font-semibold text-[#E07B2A]'
                   : 'text-[#01273A]'
               }`}
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+
+        {/* 고객지원 메뉴 */}
+        <div className="flex flex-col gap-1 px-5 py-3">
+          <p className="px-3 pb-1 pt-1 text-[10px] font-bold uppercase tracking-widest text-gray-400">고객지원</p>
+          {[
+            { label: '공지사항', href: '/notice' },
+            { label: 'FAQ',     href: '/faq'    },
+            { label: '고객센터', href: '/support' },
+            { label: '1:1 문의', href: '/inquiry' },
+          ].map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              onClick={() => setMenuOpen(false)}
+              className="rounded-lg px-3 py-2.5 text-sm text-[#01273A] transition-colors hover:bg-gray-50"
             >
               {item.label}
             </a>

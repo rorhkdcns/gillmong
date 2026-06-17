@@ -71,6 +71,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
   const router = useRouter()
   const gradeStyle = GRADE_STYLE[analysis.grade] ?? GRADE_STYLE['C']
 
+  const [editedDream, setEditedDream] = useState(dream)
   const [title, setTitle]       = useState(analysis.title)
   const [category, setCategory] = useState('')
   const [price, setPrice]       = useState('5000')
@@ -140,8 +141,8 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
       .insert({
         user_id:        user.id,
         title:          title.trim(),
-        content:        dream.trim(),
-        summary:        analysis.summary || dream.trim().slice(0, 100),
+        content:        editedDream.trim(),
+        summary:        analysis.summary || editedDream.trim().slice(0, 100),
         grade:          analysis.grade,
         type:           analysis.type,
         interpretation: analysis.interpretation,
@@ -189,8 +190,8 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
       .insert({
         user_id:        user.id,
         title:          title.trim(),
-        content:        dream.trim(),
-        summary:        analysis.summary || dream.trim().slice(0, 100),
+        content:        editedDream.trim(),
+        summary:        analysis.summary || editedDream.trim().slice(0, 100),
         grade:          analysis.grade,
         dream_type:     analysis.type,
         interpretation: analysis.interpretation,
@@ -254,10 +255,16 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
 
           {/* 나의 꿈 기록 */}
           <section className="mb-6">
-            <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">나의 꿈 기록 (원문)</h3>
-            <div className="rounded-xl bg-brand-page p-4 text-sm leading-relaxed text-brand-body">
-              {dream}
-            </div>
+            <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">
+              나의 꿈 기록 (원문)
+              <span className="ml-2 text-xs font-normal text-gray-400">직접 수정 가능</span>
+            </h3>
+            <textarea
+              value={editedDream}
+              onChange={(e) => setEditedDream(e.target.value)}
+              rows={5}
+              className="w-full resize-none rounded-xl bg-brand-page px-4 py-3 text-sm leading-relaxed text-brand-body outline-none focus:ring-1 focus:ring-[#01273A]"
+            />
           </section>
 
           {/* 해몽 요약 */}
