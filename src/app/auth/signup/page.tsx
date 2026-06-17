@@ -36,6 +36,22 @@ export default function SignupPage() {
   const [done,      setDone]      = useState(false)
   const [loading,   setLoading]   = useState(false)
 
+  const [agreeTerms,   setAgreeTerms]   = useState(false)
+  const [agreePrivacy, setAgreePrivacy] = useState(false)
+  const [agreeAge,     setAgreeAge]     = useState(false)
+  const [agreeMarketing, setAgreeMarketing] = useState(false)
+
+  const allRequired = agreeTerms && agreePrivacy && agreeAge
+  const allChecked  = allRequired && agreeMarketing
+
+  function handleAgreeAll() {
+    const next = !allChecked
+    setAgreeTerms(next)
+    setAgreePrivacy(next)
+    setAgreeAge(next)
+    setAgreeMarketing(next)
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
@@ -224,14 +240,86 @@ export default function SignupPage() {
               />
             </Field>
 
+            {/* 약관 동의 */}
+            <div className="mt-2 flex flex-col gap-0 rounded-xl border border-gray-200 bg-white">
+              {/* 전체 동의 */}
+              <label className="flex cursor-pointer items-center gap-3 border-b border-gray-100 px-4 py-3.5">
+                <input
+                  type="checkbox"
+                  checked={allChecked}
+                  onChange={handleAgreeAll}
+                  className="h-4 w-4 cursor-pointer accent-[#01273A]"
+                />
+                <span className="text-sm font-bold text-[#01273A]">전체 동의</span>
+              </label>
+
+              {/* 이용약관 */}
+              <label className="flex cursor-pointer items-center gap-3 border-b border-gray-100 px-4 py-3">
+                <input
+                  type="checkbox"
+                  checked={agreeTerms}
+                  onChange={(e) => setAgreeTerms(e.target.checked)}
+                  className="h-4 w-4 cursor-pointer accent-[#01273A]"
+                />
+                <span className="flex-1 text-sm text-[#333333]">
+                  <a href="/terms" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-[#01273A]" onClick={(e) => e.stopPropagation()}>
+                    이용약관
+                  </a>{' '}
+                  동의 <span className="text-red-400">(필수)</span>
+                </span>
+              </label>
+
+              {/* 개인정보처리방침 */}
+              <label className="flex cursor-pointer items-center gap-3 border-b border-gray-100 px-4 py-3">
+                <input
+                  type="checkbox"
+                  checked={agreePrivacy}
+                  onChange={(e) => setAgreePrivacy(e.target.checked)}
+                  className="h-4 w-4 cursor-pointer accent-[#01273A]"
+                />
+                <span className="flex-1 text-sm text-[#333333]">
+                  <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-[#01273A]" onClick={(e) => e.stopPropagation()}>
+                    개인정보처리방침
+                  </a>{' '}
+                  동의 <span className="text-red-400">(필수)</span>
+                </span>
+              </label>
+
+              {/* 만 14세 이상 */}
+              <label className="flex cursor-pointer items-center gap-3 border-b border-gray-100 px-4 py-3">
+                <input
+                  type="checkbox"
+                  checked={agreeAge}
+                  onChange={(e) => setAgreeAge(e.target.checked)}
+                  className="h-4 w-4 cursor-pointer accent-[#01273A]"
+                />
+                <span className="text-sm text-[#333333]">
+                  만 14세 이상입니다 <span className="text-red-400">(필수)</span>
+                </span>
+              </label>
+
+              {/* 마케팅 */}
+              <label className="flex cursor-pointer items-center gap-3 px-4 py-3">
+                <input
+                  type="checkbox"
+                  checked={agreeMarketing}
+                  onChange={(e) => setAgreeMarketing(e.target.checked)}
+                  className="h-4 w-4 cursor-pointer accent-[#01273A]"
+                />
+                <span className="text-sm text-[#333333]">
+                  마케팅 정보 수신 동의 <span className="text-gray-400">(선택)</span>
+                </span>
+              </label>
+            </div>
+
             {error && (
               <p className="text-sm text-red-500">{error}</p>
             )}
 
             <button
               type="submit"
-              disabled={loading}
-              className="mt-2 w-full bg-[#01273A] py-3 text-base font-semibold text-white transition-all hover:brightness-90 disabled:opacity-60"
+              disabled={loading || !allRequired}
+              className="mt-2 w-full bg-[#01273A] py-3 text-base font-semibold text-white transition-all hover:brightness-90 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {loading ? '처리 중...' : '가입하기'}
             </button>
