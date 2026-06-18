@@ -45,8 +45,8 @@ export default function ChargePage() {
     try {
       console.log('userId 가져오기 시작...')
       const { createClient } = await import('@/lib/supabase/client')
-      const { data } = await createClient().auth.getUser()
-      const userId = data?.user?.id
+      const { data } = await createClient().auth.getSession()
+      const userId = data?.session?.user?.id
 
       console.log('userId:', userId)
 

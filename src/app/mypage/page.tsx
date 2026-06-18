@@ -54,9 +54,9 @@ function Section({ title, count, children, empty }: { title: string; count: numb
 
 export default async function MyPage() {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-
-  if (!user) redirect('/auth/login')
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session?.user) redirect('/auth/login')
+  const user = session.user
 
   // 프로필 + 공개 꿈 + 개인 저장 꿈 + 구매한 꿈 + 판매한 꿈 병렬 조회
   const [profileRes, myDreamsRes, privateDreamsRes, purchasedRes, soldRes, inquiriesRes] = await Promise.all([

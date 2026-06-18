@@ -11,8 +11,9 @@ export default async function DreamEditPage({
   const { id } = await params
   const supabase = await createClient()
 
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/login')
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session?.user) redirect('/auth/login')
+  const user = session.user
 
   const { data: dream } = await supabase
     .from('dreams')

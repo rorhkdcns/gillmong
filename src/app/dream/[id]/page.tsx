@@ -22,7 +22,8 @@ export default async function DreamDetailPage({
   if (!dream) notFound()
 
   // 현재 로그인 사용자
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { session } } = await supabase.auth.getSession()
+  const user = session?.user ?? null
 
   // 작성자 닉네임 + 현재 유저 is_admin 함께 조회
   const admin = createAdminClient()
