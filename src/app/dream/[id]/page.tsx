@@ -21,17 +21,17 @@ export default async function DreamDetailPage({
 
   if (!dream) notFound()
 
-  // 작성자 닉네임 별도 조회 (admin client로 RLS 우회)
-  const admin = createAdminClient()
-  const { data: profile } = await admin
-    .from('profiles')
-    .select('nickname')
-    .eq('id', dream.user_id)
-    .single()
-  const nickname = profile?.nickname ?? ''
-
   // 현재 로그인 사용자
   const { data: { user } } = await supabase.auth.getUser()
+
+  // 작성자 닉네임 + 현재 유저 is_admin 함께 조회
+  const admin = createAdminClient()
+  const [{ data: authorProfile }, { data: myProfile }] = await Promise.all([
+    admin.from('profiles').select('nickname').eq('id', dream.user_id).single(),
+    user ? admin.from('profiles').select('is_admin').eq('id', user.id).single() : Promise.resolve({ data: null }),
+  ])
+  const nickname = authorProfile?.nickname ?? ''
+  const isAdmin  = !!(myProfile as { is_admin?: boolean } | null)?.is_admin
 
   const isOwner = !!user && user.id === dream.user_id
 
@@ -53,6 +53,8 @@ export default async function DreamDetailPage({
       isOwner={isOwner}
       isPurchased={isPurchased}
       nickname={nickname}
+      isAdmin={isAdmin}
+      isLoggedIn={!!user}
     />
   )
 }

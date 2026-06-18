@@ -8,6 +8,7 @@ import { CATEGORY_PATH } from '@/lib/supabase/types'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import { purchaseDream, deleteDream } from '../actions'
+import ReportModal from './ReportModal'
 
 const INTERP_SECTIONS = [
   { pattern: /한국\s*전통\s*해몽\s*관점\s*:/, color: '#01273A' },
@@ -53,12 +54,15 @@ interface Props {
   isOwner: boolean
   isPurchased: boolean
   nickname?: string
+  isAdmin?: boolean
+  isLoggedIn?: boolean
 }
 
-export default function DreamDetail({ dream, isOwner, isPurchased: initialPurchased, nickname }: Props) {
+export default function DreamDetail({ dream, isOwner, isPurchased: initialPurchased, nickname, isAdmin, isLoggedIn }: Props) {
   const router = useRouter()
   const [showModal, setShowModal]         = useState(false)
-  const [purchased, setPurchased]         = useState(initialPurchased || isOwner)
+  const [purchased, setPurchased]         = useState(initialPurchased || isOwner || !!isAdmin)
+  const [showReport, setShowReport]       = useState(false)
   const [buying, setBuying]               = useState(false)
   const [buyError, setBuyError]           = useState('')
   const [myPoints, setMyPoints]           = useState<number | null>(null)
@@ -311,6 +315,18 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
               </div>
             )}
 
+            {/* 신고하기 (비로그인 제외, 본인/관리자 제외) */}
+            {isLoggedIn && !isOwner && !isAdmin && (
+              <div className="mt-4 flex justify-end border-t border-gray-100 pt-4">
+                <button
+                  onClick={() => setShowReport(true)}
+                  className="text-xs text-gray-400 transition-colors hover:text-red-400"
+                >
+                  신고하기
+                </button>
+              </div>
+            )}
+
           </div>
         </div>
       </main>
@@ -349,6 +365,11 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
             </div>
           </div>
         </div>
+      )}
+
+      {/* 신고 모달 */}
+      {showReport && (
+        <ReportModal dreamId={dream.id} onClose={() => setShowReport(false)} />
       )}
 
       {/* 구매 확인 모달 */}
