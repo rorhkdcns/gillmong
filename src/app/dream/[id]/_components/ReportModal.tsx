@@ -21,15 +21,15 @@ export default function ReportModal({ dreamId, onClose }: Props) {
     setSubmitting(true)
     setError('')
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) {
       setError('로그인이 필요합니다.')
       setSubmitting(false)
       return
     }
     const { error: insertErr } = await supabase.from('reports').insert({
       dream_id:    dreamId,
-      reporter_id: user.id,
+      reporter_id: session.user.id,
       reason,
       detail:      detail.trim() || null,
       status:      'pending',

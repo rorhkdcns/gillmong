@@ -125,8 +125,9 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     setSavingPrivate(true)
 
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { setSavingPrivate(false); setSaveError('로그인이 필요합니다.'); return }
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) { setSavingPrivate(false); setSaveError('로그인이 필요합니다.'); return }
+    const user = session.user
 
     if (await checkDailyLimit(supabase, user.id)) {
       setSavingPrivate(false)
@@ -169,13 +170,14 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     setSaving(true)
 
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: { session } } = await supabase.auth.getSession()
 
-    if (!user) {
+    if (!session?.user) {
       setSaving(false)
       setSaveError('로그인이 필요합니다.')
       return
     }
+    const user = session.user
 
     if (await checkDailyLimit(supabase, user.id)) {
       setSaving(false)

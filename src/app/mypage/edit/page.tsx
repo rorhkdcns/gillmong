@@ -20,9 +20,9 @@ export default function MyPageEdit() {
 
   useEffect(() => {
     const supabase = createClient()
-    supabase.auth.getUser().then(async ({ data: { user } }) => {
-      if (!user) { router.push('/auth/login'); return }
-      const { data: profile } = await supabase.from('profiles').select('nickname').eq('id', user.id).single()
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (!session?.user) { router.push('/auth/login'); return }
+      const { data: profile } = await supabase.from('profiles').select('nickname').eq('id', session.user.id).single()
       if (profile) setNickname(profile.nickname)
       setInitDone(true)
     })
@@ -36,10 +36,10 @@ export default function MyPageEdit() {
     setLoadingNick(true)
 
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { router.push('/auth/login'); return }
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) { router.push('/auth/login'); return }
 
-    const { error } = await supabase.from('profiles').update({ nickname: nickname.trim() }).eq('id', user.id)
+    const { error } = await supabase.from('profiles').update({ nickname: nickname.trim() }).eq('id', session.user.id)
     setLoadingNick(false)
     if (error) { setNickError('변경 중 오류가 발생했습니다.'); return }
     setNickDone(true)

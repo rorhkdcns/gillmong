@@ -46,8 +46,8 @@ export default function FloatingDreamButton() {
 
   async function handleOpen() {
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { router.push('/auth/login'); return }
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) { router.push('/auth/login'); return }
     setOpen(true)
   }
 

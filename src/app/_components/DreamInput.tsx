@@ -54,8 +54,8 @@ export default function DreamInput() {
     if (!hasInput) { setInputError('최소 하나 이상의 항목을 입력해주세요.'); return }
 
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { router.push('/auth/login'); return }
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) { router.push('/auth/login'); return }
 
     setInputError('')
     setIsRetryable(false)

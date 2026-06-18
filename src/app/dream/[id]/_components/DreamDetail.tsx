@@ -81,9 +81,9 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
     setLoadingPoints(true)
     setBuyError('')
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { setLoadingPoints(false); router.push('/auth/login'); return }
-    const { data: profile } = await supabase.from('profiles').select('points').eq('id', user.id).single()
+    const { data: { session } } = await supabase.auth.getSession()
+    if (!session?.user) { setLoadingPoints(false); router.push('/auth/login'); return }
+    const { data: profile } = await supabase.from('profiles').select('points').eq('id', session.user.id).single()
     setMyPoints(profile?.points ?? 0)
     setLoadingPoints(false)
     setShowModal(true)

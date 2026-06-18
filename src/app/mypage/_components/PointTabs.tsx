@@ -36,13 +36,13 @@ export default function PointTabs() {
   useEffect(() => {
     async function fetchLogs() {
       const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { setLoading(false); return }
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.user) { setLoading(false); return }
 
       const { data } = await supabase
         .from('point_logs')
         .select('amount, type, description, created_at')
-        .eq('user_id', user.id)
+        .eq('user_id', session.user.id)
         .order('created_at', { ascending: false })
 
       const buckets: Record<TabKey, LogRow[]> = { charge: [], use: [], revenue: [] }

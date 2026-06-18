@@ -42,7 +42,7 @@ function LoginForm() {
 
     const supabase = createClient()
     const email = usernameToEmail(username)
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    const { data: signInData, error } = await supabase.auth.signInWithPassword({ email, password })
 
     setLoading(false)
 
@@ -51,8 +51,8 @@ function LoginForm() {
       return
     }
 
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) {
+    const userId = signInData.user?.id
+    if (!userId) {
       router.push('/')
       router.refresh()
       return
@@ -61,7 +61,7 @@ function LoginForm() {
     const { data: profile } = await supabase
       .from('profiles')
       .select('is_admin')
-      .eq('id', user.id)
+      .eq('id', userId)
       .single()
 
     if (profile?.is_admin) {
