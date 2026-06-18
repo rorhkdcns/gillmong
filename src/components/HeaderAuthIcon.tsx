@@ -16,33 +16,38 @@ export default function HeaderAuthIcon() {
     const supabase = createClient()
 
     async function syncSession() {
-      const { data: { session } } = await supabase.auth.getSession()
-      if (session?.user) {
-        const userId = session.user.id
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session?.user) {
+          const userId = session.user.id
 
-        const todayISO = new Date().toISOString().split('T')[0]
+          const todayISO = new Date().toISOString().split('T')[0]
 
-        const [{ data: profile }, { count }] = await Promise.all([
-          supabase.from('profiles').select('nickname').eq('id', userId).single(),
-          supabase
-            .from('analysis_logs')
-            .select('id', { count: 'exact', head: true })
-            .eq('user_id', userId)
-            .gte('created_at', todayISO),
-        ])
+          const [{ data: profile }, { count }] = await Promise.all([
+            supabase.from('profiles').select('nickname').eq('id', userId).single(),
+            supabase
+              .from('analysis_logs')
+              .select('id', { count: 'exact', head: true })
+              .eq('user_id', userId)
+              .gte('created_at', todayISO),
+          ])
 
-        const nick = profile?.nickname ?? session.user.email?.split('@')[0] ?? '사용자'
-        setNickname(nick)
-        setUsedToday(count ?? 0)
-        setHref('/mypage')
-        setLoggedIn(true)
-      } else {
-        setNickname('')
-        setUsedToday(0)
-        setHref('/auth/login')
+          const nick = profile?.nickname ?? session.user.email?.split('@')[0] ?? '사용자'
+          setNickname(nick)
+          setUsedToday(count ?? 0)
+          setHref('/mypage')
+          setLoggedIn(true)
+        } else {
+          setNickname('')
+          setUsedToday(0)
+          setHref('/auth/login')
+          setLoggedIn(false)
+        }
+      } catch {
         setLoggedIn(false)
+      } finally {
+        setAuthLoading(false)
       }
-      setAuthLoading(false)
     }
 
     syncSession()
