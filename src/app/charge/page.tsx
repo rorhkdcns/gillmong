@@ -36,6 +36,8 @@ export default function ChargePage() {
     setError('')
 
     try {
+      console.log('1️⃣ API 호출 시작...')
+
       const { createClient } = await import('@/lib/supabase/client')
       const { data: { user } } = await createClient().auth.getUser()
 
@@ -45,11 +47,16 @@ export default function ChargePage() {
         body: JSON.stringify({ userId: user?.id, amount: selectedAmount }),
       })
 
+      console.log('2️⃣ API 응답 받음:', response.ok)
+
       if (!response.ok) throw new Error('결제 준비 실패')
 
       const paymentData = await response.json()
+      console.log('3️⃣ 결제 데이터:', paymentData)
+      console.log('4️⃣ window.nicepay 있는지?', !!window.nicepay)
 
       if (window.nicepay) {
+        console.log('5️⃣ 결제창 호출 시도...')
         window.nicepay.requestPayment({
           clientId:    paymentData.clientId,
           method:      'card',
@@ -60,10 +67,13 @@ export default function ChargePage() {
           cancelUrl:   paymentData.cancelUrl,
           notifyUrl:   paymentData.notifyUrl,
         })
+        console.log('6️⃣ 결제창 호출 완료')
       } else {
+        console.log('❌ window.nicepay 없음!')
         alert('결제 시스템 준비 중입니다. 잠시 후 다시 시도해주세요.')
       }
     } catch (err) {
+      console.error('❌ 에러:', err)
       setError(err instanceof Error ? err.message : '오류 발생')
     } finally {
       setLoading(false)
