@@ -17,7 +17,19 @@
       "Bash(gh run *)",
       "Bash(npx next *)",
       "Bash(curl -s \"https://api.github.com/repos/rorhkdcns/gillmong/commits/main/status\")",
-      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d['state'], d['statuses'][0]['description'] if d['statuses'] else 'no status'\\)\")"
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d['state'], d['statuses'][0]['description'] if d['statuses'] else 'no status'\\)\")",
+      "Bash(grep -rn \"getUser\\\\|getSession\\\\|redirect\" src/app/charge/ --include=\"*.tsx\" --include=\"*.ts\")",
+      "Bash(ls src/app/charge/)",
+      "Bash(ls vercel.json)",
+      "Bash(ls .github/workflows/)",
+      "Bash(ls .vercel)",
+      "Bash(cat .vercel/project.json)",
+      "Bash(vercel --version)",
+      "Bash(npm i *)",
+      "Bash(vercel whoami *)",
+      "Bash(echo \"exit:$?\")",
+      "Bash(vercel --prod --yes)",
+      "Bash(npm run *)"
     ]
   }
 }
