@@ -61,7 +61,7 @@ interface Props {
 export default function DreamDetail({ dream, isOwner, isPurchased: initialPurchased, nickname, isAdmin, isLoggedIn }: Props) {
   const router = useRouter()
   const [showModal, setShowModal]         = useState(false)
-  const [purchased, setPurchased]         = useState(isOwner || !!isAdmin)
+  const [purchased, setPurchased]         = useState(initialPurchased || isOwner || !!isAdmin)
   const [showReport, setShowReport]       = useState(false)
   const [buying, setBuying]               = useState(false)
   const [buyError, setBuyError]           = useState('')
@@ -164,7 +164,29 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                 </div>
                 {!purchased && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-xl">
-                    <p className="text-sm font-semibold text-[#01273A]">작성자 또는 어드민만 열람 가능합니다</p>
+                    {isLoggedIn ? (
+                      <>
+                        <p className="text-sm font-semibold text-[#01273A]">구매 후 열람 가능합니다</p>
+                        {!dream.is_sold ? (
+                          <button
+                            onClick={openPurchaseModal}
+                            disabled={loadingPoints}
+                            className="rounded-full bg-[#E07B2A] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
+                          >
+                            {loadingPoints ? '잠시만요...' : `${dream.price.toLocaleString()} P 구매하기`}
+                          </button>
+                        ) : (
+                          <span className="text-xs text-gray-500">판매 완료된 꿈입니다</span>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-sm font-semibold text-[#01273A]">로그인 후 구매 가능합니다</p>
+                        <a href="/auth/login" className="rounded-full bg-[#01273A] px-5 py-2 text-sm font-bold text-white hover:brightness-90">
+                          로그인하기
+                        </a>
+                      </>
+                    )}
                   </div>
                 )}
               </div>
@@ -202,7 +224,29 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                   </div>
                   {!purchased && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-xl">
-                      <p className="text-sm font-semibold text-[#01273A]">작성자 또는 어드민만 열람 가능합니다</p>
+                      {isLoggedIn ? (
+                        <>
+                          <p className="text-sm font-semibold text-[#01273A]">구매 후 열람 가능합니다</p>
+                          {!dream.is_sold ? (
+                            <button
+                              onClick={openPurchaseModal}
+                              disabled={loadingPoints}
+                              className="rounded-full bg-[#E07B2A] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
+                            >
+                              {loadingPoints ? '잠시만요...' : `${dream.price.toLocaleString()} P 구매하기`}
+                            </button>
+                          ) : (
+                            <span className="text-xs text-gray-500">판매 완료된 꿈입니다</span>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-sm font-semibold text-[#01273A]">로그인 후 구매 가능합니다</p>
+                          <a href="/auth/login" className="rounded-full bg-[#01273A] px-5 py-2 text-sm font-bold text-white hover:brightness-90">
+                            로그인하기
+                          </a>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
@@ -221,7 +265,29 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                   </div>
                   {!purchased && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-xl">
-                      <p className="text-sm font-semibold text-[#01273A]">작성자 또는 어드민만 열람 가능합니다</p>
+                      {isLoggedIn ? (
+                        <>
+                          <p className="text-sm font-semibold text-[#01273A]">구매 후 열람 가능합니다</p>
+                          {!dream.is_sold ? (
+                            <button
+                              onClick={openPurchaseModal}
+                              disabled={loadingPoints}
+                              className="rounded-full bg-[#E07B2A] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
+                            >
+                              {loadingPoints ? '잠시만요...' : `${dream.price.toLocaleString()} P 구매하기`}
+                            </button>
+                          ) : (
+                            <span className="text-xs text-gray-500">판매 완료된 꿈입니다</span>
+                          )}
+                        </>
+                      ) : (
+                        <>
+                          <p className="text-sm font-semibold text-[#01273A]">로그인 후 구매 가능합니다</p>
+                          <a href="/auth/login" className="rounded-full bg-[#01273A] px-5 py-2 text-sm font-bold text-white hover:brightness-90">
+                            로그인하기
+                          </a>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
@@ -252,8 +318,22 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                 <span className="mb-1 text-sm font-semibold text-[#555555]">감정가</span>
                 <span className="text-3xl font-black text-[#E07B2A]">{dream.price.toLocaleString()} P</span>
               </div>
-              {dream.is_sold && (
+              {dream.is_sold && !purchased && (
                 <span className="rounded-full bg-gray-400 px-5 py-1.5 text-sm font-bold text-white">판매완료</span>
+              )}
+              {!purchased && !dream.is_sold && isLoggedIn && (
+                <button
+                  onClick={openPurchaseModal}
+                  disabled={loadingPoints}
+                  className="rounded-full bg-[#E07B2A] px-8 py-2.5 text-base font-bold text-white hover:brightness-90 disabled:opacity-60"
+                >
+                  {loadingPoints ? '잠시만요...' : '구매하기'}
+                </button>
+              )}
+              {!purchased && !dream.is_sold && !isLoggedIn && (
+                <a href="/auth/login" className="rounded-full bg-[#01273A] px-8 py-2.5 text-base font-bold text-white hover:brightness-90">
+                  로그인 후 구매하기
+                </a>
               )}
             </div>
 

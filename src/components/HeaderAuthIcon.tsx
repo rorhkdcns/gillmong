@@ -6,10 +6,11 @@ import { createClient } from '@/lib/supabase/client'
 const DAILY_LIMIT = 3
 
 export default function HeaderAuthIcon() {
-  const [href, setHref]         = useState('/auth/login')
-  const [nickname, setNickname] = useState('')
-  const [loggedIn, setLoggedIn] = useState(false)
+  const [href, setHref]           = useState('/auth/login')
+  const [nickname, setNickname]   = useState('')
+  const [loggedIn, setLoggedIn]   = useState(false)
   const [usedToday, setUsedToday] = useState(0)
+  const [loaded, setLoaded]       = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
@@ -20,7 +21,6 @@ export default function HeaderAuthIcon() {
         if (session?.user) {
           const userId = session.user.id
           const emailFallback = session.user.email?.split('@')[0] ?? '사용자'
-          // 로그인 확인 즉시 반영 (DB 쿼리 완료 전에도 마이페이지로 이동 가능)
           setNickname(emailFallback)
           setHref('/mypage')
           setLoggedIn(true)
@@ -36,8 +36,7 @@ export default function HeaderAuthIcon() {
               .gte('created_at', todayISO),
           ])
 
-          const nick = profile?.nickname ?? emailFallback
-          setNickname(nick)
+          setNickname(profile?.nickname ?? emailFallback)
           setUsedToday(count ?? 0)
         } else {
           setNickname('')
@@ -47,6 +46,8 @@ export default function HeaderAuthIcon() {
         }
       } catch {
         setLoggedIn(false)
+      } finally {
+        setLoaded(true)
       }
     }
 
@@ -67,15 +68,17 @@ export default function HeaderAuthIcon() {
       <svg className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z" />
       </svg>
-      {loggedIn ? (
-        <span className="text-sm font-semibold">
-          {nickname}님{' '}
-          <span className={`font-normal ${remaining === 0 ? 'text-red-400' : 'text-gray-400'}`}>
-            ({remaining}/{DAILY_LIMIT})
+      {loaded && (
+        loggedIn ? (
+          <span className="text-sm font-semibold">
+            {nickname}님{' '}
+            <span className={`font-normal ${remaining === 0 ? 'text-red-400' : 'text-gray-400'}`}>
+              ({remaining}/{DAILY_LIMIT})
+            </span>
           </span>
-        </span>
-      ) : (
-        <span className="text-sm font-semibold">로그인</span>
+        ) : (
+          <span className="text-sm font-semibold">로그인</span>
+        )
       )}
     </a>
   )
