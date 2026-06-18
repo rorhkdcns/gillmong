@@ -61,7 +61,7 @@ interface Props {
 export default function DreamDetail({ dream, isOwner, isPurchased: initialPurchased, nickname, isAdmin, isLoggedIn }: Props) {
   const router = useRouter()
   const [showModal, setShowModal]         = useState(false)
-  const [purchased, setPurchased]         = useState(initialPurchased || isOwner || !!isAdmin)
+  const [purchased, setPurchased]         = useState(isOwner || !!isAdmin)
   const [showReport, setShowReport]       = useState(false)
   const [buying, setBuying]               = useState(false)
   const [buyError, setBuyError]           = useState('')
@@ -164,16 +164,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                 </div>
                 {!purchased && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-xl">
-                    <p className="text-sm font-semibold text-[#01273A]">꿈을 구입하시면 원문을 보실 수 있습니다</p>
-                    {!dream.is_sold && (
-                      <button
-                        onClick={openPurchaseModal}
-                        disabled={loadingPoints}
-                        className="rounded-xl bg-[#01273A] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
-                      >
-                        {loadingPoints ? '잔액 확인 중...' : '구매하기'}
-                      </button>
-                    )}
+                    <p className="text-sm font-semibold text-[#01273A]">작성자 또는 어드민만 열람 가능합니다</p>
                   </div>
                 )}
               </div>
@@ -211,16 +202,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                   </div>
                   {!purchased && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-xl">
-                      <p className="text-sm font-semibold text-[#01273A]">꿈을 구입하시면 원문을 보실 수 있습니다</p>
-                      {!dream.is_sold && (
-                        <button
-                          onClick={openPurchaseModal}
-                          disabled={loadingPoints}
-                          className="rounded-xl bg-[#01273A] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
-                        >
-                          {loadingPoints ? '잔액 확인 중...' : '구매하기'}
-                        </button>
-                      )}
+                      <p className="text-sm font-semibold text-[#01273A]">작성자 또는 어드민만 열람 가능합니다</p>
                     </div>
                   )}
                 </div>
@@ -239,16 +221,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                   </div>
                   {!purchased && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-xl">
-                      <p className="text-sm font-semibold text-[#01273A]">꿈을 구입하시면 원문을 보실 수 있습니다</p>
-                      {!dream.is_sold && (
-                        <button
-                          onClick={openPurchaseModal}
-                          disabled={loadingPoints}
-                          className="rounded-xl bg-[#01273A] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
-                        >
-                          {loadingPoints ? '잔액 확인 중...' : '구매하기'}
-                        </button>
-                      )}
+                      <p className="text-sm font-semibold text-[#01273A]">작성자 또는 어드민만 열람 가능합니다</p>
                     </div>
                   )}
                 </div>
@@ -273,26 +246,14 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
 
             <hr className="mb-6 border-brand-border" />
 
-            {/* 8. 감정가 + 구매하기 버튼 */}
+            {/* 8. 감정가 */}
             <div className="mb-6 flex flex-col items-center gap-4 rounded-xl bg-brand-page px-6 py-6">
               <div className="flex flex-col items-center">
                 <span className="mb-1 text-sm font-semibold text-[#555555]">감정가</span>
                 <span className="text-3xl font-black text-[#E07B2A]">{dream.price.toLocaleString()} P</span>
               </div>
-              {!purchased && !dream.is_sold && (
-                <button
-                  onClick={openPurchaseModal}
-                  disabled={loadingPoints}
-                  className="w-full max-w-xs rounded-xl bg-[#01273A] py-3 font-bold text-white transition-all hover:brightness-90 disabled:opacity-60"
-                >
-                  {loadingPoints ? '잔액 확인 중...' : '구매하고 원문 보기'}
-                </button>
-              )}
-              {!purchased && dream.is_sold && (
+              {dream.is_sold && (
                 <span className="rounded-full bg-gray-400 px-5 py-1.5 text-sm font-bold text-white">판매완료</span>
-              )}
-              {purchased && !isOwner && (
-                <span className="text-sm text-emerald-600 font-semibold">구매 완료 ✓</span>
               )}
             </div>
 

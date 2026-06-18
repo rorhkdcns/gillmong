@@ -19,6 +19,11 @@ export default function HeaderAuthIcon() {
         const { data: { session } } = await supabase.auth.getSession()
         if (session?.user) {
           const userId = session.user.id
+          const emailFallback = session.user.email?.split('@')[0] ?? '사용자'
+          // 로그인 확인 즉시 반영 (DB 쿼리 완료 전에도 마이페이지로 이동 가능)
+          setNickname(emailFallback)
+          setHref('/mypage')
+          setLoggedIn(true)
 
           const todayISO = new Date().toISOString().split('T')[0]
 
@@ -31,11 +36,9 @@ export default function HeaderAuthIcon() {
               .gte('created_at', todayISO),
           ])
 
-          const nick = profile?.nickname ?? session.user.email?.split('@')[0] ?? '사용자'
+          const nick = profile?.nickname ?? emailFallback
           setNickname(nick)
           setUsedToday(count ?? 0)
-          setHref('/mypage')
-          setLoggedIn(true)
         } else {
           setNickname('')
           setUsedToday(0)
