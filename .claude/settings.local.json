@@ -29,7 +29,8 @@
       "Bash(vercel whoami *)",
       "Bash(echo \"exit:$?\")",
       "Bash(vercel --prod --yes)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(xargs grep -l \"getUser\")"
     ]
   }
 }
