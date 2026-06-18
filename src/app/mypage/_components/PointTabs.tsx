@@ -74,6 +74,7 @@ export default function PointTabs() {
         {(Object.keys(TAB_LABELS) as TabKey[]).map((key) => (
           <button
             key={key}
+            type="button"
             onClick={() => setActive(key)}
             className={`px-5 py-2.5 text-sm transition-colors ${
               active === key

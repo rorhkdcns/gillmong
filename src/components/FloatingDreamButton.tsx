@@ -99,6 +99,7 @@ export default function FloatingDreamButton() {
     <>
       {/* 플로팅 버튼 */}
       <button
+        type="button"
         onClick={handleOpen}
         aria-label="꿈 감정하기"
         className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#01273A] shadow-lg transition-transform hover:scale-105 hover:brightness-90"
@@ -115,6 +116,7 @@ export default function FloatingDreamButton() {
 
             {/* X 버튼 */}
             <button
+              type="button"
               onClick={handleClose}
               className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200"
               aria-label="닫기"
@@ -160,6 +162,7 @@ export default function FloatingDreamButton() {
               )}
 
               <button
+                type="button"
                 onClick={handleSubmit}
                 disabled={loading}
                 className="w-full rounded-xl bg-[#01273A] py-4 text-lg font-black text-white transition-all hover:brightness-90 disabled:opacity-60"

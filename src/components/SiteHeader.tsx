@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import HeaderAuthIcon from './HeaderAuthIcon'
 import FloatingDreamButton from './FloatingDreamButton'
 import { createClient } from '@/lib/supabase/client'
@@ -75,9 +76,9 @@ export default function SiteHeader({ activePath }: { activePath?: string }) {
       <header className="border-b border-gray-200 bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
 
-          <a href="/" className="flex items-center">
+          <Link href="/" className="flex items-center">
             <Image src="/logo_1.jpg" alt="길몽상점" height={50} width={160} className="h-[50px] w-auto object-contain" priority />
-          </a>
+          </Link>
 
           {/* 데스크탑 네비 */}
           <nav className="hidden items-center gap-7 md:flex">
@@ -99,6 +100,7 @@ export default function SiteHeader({ activePath }: { activePath?: string }) {
           <div className="flex items-center gap-4 text-[#333333]">
             {/* 데스크탑 검색 버튼 */}
             <button
+              type="button"
               aria-label={searchOpen ? '검색 닫기' : '검색'}
               onClick={() => setSearchOpen((v) => !v)}
               className={`hidden transition-colors hover:text-[#01273A] md:block ${searchOpen ? 'text-[#01273A]' : ''}`}
@@ -121,6 +123,7 @@ export default function SiteHeader({ activePath }: { activePath?: string }) {
 
             {/* 모바일 햄버거 버튼 */}
             <button
+              type="button"
               aria-label="메뉴 열기"
               onClick={() => setMenuOpen(true)}
               className="flex items-center justify-center text-[#01273A] md:hidden"
@@ -181,6 +184,7 @@ export default function SiteHeader({ activePath }: { activePath?: string }) {
       <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
         <span className="text-base font-semibold text-[#01273A]">메뉴</span>
         <button
+          type="button"
           aria-label="메뉴 닫기"
           onClick={() => setMenuOpen(false)}
           className="text-[#01273A]"
