@@ -36,15 +36,24 @@ export default function ChargePage() {
     setError('')
 
     try {
-      console.log('1️⃣ API 호출 시작...')
+      console.log('0️⃣ userId 가져오기 시작...')
 
       const { createClient } = await import('@/lib/supabase/client')
-      const { data: { user } } = await createClient().auth.getUser()
+      const { data } = await createClient().auth.getUser()
+      const userId = data?.user?.id
+
+      console.log('0️⃣-1 userId:', userId)
+
+      if (!userId) {
+        throw new Error('사용자 ID를 찾을 수 없습니다. 다시 로그인해주세요.')
+      }
+
+      console.log('1️⃣ API 호출 시작...')
 
       const response = await fetch('/api/payment/create-payment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user?.id, amount: selectedAmount }),
+        body: JSON.stringify({ userId, amount: selectedAmount }),
       })
 
       console.log('2️⃣ API 응답 받음:', response.ok)
