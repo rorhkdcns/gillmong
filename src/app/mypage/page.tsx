@@ -121,7 +121,7 @@ export default async function MyPage() {
                 <span className="mb-1 text-base text-[#777777]">P</span>
               </div>
               <div className="flex gap-3">
-                <a href="/mypage/charge" className="bg-[#E07B2A] px-5 py-2 text-sm font-semibold text-white transition-all hover:brightness-90">
+                <a href="/charge" className="bg-[#E07B2A] px-5 py-2 text-sm font-semibold text-white transition-all hover:brightness-90">
                   포인트 충전
                 </a>
                 <a href="/mypage/withdrawal" className="border border-[#01273A] bg-white px-5 py-2 text-sm font-semibold text-[#01273A] transition-all hover:bg-[#01273A] hover:text-white">
