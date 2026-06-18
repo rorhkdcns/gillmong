@@ -51,7 +51,18 @@ function LoginForm() {
       return
     }
 
-    router.push('/mypage')
+    const { data: { user } } = await supabase.auth.getUser()
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('is_admin')
+      .eq('id', user!.id)
+      .single()
+
+    if (profile?.is_admin) {
+      router.push('/admin')
+    } else {
+      router.push('/')
+    }
     router.refresh()
   }
 

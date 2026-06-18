@@ -10,6 +10,7 @@ export default function HeaderAuthIcon() {
   const [nickname, setNickname] = useState('')
   const [loggedIn, setLoggedIn] = useState(false)
   const [usedToday, setUsedToday] = useState(0)
+  const [authLoading, setAuthLoading] = useState(true)
 
   useEffect(() => {
     const supabase = createClient()
@@ -41,6 +42,7 @@ export default function HeaderAuthIcon() {
         setHref('/auth/login')
         setLoggedIn(false)
       }
+      setAuthLoading(false)
     }
 
     syncSession()
@@ -50,6 +52,10 @@ export default function HeaderAuthIcon() {
   }, [])
 
   const remaining = DAILY_LIMIT - usedToday
+
+  if (authLoading) {
+    return <div className="h-5 w-20 animate-pulse rounded bg-gray-200" />
+  }
 
   return (
     <a
