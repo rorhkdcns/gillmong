@@ -54,15 +54,15 @@ export default function SiteHeader() {
     const supabase = createClient()
     let currentUserId: string | null = null
 
-    async function fetchRemaining(userId: string) {
-      const todayStart = new Date()
-      todayStart.setHours(0, 0, 0, 0)
-      const { data } = await supabase
-        .from('analysis_logs')
-        .select('id')
-        .eq('user_id', userId)
-        .gte('created_at', todayStart.toISOString())
-      if (isMounted) setRemaining(DAILY_LIMIT - (data?.length ?? 0))
+    async function fetchRemaining() {
+      try {
+        const res = await fetch('/api/dream-remaining', { cache: 'no-store' })
+        if (!res.ok) return
+        const { remaining } = await res.json()
+        if (isMounted) setRemaining(remaining)
+      } catch {
+        // 조회 실패 시 현재 상태 유지
+      }
     }
 
     async function syncAuth(session: Session | null) {
@@ -77,7 +77,7 @@ export default function SiteHeader() {
       try {
         const [{ data: profile }] = await Promise.all([
           supabase.from('profiles').select('nickname').eq('id', currentUserId).single(),
-          fetchRemaining(currentUserId),
+          fetchRemaining(),
         ])
 
         if (!isMounted) return
@@ -88,7 +88,7 @@ export default function SiteHeader() {
     }
 
     function onDreamAnalyzed() {
-      setRemaining((prev) => Math.max(0, prev - 1))
+      fetchRemaining()
     }
 
     supabase.auth.getSession().then((result: { data: { session: Session | null } }) => {
