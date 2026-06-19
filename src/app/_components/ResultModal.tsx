@@ -384,9 +384,9 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
               <button
                 onClick={handleRegister}
                 disabled={saving || savingPrivate || !!priceError}
-                className="flex-1 rounded-xl bg-[#01273A] py-3 text-base font-bold text-white transition-colors hover:brightness-90 disabled:opacity-60"
+                className="flex-1 rounded-xl bg-[#01273A] py-3 text-base font-bold text-white transition-colors hover:brightness-90 disabled:opacity-60 leading-tight"
               >
-                {saving ? '등록 중...' : '마켓에 등록하기'}
+                {saving ? '등록 중...' : <><span className="block">마켓에</span><span className="block">등록하기</span></>}
               </button>
               <button
                 onClick={handlePrivateSave}
