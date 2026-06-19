@@ -62,7 +62,7 @@ export default async function MyPage() {
 
   // 프로필 + 공개 꿈 + 개인 저장 꿈 + 구매한 꿈 + 판매한 꿈 병렬 조회
   const [profileRes, myDreamsRes, privateDreamsRes, purchasedRes, soldRes, inquiriesRes] = await Promise.all([
-    supabase.from('profiles').select('nickname, username, points').eq('id', user.id).single(),
+    supabase.from('profiles').select('nickname, username, points, is_admin').eq('id', user.id).single(),
     supabase.from('dreams').select('id, title, grade, price, is_sold, created_at').eq('user_id', user.id).order('created_at', { ascending: false }),
     supabase.from('saved_dreams').select('id, title, grade, created_at').eq('user_id', user.id).order('created_at', { ascending: false }),
     supabase.from('purchases').select('price, created_at, dreams(id, title, grade, price)').eq('buyer_id', user.id).order('created_at', { ascending: false }),
@@ -103,6 +103,7 @@ export default async function MyPage() {
   const nickname     = profile?.nickname ?? (user.user_metadata?.nickname as string) ?? '회원'
   const username     = profile?.username ?? (user.user_metadata?.username as string) ?? ''
   const pointBalance = profile?.points ?? 0
+  const isAdmin      = profile?.is_admin ?? false
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
@@ -125,7 +126,17 @@ export default async function MyPage() {
                   <p className="mt-0.5 truncate text-sm text-[#777777]">@{username}</p>
                 </div>
               </div>
-              <LogoutButton />
+              <div className="flex shrink-0 items-center gap-2">
+                {isAdmin && (
+                  <a
+                    href="/admin"
+                    className="rounded bg-[#E07B2A] px-3 py-1.5 text-xs font-bold text-white transition hover:brightness-90"
+                  >
+                    어드민
+                  </a>
+                )}
+                <LogoutButton />
+              </div>
             </div>
           </section>
 
