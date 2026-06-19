@@ -43,6 +43,7 @@ export default function FloatingDreamButton() {
   const [loading, setLoading]                       = useState(false)
   const [result, setResult]                         = useState<AnalysisResult | null>(null)
   const [reconstructedDream, setReconstructedDream] = useState('')
+  const [dailyLimitReached, setDailyLimitReached]   = useState(false)
 
   async function handleOpen() {
     const supabase = createClient()
@@ -59,6 +60,7 @@ export default function FloatingDreamButton() {
     setResult(null)
     setReconstructedDream('')
     setLoading(false)
+    setDailyLimitReached(false)
   }
 
   function handleChange(key: keyof Answers, value: string) {
@@ -81,12 +83,13 @@ export default function FloatingDreamButton() {
         body: JSON.stringify({ answers }),
       })
       const data = await res.json()
-      if (res.status === 429) { setInputError(data.error); setLoading(false); return }
+      if (res.status === 429) { setDailyLimitReached(true); setLoading(false); return }
       if (res.status === 503) { setInputError(data.error); setIsRetryable(true); setLoading(false); return }
       if (!res.ok || data.error) throw new Error(data.error ?? '분석 실패')
       const { reconstructedDream: rd, ...analysis } = data
       setReconstructedDream(rd ?? '')
       setResult(analysis as AnalysisResult)
+      window.dispatchEvent(new Event('dream-analyzed'))
     } catch (err) {
       const msg = err instanceof Error ? err.message : '알 수 없는 오류'
       setInputError(`해몽 분석 중 오류가 발생했습니다: ${msg}`)
@@ -161,14 +164,22 @@ export default function FloatingDreamButton() {
                 </div>
               )}
 
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={loading}
-                className="w-full rounded-xl bg-[#01273A] py-4 text-lg font-black text-white transition-all hover:brightness-90 disabled:opacity-60"
-              >
-                나의 꿈 감정하기
-              </button>
+              {dailyLimitReached ? (
+                <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-5 text-center">
+                  <p className="text-2xl mb-2">🌙</p>
+                  <p className="font-black text-[#01273A] text-sm">오늘의 해몽 횟수를 모두 사용하셨습니다</p>
+                  <p className="mt-1.5 text-xs text-amber-700">하루 3회 제공되며, 자정에 다시 초기화됩니다.</p>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  className="w-full rounded-xl bg-[#01273A] py-4 text-lg font-black text-white transition-all hover:brightness-90 disabled:opacity-60"
+                >
+                  나의 꿈 감정하기
+                </button>
+              )}
             </div>
           </div>
         </div>

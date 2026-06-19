@@ -52,31 +52,42 @@ export default function SiteHeader() {
   useEffect(() => {
     let isMounted = true
     const supabase = createClient()
+    let currentUserId: string | null = null
+
+    async function fetchRemaining(userId: string) {
+      const todayISO = new Date().toISOString().split('T')[0]
+      const { count } = await supabase
+        .from('analysis_logs')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .gte('created_at', todayISO)
+      if (isMounted) setRemaining(DAILY_LIMIT - (count ?? 0))
+    }
 
     async function syncAuth(session: Session | null) {
       if (!isMounted) return
       setLoggedIn(!!session)
-      if (!session?.user) { setNickname(''); setRemaining(DAILY_LIMIT); return }
+      if (!session?.user) { setNickname(''); setRemaining(DAILY_LIMIT); currentUserId = null; return }
 
-      // 세션 확인 즉시 폴백 닉네임 표시 (프로필 조회 실패해도 유지)
+      currentUserId = session.user.id
       const emailFallback = session.user.email?.split('@')[0] ?? '사용자'
       setNickname(emailFallback)
 
       try {
-        const userId = session.user.id
-        const todayISO = new Date().toISOString().split('T')[0]
-
-        const [{ data: profile }, { count }] = await Promise.all([
-          supabase.from('profiles').select('nickname').eq('id', userId).single(),
-          supabase.from('analysis_logs').select('id', { count: 'exact', head: true }).eq('user_id', userId).gte('created_at', todayISO),
+        const [{ data: profile }] = await Promise.all([
+          supabase.from('profiles').select('nickname').eq('id', currentUserId).single(),
+          fetchRemaining(currentUserId),
         ])
 
         if (!isMounted) return
         setNickname(profile?.nickname ?? emailFallback)
-        setRemaining(DAILY_LIMIT - (count ?? 0))
       } catch {
         // 조회 실패해도 폴백 닉네임 + 로그인 상태 유지
       }
+    }
+
+    function onDreamAnalyzed() {
+      if (currentUserId) fetchRemaining(currentUserId).catch(() => {})
     }
 
     supabase.auth.getSession().then((result: { data: { session: Session | null } }) => {
@@ -87,9 +98,12 @@ export default function SiteHeader() {
       syncAuth(session).catch(() => {})
     })
 
+    window.addEventListener('dream-analyzed', onDreamAnalyzed)
+
     return () => {
       isMounted = false
       subscription.unsubscribe()
+      window.removeEventListener('dream-analyzed', onDreamAnalyzed)
     }
   }, [DAILY_LIMIT])
 

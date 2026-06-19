@@ -42,6 +42,7 @@ export default function DreamInput() {
   const [loading, setLoading]                   = useState(false)
   const [modal, setModal]                       = useState<AnalysisResult | null>(null)
   const [reconstructedDream, setReconstructedDream] = useState('')
+  const [dailyLimitReached, setDailyLimitReached] = useState(false)
 
   function handleChange(key: keyof Answers, value: string) {
     setAnswers((prev) => ({ ...prev, [key]: value }))
@@ -68,12 +69,13 @@ export default function DreamInput() {
         body: JSON.stringify({ answers }),
       })
       const data = await res.json()
-      if (res.status === 429) { setInputError(data.error); return }
+      if (res.status === 429) { setDailyLimitReached(true); return }
       if (res.status === 503) { setInputError(data.error); setIsRetryable(true); return }
       if (!res.ok || data.error) throw new Error(data.error ?? '분석 실패')
       const { reconstructedDream: rd, ...analysis } = data
       setReconstructedDream(rd ?? '')
       setModal(analysis as AnalysisResult)
+      window.dispatchEvent(new Event('dream-analyzed'))
     } catch (err) {
       const msg = err instanceof Error ? err.message : '알 수 없는 오류'
       setInputError(`해몽 분석 중 오류가 발생했습니다: ${msg}`)
@@ -117,15 +119,23 @@ export default function DreamInput() {
           </div>
         )}
 
-        <button
-          type="button"
-          onClick={handleSubmit}
-          disabled={loading}
-          className="w-full rounded-xl py-5 text-xl font-black text-white shadow-md transition-all hover:brightness-90 active:scale-[0.98] disabled:opacity-60"
-          style={{ backgroundColor: '#01273A' }}
-        >
-          나의 꿈 감정하기
-        </button>
+        {dailyLimitReached ? (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-5 text-center">
+            <p className="text-2xl mb-2">🌙</p>
+            <p className="font-black text-[#01273A] text-base">오늘의 해몽 횟수를 모두 사용하셨습니다</p>
+            <p className="mt-1.5 text-sm text-amber-700">하루 3회 제공되며, 자정에 다시 초기화됩니다.</p>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={loading}
+            className="w-full rounded-xl py-5 text-xl font-black text-white shadow-md transition-all hover:brightness-90 active:scale-[0.98] disabled:opacity-60"
+            style={{ backgroundColor: '#01273A' }}
+          >
+            나의 꿈 감정하기
+          </button>
+        )}
       </div>
 
       {/* 로딩 모달 */}
