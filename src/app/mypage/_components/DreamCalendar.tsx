@@ -26,6 +26,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
   const today = new Date()
   const [base, setBase] = useState(new Date(today.getFullYear(), today.getMonth(), 1))
   const [selected, setSelected] = useState<string | null>(null)
+  const [searchVal, setSearchVal] = useState('')
 
   const byDate = useMemo(() => {
     const map: Record<string, CalendarItem[]> = {}
@@ -48,13 +49,49 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ]
 
+  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value
+    setSearchVal(val)
+    if (!val) { setSelected(null); return }
+    const d = new Date(val)
+    if (isNaN(d.getTime())) return
+    setBase(new Date(d.getFullYear(), d.getMonth(), 1))
+    setSelected(val)
+  }
+
+  function clearSearch() {
+    setSearchVal('')
+    setSelected(null)
+  }
+
   return (
     <div>
+      {/* 날짜 검색 */}
+      <div className="mb-5 flex items-center gap-2">
+        <div className="relative flex-1">
+          <input
+            type="date"
+            value={searchVal}
+            onChange={handleSearch}
+            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-[#333333] outline-none focus:border-[#01273A]"
+          />
+        </div>
+        {searchVal && (
+          <button
+            type="button"
+            onClick={clearSearch}
+            className="shrink-0 rounded-lg border border-gray-200 px-3 py-2 text-xs text-[#777777] hover:border-gray-400"
+          >
+            초기화
+          </button>
+        )}
+      </div>
+
       {/* 월 이동 */}
-      <div className="mb-4 flex items-center justify-between">
+      <div className="mb-3 flex items-center justify-between">
         <button
           type="button"
-          onClick={() => { setBase(new Date(year, month - 1, 1)); setSelected(null) }}
+          onClick={() => { setBase(new Date(year, month - 1, 1)); setSelected(null); setSearchVal('') }}
           className="rounded px-3 py-1.5 text-sm text-[#555555] hover:bg-gray-100"
         >
           ‹ 이전
@@ -62,7 +99,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
         <span className="text-sm font-semibold text-[#01273A]">{year}년 {month + 1}월</span>
         <button
           type="button"
-          onClick={() => { setBase(new Date(year, month + 1, 1)); setSelected(null) }}
+          onClick={() => { setBase(new Date(year, month + 1, 1)); setSelected(null); setSearchVal('') }}
           className="rounded px-3 py-1.5 text-sm text-[#555555] hover:bg-gray-100"
         >
           다음 ›
@@ -92,7 +129,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
             <button
               key={dateStr}
               type="button"
-              onClick={() => setSelected(isSelected ? null : dateStr)}
+              onClick={() => { setSelected(isSelected ? null : dateStr); setSearchVal(isSelected ? '' : dateStr) }}
               className={`flex flex-col items-center justify-center rounded-lg py-2 transition-colors ${
                 isSelected
                   ? 'bg-[#01273A] text-white'

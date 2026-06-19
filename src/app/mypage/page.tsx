@@ -4,7 +4,7 @@ import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import LogoutButton from './_components/LogoutButton'
 import PointTabs from './_components/PointTabs'
-import ToggleDreamSection from './_components/ToggleDreamSection'
+import DreamCalendar from './_components/DreamCalendar'
 import type { CalendarItem } from './_components/DreamCalendar'
 
 function formatDate(iso: string) {
@@ -155,33 +155,31 @@ export default async function MyPage() {
           </section>
 
           {/* 3. 내가 등록한 꿈 */}
-          <ToggleDreamSection title="내가 등록한 꿈" count={myDreams.length} calendarItems={myDreamsCalendar}>
-            {myDreams.map((d) => <DreamRow key={d.id} id={d.id} title={d.title} grade={d.grade} price={d.price} owner />)}
-          </ToggleDreamSection>
+          <section className="border border-gray-200 bg-white p-5 md:p-8">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg text-[#01273A]">내가 등록한 꿈</h2>
+              <span className="text-sm text-[#777777]">{myDreams.length}건</span>
+            </div>
+            <DreamCalendar items={myDreamsCalendar} />
+          </section>
 
-          {/* 4. 내가 저장한 꿈 (개인 저장, 비공개) */}
-          <ToggleDreamSection title="내가 저장한 꿈" count={privateDreams.length} calendarItems={savedCalendar}>
-            {privateDreams.map((d) => (
-              <li key={d.id} className="flex items-center gap-3 py-4">
-                <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_COLOR[d.grade] ?? 'bg-gray-400'}`}>
-                  {d.grade}
-                </span>
-                <a href={`/saved/${d.id}`} className="text-base text-[#333333] hover:text-[#01273A] hover:underline">
-                  {d.title}
-                </a>
-                <span className="ml-auto shrink-0 rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-[#888888]">비공개</span>
-              </li>
-            ))}
-          </ToggleDreamSection>
+          {/* 4. 내가 저장한 꿈 */}
+          <section className="border border-gray-200 bg-white p-5 md:p-8">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg text-[#01273A]">내가 저장한 꿈</h2>
+              <span className="text-sm text-[#777777]">{privateDreams.length}건</span>
+            </div>
+            <DreamCalendar items={savedCalendar} />
+          </section>
 
           {/* 5. 구매한 꿈 */}
-          <ToggleDreamSection title="구매한 꿈" count={purchased.length} calendarItems={purchasedCalendar}>
-            {purchased.map((p) => {
-              const d = p.dreams as unknown as { id: number; title: string; grade: string; price: number } | null
-              if (!d) return null
-              return <DreamRow key={d.id} id={d.id} title={d.title} grade={d.grade} price={p.price} />
-            })}
-          </ToggleDreamSection>
+          <section className="border border-gray-200 bg-white p-5 md:p-8">
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg text-[#01273A]">구매한 꿈</h2>
+              <span className="text-sm text-[#777777]">{purchased.length}건</span>
+            </div>
+            <DreamCalendar items={purchasedCalendar} />
+          </section>
 
           {/* 6. 판매 현황 */}
           <section className="border border-gray-200 bg-white p-5 md:p-8">
