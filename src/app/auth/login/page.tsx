@@ -39,33 +39,37 @@ function LoginForm() {
       localStorage.removeItem('savedUsername')
     }
 
-    const supabase = createClient()
-    const email = usernameToEmail(username)
-    const { data: signInData, error } = await supabase.auth.signInWithPassword({ email, password })
+    try {
+      const supabase = createClient()
+      const email = usernameToEmail(username)
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password })
 
-    setLoading(false)
+      if (signInError) {
+        setError('아이디 또는 비밀번호가 올바르지 않습니다.')
+        setLoading(false)
+        return
+      }
 
-    if (error) {
-      setError('아이디 또는 비밀번호가 올바르지 않습니다.')
-      return
-    }
+      // 어드민 여부 확인 — 실패해도 반드시 이동
+      let isAdmin = false
+      try {
+        const userId = signInData.user?.id
+        if (userId) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('is_admin')
+            .eq('id', userId)
+            .single()
+          isAdmin = !!profile?.is_admin
+        }
+      } catch {
+        // 프로필 조회 실패해도 로그인은 성공 → 홈으로
+      }
 
-    const userId = signInData.user?.id
-    if (!userId) {
-      window.location.href = '/'
-      return
-    }
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('is_admin')
-      .eq('id', userId)
-      .single()
-
-    if (profile?.is_admin) {
-      window.location.href = '/admin'
-    } else {
-      window.location.href = '/'
+      window.location.href = isAdmin ? '/admin' : '/'
+    } catch {
+      setError('로그인 중 오류가 발생했습니다. 다시 시도해주세요.')
+      setLoading(false)
     }
   }
 
