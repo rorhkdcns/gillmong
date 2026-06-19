@@ -316,11 +316,11 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
           {/* 행운의 추천 번호 */}
           <section className="mb-6">
             <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-brand-muted">행운의 추천 번호</h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="grid grid-cols-3 gap-2">
               {analysis.lucky_numbers.map((num) => (
                 <div
                   key={num}
-                  className="flex h-11 w-11 items-center justify-center rounded-full bg-[#E07B2A] text-base font-black text-white shadow"
+                  className="flex h-11 items-center justify-center rounded-full bg-[#E07B2A] text-base font-black text-white shadow"
                 >
                   {num}
                 </div>

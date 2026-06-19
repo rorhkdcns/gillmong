@@ -43,6 +43,7 @@ export default function DreamInput() {
   const [modal, setModal]                       = useState<AnalysisResult | null>(null)
   const [reconstructedDream, setReconstructedDream] = useState('')
   const [dailyLimitReached, setDailyLimitReached] = useState(false)
+  const [remaining, setRemaining] = useState<number | null>(null)
 
   useEffect(() => {
     async function checkLimit() {
@@ -51,8 +52,9 @@ export default function DreamInput() {
       if (!session?.user) return
       const res = await fetch('/api/dream-remaining', { cache: 'no-store' })
       if (!res.ok) return
-      const { remaining } = await res.json()
-      if (remaining <= 0) setDailyLimitReached(true)
+      const { remaining: r } = await res.json()
+      setRemaining(r)
+      if (r <= 0) setDailyLimitReached(true)
     }
     checkLimit()
 
@@ -146,6 +148,15 @@ export default function DreamInput() {
           </div>
         )}
 
+        {remaining !== null && (
+          <p className="text-center text-sm">
+            <span className="text-[#777777]">오늘 해몽 </span>
+            <span className={`font-bold ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>
+              {remaining}/3회
+            </span>
+            <span className="text-[#777777]"> 남음</span>
+          </p>
+        )}
         <button
           type="button"
           onClick={handleSubmit}
