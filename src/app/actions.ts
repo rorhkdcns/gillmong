@@ -50,7 +50,7 @@ export async function withdrawalAction(
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: '로그인이 필요합니다.' }
 
-  const amount      = parseInt((formData.get('amount') as string) ?? '0', 10)
+  const amount      = parseInt(((formData.get('amount') as string) ?? '0').replace(/,/g, ''), 10)
   const bankName    = ((formData.get('bank_name') as string) ?? '').trim()
   const accountNum  = ((formData.get('account_number') as string) ?? '').trim()
   const accountHolder = ((formData.get('account_holder') as string) ?? '').trim()
