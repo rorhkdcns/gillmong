@@ -59,25 +59,29 @@ export default function SiteHeader() {
       setLoggedIn(!!session)
       if (!session?.user) { setNickname(''); setRemaining(DAILY_LIMIT); return }
 
-      const userId = session.user.id
-      const todayISO = new Date().toISOString().split('T')[0]
+      try {
+        const userId = session.user.id
+        const todayISO = new Date().toISOString().split('T')[0]
 
-      const [{ data: profile }, { count }] = await Promise.all([
-        supabase.from('profiles').select('nickname').eq('id', userId).single(),
-        supabase.from('analysis_logs').select('id', { count: 'exact', head: true }).eq('user_id', userId).gte('created_at', todayISO),
-      ])
+        const [{ data: profile }, { count }] = await Promise.all([
+          supabase.from('profiles').select('nickname').eq('id', userId).single(),
+          supabase.from('analysis_logs').select('id', { count: 'exact', head: true }).eq('user_id', userId).gte('created_at', todayISO),
+        ])
 
-      if (!isMounted) return
-      setNickname(profile?.nickname ?? session.user.email?.split('@')[0] ?? '')
-      setRemaining(DAILY_LIMIT - (count ?? 0))
+        if (!isMounted) return
+        setNickname(profile?.nickname ?? session.user.email?.split('@')[0] ?? '')
+        setRemaining(DAILY_LIMIT - (count ?? 0))
+      } catch {
+        // 조회 실패해도 로그인 상태는 유지
+      }
     }
 
     supabase.auth.getSession().then((result: { data: { session: Session | null } }) => {
-      syncAuth(result.data.session)
+      syncAuth(result.data.session).catch(() => {})
     })
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: string, session: Session | null) => {
-      syncAuth(session)
+      syncAuth(session).catch(() => {})
     })
 
     return () => {

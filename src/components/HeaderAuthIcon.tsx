@@ -54,7 +54,7 @@ export default function HeaderAuthIcon() {
 
     syncSession()
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => syncSession())
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => syncSession().catch(() => {}))
     return () => subscription.unsubscribe()
   }, [])
 
