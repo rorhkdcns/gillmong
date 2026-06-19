@@ -15,6 +15,17 @@ export default function HeaderAuthIcon() {
 
   useEffect(() => {
     const supabase = createClient()
+    let currentUserId: string | null = null
+
+    async function refreshCount(userId: string) {
+      const todayISO = new Date().toISOString().split('T')[0]
+      const { count } = await supabase
+        .from('analysis_logs')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .gte('created_at', todayISO)
+      setUsedToday(count ?? 0)
+    }
 
     async function syncAuth(session: Session | null) {
       if (!session?.user) {
@@ -22,18 +33,18 @@ export default function HeaderAuthIcon() {
         setNickname('')
         setUsedToday(0)
         setLoaded(true)
+        currentUserId = null
         return
       }
 
       const userId = session.user.id
+      currentUserId = userId
       const emailFallback = session.user.email?.split('@')[0] ?? '사용자'
 
-      // 세션 확인 즉시 로그인 상태 + 폴백 닉네임 표시
       setLoggedIn(true)
       setNickname(emailFallback)
       setLoaded(true)
 
-      // 프로필/횟수 조회 — 실패해도 로그인 상태 유지
       try {
         const todayISO = new Date().toISOString().split('T')[0]
         const [{ data: profile }, { count }] = await Promise.all([
@@ -51,17 +62,24 @@ export default function HeaderAuthIcon() {
       }
     }
 
-    // 초기 세션 확인
+    function onDreamAnalyzed() {
+      if (currentUserId) refreshCount(currentUserId).catch(() => {})
+    }
+
     supabase.auth.getSession().then((result: { data: { session: Session | null } }) => {
       syncAuth(result.data.session).catch(() => {})
     })
 
-    // auth 상태 변경 시 session을 직접 받아 처리 (getSession() 재호출 불필요)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: string, session: Session | null) => {
       syncAuth(session).catch(() => {})
     })
 
-    return () => subscription.unsubscribe()
+    window.addEventListener('dream-analyzed', onDreamAnalyzed)
+
+    return () => {
+      subscription.unsubscribe()
+      window.removeEventListener('dream-analyzed', onDreamAnalyzed)
+    }
   }, [])
 
   const remaining = DAILY_LIMIT - usedToday
@@ -80,9 +98,9 @@ export default function HeaderAuthIcon() {
         {loggedIn ? (
           <>
             {nickname}님{' '}
-            <span className={`font-normal ${remaining === 0 ? 'text-red-400' : 'text-gray-400'}`}>
-              ({remaining}회)
-            </span>
+            <span className="font-normal text-gray-400">(
+              <span className={`font-bold ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>{remaining}</span>
+            회)</span>
           </>
         ) : (
           '로그인'
