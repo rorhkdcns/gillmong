@@ -4,6 +4,8 @@ import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import LogoutButton from './_components/LogoutButton'
 import PointTabs from './_components/PointTabs'
+import ToggleDreamSection from './_components/ToggleDreamSection'
+import type { CalendarItem } from './_components/DreamCalendar'
 
 function formatDate(iso: string) {
   const d = new Date(iso)
@@ -61,8 +63,8 @@ export default async function MyPage() {
   // 프로필 + 공개 꿈 + 개인 저장 꿈 + 구매한 꿈 + 판매한 꿈 병렬 조회
   const [profileRes, myDreamsRes, privateDreamsRes, purchasedRes, soldRes, inquiriesRes] = await Promise.all([
     supabase.from('profiles').select('nickname, username, points').eq('id', user.id).single(),
-    supabase.from('dreams').select('id, title, grade, price, is_sold').eq('user_id', user.id).order('created_at', { ascending: false }),
-    supabase.from('saved_dreams').select('id, title, grade').eq('user_id', user.id).order('created_at', { ascending: false }),
+    supabase.from('dreams').select('id, title, grade, price, is_sold, created_at').eq('user_id', user.id).order('created_at', { ascending: false }),
+    supabase.from('saved_dreams').select('id, title, grade, created_at').eq('user_id', user.id).order('created_at', { ascending: false }),
     supabase.from('purchases').select('price, created_at, dreams(id, title, grade, price)').eq('buyer_id', user.id).order('created_at', { ascending: false }),
     supabase.from('dreams').select('id, title, grade, price, purchases(price, created_at)').eq('user_id', user.id).eq('is_sold', true).order('created_at', { ascending: false }),
     supabase.from('inquiries').select('id, title, status, created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(10),
@@ -70,7 +72,7 @@ export default async function MyPage() {
 
   const profile       = profileRes.data
   const myDreams      = myDreamsRes.data ?? []
-  const privateDreams = (privateDreamsRes.data ?? []) as Array<{ id: number; title: string; grade: string }>
+  const privateDreams = (privateDreamsRes.data ?? []) as Array<{ id: number; title: string; grade: string; created_at: string }>
   const purchased     = purchasedRes.data ?? []
   const myInquiries   = (inquiriesRes.data ?? []) as Array<{ id: number; title: string; status: string; created_at: string }>
   const soldDreams = (soldRes.data ?? []) as Array<{
@@ -80,6 +82,23 @@ export default async function MyPage() {
     price: number
     purchases: Array<{ price: number; created_at: string }>
   }>
+
+  // 달력용 데이터
+  const myDreamsCalendar: CalendarItem[] = myDreams
+    .filter(d => d.created_at)
+    .map(d => ({ id: d.id, title: d.title, grade: d.grade, price: d.price, date: d.created_at as string, href: `/dream/${d.id}?owner=1` }))
+
+  const savedCalendar: CalendarItem[] = privateDreams
+    .filter(d => d.created_at)
+    .map(d => ({ id: d.id, title: d.title, grade: d.grade, date: d.created_at, href: `/saved/${d.id}` }))
+
+  const purchasedCalendar: CalendarItem[] = purchased
+    .flatMap(p => {
+      const d = p.dreams as unknown as { id: number; title: string; grade: string; price: number } | null
+      if (!d || !p.created_at) return []
+      const item: CalendarItem = { id: d.id, title: d.title, grade: d.grade, price: p.price, date: p.created_at, href: `/dream/${d.id}` }
+      return [item]
+    })
 
   const nickname     = profile?.nickname ?? (user.user_metadata?.nickname as string) ?? '회원'
   const username     = profile?.username ?? (user.user_metadata?.username as string) ?? ''
@@ -136,12 +155,12 @@ export default async function MyPage() {
           </section>
 
           {/* 3. 내가 등록한 꿈 */}
-          <Section title="내가 등록한 꿈" count={myDreams.length} empty={myDreams.length === 0}>
+          <ToggleDreamSection title="내가 등록한 꿈" count={myDreams.length} calendarItems={myDreamsCalendar}>
             {myDreams.map((d) => <DreamRow key={d.id} id={d.id} title={d.title} grade={d.grade} price={d.price} owner />)}
-          </Section>
+          </ToggleDreamSection>
 
           {/* 4. 내가 저장한 꿈 (개인 저장, 비공개) */}
-          <Section title="내가 저장한 꿈" count={privateDreams.length} empty={privateDreams.length === 0}>
+          <ToggleDreamSection title="내가 저장한 꿈" count={privateDreams.length} calendarItems={savedCalendar}>
             {privateDreams.map((d) => (
               <li key={d.id} className="flex items-center gap-3 py-4">
                 <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_COLOR[d.grade] ?? 'bg-gray-400'}`}>
@@ -153,16 +172,16 @@ export default async function MyPage() {
                 <span className="ml-auto shrink-0 rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-[#888888]">비공개</span>
               </li>
             ))}
-          </Section>
+          </ToggleDreamSection>
 
           {/* 5. 구매한 꿈 */}
-          <Section title="구매한 꿈" count={purchased.length} empty={purchased.length === 0}>
+          <ToggleDreamSection title="구매한 꿈" count={purchased.length} calendarItems={purchasedCalendar}>
             {purchased.map((p) => {
               const d = p.dreams as unknown as { id: number; title: string; grade: string; price: number } | null
               if (!d) return null
               return <DreamRow key={d.id} id={d.id} title={d.title} grade={d.grade} price={p.price} />
             })}
-          </Section>
+          </ToggleDreamSection>
 
           {/* 6. 판매 현황 */}
           <section className="border border-gray-200 bg-white p-5 md:p-8">
