@@ -38,8 +38,8 @@ function DreamRow({ id, title, grade, price, owner }: { id: number; title: strin
 
 function Section({ title, count, children, empty }: { title: string; count: number; children?: React.ReactNode; empty?: boolean }) {
   return (
-    <section className="border border-gray-200 bg-white p-8">
-      <div className="mb-5 flex items-center justify-between">
+    <section className="border border-gray-200 bg-white p-5 md:p-8">
+      <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg text-[#01273A]">{title}</h2>
         <span className="text-sm text-[#777777]">{count}건</span>
       </div>
@@ -91,19 +91,19 @@ export default async function MyPage() {
       <SiteHeader />
 
       {/* ───── 본문 ───── */}
-      <main className="flex-1 px-6 py-12">
-        <div className="mx-auto max-w-3xl space-y-6">
+      <main className="flex-1 px-4 py-8 md:px-6 md:py-12">
+        <div className="mx-auto max-w-3xl space-y-4 md:space-y-6">
 
           {/* 1. 프로필 */}
-          <section className="border border-gray-200 bg-white p-8">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-5">
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center bg-[#01273A] text-2xl font-bold text-white">
+          <section className="border border-gray-200 bg-white p-5 md:p-8">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex min-w-0 items-center gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center bg-[#01273A] text-xl font-bold text-white md:h-16 md:w-16 md:text-2xl">
                   {nickname.charAt(0).toUpperCase()}
                 </div>
-                <div>
-                  <p className="text-xl text-[#01273A]">{nickname}</p>
-                  <p className="mt-0.5 text-sm text-[#777777]">@{username}</p>
+                <div className="min-w-0">
+                  <p className="truncate text-lg text-[#01273A] md:text-xl">{nickname}</p>
+                  <p className="mt-0.5 truncate text-sm text-[#777777]">@{username}</p>
                 </div>
               </div>
               <LogoutButton />
@@ -111,23 +111,24 @@ export default async function MyPage() {
           </section>
 
           {/* 2. 포인트 */}
-          <section className="border border-gray-200 bg-white p-8">
-            <h2 className="mb-5 text-lg text-[#01273A]">포인트</h2>
+          <section className="border border-gray-200 bg-white p-5 md:p-8">
+            {/* 포인트 타이틀 + 잔액 */}
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-lg text-[#01273A]">포인트</h2>
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl font-bold text-[#E07B2A]">{pointBalance.toLocaleString()}</span>
+                <span className="text-sm text-[#777777]">P</span>
+              </div>
+            </div>
 
-            {/* 잔액 + 버튼 */}
-            <div className="flex items-end justify-between">
-              <div className="flex items-end gap-2">
-                <span className="text-4xl font-bold text-[#E07B2A]">{pointBalance.toLocaleString()}</span>
-                <span className="mb-1 text-base text-[#777777]">P</span>
-              </div>
-              <div className="flex gap-3">
-                <a href="/charge" className="bg-[#E07B2A] px-5 py-2 text-sm font-semibold text-white transition-all hover:brightness-90">
-                  포인트 충전
-                </a>
-                <a href="/mypage/withdrawal" className="border border-[#01273A] bg-white px-5 py-2 text-sm font-semibold text-[#01273A] transition-all hover:bg-[#01273A] hover:text-white">
-                  출금 신청
-                </a>
-              </div>
+            {/* 버튼 */}
+            <div className="mb-5 flex gap-3">
+              <a href="/charge" className="flex-1 bg-[#E07B2A] py-2.5 text-center text-sm font-semibold text-white transition-all hover:brightness-90">
+                포인트 충전
+              </a>
+              <a href="/mypage/withdrawal" className="flex-1 border border-[#01273A] bg-white py-2.5 text-center text-sm font-semibold text-[#01273A] transition-all hover:bg-[#01273A] hover:text-white">
+                출금 신청
+              </a>
             </div>
 
             {/* 포인트 내역 탭 */}
@@ -164,8 +165,8 @@ export default async function MyPage() {
           </Section>
 
           {/* 6. 판매 현황 */}
-          <section className="border border-gray-200 bg-white p-8">
-            <div className="mb-5 flex items-center justify-between">
+          <section className="border border-gray-200 bg-white p-5 md:p-8">
+            <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg text-[#01273A]">판매 현황</h2>
               <span className="text-sm text-[#777777]">{soldDreams.length}건</span>
             </div>
@@ -197,8 +198,8 @@ export default async function MyPage() {
           </section>
 
           {/* 7. 1:1 문의 내역 */}
-          <section className="border border-gray-200 bg-white p-8">
-            <div className="mb-5 flex items-center justify-between">
+          <section className="border border-gray-200 bg-white p-5 md:p-8">
+            <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg text-[#01273A]">1:1 문의 내역</h2>
               <a href="/inquiry" className="text-sm text-[#6B96A8] hover:underline">+ 문의하기</a>
             </div>

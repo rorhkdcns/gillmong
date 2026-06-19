@@ -135,7 +135,7 @@ export default function SiteHeader() {
               </button>
               <Link
                 href={loggedIn ? '/mypage' : '/auth/login'}
-                className="hidden items-center gap-1.5 text-[#333333] transition-colors hover:text-[#01273A] md:flex"
+                className="flex items-center gap-1.5 text-[#333333] transition-colors hover:text-[#01273A] max-md:hidden"
               >
                 <svg className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z" />
