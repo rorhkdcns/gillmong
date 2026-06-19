@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import HeaderAuthIcon from './HeaderAuthIcon'
 import FloatingDreamButton from './FloatingDreamButton'
 import { createClient } from '@/lib/supabase/client'
 import type { Session } from '@supabase/supabase-js'
@@ -134,9 +133,24 @@ export default function SiteHeader() {
               >
                 {searchOpen ? <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg> : <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" /></svg>}
               </button>
-              <div className="hidden md:block">
-                <HeaderAuthIcon />
-              </div>
+              <Link
+                href={loggedIn ? '/mypage' : '/auth/login'}
+                className="hidden items-center gap-1.5 text-[#333333] transition-colors hover:text-[#01273A] md:flex"
+              >
+                <svg className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z" />
+                </svg>
+                <span className="text-sm font-semibold">
+                  {loggedIn ? (
+                    <>
+                      {nickname}님{' '}
+                      <span className={`font-normal ${remaining === 0 ? 'text-red-400' : 'text-gray-400'}`}>
+                        ({remaining}/{DAILY_LIMIT})
+                      </span>
+                    </>
+                  ) : '로그인'}
+                </span>
+              </Link>
               {loggedIn && (
                 <Link href="/mypage" className="flex flex-col items-end md:hidden leading-tight">
                   <span className="text-xs font-semibold text-[#01273A]">{nickname}님</span>
