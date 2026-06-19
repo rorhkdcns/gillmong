@@ -76,7 +76,7 @@ export default function PointTabs() {
             key={key}
             type="button"
             onClick={() => setActive(key)}
-            className={`px-5 py-2.5 text-sm transition-colors ${
+            className={`flex-1 whitespace-nowrap py-2.5 text-center text-sm transition-colors ${
               active === key
                 ? 'border-b-2 border-[#01273A] font-semibold text-[#01273A]'
                 : 'text-[#777777] hover:text-[#333333]'
