@@ -6,7 +6,6 @@ import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 
 const CHARGE_AMOUNTS = [
-  { points: 1000,   price: 1000 },
   { points: 5000,   price: 5000 },
   { points: 10000,  price: 10000 },
   { points: 50000,  price: 50000 },
@@ -100,7 +99,7 @@ export default function ChargePage() {
         <div className="mb-8">
           <h2 className="mb-2 text-lg font-semibold">충전 금액 선택</h2>
           <p className="mb-4 text-sm text-gray-500">버튼을 클릭하면 금액이 누적됩니다</p>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-4">
             {CHARGE_AMOUNTS.map((item) => (
               <button
                 key={item.points}
