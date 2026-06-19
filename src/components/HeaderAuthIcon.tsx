@@ -1,16 +1,17 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
 const DAILY_LIMIT = 3
 
 export default function HeaderAuthIcon() {
-  const [href, setHref]           = useState('/auth/login')
-  const [nickname, setNickname]   = useState('')
-  const [loggedIn, setLoggedIn]   = useState(false)
+  const [href, setHref] = useState('/auth/login')
+  const [nickname, setNickname] = useState('')
+  const [loggedIn, setLoggedIn] = useState(false)
   const [usedToday, setUsedToday] = useState(0)
-  const [loaded, setLoaded]       = useState(false)
+  const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
     const supabase = createClient()
@@ -60,26 +61,31 @@ export default function HeaderAuthIcon() {
   const remaining = DAILY_LIMIT - usedToday
 
   return (
-    <a
+    <Link
       href={href}
-      aria-label={loggedIn ? '마이페이지' : '로그인'}
-      className="flex items-center gap-1.5 text-[#333333] hover:text-[#01273A]"
+      className="flex items-center gap-1.5 text-[#333333] hover:text-[#01273A] transition-colors"
     >
       <svg className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z" />
       </svg>
-      {loaded && (
-        loggedIn ? (
-          <span className="text-sm font-semibold">
-            {nickname}님{' '}
-            <span className={`font-normal ${remaining === 0 ? 'text-red-400' : 'text-gray-400'}`}>
-              ({remaining}/{DAILY_LIMIT})
-            </span>
-          </span>
+      
+      {/* 로딩 중일 때 레이아웃 흔들림 방지용 min-w 설정 */}
+      <span className="text-sm font-semibold min-w-[60px]">
+        {loaded ? (
+          loggedIn ? (
+            <>
+              {nickname}님{' '}
+              <span className={`font-normal ${remaining === 0 ? 'text-red-400' : 'text-gray-400'}`}>
+                ({remaining}/{DAILY_LIMIT})
+              </span>
+            </>
+          ) : (
+            '로그인'
+          )
         ) : (
-          <span className="text-sm font-semibold">로그인</span>
-        )
-      )}
-    </a>
+          <span className="opacity-0">로그인</span> 
+        )}
+      </span>
+    </Link>
   )
 }

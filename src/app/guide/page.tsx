@@ -60,7 +60,7 @@ export default function GuidePage() {
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]" style={{ fontSize: '18px' }}>
 
-      <SiteHeader activePath="/guide" />
+      <SiteHeader />
 
       {/* ───── 1. 꿈의 가치를 거래합니다 ───── */}
       <section className="bg-[#01273A] px-8 py-32 text-white">

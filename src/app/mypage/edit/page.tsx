@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import type { Session } from '@supabase/supabase-js'
 import SiteHeader from '@/components/SiteHeader'
 
 export default function MyPageEdit() {
@@ -20,7 +21,8 @@ export default function MyPageEdit() {
 
   useEffect(() => {
     const supabase = createClient()
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    supabase.auth.getSession().then(async (result: { data: { session: Session | null } }) => {
+      const session = result.data.session
       if (!session?.user) { router.push('/auth/login'); return }
       const { data: profile } = await supabase.from('profiles').select('nickname').eq('id', session.user.id).single()
       if (profile) setNickname(profile.nickname)

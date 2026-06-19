@@ -39,8 +39,8 @@ export default function AdminReportsPage() {
 
     if (!data) { setLoading(false); return }
 
-    const dreamIds    = [...new Set(data.map((r) => r.dream_id))]
-    const reporterIds = [...new Set(data.map((r) => r.reporter_id))]
+    const dreamIds    = [...new Set(data.map((r: Report) => r.dream_id))]
+    const reporterIds = [...new Set(data.map((r: Report) => r.reporter_id))]
 
     const [{ data: dreams }, { data: profiles }] = await Promise.all([
       dreamIds.length
@@ -57,7 +57,7 @@ export default function AdminReportsPage() {
     for (const p of profiles ?? []) profMap[p.id]  = p.nickname
 
     setReports(
-      data.map((r) => ({
+      data.map((r: Report) => ({
         ...r,
         dream_title:        dreamMap[r.dream_id]    ?? `#${r.dream_id}`,
         reporter_nickname:  profMap[r.reporter_id]  ?? '알 수 없음',

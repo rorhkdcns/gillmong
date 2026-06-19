@@ -41,8 +41,8 @@ function SearchResults() {
       .select('id, title, summary, grade, price, is_sold')
       .or(`title.ilike.%${q}%,summary.ilike.%${q}%`)
       .order('created_at', { ascending: false })
-      .then(({ data }) => {
-        setResults(data ?? [])
+      .then((result: { data: SearchCard[] | null }) => {
+        setResults(result.data ?? [])
         setLoading(false)
       })
   }, [q])

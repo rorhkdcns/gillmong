@@ -46,7 +46,7 @@ export default function CategoryPage({ title, description, activePath, cards }: 
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
 
-      <SiteHeader activePath={activePath} />
+      <SiteHeader />
 
       {/* ───── 히어로 ───── */}
       <section className="bg-white px-6 pb-6 pt-14 text-center">
