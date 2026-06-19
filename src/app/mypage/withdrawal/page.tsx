@@ -15,14 +15,14 @@ export default async function WithdrawalPage() {
 
   // 캐시·RLS 영향 없이 최신 잔액을 읽기 위해 admin 클라이언트 사용
   const admin = createAdminClient()
-  const { data: profile } = await admin
+  const { data: profileRow } = await admin
     .from('profiles')
-    .select('points, real_name')
+    .select('points')
     .eq('id', user.id)
     .single()
 
-  const balance  = profile?.points   ?? 0
-  const realName = profile?.real_name ?? ''
+  const balance  = profileRow?.points ?? 0
+  const realName = ''
 
   // 출금 신청 내역
   const { data: history } = await admin
