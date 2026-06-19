@@ -125,14 +125,14 @@ export default function FloatingDreamButton() {
 
       {/* 꿈 입력 모달 — X 버튼으로만 닫힘 */}
       {open && !result && !loading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
-          <div className="relative max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-7 shadow-2xl">
+        <div className="fixed inset-0 z-[200] overflow-y-auto bg-black/60 px-4 pb-8 pt-[84px]">
+          <div className="relative mx-auto w-full max-w-lg rounded-2xl bg-white p-5 shadow-2xl">
 
             {/* X 버튼 */}
             <button
               type="button"
               onClick={handleClose}
-              className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200"
+              className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200"
               aria-label="닫기"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
@@ -140,19 +140,18 @@ export default function FloatingDreamButton() {
               </svg>
             </button>
 
-            <h2 className="mb-6 text-center text-xl font-black text-[#01273A]">나의 꿈 감정하기</h2>
+            <h2 className="mb-4 text-center text-lg font-black text-[#01273A]">나의 꿈 감정하기</h2>
 
             {dailyLimitReached ? (
-              <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-8 text-center">
-                <p className="text-3xl mb-3">🌙</p>
+              <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-6 text-center">
                 <p className="font-black text-[#01273A] text-sm">오늘의 해몽 횟수를 모두 사용하셨습니다</p>
-                <p className="mt-2 text-xs text-amber-700">하루 3회 제공되며, 자정에 다시 초기화됩니다.</p>
+                <p className="mt-1 text-xs text-amber-700">하루 3회 제공되며, 자정에 다시 초기화됩니다.</p>
               </div>
             ) : (
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3">
                 {FIELDS.map((field) => (
                   <div key={field.key}>
-                    <label className="mb-1.5 block text-sm font-bold text-[#01273A]">
+                    <label className="mb-1 block text-sm font-bold text-[#01273A]">
                       {field.label}
                       <span className="ml-1 font-normal text-xs text-gray-400">({field.desc})</span>
                     </label>
@@ -160,14 +159,14 @@ export default function FloatingDreamButton() {
                       value={answers[field.key]}
                       onChange={(e) => handleChange(field.key, e.target.value)}
                       placeholder={field.placeholder}
-                      rows={2}
-                      className="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-[#01273A] placeholder:text-[#BBBBBB] outline-none focus:border-[#01273A]"
+                      rows={1}
+                      className="w-full resize-none rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-[#01273A] placeholder:text-[#BBBBBB] outline-none focus:border-[#01273A]"
                     />
                   </div>
                 ))}
 
                 {inputError && (
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-1.5">
                     <p className="text-sm text-red-500">{inputError}</p>
                     {isRetryable && (
                       <button
@@ -183,19 +182,17 @@ export default function FloatingDreamButton() {
                 )}
 
                 {remaining !== null && (
-                  <p className="text-center text-sm">
-                    <span className="text-[#777777]">오늘 해몽 </span>
-                    <span className={`font-bold ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>
-                      {remaining}회
-                    </span>
-                    <span className="text-[#777777]"> 남음</span>
+                  <p className="text-center text-xs text-[#777777]">
+                    오늘 해몽{' '}
+                    <span className={`font-bold ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>{remaining}회</span>
+                    {' '}남음
                   </p>
                 )}
                 <button
                   type="button"
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="w-full rounded-xl bg-[#01273A] py-4 text-lg font-black text-white transition-all hover:brightness-90 disabled:opacity-60"
+                  className="w-full rounded-xl bg-[#01273A] py-3 text-base font-black text-white transition-all hover:brightness-90 disabled:opacity-60"
                 >
                   나의 꿈 감정하기
                 </button>
