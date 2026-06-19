@@ -22,16 +22,20 @@ declare global {
 }
 
 export default function ChargePage() {
-  const [selectedItems, setSelectedItems] = useState<Array<{ points: number; price: number }>>([])
-  const [loading, setLoading]             = useState(false)
-  const [error, setError]                 = useState('')
+  const [totalAmount, setTotalAmount] = useState(0)
+  const [totalPoints, setTotalPoints] = useState(0)
+  const [loading, setLoading]         = useState(false)
+  const [error, setError]             = useState('')
 
-  const totalAmount = selectedItems.reduce((sum, item) => sum + item.price, 0)
-  const totalPoints = selectedItems.reduce((sum, item) => sum + item.points, 0)
+  function handleAddAmount(item: { points: number; price: number }) {
+    setTotalAmount(prev => prev + item.price)
+    setTotalPoints(prev => prev + item.points)
+  }
 
-  const handleAddAmount  = (item: { points: number; price: number }) => setSelectedItems([...selectedItems, item])
-  const handleRemoveItem = (index: number) => setSelectedItems(selectedItems.filter((_, i) => i !== index))
-  const handleClear      = () => setSelectedItems([])
+  function handleClear() {
+    setTotalAmount(0)
+    setTotalPoints(0)
+  }
 
   const handleCharge = async () => {
     if (totalAmount === 0) {
@@ -43,32 +47,23 @@ export default function ChargePage() {
     setError('')
 
     try {
-      console.log('userId 가져오기 시작...')
       const { createClient } = await import('@/lib/supabase/client')
       const { data } = await createClient().auth.getSession()
       const userId = data?.session?.user?.id
 
-      console.log('userId:', userId)
-
       if (!userId) throw new Error('사용자 ID를 찾을 수 없습니다')
 
-      console.log('API 호출 시작...')
       const response = await fetch('/api/payment/create-payment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId, amount: totalAmount }),
       })
 
-      console.log('API 응답:', response.ok)
-
       if (!response.ok) throw new Error('결제 준비 실패')
 
       const paymentData = await response.json()
-      console.log('결제 데이터:', paymentData)
-      console.log('window.nicepay 있는지?', !!window.nicepay)
 
       if (window.nicepay) {
-        console.log('결제창 호출...')
         window.nicepay.requestPayment({
           clientId:    paymentData.clientId,
           method:      'card',
@@ -83,7 +78,6 @@ export default function ChargePage() {
         alert('결제 시스템 준비 중입니다. 잠시 후 다시 시도해주세요.')
       }
     } catch (err) {
-      console.error('에러:', err)
       setError(err instanceof Error ? err.message : '오류 발생')
     } finally {
       setLoading(false)
@@ -93,7 +87,7 @@ export default function ChargePage() {
   return (
     <>
       <SiteHeader />
-      <div className="flex-1 mx-auto w-full max-w-2xl p-6">
+      <div className="mx-auto w-full max-w-2xl flex-1 p-6">
         <h1 className="mb-8 text-3xl font-bold">포인트 충전</h1>
 
         {error && (
@@ -105,7 +99,7 @@ export default function ChargePage() {
         {/* 충전 금액 선택 */}
         <div className="mb-8">
           <h2 className="mb-2 text-lg font-semibold">충전 금액 선택</h2>
-          <p className="mb-4 text-sm text-gray-500">원하는 금액을 클릭하면 장바구니에 추가됩니다</p>
+          <p className="mb-4 text-sm text-gray-500">버튼을 클릭하면 금액이 누적됩니다</p>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             {CHARGE_AMOUNTS.map((item) => (
               <button
@@ -115,7 +109,7 @@ export default function ChargePage() {
                 className="rounded-lg border-2 border-gray-300 p-4 text-center transition hover:border-[#E07B2A] hover:bg-orange-50 disabled:opacity-50"
               >
                 <div className="mb-1 text-xl font-bold text-[#E07B2A]">
-                  +{item.points.toLocaleString()}
+                  +{item.points.toLocaleString()} P
                 </div>
                 <div className="text-sm text-gray-600">
                   ₩{item.price.toLocaleString()}
@@ -125,38 +119,29 @@ export default function ChargePage() {
           </div>
         </div>
 
-        {/* 선택된 항목 */}
-        {selectedItems.length > 0 && (
-          <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
-            <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-lg font-semibold">선택된 항목</h3>
-              <button onClick={handleClear} className="text-sm text-gray-500 underline hover:text-red-500">
+        {/* 총 충전액 */}
+        <div className="mb-6 rounded-lg border border-gray-200 bg-gray-50 p-5">
+          <div className="mb-3 flex items-center justify-between">
+            <span className="font-semibold text-[#01273A]">총 충전액</span>
+            {totalAmount > 0 && (
+              <button
+                type="button"
+                onClick={handleClear}
+                className="text-sm text-gray-400 underline hover:text-red-400"
+              >
                 초기화
               </button>
-            </div>
-            <div className="mb-4 space-y-2">
-              {selectedItems.map((item, index) => (
-                <div key={index} className="flex items-center justify-between rounded bg-white p-3">
-                  <span className="text-gray-700">
-                    +{item.points.toLocaleString()} 포인트 (₩{item.price.toLocaleString()})
-                  </span>
-                  <button
-                    onClick={() => handleRemoveItem(index)}
-                    className="font-bold text-red-400 hover:text-red-600"
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-            </div>
-            <div className="flex items-center justify-between border-t pt-3 text-lg font-bold">
-              <span>총 충전액:</span>
-              <span className="text-[#E07B2A]">
-                ₩{totalAmount.toLocaleString()} ({totalPoints.toLocaleString()} 포인트)
-              </span>
-            </div>
+            )}
           </div>
-        )}
+          <div className="flex items-baseline gap-3">
+            <span className="text-3xl font-bold text-[#01273A]">
+              ₩{totalAmount.toLocaleString()}
+            </span>
+            <span className="text-xl font-bold text-[#E07B2A]">
+              {totalPoints.toLocaleString()} P
+            </span>
+          </div>
+        </div>
 
         {/* 충전 버튼 */}
         <button
@@ -168,14 +153,14 @@ export default function ChargePage() {
               : 'bg-[#E07B2A] hover:brightness-90'
           }`}
         >
-          {loading ? '결제 진행 중...' : `₩${totalAmount.toLocaleString()} 포인트 충전하기`}
+          {loading ? '결제 진행 중...' : totalAmount === 0 ? '금액을 선택해주세요' : `₩${totalAmount.toLocaleString()} 충전하기`}
         </button>
 
         {/* 안내 */}
         <div className="mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4">
           <h3 className="mb-3 font-semibold">포인트 충전 안내</h3>
           <ul className="space-y-2 text-sm text-gray-700">
-            <li>• 같은 금액을 여러 번 클릭하면 누적됩니다</li>
+            <li>• 같은 금액을 여러 번 클릭하면 금액이 누적됩니다</li>
             <li>• 충전된 포인트는 꿈 구매에 즉시 사용할 수 있습니다</li>
             <li>• 환불은 불가능하니 신중하게 선택해주세요</li>
             <li>• 포인트는 마이페이지에서 실시간으로 확인할 수 있습니다</li>
