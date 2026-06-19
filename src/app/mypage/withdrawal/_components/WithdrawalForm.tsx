@@ -70,21 +70,20 @@ export default function WithdrawalForm({
         </p>
       </div>
 
-      {/* 빠른 금액 선택 */}
+      {/* 빠른 금액 선택 (누적) */}
       <div className="flex flex-wrap gap-2">
-        {[5000, 10000, 30000, 50000].map((v) => (
+        {[5000, 10000, 30000, 50000, 100000].map((v) => (
           <button
             key={v}
             type="button"
-            disabled={balance < v}
-            onClick={() => setAmount(v.toLocaleString())}
-            className={`rounded border px-3 py-1.5 text-sm transition ${
-              parsed === v
-                ? 'border-[#01273A] bg-[#01273A] text-white'
-                : 'border-gray-300 text-[#555555] hover:border-[#01273A] hover:text-[#01273A]'
-            } disabled:cursor-not-allowed disabled:opacity-40`}
+            disabled={parsed + v > balance}
+            onClick={() => {
+              const next = parsed + v
+              if (next <= balance) setAmount(next.toLocaleString())
+            }}
+            className="rounded border border-gray-300 px-3 py-1.5 text-sm text-[#555555] transition hover:border-[#01273A] hover:text-[#01273A] disabled:cursor-not-allowed disabled:opacity-40"
           >
-            {v.toLocaleString()}P
+            +{v.toLocaleString()}P
           </button>
         ))}
         <button
@@ -95,6 +94,15 @@ export default function WithdrawalForm({
         >
           전액
         </button>
+        {parsed > 0 && (
+          <button
+            type="button"
+            onClick={() => setAmount('')}
+            className="rounded border border-red-200 px-3 py-1.5 text-sm text-red-400 transition hover:border-red-400"
+          >
+            초기화
+          </button>
+        )}
       </div>
 
       {/* 은행명 */}
