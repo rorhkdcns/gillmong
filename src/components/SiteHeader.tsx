@@ -140,16 +140,16 @@ export default function SiteHeader() {
                 <svg className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z" />
                 </svg>
-                <span className="text-sm font-semibold">
-                  {loggedIn ? (
-                    <>
-                      {nickname}님{' '}
-                      <span className={`font-normal ${remaining === 0 ? 'text-red-400' : 'text-gray-400'}`}>
-                        ({remaining}/{DAILY_LIMIT})
-                      </span>
-                    </>
-                  ) : '로그인'}
-                </span>
+                {loggedIn ? (
+                  <span className="flex flex-col leading-tight">
+                    <span className="text-sm font-semibold">{nickname}님</span>
+                    <span className={`text-xs font-normal ${remaining === 0 ? 'text-red-400' : 'text-gray-400'}`}>
+                      해몽 {remaining}/{DAILY_LIMIT}회 남음
+                    </span>
+                  </span>
+                ) : (
+                  <span className="text-sm font-semibold">로그인</span>
+                )}
               </Link>
               {loggedIn && (
                 <Link href="/mypage" className="flex flex-col items-end md:hidden leading-tight">
