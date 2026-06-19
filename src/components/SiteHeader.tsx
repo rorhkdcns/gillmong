@@ -159,7 +159,7 @@ export default function SiteHeader() {
                   <span className="flex flex-col leading-tight">
                     <span className="text-sm font-semibold">{nickname}님</span>
                     <span className={`text-xs font-normal ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>
-                      해몽 {remaining}/{DAILY_LIMIT}회 남음
+                      해몽 {remaining}회 남음
                     </span>
                   </span>
                 ) : (
@@ -170,7 +170,7 @@ export default function SiteHeader() {
                 <Link href="/mypage" className="flex flex-col items-end md:hidden leading-tight">
                   <span className="text-xs font-semibold text-[#01273A]">{nickname}님</span>
                   <span className={`text-[10px] ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>
-                    해몽 {remaining}/{DAILY_LIMIT}회 남음
+                    해몽 {remaining}회 남음
                   </span>
                 </Link>
               )}
@@ -210,7 +210,7 @@ export default function SiteHeader() {
                 <span className="flex items-center justify-between">
                   <span>{nickname}님</span>
                   <span className={`text-xs font-normal ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>
-                    해몽 {remaining}/{DAILY_LIMIT}회 남음
+                    해몽 {remaining}회 남음
                   </span>
                 </span>
               ) : '로그인'}

@@ -186,7 +186,7 @@ export default function FloatingDreamButton() {
                   <p className="text-center text-sm">
                     <span className="text-[#777777]">오늘 해몽 </span>
                     <span className={`font-bold ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>
-                      {remaining}/3회
+                      {remaining}회
                     </span>
                     <span className="text-[#777777]"> 남음</span>
                   </p>

@@ -81,7 +81,7 @@ export default function HeaderAuthIcon() {
           <>
             {nickname}님{' '}
             <span className={`font-normal ${remaining === 0 ? 'text-red-400' : 'text-gray-400'}`}>
-              ({remaining}/{DAILY_LIMIT})
+              ({remaining}회)
             </span>
           </>
         ) : (
