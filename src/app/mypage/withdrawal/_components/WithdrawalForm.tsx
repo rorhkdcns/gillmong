@@ -76,9 +76,9 @@ export default function WithdrawalForm({
           <button
             key={v}
             type="button"
-            disabled={parsed + v > balance}
+            disabled={(parsed || 0) + v > balance}
             onClick={() => {
-              const next = parsed + v
+              const next = (parsed || 0) + v
               if (next <= balance) setAmount(next.toLocaleString())
             }}
             className="rounded border border-gray-300 px-3 py-1.5 text-sm text-[#555555] transition hover:border-[#01273A] hover:text-[#01273A] disabled:cursor-not-allowed disabled:opacity-40"
