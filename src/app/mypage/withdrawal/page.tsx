@@ -5,6 +5,8 @@ import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import WithdrawalForm from './_components/WithdrawalForm'
 
+export const dynamic = 'force-dynamic'
+
 export default async function WithdrawalPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
