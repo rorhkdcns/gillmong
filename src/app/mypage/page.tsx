@@ -119,7 +119,7 @@ export default async function MyPage() {
           <section className="border border-gray-200 bg-white p-5 md:p-8">
             <div className="flex items-center justify-between gap-3">
               <div className="flex min-w-0 items-center gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center bg-[#01273A] text-xl font-bold text-white md:h-16 md:w-16 md:text-2xl">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#01273A] text-xl font-bold text-white md:h-16 md:w-16 md:text-2xl">
                   {nickname.charAt(0).toUpperCase()}
                 </div>
                 <div className="min-w-0">
