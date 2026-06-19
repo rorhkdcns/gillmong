@@ -93,3 +93,18 @@ export async function withdrawalAction(
   revalidatePath('/mypage/withdrawal')
   return { success: true }
 }
+
+export async function getMyWithdrawals(): Promise<Array<{
+  id: number; amount: number; bank_name: string; status: string; created_at: string
+}>> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
+  const admin = createAdminClient()
+  const { data } = await admin
+    .from('withdrawal_requests')
+    .select('id, amount, bank_name, status, created_at')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+  return data ?? []
+}

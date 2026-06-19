@@ -68,14 +68,14 @@ export default async function MyPage() {
     supabase.from('saved_dreams').select('id, title, grade, created_at').eq('user_id', user.id).order('created_at', { ascending: false }),
     supabase.from('purchases').select('price, created_at, dreams(id, title, grade, price)').eq('buyer_id', user.id).order('created_at', { ascending: false }),
     supabase.from('dreams').select('id, title, grade, price, purchases(price, created_at)').eq('user_id', user.id).eq('is_sold', true).order('created_at', { ascending: false }),
-    supabase.from('inquiries').select('id, title, status, created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(10),
+    supabase.from('inquiries').select('id, title, status, answer, created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(10),
   ])
 
   const profile       = profileRes.data
   const myDreams      = myDreamsRes.data ?? []
   const privateDreams = (privateDreamsRes.data ?? []) as Array<{ id: number; title: string; grade: string; created_at: string }>
   const purchased     = purchasedRes.data ?? []
-  const myInquiries   = (inquiriesRes.data ?? []) as Array<{ id: number; title: string; status: string; created_at: string }>
+  const myInquiries   = (inquiriesRes.data ?? []) as Array<{ id: number; title: string; status: string; answer: string | null; created_at: string }>
   const soldDreams = (soldRes.data ?? []) as Array<{
     id: number
     title: string
@@ -249,14 +249,22 @@ export default async function MyPage() {
             ) : (
               <ul className="divide-y divide-gray-100">
                 {myInquiries.map((inq) => (
-                  <li key={inq.id} className="flex items-center justify-between py-4">
-                    <span className="text-base text-[#333333] truncate mr-3">{inq.title}</span>
-                    <div className="flex shrink-0 items-center gap-3">
-                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${inq.status === 'answered' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
-                        {inq.status === 'answered' ? '답변완료' : '대기중'}
-                      </span>
-                      <span className="text-xs text-[#999]">{formatDate(inq.created_at)}</span>
+                  <li key={inq.id} className="py-4">
+                    <div className="flex items-center justify-between">
+                      <span className="truncate mr-3 text-base text-[#333333]">{inq.title}</span>
+                      <div className="flex shrink-0 items-center gap-3">
+                        <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${inq.status === 'answered' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                          {inq.status === 'answered' ? '답변완료' : '대기중'}
+                        </span>
+                        <span className="text-xs text-[#999]">{formatDate(inq.created_at)}</span>
+                      </div>
                     </div>
+                    {inq.status === 'answered' && inq.answer && (
+                      <div className="mt-2 rounded bg-gray-50 border border-gray-100 px-3 py-2.5">
+                        <p className="mb-1 text-xs font-semibold text-[#6B96A8]">관리자 답변</p>
+                        <p className="text-sm text-[#555555] whitespace-pre-wrap">{inq.answer}</p>
+                      </div>
+                    )}
                   </li>
                 ))}
               </ul>
