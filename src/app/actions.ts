@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 
@@ -59,7 +60,10 @@ export async function withdrawalAction(
   if (amount % 1000 !== 0)            return { error: '1,000P 단위로 신청 가능합니다.' }
   if (!bankName || !accountNum || !accountHolder) return { error: '은행 정보를 모두 입력해주세요.' }
 
-  const { data: profile } = await supabase
+  // DB 작업은 admin 클라이언트로 RLS 우회 (유저 인증은 위에서 완료)
+  const admin = createAdminClient()
+
+  const { data: profile } = await admin
     .from('profiles')
     .select('points')
     .eq('id', user.id)
@@ -68,7 +72,7 @@ export async function withdrawalAction(
   if (!profile || profile.points < amount)
     return { error: `포인트가 부족합니다. (보유: ${(profile?.points ?? 0).toLocaleString()}P)` }
 
-  const { error } = await supabase.from('withdrawal_requests').insert({
+  const { error } = await admin.from('withdrawal_requests').insert({
     user_id:         user.id,
     amount,
     bank_name:       bankName,
@@ -77,10 +81,10 @@ export async function withdrawalAction(
     status:          'pending',
   })
 
-  if (error) return { error: '신청 중 오류가 발생했습니다. 다시 시도해주세요.' }
+  if (error) return { error: `신청 중 오류가 발생했습니다. (${error.message})` }
 
   // 포인트 차감
-  await supabase
+  await admin
     .from('profiles')
     .update({ points: profile.points - amount })
     .eq('id', user.id)
