@@ -330,7 +330,7 @@ export async function adminAnswerInquiry(
 export async function getAdminWithdrawals() {
   const admin = createAdminClient()
   const { data, error } = await admin
-    .from('withdrawals')
+    .from('withdrawal_requests')
     .select('*')
     .order('created_at', { ascending: false })
   if (error) return { error: error.message, data: [] }
@@ -342,7 +342,7 @@ export async function adminHandleWithdrawal(
 ): Promise<{ success?: boolean; error?: string }> {
   const admin = createAdminClient()
   const { error } = await admin
-    .from('withdrawals')
+    .from('withdrawal_requests')
     .update({ status: action === 'approve' ? 'approved' : 'rejected' })
     .eq('id', id)
   if (error) return { error: error.message }

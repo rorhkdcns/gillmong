@@ -50,7 +50,7 @@ export default function AdminWithdrawals() {
         <div className="rounded border border-amber-200 bg-amber-50 p-6 text-sm text-amber-700">
           <p className="font-semibold">withdrawals 테이블이 없습니다.</p>
           <p className="mt-1">Supabase에서 아래 SQL을 실행해 테이블을 생성해주세요.</p>
-          <pre className="mt-4 overflow-x-auto rounded bg-white p-4 text-xs text-gray-700">{`CREATE TABLE withdrawals (
+          <pre className="mt-4 overflow-x-auto rounded bg-white p-4 text-xs text-gray-700">{`CREATE TABLE withdrawal_requests (
   id BIGSERIAL PRIMARY KEY,
   user_id UUID REFERENCES profiles(id),
   amount INTEGER NOT NULL,
