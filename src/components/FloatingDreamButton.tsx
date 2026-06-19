@@ -44,17 +44,21 @@ export default function FloatingDreamButton() {
   const [result, setResult]                         = useState<AnalysisResult | null>(null)
   const [reconstructedDream, setReconstructedDream] = useState('')
   const [dailyLimitReached, setDailyLimitReached]   = useState(false)
+  const [remaining, setRemaining]                   = useState<number | null>(null)
+
+  async function fetchRemaining() {
+    const res = await fetch('/api/dream-remaining', { cache: 'no-store' })
+    if (!res.ok) return
+    const { remaining: r } = await res.json()
+    setRemaining(r)
+    if (r <= 0) setDailyLimitReached(true)
+  }
 
   async function handleOpen() {
     const supabase = createClient()
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.user) { router.push('/auth/login'); return }
-
-    const res = await fetch('/api/dream-remaining', { cache: 'no-store' })
-    if (res.ok) {
-      const { remaining } = await res.json()
-      if (remaining <= 0) setDailyLimitReached(true)
-    }
+    await fetchRemaining()
     setOpen(true)
   }
 
@@ -96,6 +100,7 @@ export default function FloatingDreamButton() {
       setReconstructedDream(rd ?? '')
       setResult(analysis as AnalysisResult)
       window.dispatchEvent(new Event('dream-analyzed'))
+      fetchRemaining()
     } catch (err) {
       const msg = err instanceof Error ? err.message : '알 수 없는 오류'
       setInputError(`해몽 분석 중 오류가 발생했습니다: ${msg}`)
@@ -177,6 +182,15 @@ export default function FloatingDreamButton() {
                   </div>
                 )}
 
+                {remaining !== null && (
+                  <p className="text-center text-sm">
+                    <span className="text-[#777777]">오늘 해몽 </span>
+                    <span className={`font-bold ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>
+                      {remaining}/3회
+                    </span>
+                    <span className="text-[#777777]"> 남음</span>
+                  </p>
+                )}
                 <button
                   type="button"
                   onClick={handleSubmit}
