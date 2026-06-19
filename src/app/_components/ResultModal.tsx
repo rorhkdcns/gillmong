@@ -218,13 +218,13 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
   }
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 px-4 py-8">
+    <div className="fixed inset-0 z-[200] overflow-y-auto bg-black/60 px-4 pb-8 pt-[84px]">
       <div className="relative mx-auto w-full max-w-lg md:max-w-[800px] rounded-2xl bg-white shadow-2xl">
 
         {/* X 버튼 */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200"
+          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200"
           aria-label="닫기"
         >
           <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
@@ -232,45 +232,45 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
           </svg>
         </button>
 
-        <div className="p-7">
+        <div className="p-5">
 
-          {/* 모달 제목 */}
-          <h2 className="mb-6 text-center text-xl font-black text-brand-heading">
-            길몽상점 감정 결과
-          </h2>
-
-          {/* 등급 + 유형 */}
-          <div className="mb-6 flex flex-col items-center gap-3">
-            <div className={`flex h-24 w-24 items-center justify-center rounded-full ${gradeStyle.bg} shadow-lg`}>
-              <span className="text-5xl font-black text-white">{analysis.grade}</span>
+          {/* 등급 + 유형 — 가로 배치로 압축 */}
+          <div className="mb-4 flex items-center gap-4">
+            <div className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full ${gradeStyle.bg} shadow`}>
+              <span className="text-3xl font-black text-white">{analysis.grade}</span>
             </div>
-            <span className={`text-base font-bold ${gradeStyle.text}`}>{gradeStyle.label}</span>
-            <span className={`rounded-full border px-3 py-0.5 text-sm font-semibold ${TYPE_STYLE[analysis.type] ?? TYPE_STYLE['중립']}`}>
-              {analysis.type}
-            </span>
+            <div>
+              <p className="text-lg font-black text-brand-heading">길몽상점 감정 결과</p>
+              <div className="mt-1 flex items-center gap-2">
+                <span className={`text-sm font-bold ${gradeStyle.text}`}>{gradeStyle.label}</span>
+                <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${TYPE_STYLE[analysis.type] ?? TYPE_STYLE['중립']}`}>
+                  {analysis.type}
+                </span>
+              </div>
+            </div>
           </div>
 
-          <hr className="mb-6 border-brand-border" />
+          <hr className="mb-4 border-brand-border" />
 
           {/* 나의 꿈 기록 */}
-          <section className="mb-6">
-            <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">
-              나의 꿈 기록 (원문)
-              <span className="ml-2 text-xs font-normal text-gray-400">직접 수정 가능</span>
+          <section className="mb-4">
+            <h3 className="mb-1.5 text-sm font-bold text-brand-muted">
+              나의 꿈 기록
+              <span className="ml-1.5 text-xs font-normal text-gray-400">직접 수정 가능</span>
             </h3>
             <textarea
               value={editedDream}
               onChange={(e) => setEditedDream(e.target.value)}
-              rows={5}
-              className="w-full resize-none rounded-xl bg-brand-page px-4 py-3 text-sm leading-relaxed text-brand-body outline-none focus:ring-1 focus:ring-[#01273A]"
+              rows={3}
+              className="w-full resize-none rounded-lg bg-brand-page px-3 py-2 text-sm leading-relaxed text-brand-body outline-none focus:ring-1 focus:ring-[#01273A]"
             />
           </section>
 
           {/* 해몽 요약 */}
           {analysis.summary && (
-            <section className="mb-5">
-              <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">해몽 요약</h3>
-              <div className="rounded-xl border border-[#CCCCCC] bg-amber-50/30 p-4 text-sm leading-relaxed text-brand-body">
+            <section className="mb-4">
+              <h3 className="mb-1.5 text-sm font-bold text-brand-muted">해몽 요약</h3>
+              <div className="rounded-lg border border-[#CCCCCC] bg-amber-50/30 px-3 py-2 text-sm leading-relaxed text-brand-body">
                 {analysis.summary}
               </div>
             </section>
@@ -280,19 +280,19 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
           {analysis.interpretation && (() => {
             const sections = parseInterpretation(analysis.interpretation)
             return (
-              <section className="mb-5">
-                <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">상세 해몽</h3>
-                <div className="rounded-xl border border-[#CCCCCC] overflow-hidden">
+              <section className="mb-4">
+                <h3 className="mb-1.5 text-sm font-bold text-brand-muted">상세 해몽</h3>
+                <div className="rounded-lg border border-[#CCCCCC] overflow-hidden">
                   {sections.length > 0 ? sections.map((sec, i) => (
                     <div key={i}>
                       {i > 0 && <hr style={{ borderColor: '#EEEEEE' }} />}
-                      <div className="p-4">
-                        <p className="mb-1.5 text-sm font-bold" style={{ color: sec.color }}>{sec.title}</p>
+                      <div className="px-3 py-2">
+                        <p className="mb-1 text-xs font-bold" style={{ color: sec.color }}>{sec.title}</p>
                         <p className="text-sm leading-relaxed text-brand-body whitespace-pre-line">{sec.content}</p>
                       </div>
                     </div>
                   )) : (
-                    <div className="p-4 text-sm leading-relaxed text-brand-body whitespace-pre-line">
+                    <div className="px-3 py-2 text-sm leading-relaxed text-brand-body whitespace-pre-line">
                       {analysis.interpretation}
                     </div>
                   )}
@@ -303,22 +303,22 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
 
           {/* 실생활 조언 */}
           {analysis.advice && (
-            <section className="mb-6">
-              <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">실생활 조언</h3>
-              <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 text-sm leading-relaxed text-brand-body">
+            <section className="mb-4">
+              <h3 className="mb-1.5 text-sm font-bold text-brand-muted">실생활 조언</h3>
+              <div className="rounded-lg border border-blue-100 bg-blue-50/40 px-3 py-2 text-sm leading-relaxed text-brand-body">
                 {analysis.advice}
               </div>
             </section>
           )}
 
           {/* 행운의 추천 번호 */}
-          <section className="mb-6">
-            <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-brand-muted">행운의 추천 번호</h3>
-            <div className="grid grid-cols-3 gap-2">
+          <section className="mb-4">
+            <h3 className="mb-2 text-sm font-bold text-brand-muted">행운의 추천 번호</h3>
+            <div className="flex gap-2">
               {analysis.lucky_numbers.map((num) => (
                 <div
                   key={num}
-                  className="flex h-11 items-center justify-center rounded-full bg-[#E07B2A] text-base font-black text-white shadow"
+                  className="flex h-9 flex-1 items-center justify-center rounded-full bg-[#E07B2A] text-sm font-black text-white shadow"
                 >
                   {num}
                 </div>
@@ -326,29 +326,29 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
             </div>
           </section>
 
-          <hr className="mb-6 border-brand-border" />
+          <hr className="mb-4 border-brand-border" />
 
           {/* 마켓 판매 등록 */}
           <section>
-            <h3 className="mb-4 text-base font-black text-brand-heading">마켓 판매 등록</h3>
+            <h3 className="mb-3 text-sm font-black text-brand-heading">마켓 판매 등록</h3>
 
-            <div className="mb-3">
-              <label className="mb-1 block text-base font-medium text-brand-body">꿈 제목 <span className="text-red-400">*</span></label>
+            <div className="mb-2">
+              <label className="mb-1 block text-sm font-medium text-brand-body">꿈 제목 <span className="text-red-400">*</span></label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="꿈을 한 줄로 표현해주세요"
-                className="w-full rounded-xl border border-[#CCCCCC] bg-white px-4 py-3 text-base text-brand-heading outline-none focus:border-[#01273A]"
+                className="w-full rounded-lg border border-[#CCCCCC] bg-white px-3 py-2 text-sm text-brand-heading outline-none focus:border-[#01273A]"
               />
             </div>
 
-            <div className="mb-3">
-              <label className="mb-1 block text-base font-medium text-brand-body">카테고리 <span className="text-red-400">*</span></label>
+            <div className="mb-2">
+              <label className="mb-1 block text-sm font-medium text-brand-body">카테고리 <span className="text-red-400">*</span></label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full rounded-xl border border-[#CCCCCC] bg-white px-4 py-3 text-base text-brand-heading outline-none"
+                className="w-full rounded-lg border border-[#CCCCCC] bg-white px-3 py-2 text-sm text-brand-heading outline-none"
               >
                 <option value="">카테고리를 선택해주세요</option>
                 {CATEGORIES.map((cat) => (
@@ -357,8 +357,8 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
               </select>
             </div>
 
-            <div className="mb-5">
-              <label className="mb-1 block text-base font-medium text-brand-body">감정가 <span className="text-red-400">*</span></label>
+            <div className="mb-3">
+              <label className="mb-1 block text-sm font-medium text-brand-body">감정가 <span className="text-red-400">*</span></label>
               <div className="relative">
                 <input
                   type="number"
@@ -367,35 +367,35 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
                   onBlur={handlePriceBlur}
                   min="5000"
                   step="100"
-                  className="w-full rounded-xl border border-[#CCCCCC] bg-white px-4 py-3 pr-10 text-base text-brand-heading outline-none focus:border-[#01273A]"
+                  className="w-full rounded-lg border border-[#CCCCCC] bg-white px-3 py-2 pr-8 text-sm text-brand-heading outline-none focus:border-[#01273A]"
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-brand-muted">P</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-brand-muted">P</span>
               </div>
               {priceError && <p className="mt-1 text-xs text-red-500">{priceError}</p>}
             </div>
 
             {saveError && (
-              <p className="mb-4 text-sm text-red-500">{saveError}</p>
+              <p className="mb-3 text-sm text-red-500">{saveError}</p>
             )}
 
-            <div className="flex gap-3">
+            <div className="flex gap-2">
               <button
                 onClick={handleRegister}
                 disabled={saving || savingPrivate || !!priceError}
-                className="flex-1 rounded-xl bg-[#01273A] py-3 text-base font-bold text-white transition-colors hover:brightness-90 disabled:opacity-60 leading-tight"
+                className="flex-1 rounded-lg bg-[#01273A] py-2.5 text-sm font-bold text-white transition-colors hover:brightness-90 disabled:opacity-60"
               >
-                {saving ? '등록 중...' : <><span className="block">마켓에</span><span className="block">등록하기</span></>}
+                {saving ? '등록 중...' : '마켓 등록'}
               </button>
               <button
                 onClick={handlePrivateSave}
                 disabled={saving || savingPrivate}
-                className="flex-1 rounded-xl border-2 border-[#01273A] bg-white py-3 text-base font-bold text-[#01273A] transition-colors hover:bg-[#01273A] hover:text-white disabled:opacity-60"
+                className="flex-1 rounded-lg border-2 border-[#01273A] bg-white py-2.5 text-sm font-bold text-[#01273A] transition-colors hover:bg-[#01273A] hover:text-white disabled:opacity-60"
               >
                 {savingPrivate ? '저장 중...' : '개인 저장'}
               </button>
               <button
                 onClick={onClose}
-                className="rounded-xl border-2 border-gray-300 px-5 py-3 text-base font-bold text-gray-400 transition-colors hover:border-gray-400 hover:text-gray-500"
+                className="rounded-lg border-2 border-gray-300 px-4 py-2.5 text-sm font-bold text-gray-400 transition-colors hover:border-gray-400 hover:text-gray-500"
               >
                 닫기
               </button>
