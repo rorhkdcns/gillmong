@@ -1,7 +1,7 @@
 'use client'
 
 import { Suspense, useEffect, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import SiteFooter from '@/components/SiteFooter'
 import { createClient } from '@/lib/supabase/client'
@@ -11,7 +11,6 @@ function usernameToEmail(username: string) {
 }
 
 function LoginForm() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   const resetDone = searchParams.get('reset') === 'done'
 
@@ -53,8 +52,7 @@ function LoginForm() {
 
     const userId = signInData.user?.id
     if (!userId) {
-      router.push('/')
-      router.refresh()
+      window.location.href = '/'
       return
     }
 
@@ -65,11 +63,10 @@ function LoginForm() {
       .single()
 
     if (profile?.is_admin) {
-      router.push('/admin')
+      window.location.href = '/admin'
     } else {
-      router.push('/')
+      window.location.href = '/'
     }
-    router.refresh()
   }
 
   return (

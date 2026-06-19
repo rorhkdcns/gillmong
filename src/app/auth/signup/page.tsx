@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import SiteFooter from '@/components/SiteFooter'
 import { createClient } from '@/lib/supabase/client'
@@ -26,7 +25,6 @@ function Field({
 const INPUT = 'w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#01273A]'
 
 export default function SignupPage() {
-  const router = useRouter()
   const [username,  setUsername]  = useState('')
   const [password,  setPassword]  = useState('')
   const [nickname,  setNickname]  = useState('')
@@ -155,8 +153,7 @@ export default function SignupPage() {
     }
 
     if (data.session) {
-      router.push('/mypage')
-      router.refresh()
+      window.location.href = '/mypage'
       return
     }
 
