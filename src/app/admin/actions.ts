@@ -157,6 +157,24 @@ export async function adminAdjustPoints(
   return { success: true }
 }
 
+export async function adminAdjustPointsByUsername(
+  username: string, amount: number,
+): Promise<{ success?: boolean; new_points?: number; error?: string }> {
+  const admin = createAdminClient()
+  const { data: profile } = await admin.from('profiles').select('id, points').eq('username', username).single()
+  if (!profile) return { error: '존재하지 않는 아이디입니다.' }
+  const newPoints = profile.points + amount
+  if (newPoints < 0) return { error: `포인트가 부족합니다. (보유: ${profile.points.toLocaleString()}P)` }
+  const { error: e1 } = await admin.from('profiles').update({ points: newPoints }).eq('id', profile.id)
+  if (e1) return { error: e1.message }
+  await admin.from('point_logs').insert({
+    user_id: profile.id, amount,
+    type: amount > 0 ? 'charge' : 'use',
+    description: amount > 0 ? '관리자 포인트 지급' : '관리자 포인트 차감',
+  })
+  return { success: true, new_points: newPoints }
+}
+
 export async function adminSendPasswordReset(
   userId: string,
 ): Promise<{ success?: boolean; link?: string; error?: string }> {

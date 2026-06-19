@@ -1,12 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { syncSalePoints, resetAllData } from '../actions'
+import { adminAdjustPointsByUsername, syncSalePoints, resetAllData } from '../actions'
 
 export default function AdminPointsPage() {
   const [username, setUsername] = useState('')
   const [amount, setAmount]     = useState('')
+  const [mode, setMode]         = useState<'give' | 'deduct'>('give')
   const [loading, setLoading]   = useState(false)
   const [result, setResult]     = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
@@ -22,17 +22,20 @@ export default function AdminPointsPage() {
     const amt = parseInt(amount, 10)
     if (!username.trim()) { setResult({ type: 'error', message: '아이디를 입력해주세요.' }); return }
     if (!amt || amt <= 0) { setResult({ type: 'error', message: '포인트 금액을 올바르게 입력해주세요.' }); return }
+
     setLoading(true)
-    const supabase = createClient()
-    const { data, error } = await supabase.rpc('admin_give_points', { target_username: username.trim(), amount_to_add: amt })
+    const finalAmount = mode === 'deduct' ? -amt : amt
+    const res = await adminAdjustPointsByUsername(username.trim(), finalAmount)
     setLoading(false)
-    if (error) { setResult({ type: 'error', message: error.message }); return }
-    if (!data) { setResult({ type: 'error', message: 'SQL 패치(patch_02)가 Supabase에 적용됐는지 확인해주세요.' }); return }
-    const res = data as { error?: string; success?: boolean; new_points?: number }
+
     if (res.error) {
       setResult({ type: 'error', message: res.error })
     } else {
-      setResult({ type: 'success', message: `@${username.trim()}에게 ${amt.toLocaleString()} P 지급 완료 (잔액: ${res.new_points?.toLocaleString()} P)` })
+      const action = mode === 'give' ? '지급' : '차감'
+      setResult({
+        type: 'success',
+        message: `@${username.trim()}에게 ${amt.toLocaleString()}P ${action} 완료 (잔액: ${res.new_points?.toLocaleString()}P)`,
+      })
       setUsername(''); setAmount('')
     }
   }
@@ -56,33 +59,74 @@ export default function AdminPointsPage() {
 
   return (
     <div className="p-8">
-      <h1 className="mb-8 text-2xl font-bold text-[#01273A]">포인트 지급</h1>
+      <h1 className="mb-8 text-2xl font-bold text-[#01273A]">포인트 관리</h1>
 
       <div className="max-w-md space-y-6">
-        {/* 포인트 지급 */}
+        {/* 포인트 지급 / 차감 */}
         <div className="rounded border border-gray-200 bg-white p-8">
-          <h2 className="mb-5 font-bold text-[#01273A]">아이디로 직접 지급</h2>
+          <h2 className="mb-5 font-bold text-[#01273A]">아이디로 직접 조정</h2>
+
+          {/* 지급 / 차감 토글 */}
+          <div className="mb-5 flex rounded border border-gray-200 overflow-hidden">
+            <button
+              type="button"
+              onClick={() => { setMode('give'); setResult(null) }}
+              className={`flex-1 py-2.5 text-sm font-semibold transition ${
+                mode === 'give'
+                  ? 'bg-[#01273A] text-white'
+                  : 'bg-white text-[#555] hover:bg-gray-50'
+              }`}
+            >
+              지급
+            </button>
+            <button
+              type="button"
+              onClick={() => { setMode('deduct'); setResult(null) }}
+              className={`flex-1 py-2.5 text-sm font-semibold transition ${
+                mode === 'deduct'
+                  ? 'bg-red-500 text-white'
+                  : 'bg-white text-[#555] hover:bg-gray-50'
+              }`}
+            >
+              차감
+            </button>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="mb-1 block text-sm font-semibold text-[#333]">아이디</label>
-              <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}
-                placeholder="수신자 아이디 입력"
-                className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#01273A]" />
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="대상자 아이디 입력"
+                className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#01273A]"
+              />
             </div>
             <div>
               <label className="mb-1 block text-sm font-semibold text-[#333]">포인트 금액</label>
-              <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)}
-                placeholder="예: 10000" min={1}
-                className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#01273A]" />
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="예: 10000"
+                min={1}
+                className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#01273A]"
+              />
             </div>
             {result && (
               <div className={`rounded px-4 py-3 text-sm ${result.type === 'success' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'}`}>
                 {result.message}
               </div>
             )}
-            <button type="submit" disabled={loading}
-              className="w-full bg-[#01273A] py-3 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60">
-              {loading ? '처리 중...' : '포인트 지급하기'}
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full py-3 text-sm font-semibold text-white transition hover:brightness-90 disabled:opacity-60 ${
+                mode === 'deduct' ? 'bg-red-500' : 'bg-[#01273A]'
+              }`}
+            >
+              {loading ? '처리 중...' : mode === 'give' ? '포인트 지급하기' : '포인트 차감하기'}
             </button>
           </form>
         </div>
@@ -96,8 +140,11 @@ export default function AdminPointsPage() {
               {syncResult.message}
             </div>
           )}
-          <button onClick={handleSync} disabled={syncing}
-            className="w-full bg-[#6B96A8] py-3 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60">
+          <button
+            onClick={handleSync}
+            disabled={syncing}
+            className="w-full bg-[#6B96A8] py-3 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
+          >
             {syncing ? '동기화 중...' : '판매 포인트 동기화 실행'}
           </button>
         </div>
@@ -111,8 +158,11 @@ export default function AdminPointsPage() {
               {resetResult.message}
             </div>
           )}
-          <button onClick={handleReset} disabled={resetting}
-            className="w-full bg-red-500 py-3 text-sm font-semibold text-white hover:bg-red-600 disabled:opacity-60">
+          <button
+            onClick={handleReset}
+            disabled={resetting}
+            className="w-full bg-red-500 py-3 text-sm font-semibold text-white hover:bg-red-600 disabled:opacity-60"
+          >
             {resetting ? '초기화 중...' : '전체 초기화 실행'}
           </button>
         </div>
