@@ -133,6 +133,14 @@ export default function SiteHeader() {
               <div className="hidden md:block">
                 <HeaderAuthIcon />
               </div>
+              {loggedIn && (
+                <Link href="/mypage" className="flex flex-col items-end md:hidden leading-tight">
+                  <span className="text-xs font-semibold text-[#01273A]">{nickname}님</span>
+                  <span className={`text-[10px] ${remaining === 0 ? 'text-red-400' : 'text-gray-400'}`}>
+                    해몽 {remaining}/{DAILY_LIMIT}회 남음
+                  </span>
+                </Link>
+              )}
               <button type="button" onClick={() => setMenuOpen(true)} className="flex items-center justify-center text-[#01273A] md:hidden">
                 <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
               </button>
