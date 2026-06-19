@@ -218,10 +218,8 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
   }
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
-    >
-      <div className="relative max-h-[90vh] w-full max-w-lg md:max-w-[800px] overflow-y-auto rounded-2xl bg-white shadow-2xl">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 px-4 py-8">
+      <div className="relative mx-auto w-full max-w-lg md:max-w-[800px] rounded-2xl bg-white shadow-2xl">
 
         {/* X 버튼 */}
         <button
