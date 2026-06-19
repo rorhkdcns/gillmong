@@ -94,6 +94,9 @@ export async function POST(req: NextRequest) {
 grade 기준: A=최고의 길몽, B=좋은 길몽, C=평범한 꿈, D=주의가 필요한 꿈, E=흉몽의 기운, F=해석 불가
 type: "길몽" | "흉몽" | "중립" 중 하나`
 
+  // 버튼 누른 시점에 횟수 차감 (Gemini 성공 여부와 무관)
+  await supabase.from('analysis_logs').insert({ user_id: user.id })
+
   const reqBody = JSON.stringify({
     contents: [{ parts: [{ text: prompt }] }],
     generationConfig: { temperature: 0.75, responseMimeType: 'application/json' },
@@ -151,8 +154,6 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
     advice:         String(parsed.advice ?? ''),
     lucky_numbers:  sanitizeLuckyNumbers(parsed.lucky_numbers),
   }
-
-  await supabase.from('analysis_logs').insert({ user_id: user.id })
 
   return NextResponse.json(result)
 }
