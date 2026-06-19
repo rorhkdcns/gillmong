@@ -55,13 +55,14 @@ export default function SiteHeader() {
     let currentUserId: string | null = null
 
     async function fetchRemaining(userId: string) {
-      const todayISO = new Date().toISOString().split('T')[0]
-      const { count } = await supabase
+      const todayStart = new Date()
+      todayStart.setHours(0, 0, 0, 0)
+      const { data } = await supabase
         .from('analysis_logs')
-        .select('id', { count: 'exact', head: true })
+        .select('id')
         .eq('user_id', userId)
-        .gte('created_at', todayISO)
-      if (isMounted) setRemaining(DAILY_LIMIT - (count ?? 0))
+        .gte('created_at', todayStart.toISOString())
+      if (isMounted) setRemaining(DAILY_LIMIT - (data?.length ?? 0))
     }
 
     async function syncAuth(session: Session | null) {
@@ -87,7 +88,7 @@ export default function SiteHeader() {
     }
 
     function onDreamAnalyzed() {
-      if (currentUserId) fetchRemaining(currentUserId).catch(() => {})
+      setRemaining((prev) => Math.max(0, prev - 1))
     }
 
     supabase.auth.getSession().then((result: { data: { session: Session | null } }) => {
