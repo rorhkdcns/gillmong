@@ -26,17 +26,29 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
   const today = new Date()
   const [base, setBase] = useState(new Date(today.getFullYear(), today.getMonth(), 1))
   const [selected, setSelected] = useState<string | null>(null)
-  const [searchVal, setSearchVal] = useState('')
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
+
+  // 날짜 범위 필터링
+  const filteredItems = useMemo(() => {
+    if (!startDate && !endDate) return items
+    return items.filter(item => {
+      const d = item.date.slice(0, 10)
+      if (startDate && d < startDate) return false
+      if (endDate && d > endDate) return false
+      return true
+    })
+  }, [items, startDate, endDate])
 
   const byDate = useMemo(() => {
     const map: Record<string, CalendarItem[]> = {}
-    for (const item of items) {
+    for (const item of filteredItems) {
       const d = item.date.slice(0, 10)
       if (!map[d]) map[d] = []
       map[d].push(item)
     }
     return map
-  }, [items])
+  }, [filteredItems])
 
   const year = base.getFullYear()
   const month = base.getMonth()
@@ -49,41 +61,69 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
     ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
   ]
 
-  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleStartDate(e: React.ChangeEvent<HTMLInputElement>) {
     const val = e.target.value
-    setSearchVal(val)
-    if (!val) { setSelected(null); return }
-    const d = new Date(val)
-    if (isNaN(d.getTime())) return
-    setBase(new Date(d.getFullYear(), d.getMonth(), 1))
-    setSelected(val)
+    setStartDate(val)
+    setSelected(null)
+    if (val) {
+      const d = new Date(val)
+      if (!isNaN(d.getTime())) setBase(new Date(d.getFullYear(), d.getMonth(), 1))
+    }
+  }
+
+  function handleEndDate(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value
+    setEndDate(val)
+    setSelected(null)
+    if (val && !startDate) {
+      const d = new Date(val)
+      if (!isNaN(d.getTime())) setBase(new Date(d.getFullYear(), d.getMonth(), 1))
+    }
   }
 
   function clearSearch() {
-    setSearchVal('')
+    setStartDate('')
+    setEndDate('')
     setSelected(null)
   }
 
+  const hasFilter = startDate || endDate
+
   return (
     <div>
-      {/* 날짜 검색 */}
-      <div className="mb-5 flex items-center gap-2">
-        <div className="relative flex-1">
+      {/* 날짜 범위 검색 */}
+      <div className="mb-5 rounded-lg border border-gray-200 bg-gray-50 p-3">
+        <p className="mb-2 text-xs font-medium text-[#777777]">기간 검색</p>
+        <div className="flex flex-wrap items-center gap-2">
           <input
             type="date"
-            value={searchVal}
-            onChange={handleSearch}
-            className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-[#333333] outline-none focus:border-[#01273A]"
+            value={startDate}
+            onChange={handleStartDate}
+            max={endDate || undefined}
+            className="flex-1 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-[#333333] outline-none focus:border-[#01273A]"
           />
+          <span className="text-sm text-[#777777]">~</span>
+          <input
+            type="date"
+            value={endDate}
+            onChange={handleEndDate}
+            min={startDate || undefined}
+            className="flex-1 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-[#333333] outline-none focus:border-[#01273A]"
+          />
+          {hasFilter && (
+            <button
+              type="button"
+              onClick={clearSearch}
+              className="shrink-0 rounded border border-gray-300 bg-white px-3 py-2 text-xs text-[#777777] hover:border-red-300 hover:text-red-400"
+            >
+              초기화
+            </button>
+          )}
         </div>
-        {searchVal && (
-          <button
-            type="button"
-            onClick={clearSearch}
-            className="shrink-0 rounded-lg border border-gray-200 px-3 py-2 text-xs text-[#777777] hover:border-gray-400"
-          >
-            초기화
-          </button>
+        {hasFilter && (
+          <p className="mt-2 text-xs text-[#E07B2A]">
+            {filteredItems.length}건 표시 중
+          </p>
         )}
       </div>
 
@@ -91,7 +131,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
       <div className="mb-3 flex items-center justify-between">
         <button
           type="button"
-          onClick={() => { setBase(new Date(year, month - 1, 1)); setSelected(null); setSearchVal('') }}
+          onClick={() => { setBase(new Date(year, month - 1, 1)); setSelected(null) }}
           className="rounded px-3 py-1.5 text-sm text-[#555555] hover:bg-gray-100"
         >
           ‹ 이전
@@ -99,7 +139,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
         <span className="text-sm font-semibold text-[#01273A]">{year}년 {month + 1}월</span>
         <button
           type="button"
-          onClick={() => { setBase(new Date(year, month + 1, 1)); setSelected(null); setSearchVal('') }}
+          onClick={() => { setBase(new Date(year, month + 1, 1)); setSelected(null) }}
           className="rounded px-3 py-1.5 text-sm text-[#555555] hover:bg-gray-100"
         >
           다음 ›
@@ -124,17 +164,20 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
           const isSelected = selected === dateStr
           const isToday = dateStr === todayStr
           const dow = (firstWeekday + day - 1) % 7
+          const inRange = (!startDate || dateStr >= startDate) && (!endDate || dateStr <= endDate)
 
           return (
             <button
               key={dateStr}
               type="button"
-              onClick={() => { setSelected(isSelected ? null : dateStr); setSearchVal(isSelected ? '' : dateStr) }}
+              onClick={() => setSelected(isSelected ? null : dateStr)}
               className={`flex flex-col items-center justify-center rounded-lg py-2 transition-colors ${
                 isSelected
                   ? 'bg-[#01273A] text-white'
                   : count > 0
                   ? 'bg-amber-50 hover:bg-amber-100'
+                  : hasFilter && !inRange
+                  ? 'opacity-30'
                   : 'hover:bg-gray-50'
               } ${!isSelected && dow === 0 ? 'text-red-400' : ''} ${!isSelected && dow === 6 ? 'text-blue-400' : ''}`}
             >
