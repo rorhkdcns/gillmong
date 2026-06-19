@@ -59,6 +59,10 @@ export default function SiteHeader() {
       setLoggedIn(!!session)
       if (!session?.user) { setNickname(''); setRemaining(DAILY_LIMIT); return }
 
+      // 세션 확인 즉시 폴백 닉네임 표시 (프로필 조회 실패해도 유지)
+      const emailFallback = session.user.email?.split('@')[0] ?? '사용자'
+      setNickname(emailFallback)
+
       try {
         const userId = session.user.id
         const todayISO = new Date().toISOString().split('T')[0]
@@ -69,10 +73,10 @@ export default function SiteHeader() {
         ])
 
         if (!isMounted) return
-        setNickname(profile?.nickname ?? session.user.email?.split('@')[0] ?? '')
+        setNickname(profile?.nickname ?? emailFallback)
         setRemaining(DAILY_LIMIT - (count ?? 0))
       } catch {
-        // 조회 실패해도 로그인 상태는 유지
+        // 조회 실패해도 폴백 닉네임 + 로그인 상태 유지
       }
     }
 
