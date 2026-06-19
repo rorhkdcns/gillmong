@@ -158,7 +158,10 @@ export default async function MyPage() {
           <section className="border border-gray-200 bg-white p-5 md:p-8">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="bg-[#01273A] px-3 py-1 text-sm font-semibold text-white">내가 등록한 꿈</h2>
-              <span className="text-sm text-[#777777]">{myDreams.length}건</span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl font-bold text-[#E07B2A]">{myDreams.length}</span>
+                <span className="text-sm text-[#777777]">건</span>
+              </div>
             </div>
             <DreamCalendar items={myDreamsCalendar} />
           </section>
@@ -167,7 +170,10 @@ export default async function MyPage() {
           <section className="border border-gray-200 bg-white p-5 md:p-8">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="bg-[#01273A] px-3 py-1 text-sm font-semibold text-white">내가 저장한 꿈</h2>
-              <span className="text-sm text-[#777777]">{privateDreams.length}건</span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl font-bold text-[#E07B2A]">{privateDreams.length}</span>
+                <span className="text-sm text-[#777777]">건</span>
+              </div>
             </div>
             <DreamCalendar items={savedCalendar} />
           </section>
@@ -176,7 +182,10 @@ export default async function MyPage() {
           <section className="border border-gray-200 bg-white p-5 md:p-8">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="bg-[#01273A] px-3 py-1 text-sm font-semibold text-white">구매한 꿈</h2>
-              <span className="text-sm text-[#777777]">{purchased.length}건</span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl font-bold text-[#E07B2A]">{purchased.length}</span>
+                <span className="text-sm text-[#777777]">건</span>
+              </div>
             </div>
             <DreamCalendar items={purchasedCalendar} />
           </section>
@@ -185,7 +194,10 @@ export default async function MyPage() {
           <section className="border border-gray-200 bg-white p-5 md:p-8">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="bg-[#01273A] px-3 py-1 text-sm font-semibold text-white">판매 현황</h2>
-              <span className="text-sm text-[#777777]">{soldDreams.length}건</span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-2xl font-bold text-[#E07B2A]">{soldDreams.length}</span>
+                <span className="text-sm text-[#777777]">건</span>
+              </div>
             </div>
             {soldDreams.length === 0 ? (
               <p className="py-6 text-center text-sm text-[#999]">판매 내역이 없습니다</p>
