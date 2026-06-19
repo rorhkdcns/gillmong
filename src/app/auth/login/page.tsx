@@ -1,24 +1,18 @@
 'use client'
 
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useActionState, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import SiteFooter from '@/components/SiteFooter'
-import { createClient } from '@/lib/supabase/client'
-
-function usernameToEmail(username: string) {
-  return `${username.trim().toLowerCase()}@gillmong.com`
-}
+import { loginAction } from '@/app/actions'
 
 function LoginForm() {
   const searchParams = useSearchParams()
   const resetDone = searchParams.get('reset') === 'done'
 
+  const [state, formAction, isPending] = useActionState(loginAction, null)
+  const [saveId, setSaveId] = useState(false)
   const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError]       = useState('')
-  const [loading, setLoading]   = useState(false)
-  const [saveId, setSaveId]     = useState(false)
 
   useEffect(() => {
     const saved = localStorage.getItem('savedUsername')
@@ -28,48 +22,11 @@ function LoginForm() {
     }
   }, [])
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
-
+  function handleBeforeSubmit() {
     if (saveId) {
       localStorage.setItem('savedUsername', username.trim().toLowerCase())
     } else {
       localStorage.removeItem('savedUsername')
-    }
-
-    try {
-      const supabase = createClient()
-      const email = usernameToEmail(username)
-      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password })
-
-      if (signInError) {
-        setError('아이디 또는 비밀번호가 올바르지 않습니다.')
-        setLoading(false)
-        return
-      }
-
-      // 어드민 여부 확인 — 실패해도 반드시 이동
-      let isAdmin = false
-      try {
-        const userId = signInData.user?.id
-        if (userId) {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('is_admin')
-            .eq('id', userId)
-            .single()
-          isAdmin = !!profile?.is_admin
-        }
-      } catch {
-        // 프로필 조회 실패해도 로그인은 성공 → 홈으로
-      }
-
-      window.location.href = isAdmin ? '/admin' : '/'
-    } catch {
-      setError('로그인 중 오류가 발생했습니다. 다시 시도해주세요.')
-      setLoading(false)
     }
   }
 
@@ -84,11 +41,12 @@ function LoginForm() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form action={formAction} onSubmit={handleBeforeSubmit} className="flex flex-col gap-4">
         <div>
           <label className="mb-1 block text-sm text-[#555555]">아이디</label>
           <input
             type="text"
+            name="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             placeholder="아이디 입력"
@@ -101,8 +59,7 @@ function LoginForm() {
           <label className="mb-1 block text-sm text-[#555555]">비밀번호</label>
           <input
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
             placeholder="비밀번호 입력"
             required
             className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#01273A]"
@@ -119,16 +76,16 @@ function LoginForm() {
           <span className="text-sm text-[#555555]">아이디 저장</span>
         </label>
 
-        {error && (
-          <p className="text-sm text-red-500">{error}</p>
+        {state?.error && (
+          <p className="text-sm text-red-500">{state.error}</p>
         )}
 
         <button
           type="submit"
-          disabled={loading}
+          disabled={isPending}
           className="mt-2 w-full bg-[#01273A] py-3 text-base font-semibold text-white transition-all hover:brightness-90 disabled:opacity-60"
         >
-          {loading ? '로그인 중...' : '로그인'}
+          {isPending ? '로그인 중...' : '로그인'}
         </button>
       </form>
 
@@ -151,8 +108,6 @@ function LoginForm() {
 export default function LoginPage() {
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
-
-      {/* 헤더 */}
       <header className="border-b border-gray-200 bg-white px-6 py-4">
         <div className="mx-auto max-w-6xl">
           <a href="/">
@@ -161,7 +116,6 @@ export default function LoginPage() {
         </div>
       </header>
 
-      {/* 본문 */}
       <main className="flex flex-1 items-center justify-center px-6 py-16">
         <Suspense fallback={null}>
           <LoginForm />
