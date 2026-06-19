@@ -49,6 +49,12 @@ export default function FloatingDreamButton() {
     const supabase = createClient()
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.user) { router.push('/auth/login'); return }
+
+    const res = await fetch('/api/dream-remaining', { cache: 'no-store' })
+    if (res.ok) {
+      const { remaining } = await res.json()
+      if (remaining <= 0) setDailyLimitReached(true)
+    }
     setOpen(true)
   }
 
@@ -131,46 +137,46 @@ export default function FloatingDreamButton() {
 
             <h2 className="mb-6 text-center text-xl font-black text-[#01273A]">나의 꿈 감정하기</h2>
 
-            <div className="flex flex-col gap-4">
-              {FIELDS.map((field) => (
-                <div key={field.key}>
-                  <label className="mb-1.5 block text-sm font-bold text-[#01273A]">
-                    {field.label}
-                    <span className="ml-1 font-normal text-xs text-gray-400">({field.desc})</span>
-                  </label>
-                  <textarea
-                    value={answers[field.key]}
-                    onChange={(e) => handleChange(field.key, e.target.value)}
-                    placeholder={field.placeholder}
-                    rows={2}
-                    className="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-[#01273A] placeholder:text-[#BBBBBB] outline-none focus:border-[#01273A]"
-                  />
-                </div>
-              ))}
+            {dailyLimitReached ? (
+              <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-8 text-center">
+                <p className="text-3xl mb-3">🌙</p>
+                <p className="font-black text-[#01273A] text-sm">오늘의 해몽 횟수를 모두 사용하셨습니다</p>
+                <p className="mt-2 text-xs text-amber-700">하루 3회 제공되며, 자정에 다시 초기화됩니다.</p>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4">
+                {FIELDS.map((field) => (
+                  <div key={field.key}>
+                    <label className="mb-1.5 block text-sm font-bold text-[#01273A]">
+                      {field.label}
+                      <span className="ml-1 font-normal text-xs text-gray-400">({field.desc})</span>
+                    </label>
+                    <textarea
+                      value={answers[field.key]}
+                      onChange={(e) => handleChange(field.key, e.target.value)}
+                      placeholder={field.placeholder}
+                      rows={2}
+                      className="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-[#01273A] placeholder:text-[#BBBBBB] outline-none focus:border-[#01273A]"
+                    />
+                  </div>
+                ))}
 
-              {inputError && (
-                <div className="flex flex-col gap-2">
-                  <p className="text-sm text-red-500">{inputError}</p>
-                  {isRetryable && (
-                    <button
-                      type="button"
-                      onClick={handleSubmit}
-                      disabled={loading}
-                      className="self-start rounded-lg border border-red-300 px-4 py-1.5 text-sm font-semibold text-red-500 hover:bg-red-50 disabled:opacity-60"
-                    >
-                      재시도
-                    </button>
-                  )}
-                </div>
-              )}
+                {inputError && (
+                  <div className="flex flex-col gap-2">
+                    <p className="text-sm text-red-500">{inputError}</p>
+                    {isRetryable && (
+                      <button
+                        type="button"
+                        onClick={handleSubmit}
+                        disabled={loading}
+                        className="self-start rounded-lg border border-red-300 px-4 py-1.5 text-sm font-semibold text-red-500 hover:bg-red-50 disabled:opacity-60"
+                      >
+                        재시도
+                      </button>
+                    )}
+                  </div>
+                )}
 
-              {dailyLimitReached ? (
-                <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-5 text-center">
-                  <p className="text-2xl mb-2">🌙</p>
-                  <p className="font-black text-[#01273A] text-sm">오늘의 해몽 횟수를 모두 사용하셨습니다</p>
-                  <p className="mt-1.5 text-xs text-amber-700">하루 3회 제공되며, 자정에 다시 초기화됩니다.</p>
-                </div>
-              ) : (
                 <button
                   type="button"
                   onClick={handleSubmit}
@@ -179,8 +185,8 @@ export default function FloatingDreamButton() {
                 >
                   나의 꿈 감정하기
                 </button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       )}

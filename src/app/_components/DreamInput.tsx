@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import ResultModal, { type AnalysisResult } from './ResultModal'
@@ -44,6 +44,23 @@ export default function DreamInput() {
   const [reconstructedDream, setReconstructedDream] = useState('')
   const [dailyLimitReached, setDailyLimitReached] = useState(false)
 
+  useEffect(() => {
+    async function checkLimit() {
+      const supabase = createClient()
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.user) return
+      const res = await fetch('/api/dream-remaining', { cache: 'no-store' })
+      if (!res.ok) return
+      const { remaining } = await res.json()
+      if (remaining <= 0) setDailyLimitReached(true)
+    }
+    checkLimit()
+
+    function onAnalyzed() { checkLimit() }
+    window.addEventListener('dream-analyzed', onAnalyzed)
+    return () => window.removeEventListener('dream-analyzed', onAnalyzed)
+  }, [])
+
   function handleChange(key: keyof Answers, value: string) {
     setAnswers((prev) => ({ ...prev, [key]: value }))
     setInputError('')
@@ -84,6 +101,16 @@ export default function DreamInput() {
     }
   }
 
+  if (dailyLimitReached) {
+    return (
+      <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-8 text-center">
+        <p className="text-3xl mb-3">🌙</p>
+        <p className="font-black text-[#01273A] text-lg">오늘의 해몽 횟수를 모두 사용하셨습니다</p>
+        <p className="mt-2 text-sm text-amber-700">하루 3회 제공되며, 자정에 다시 초기화됩니다.</p>
+      </div>
+    )
+  }
+
   return (
     <>
       <div className="flex flex-col gap-4">
@@ -119,23 +146,15 @@ export default function DreamInput() {
           </div>
         )}
 
-        {dailyLimitReached ? (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-5 text-center">
-            <p className="text-2xl mb-2">🌙</p>
-            <p className="font-black text-[#01273A] text-base">오늘의 해몽 횟수를 모두 사용하셨습니다</p>
-            <p className="mt-1.5 text-sm text-amber-700">하루 3회 제공되며, 자정에 다시 초기화됩니다.</p>
-          </div>
-        ) : (
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={loading}
-            className="w-full rounded-xl py-5 text-xl font-black text-white shadow-md transition-all hover:brightness-90 active:scale-[0.98] disabled:opacity-60"
-            style={{ backgroundColor: '#01273A' }}
-          >
-            나의 꿈 감정하기
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={loading}
+          className="w-full rounded-xl py-5 text-xl font-black text-white shadow-md transition-all hover:brightness-90 active:scale-[0.98] disabled:opacity-60"
+          style={{ backgroundColor: '#01273A' }}
+        >
+          나의 꿈 감정하기
+        </button>
       </div>
 
       {/* 로딩 모달 */}
