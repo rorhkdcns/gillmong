@@ -58,30 +58,30 @@ const grades = [
 
 export default function GuidePage() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#F7F7F5]" style={{ fontSize: '18px' }}>
+    <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
 
       <SiteHeader />
 
       {/* ───── 1. 꿈의 가치를 거래합니다 ───── */}
-      <section className="bg-[#01273A] px-8 py-32 text-white">
+      <section className="bg-[#01273A] px-5 py-14 text-white md:px-8 md:py-32">
         <div className="mx-auto max-w-4xl text-center">
-          <p className="mb-5 tracking-widest text-[#FFD700]" style={{ fontSize: '16px' }}>GILLMONG SERVICE</p>
-          <h1 className="mb-6 leading-tight text-white" style={{ fontSize: '48px' }}>꿈의 가치를 거래합니다</h1>
-          <p className="mx-auto mb-20 max-w-xl leading-relaxed text-white/90" style={{ fontSize: '18px' }}>
+          <p className="mb-4 text-xs tracking-widest text-[#FFD700] md:mb-5 md:text-base">GILLMONG SERVICE</p>
+          <h1 className="mb-4 text-3xl leading-tight text-white md:mb-6 md:text-5xl">꿈의 가치를 거래합니다</h1>
+          <p className="mx-auto mb-10 max-w-xl text-base leading-relaxed text-white/90 md:mb-20 md:text-lg">
             당신의 꿈이 하나의 상품이 됩니다
           </p>
-          <div className="grid gap-8 text-left md:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-10">
-              <Sparkles className="mb-6 text-[#FFD700]" size={32} strokeWidth={1.5} />
-              <h3 className="mb-4 text-white" style={{ fontSize: '22px' }}>AI 해몽 분석</h3>
-              <p className="leading-relaxed text-white/85" style={{ fontSize: '17px' }}>
+          <div className="grid gap-5 text-left md:grid-cols-2 md:gap-8">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 md:p-10">
+              <Sparkles className="mb-4 text-[#FFD700] md:mb-6" size={28} strokeWidth={1.5} />
+              <h3 className="mb-3 text-lg text-white md:mb-4 md:text-xl">AI 해몽 분석</h3>
+              <p className="text-sm leading-relaxed text-white/85 md:text-base">
                 당신의 꿈을 GILLMONG AI가 한국 전통·동양·서양 심리학적 관점으로 정밀 분석하여 운세 등급과 해몽을 제공합니다.
               </p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-10">
-              <Coins className="mb-6 text-[#FFD700]" size={32} strokeWidth={1.5} />
-              <h3 className="mb-4 text-white" style={{ fontSize: '22px' }}>포인트 기반 거래</h3>
-              <p className="leading-relaxed text-white/85" style={{ fontSize: '17px' }}>
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-6 md:p-10">
+              <Coins className="mb-4 text-[#FFD700] md:mb-6" size={28} strokeWidth={1.5} />
+              <h3 className="mb-3 text-lg text-white md:mb-4 md:text-xl">포인트 기반 거래</h3>
+              <p className="text-sm leading-relaxed text-white/85 md:text-base">
                 좋은 꿈을 판매하여 리워드를 얻거나, 필요한 행운을 포인트로 구매할 수 있는 독창적인 마켓 플랫폼입니다.
               </p>
             </div>
@@ -90,22 +90,24 @@ export default function GuidePage() {
       </section>
 
       {/* ───── 2. 서비스 프로세스 ───── */}
-      <section className="bg-white px-8 py-28">
+      <section className="bg-white px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl">
-          <div className="mb-20 text-center">
-            <p className="mb-4 tracking-widest text-[#555555]" style={{ fontSize: '16px' }}>HOW IT WORKS</p>
-            <h2 className="text-[#01273A]" style={{ fontSize: '32px' }}>GILLMONG 서비스 프로세스</h2>
+          <div className="mb-10 text-center md:mb-20">
+            <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">HOW IT WORKS</p>
+            <h2 className="text-2xl text-[#01273A] md:text-3xl">GILLMONG 서비스 프로세스</h2>
           </div>
-          <div className="flex items-start justify-center">
+          {/* 모바일: 2열 그리드 / 데스크탑: 가로 flex */}
+          <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:flex md:items-start md:justify-center">
             {processSteps.map((item, i) => (
               <Fragment key={i}>
-                <div className="flex flex-1 flex-col items-center px-4 text-center">
-                  <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#01273A]">
-                    <item.Icon size={28} strokeWidth={1.5} className="text-[#FFD700]" />
+                <div className="flex flex-col items-center px-2 text-center md:flex-1 md:px-4">
+                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#01273A] md:mb-6 md:h-20 md:w-20">
+                    <item.Icon size={22} strokeWidth={1.5} className="text-[#FFD700] md:hidden" />
+                    <item.Icon size={28} strokeWidth={1.5} className="hidden text-[#FFD700] md:block" />
                   </div>
-                  <p className="mb-1 text-[#E07B2A]" style={{ fontSize: '16px' }}>{item.step}</p>
-                  <p className="mb-3 text-[#01273A]" style={{ fontSize: '18px' }}>{item.title}</p>
-                  <p className="leading-relaxed text-[#333333]" style={{ fontSize: '16px' }}>{item.desc}</p>
+                  <p className="mb-1 text-xs text-[#E07B2A] md:text-base">{item.step}</p>
+                  <p className="mb-2 text-sm font-semibold text-[#01273A] md:mb-3 md:text-lg md:font-normal">{item.title}</p>
+                  <p className="text-xs leading-relaxed text-[#333333] md:text-base">{item.desc}</p>
                 </div>
                 {i < processSteps.length - 1 && (
                   <div className="hidden shrink-0 items-center pt-9 text-[#888888] md:flex">
@@ -119,38 +121,35 @@ export default function GuidePage() {
       </section>
 
       {/* ───── 3. 행운을 구매하세요 ───── */}
-      <section className="bg-[#F2F2F2] px-8 py-28">
+      <section className="bg-[#F2F2F2] px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl md:flex md:items-start md:gap-20">
-          <div className="mb-12 md:mb-0 md:w-1/2">
-            <p className="mb-4 tracking-widest text-[#555555]" style={{ fontSize: '16px' }}>BUY LUCK</p>
-            <h2 className="mb-5 text-[#01273A]" style={{ fontSize: '32px' }}>행운을 구매하세요</h2>
-            <p className="mb-10 leading-relaxed text-[#333333]" style={{ fontSize: '18px' }}>
+          <div className="mb-8 text-center md:mb-0 md:w-1/2 md:text-left">
+            <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">BUY LUCK</p>
+            <h2 className="mb-4 text-2xl text-[#01273A] md:mb-5 md:text-3xl">행운을 구매하세요</h2>
+            <p className="mb-8 text-sm leading-relaxed text-[#333333] md:mb-10 md:text-lg">
               꿈 구경하기 메뉴에서 등록된 꿈들을 탐색하세요.
             </p>
-            <ul className="flex flex-col gap-6">
+            <ul className="flex flex-col gap-4 text-left md:gap-6">
               {[
                 '상징, 요약, 운세 등급 확인',
                 '해몽 및 행운 번호 제공',
                 '포인트 결제 시 해몽 전문 열람',
               ].map((item, i) => (
-                <li key={i} className="flex items-start gap-4">
-                  <span
-                    className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#E07B2A] text-white"
-                    style={{ fontSize: '14px' }}
-                  >
+                <li key={i} className="flex items-start gap-3 md:gap-4">
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#E07B2A] text-xs text-white md:h-7 md:w-7">
                     {i + 1}
                   </span>
-                  <span className="leading-relaxed text-[#333333]" style={{ fontSize: '18px' }}>{item}</span>
+                  <span className="text-sm leading-relaxed text-[#333333] md:text-lg">{item}</span>
                 </li>
               ))}
             </ul>
           </div>
-          <div className="rounded-2xl bg-[#01273A] p-10 shadow-sm md:w-1/2">
-            <p className="mb-6 text-white" style={{ fontSize: '20px' }}>구매 흐름</p>
+          <div className="mt-8 rounded-2xl bg-[#01273A] p-6 shadow-sm md:mt-0 md:w-1/2 md:p-10">
+            <p className="mb-4 text-base text-white md:mb-6 md:text-xl">구매 흐름</p>
             {['꿈 마켓 탐색', '운세 등급 & 상징 확인', '포인트 결제', '행운 상징물 소유'].map((step, i) => (
-              <div key={i} className="flex items-center gap-5 border-b border-white/10 py-5 last:border-0">
-                <span className="text-[#FFD700]" style={{ fontSize: '16px' }}>{String(i + 1).padStart(2, '0')}</span>
-                <span className="text-white" style={{ fontSize: '18px' }}>{step}</span>
+              <div key={i} className="flex items-center gap-4 border-b border-white/10 py-4 last:border-0 md:gap-5 md:py-5">
+                <span className="text-sm text-[#FFD700] md:text-base">{String(i + 1).padStart(2, '0')}</span>
+                <span className="text-sm text-white md:text-lg">{step}</span>
               </div>
             ))}
           </div>
@@ -158,31 +157,30 @@ export default function GuidePage() {
       </section>
 
       {/* ───── 4. 당신의 꿈이 수익이 됩니다 ───── */}
-      <section className="bg-white px-8 py-28">
+      <section className="bg-white px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl md:flex md:flex-row-reverse md:items-start md:gap-20">
-          <div className="mb-12 md:mb-0 md:w-1/2">
-            <p className="mb-4 tracking-widest text-[#555555]" style={{ fontSize: '16px' }}>SELL YOUR DREAM</p>
-            <h2 className="mb-10 text-[#01273A]" style={{ fontSize: '32px' }}>당신의 꿈이<br />수익이 됩니다</h2>
-            <ul className="flex flex-col gap-6">
+          <div className="mb-8 text-center md:mb-0 md:w-1/2 md:text-left">
+            <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">SELL YOUR DREAM</p>
+            <h2 className="mb-8 text-2xl text-[#01273A] md:mb-10 md:text-3xl">
+              당신의 꿈이<br />수익이 됩니다
+            </h2>
+            <ul className="flex flex-col gap-4 text-left md:gap-6">
               {['상세한 꿈 일기 작성', 'AI 해몽 생성', '마켓 등록 및 리워드'].map((item, i) => (
-                <li key={i} className="flex items-start gap-4">
-                  <span
-                    className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#01273A] text-white"
-                    style={{ fontSize: '14px' }}
-                  >
+                <li key={i} className="flex items-start gap-3 md:gap-4">
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#01273A] text-xs text-white md:h-7 md:w-7">
                     {i + 1}
                   </span>
-                  <span className="leading-relaxed text-[#333333]" style={{ fontSize: '18px' }}>{item}</span>
+                  <span className="text-sm leading-relaxed text-[#333333] md:text-lg">{item}</span>
                 </li>
               ))}
             </ul>
           </div>
-          <div className="rounded-2xl bg-[#01273A] p-10 md:w-1/2">
-            <p className="mb-6 text-white" style={{ fontSize: '20px' }}>판매 흐름</p>
+          <div className="mt-8 rounded-2xl bg-[#01273A] p-6 md:mt-0 md:w-1/2 md:p-10">
+            <p className="mb-4 text-base text-white md:mb-6 md:text-xl">판매 흐름</p>
             {['꿈 일기 상세 작성', 'AI 정밀 해몽 실행', '마켓 가격 설정', '판매 & 리워드 수령'].map((step, i) => (
-              <div key={i} className="flex items-center gap-5 border-b border-white/10 py-5 last:border-0">
-                <span className="text-[#FFD700]" style={{ fontSize: '16px' }}>{String(i + 1).padStart(2, '0')}</span>
-                <span className="text-white" style={{ fontSize: '18px' }}>{step}</span>
+              <div key={i} className="flex items-center gap-4 border-b border-white/10 py-4 last:border-0 md:gap-5 md:py-5">
+                <span className="text-sm text-[#FFD700] md:text-base">{String(i + 1).padStart(2, '0')}</span>
+                <span className="text-sm text-white md:text-lg">{step}</span>
               </div>
             ))}
           </div>
@@ -190,18 +188,18 @@ export default function GuidePage() {
       </section>
 
       {/* ───── 5. 안심하고 거래하세요 ───── */}
-      <section className="bg-[#F2F2F2] px-8 py-28">
+      <section className="bg-[#F2F2F2] px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl">
-          <div className="mb-20 text-center">
-            <p className="mb-4 tracking-widest text-[#555555]" style={{ fontSize: '16px' }}>TRUST & SAFETY</p>
-            <h2 className="text-[#01273A]" style={{ fontSize: '32px' }}>안심하고 거래하세요</h2>
+          <div className="mb-10 text-center md:mb-20">
+            <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">TRUST & SAFETY</p>
+            <h2 className="text-2xl text-[#01273A] md:text-3xl">안심하고 거래하세요</h2>
           </div>
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="grid gap-5 md:grid-cols-3 md:gap-8">
             {trustCards.map((card, i) => (
-              <div key={i} className="rounded-2xl bg-white p-10 shadow-sm">
-                <card.Icon className="mb-8 text-[#E07B2A]" size={32} strokeWidth={1.5} />
-                <p className="mb-4 text-[#01273A]" style={{ fontSize: '20px' }}>{card.title}</p>
-                <p className="leading-relaxed text-[#333333]" style={{ fontSize: '17px' }}>{card.desc}</p>
+              <div key={i} className="rounded-2xl bg-white p-6 shadow-sm md:p-10">
+                <card.Icon className="mb-4 text-[#E07B2A] md:mb-8" size={28} strokeWidth={1.5} />
+                <p className="mb-3 text-lg text-[#01273A] md:mb-4 md:text-xl">{card.title}</p>
+                <p className="text-sm leading-relaxed text-[#333333] md:text-base">{card.desc}</p>
               </div>
             ))}
           </div>
@@ -209,19 +207,35 @@ export default function GuidePage() {
       </section>
 
       {/* ───── 6. 포인트 정책 안내 ───── */}
-      <section className="bg-white px-8 py-28">
+      <section className="bg-white px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl">
-          <div className="mb-20 text-center">
-            <p className="mb-4 tracking-widest text-[#555555]" style={{ fontSize: '16px' }}>POINT POLICY</p>
-            <h2 className="text-[#01273A]" style={{ fontSize: '32px' }}>포인트 정책 안내</h2>
+          <div className="mb-10 text-center md:mb-20">
+            <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">POINT POLICY</p>
+            <h2 className="text-2xl text-[#01273A] md:text-3xl">포인트 정책 안내</h2>
           </div>
-          <div className="overflow-hidden rounded-2xl border border-gray-200">
+
+          {/* 모바일: 카드형 */}
+          <div className="flex flex-col gap-4 md:hidden">
+            {pointPolicies.map((row, i) => (
+              <div key={i} className="rounded-xl border border-gray-200 bg-white p-5">
+                <div className="mb-3 flex items-center gap-2">
+                  <row.Icon size={18} strokeWidth={1.5} className="shrink-0 text-[#E07B2A]" />
+                  <span className="font-semibold text-[#01273A]">{row.service}</span>
+                </div>
+                <p className="mb-1 text-sm text-[#333333]">{row.policy}</p>
+                <p className="text-xs text-[#777777]">{row.detail}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* 데스크탑: 테이블 */}
+          <div className="hidden overflow-hidden rounded-2xl border border-gray-200 md:block">
             <table className="w-full">
               <thead>
                 <tr className="bg-[#01273A] text-white">
-                  <th className="px-8 py-5 text-left" style={{ fontSize: '17px' }}>서비스</th>
-                  <th className="px-8 py-5 text-left" style={{ fontSize: '17px' }}>정책</th>
-                  <th className="px-8 py-5 text-left" style={{ fontSize: '17px' }}>상세</th>
+                  <th className="px-8 py-5 text-left text-base">서비스</th>
+                  <th className="px-8 py-5 text-left text-base">정책</th>
+                  <th className="px-8 py-5 text-left text-base">상세</th>
                 </tr>
               </thead>
               <tbody>
@@ -230,11 +244,11 @@ export default function GuidePage() {
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-3">
                         <row.Icon size={20} strokeWidth={1.5} className="text-[#E07B2A]" />
-                        <span className="text-[#01273A]" style={{ fontSize: '17px' }}>{row.service}</span>
+                        <span className="text-base text-[#01273A]">{row.service}</span>
                       </div>
                     </td>
-                    <td className="px-8 py-5 text-[#333333]" style={{ fontSize: '16px' }}>{row.policy}</td>
-                    <td className="px-8 py-5 text-[#333333]" style={{ fontSize: '16px' }}>{row.detail}</td>
+                    <td className="px-8 py-5 text-base text-[#333333]">{row.policy}</td>
+                    <td className="px-8 py-5 text-base text-[#333333]">{row.detail}</td>
                   </tr>
                 ))}
               </tbody>
@@ -244,29 +258,29 @@ export default function GuidePage() {
       </section>
 
       {/* ───── 7. 운세 등급 시스템 ───── */}
-      <section className="bg-[#F2F2F2] px-8 py-28">
+      <section className="bg-[#F2F2F2] px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl">
-          <div className="mb-20 text-center">
-            <p className="mb-4 tracking-widest text-[#555555]" style={{ fontSize: '16px' }}>GRADE SYSTEM</p>
-            <h2 className="text-[#01273A]" style={{ fontSize: '32px' }}>운세 등급 시스템</h2>
+          <div className="mb-10 text-center md:mb-20">
+            <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">GRADE SYSTEM</p>
+            <h2 className="text-2xl text-[#01273A] md:text-3xl">운세 등급 시스템</h2>
           </div>
-          <div className="mb-16 flex justify-center">
-            <div className="flex h-40 w-40 flex-col items-center justify-center rounded-full bg-[#01273A] shadow-xl">
-              <Star size={22} strokeWidth={1.5} className="mb-1 text-[#FFD700]" />
-              <span className="tracking-widest text-[#FFD700]" style={{ fontSize: '14px' }}>EXCEL</span>
-              <span className="text-white/80" style={{ fontSize: '14px' }}>GILLMONG</span>
-              <span className="text-white" style={{ fontSize: '20px' }}>GRADE</span>
+          <div className="mb-8 flex justify-center md:mb-16">
+            <div className="flex h-32 w-32 flex-col items-center justify-center rounded-full bg-[#01273A] shadow-xl md:h-40 md:w-40">
+              <Star size={20} strokeWidth={1.5} className="mb-1 text-[#FFD700]" />
+              <span className="text-xs tracking-widest text-[#FFD700]">EXCEL</span>
+              <span className="text-xs text-white/80">GILLMONG</span>
+              <span className="text-lg text-white">GRADE</span>
             </div>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-3 md:gap-6">
             {grades.map((g, i) => (
-              <div key={i} className="flex items-center gap-6 rounded-2xl bg-white p-8 shadow-sm">
-                <div className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full ${g.color} text-white shadow`} style={{ fontSize: '24px' }}>
+              <div key={i} className="flex items-center gap-5 rounded-2xl bg-white p-5 shadow-sm md:gap-6 md:p-8">
+                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-xl font-bold text-white shadow md:h-16 md:w-16 md:text-2xl ${g.color}`}>
                   {g.grade}
                 </div>
                 <div>
-                  <p className="mb-1 text-[#01273A]" style={{ fontSize: '18px' }}>{g.label}</p>
-                  <p className="text-[#333333]" style={{ fontSize: '16px' }}>{g.desc}</p>
+                  <p className="mb-1 text-base text-[#01273A] md:text-lg">{g.label}</p>
+                  <p className="text-sm text-[#333333] md:text-base">{g.desc}</p>
                 </div>
               </div>
             ))}
