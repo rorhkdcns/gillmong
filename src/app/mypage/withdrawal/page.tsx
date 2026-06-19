@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import WithdrawalForm from './_components/WithdrawalForm'
@@ -12,7 +13,9 @@ export default async function WithdrawalPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
 
-  const { data: profile } = await supabase
+  // 캐시·RLS 영향 없이 최신 잔액을 읽기 위해 admin 클라이언트 사용
+  const admin = createAdminClient()
+  const { data: profile } = await admin
     .from('profiles')
     .select('points, real_name')
     .eq('id', user.id)
@@ -22,7 +25,7 @@ export default async function WithdrawalPage() {
   const realName = profile?.real_name ?? ''
 
   // 출금 신청 내역
-  const { data: history } = await supabase
+  const { data: history } = await admin
     .from('withdrawal_requests')
     .select('id, amount, bank_name, account_number, status, created_at')
     .eq('user_id', user.id)
