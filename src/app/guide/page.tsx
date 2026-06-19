@@ -96,21 +96,33 @@ export default function GuidePage() {
             <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">HOW IT WORKS</p>
             <h2 className="text-2xl text-[#01273A] md:text-3xl">GILLMONG 서비스 프로세스</h2>
           </div>
-          {/* 모바일: 2열 그리드 / 데스크탑: 가로 flex */}
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:flex md:items-start md:justify-center">
+          {/* 모바일: 2×2 그리드 */}
+          <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:hidden">
+            {processSteps.map((item, i) => (
+              <div key={i} className="flex flex-col items-center px-1 text-center">
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#01273A]">
+                  <item.Icon size={22} strokeWidth={1.5} className="text-[#FFD700]" />
+                </div>
+                <p className="mb-1 text-xs text-[#E07B2A]">{item.step}</p>
+                <p className="mb-2 text-sm font-semibold text-[#01273A]">{item.title}</p>
+                <p className="text-xs leading-relaxed text-[#555555]">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+          {/* 데스크탑: 가로 flex + 화살표 */}
+          <div className="hidden md:flex md:items-start md:justify-center">
             {processSteps.map((item, i) => (
               <Fragment key={i}>
-                <div className="flex flex-col items-center px-2 text-center md:flex-1 md:px-4">
-                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#01273A] md:mb-6 md:h-20 md:w-20">
-                    <item.Icon size={22} strokeWidth={1.5} className="text-[#FFD700] md:hidden" />
-                    <item.Icon size={28} strokeWidth={1.5} className="hidden text-[#FFD700] md:block" />
+                <div className="flex flex-1 flex-col items-center px-4 text-center">
+                  <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#01273A]">
+                    <item.Icon size={28} strokeWidth={1.5} className="text-[#FFD700]" />
                   </div>
-                  <p className="mb-1 text-xs text-[#E07B2A] md:text-base">{item.step}</p>
-                  <p className="mb-2 text-sm font-semibold text-[#01273A] md:mb-3 md:text-lg md:font-normal">{item.title}</p>
-                  <p className="text-xs leading-relaxed text-[#333333] md:text-base">{item.desc}</p>
+                  <p className="mb-1 text-base text-[#E07B2A]">{item.step}</p>
+                  <p className="mb-3 text-lg text-[#01273A]">{item.title}</p>
+                  <p className="text-base leading-relaxed text-[#333333]">{item.desc}</p>
                 </div>
                 {i < processSteps.length - 1 && (
-                  <div className="hidden shrink-0 items-center pt-9 text-[#888888] md:flex">
+                  <div className="flex shrink-0 items-center pt-9 text-[#888888]">
                     <ChevronRight size={20} />
                   </div>
                 )}
