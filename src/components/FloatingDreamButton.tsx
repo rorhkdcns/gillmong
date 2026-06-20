@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import ResultModal, { type AnalysisResult } from '@/app/_components/ResultModal'
+import { useRemainingCount } from '@/hooks/useRemainingCount'
 
 const FIELDS = [
   {
@@ -36,6 +37,8 @@ type Answers = { who: string; when: string; how: string; memory: string }
 
 export default function FloatingDreamButton() {
   const router = useRouter()
+  const { remaining, fetchRemaining } = useRemainingCount()
+
   const [open, setOpen]     = useState(false)
   const [answers, setAnswers] = useState<Answers>({ who: '', when: '', how: '', memory: '' })
   const [inputError, setInputError]                 = useState('')
@@ -44,27 +47,13 @@ export default function FloatingDreamButton() {
   const [result, setResult]                         = useState<AnalysisResult | null>(null)
   const [reconstructedDream, setReconstructedDream] = useState('')
   const [dailyLimitReached, setDailyLimitReached]   = useState(false)
-  const [remaining, setRemaining]                   = useState<number | null>(null)
-
-  useEffect(() => {
-    fetchRemaining()
-    window.addEventListener('dream-analyzed', fetchRemaining)
-    return () => window.removeEventListener('dream-analyzed', fetchRemaining)
-  }, [])
-
-  async function fetchRemaining() {
-    const res = await fetch('/api/dream-remaining', { cache: 'no-store' })
-    if (!res.ok) return
-    const { remaining: r } = await res.json()
-    setRemaining(r)
-    if (typeof r === 'number' && r <= 0) setDailyLimitReached(true)
-  }
 
   async function handleOpen() {
     const supabase = createClient()
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.user) { router.push('/auth/login'); return }
-    await fetchRemaining()
+    const r = await fetchRemaining()
+    if (typeof r === 'number' && r <= 0) setDailyLimitReached(true)
     setOpen(true)
   }
 
@@ -106,7 +95,6 @@ export default function FloatingDreamButton() {
       setReconstructedDream(rd ?? '')
       setResult(analysis as AnalysisResult)
       window.dispatchEvent(new Event('dream-analyzed'))
-      fetchRemaining()
     } catch (err) {
       const msg = err instanceof Error ? err.message : '알 수 없는 오류'
       setInputError(`해몽 분석 중 오류가 발생했습니다: ${msg}`)

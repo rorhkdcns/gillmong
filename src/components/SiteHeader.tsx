@@ -7,6 +7,7 @@ import Link from 'next/link'
 import FloatingDreamButton from './FloatingDreamButton'
 import { createClient } from '@/lib/supabase/client'
 import type { Session } from '@supabase/supabase-js'
+import { useRemainingCount } from '@/hooks/useRemainingCount'
 
 const navItems = [
   { label: '이용방법', href: '/guide' },
@@ -20,17 +21,15 @@ const navItems = [
 export default function SiteHeader() {
   const router = useRouter()
   const pathname = usePathname()
-  
+  const { remaining, fetchRemaining } = useRemainingCount()
+
   const [searchOpen, setSearchOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
   const [mobileQuery, setMobileQuery] = useState('')
   const [loggedIn, setLoggedIn] = useState(false)
   const [nickname, setNickname] = useState('')
-  const [remaining, setRemaining] = useState<number | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
-
-  const DAILY_LIMIT = 3
 
   // 메뉴 열릴 때 배경 스크롤 방지
   useEffect(() => {
@@ -54,21 +53,10 @@ export default function SiteHeader() {
     const supabase = createClient()
     let currentUserId: string | null = null
 
-    async function fetchRemaining() {
-      try {
-        const res = await fetch('/api/dream-remaining', { cache: 'no-store' })
-        if (!res.ok) return
-        const { remaining } = await res.json()
-        if (isMounted) setRemaining(remaining)
-      } catch {
-        // 조회 실패 시 현재 상태 유지
-      }
-    }
-
     async function syncAuth(session: Session | null) {
       if (!isMounted) return
       setLoggedIn(!!session)
-      if (!session?.user) { setNickname(''); setRemaining(null); currentUserId = null; return }
+      if (!session?.user) { setNickname(''); currentUserId = null; return }
 
       currentUserId = session.user.id
       const emailFallback = session.user.email?.split('@')[0] ?? '사용자'
@@ -87,10 +75,6 @@ export default function SiteHeader() {
       }
     }
 
-    function onDreamAnalyzed() {
-      fetchRemaining()
-    }
-
     supabase.auth.getSession().then((result: { data: { session: Session | null } }) => {
       syncAuth(result.data.session).catch(() => {})
     })
@@ -99,14 +83,11 @@ export default function SiteHeader() {
       syncAuth(session).catch(() => {})
     })
 
-    window.addEventListener('dream-analyzed', onDreamAnalyzed)
-
     return () => {
       isMounted = false
       subscription.unsubscribe()
-      window.removeEventListener('dream-analyzed', onDreamAnalyzed)
     }
-  }, [DAILY_LIMIT])
+  }, [fetchRemaining])
 
   function handleSearch(e: React.FormEvent, q: string, type: 'desktop' | 'mobile') {
     e.preventDefault()
