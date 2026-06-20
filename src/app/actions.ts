@@ -108,3 +108,44 @@ export async function getMyWithdrawals(): Promise<Array<{
     .order('created_at', { ascending: false })
   return data ?? []
 }
+
+export async function deleteMyAccountAction(): Promise<{ error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: '로그인이 필요합니다.' }
+
+  const admin = createAdminClient()
+  const uid = user.id
+
+  // 보조 테이블 (실패해도 계속)
+  await Promise.all([
+    admin.from('withdrawal_requests').delete().eq('user_id', uid),
+    admin.from('reports').delete().eq('reporter_id', uid),
+    admin.from('analysis_logs').delete().eq('user_id', uid),
+    admin.from('saved_dreams').delete().eq('user_id', uid),
+    admin.from('inquiries').delete().eq('user_id', uid),
+  ])
+
+  const { error: ep } = await admin.from('point_logs').delete().eq('user_id', uid)
+  if (ep) return { error: `데이터 삭제 실패: ${ep.message}` }
+
+  const { data: bought } = await admin.from('purchases').select('dream_id').eq('buyer_id', uid)
+  for (const p of bought ?? []) {
+    await admin.from('dreams').update({ is_sold: false }).eq('id', p.dream_id)
+  }
+
+  const { error: epu } = await admin.from('purchases').delete().eq('buyer_id', uid)
+  if (epu) return { error: `데이터 삭제 실패: ${epu.message}` }
+
+  const { error: ed } = await admin.from('dreams').delete().eq('user_id', uid)
+  if (ed) return { error: `데이터 삭제 실패: ${ed.message}` }
+
+  const { error: epr } = await admin.from('profiles').delete().eq('id', uid)
+  if (epr) return { error: `데이터 삭제 실패: ${epr.message}` }
+
+  const { error: ea } = await admin.auth.admin.deleteUser(uid)
+  if (ea) return { error: `계정 삭제 실패: ${ea.message}` }
+
+  await supabase.auth.signOut()
+  redirect('/')
+}
