@@ -46,7 +46,11 @@ export default function FloatingDreamButton() {
   const [dailyLimitReached, setDailyLimitReached]   = useState(false)
   const [remaining, setRemaining]                   = useState<number | null>(null)
 
-  useEffect(() => { fetchRemaining() }, [])
+  useEffect(() => {
+    fetchRemaining()
+    window.addEventListener('dream-analyzed', fetchRemaining)
+    return () => window.removeEventListener('dream-analyzed', fetchRemaining)
+  }, [])
 
   async function fetchRemaining() {
     const res = await fetch('/api/dream-remaining', { cache: 'no-store' })

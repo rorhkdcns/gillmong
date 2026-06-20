@@ -68,7 +68,7 @@ export default function SiteHeader() {
     async function syncAuth(session: Session | null) {
       if (!isMounted) return
       setLoggedIn(!!session)
-      if (!session?.user) { setNickname(''); setRemaining(DAILY_LIMIT); currentUserId = null; return }
+      if (!session?.user) { setNickname(''); setRemaining(null); currentUserId = null; return }
 
       currentUserId = session.user.id
       const emailFallback = session.user.email?.split('@')[0] ?? '사용자'
