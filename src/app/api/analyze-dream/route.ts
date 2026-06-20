@@ -34,22 +34,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: '로그인이 필요합니다.' }, { status: 401 })
   }
 
-  const todayStart = new Date()
-  todayStart.setHours(0, 0, 0, 0)
-  const todayISO = todayStart.toISOString()
-  const { data: logsToday } = await supabase
-    .from('analysis_logs')
-    .select('id')
-    .eq('user_id', user.id)
-    .gte('created_at', todayISO)
-  const usedCount = logsToday?.length ?? 0
-  if (usedCount >= 3) {
-    return NextResponse.json(
-      { error: `오늘 해몽 횟수를 모두 사용했습니다 (3/3)` },
-      { status: 429 }
-    )
-  }
-
   const body = await req.json()
   const answers = body.answers as { who?: string; when?: string; how?: string; memory?: string } | undefined
   const hasInput = answers && Object.values(answers).some((v) => typeof v === 'string' && v.trim())

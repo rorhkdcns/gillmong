@@ -51,7 +51,7 @@ export default function FloatingDreamButton() {
     if (!res.ok) return
     const { remaining: r } = await res.json()
     setRemaining(r)
-    if (r <= 0) setDailyLimitReached(true)
+    if (typeof r === 'number' && r <= 0) setDailyLimitReached(true)
   }
 
   async function handleOpen() {
