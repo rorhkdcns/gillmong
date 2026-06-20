@@ -36,13 +36,10 @@ function parseInterpretation(text: string) {
   return sections
 }
 
-const GRADE_STYLE: Record<string, { bg: string; text: string; label: string }> = {
-  A: { bg: 'bg-emerald-500', text: 'text-emerald-600', label: '최고의 길몽' },
-  B: { bg: 'bg-blue-500',    text: 'text-blue-600',    label: '좋은 길몽' },
-  C: { bg: 'bg-amber-400',   text: 'text-amber-500',   label: '평범한 꿈' },
-  D: { bg: 'bg-orange-400',  text: 'text-orange-500',  label: '주의가 필요한 꿈' },
-  E: { bg: 'bg-red-400',     text: 'text-red-500',     label: '흉몽의 기운' },
-  F: { bg: 'bg-gray-400',    text: 'text-gray-500',    label: '해석 불가' },
+const ALPHABET_BG: Record<string, string> = {
+  길몽: 'bg-emerald-500',
+  흉몽: 'bg-red-500',
+  중립: 'bg-gray-400',
 }
 
 const TYPE_STYLE: Record<string, string> = {
@@ -52,7 +49,7 @@ const TYPE_STYLE: Record<string, string> = {
 }
 
 export interface AnalysisResult {
-  grade: string
+  alphabet: string
   type: string
   title: string
   summary: string
@@ -69,7 +66,7 @@ interface ResultModalProps {
 
 export default function ResultModal({ dream, analysis, onClose }: ResultModalProps) {
   const router = useRouter()
-  const gradeStyle = GRADE_STYLE[analysis.grade] ?? GRADE_STYLE['C']
+  const alphaBg = ALPHABET_BG[analysis.type] ?? ALPHABET_BG['중립']
 
   const [editedDream, setEditedDream] = useState(dream)
   const [title, setTitle]       = useState(analysis.title)
@@ -144,7 +141,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
         title:          title.trim(),
         content:        editedDream.trim(),
         summary:        analysis.summary || editedDream.trim().slice(0, 100),
-        grade:          analysis.grade,
+        grade:          analysis.alphabet,
         type:           analysis.type,
         interpretation: analysis.interpretation,
         advice:         analysis.advice,
@@ -194,7 +191,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
         title:          title.trim(),
         content:        editedDream.trim(),
         summary:        analysis.summary || editedDream.trim().slice(0, 100),
-        grade:          analysis.grade,
+        grade:          analysis.alphabet,
         dream_type:     analysis.type,
         interpretation: analysis.interpretation,
         advice:         analysis.advice,
@@ -234,20 +231,28 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
 
         <div className="p-5">
 
-          {/* 등급 + 유형 — 가로 배치로 압축 */}
-          <div className="mb-4 flex items-center gap-4">
-            <div className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full ${gradeStyle.bg} shadow`}>
-              <span className="text-3xl font-black text-white">{analysis.grade}</span>
+          {/* 제목 */}
+          <h2 className="mb-4 text-center text-xl font-black text-brand-heading">길몽상점 감정 결과</h2>
+
+          {/* 알파벳 원형 — 중앙 상단 */}
+          <div className="mb-6 flex flex-col items-center gap-3">
+            <div className={`flex h-20 w-20 items-center justify-center rounded-full ${alphaBg} shadow-lg`}>
+              <span className="text-4xl font-black text-white">{analysis.alphabet}</span>
             </div>
-            <div>
-              <p className="text-lg font-black text-brand-heading">길몽상점 감정 결과</p>
-              <div className="mt-1 flex items-center gap-2">
-                <span className={`text-sm font-bold ${gradeStyle.text}`}>{gradeStyle.label}</span>
-                <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${TYPE_STYLE[analysis.type] ?? TYPE_STYLE['중립']}`}>
-                  {analysis.type}
-                </span>
-              </div>
+
+            {/* 태그들 — 중앙 정렬 */}
+            <div className="flex flex-row items-center justify-center gap-2">
+              <span className={`rounded-full border px-3 py-1 text-xs font-semibold ${TYPE_STYLE[analysis.type] ?? TYPE_STYLE['중립']}`}>
+                {analysis.type}
+              </span>
             </div>
+
+            {/* 요약 텍스트 — 태그 아래 */}
+            {analysis.summary && (
+              <p className="max-w-sm text-center text-sm leading-relaxed text-brand-body">
+                {analysis.summary}
+              </p>
+            )}
           </div>
 
           <hr className="mb-4 border-brand-border" />
@@ -265,16 +270,6 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
               className="w-full resize-none rounded-lg bg-brand-page px-3 py-2 text-sm leading-relaxed text-brand-body outline-none focus:ring-1 focus:ring-[#01273A]"
             />
           </section>
-
-          {/* 해몽 요약 */}
-          {analysis.summary && (
-            <section className="mb-4">
-              <h3 className="mb-1.5 text-sm font-bold text-brand-muted">해몽 요약</h3>
-              <div className="rounded-lg border border-[#CCCCCC] bg-amber-50/30 px-3 py-2 text-sm leading-relaxed text-brand-body">
-                {analysis.summary}
-              </div>
-            </section>
-          )}
 
           {/* 상세 해몽 */}
           {analysis.interpretation && (() => {

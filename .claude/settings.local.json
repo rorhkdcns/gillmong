@@ -30,7 +30,16 @@
       "Bash(echo \"exit:$?\")",
       "Bash(vercel --prod --yes)",
       "Bash(npm run *)",
-      "Bash(xargs grep -l \"getUser\")"
+      "Bash(xargs grep -l \"getUser\")",
+      "Bash(vercel ls *)",
+      "Bash(vercel env *)",
+      "Bash(vercel logs *)",
+      "Skill(run)",
+      "Bash(npx playwright *)",
+      "Bash(node *)",
+      "Bash(git -C \"C:/Users/태현이형님/gillmong\" status)",
+      "Bash(git -C \"C:/Users/태현이형님/gillmong\" diff)",
+      "Bash(git *)"
     ]
   }
 }

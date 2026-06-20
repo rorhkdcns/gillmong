@@ -83,16 +83,16 @@ export async function POST(req: NextRequest) {
 아래 JSON 형식으로만 응답해. 다른 설명 없이 JSON만:
 {
   "reconstructedDream": "4가지 단서를 바탕으로 재구성한 자연스러운 꿈 이야기 (3~5문장, 1인칭 서술)",
-  "grade": "A",
+  "alphabet": "A",
   "type": "길몽",
   "title": "꿈을 한 줄로 표현한 제목 (20자 이내)",
-  "summary": "꿈의 핵심 의미 요약 (2~3줄, 꿈의 실제 성격을 반영한 어조)",
+  "summary": "꿈의 핵심을 1~2줄로 요약",
   "interpretation": "한국 전통 해몽 관점:\\n(내용)\\n\\n아시아 관점 (중국·일본):\\n(내용)\\n\\n서양 심리학적 관점:\\n(내용)\\n\\n종합 해석:\\n(내용)",
   "advice": "이 꿈을 바탕으로 한 실생활 조언 (2~3문장, 흉몽이면 주의사항 포함)",
   "lucky_numbers": [1, 7, 13, 27, 38, 45]
 }
 
-grade 기준: A=최고의 길몽, B=좋은 길몽, C=평범한 꿈, D=주의가 필요한 꿈, E=흉몽의 기운, F=해석 불가
+alphabet: 꿈의 핵심 특성을 나타내는 영문 대문자 A~Z 중 하나. 예시 — A=Abundance(풍요), B=Burden(부담)/Blessing(축복), C=Change(변화)/Caution(주의), D=Destiny(운명)/Danger(위험), E=Energy(에너지)/Escape(도피), F=Freedom(자유)/Fear(두려움), G=Growth(성장)/Guidance(인도), H=Hope(희망)/Hazard(위험), I=Intuition(직관), J=Journey(여정), K=Knowledge(지혜), L=Love(사랑)/Loss(상실), M=Mystery(신비), N=New Beginning(새시작), O=Opportunity(기회), P=Power(힘)/Pressure(압박), Q=Quest(탐구), R=Renewal(갱신)/Risk(위험), S=Success(성공)/Stress(스트레스), T=Transformation(변화)/Trial(시련), U=Unity(화합), V=Victory(승리)/Vulnerability(취약), W=Warning(경고)/Wisdom(지혜), X=eXtraordinary(비범함), Y=Yearning(갈망), Z=Zenith(정점)
 type: "길몽" | "흉몽" | "중립" 중 하나`
 
   // 버튼 누른 시점에 횟수 차감 (Gemini 성공 여부와 무관)
@@ -143,13 +143,13 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
     return NextResponse.json({ error: '결과 파싱에 실패했습니다. 다시 시도해주세요.' }, { status: 500 })
   }
 
-  const VALID_GRADES = ['A', 'B', 'C', 'D', 'E', 'F']
+  const VALID_ALPHA  = /^[A-Z]$/
   const VALID_TYPES  = ['길몽', '흉몽', '중립']
 
   const result = {
     reconstructedDream: String(parsed.reconstructedDream ?? '').trim() || `${who} / ${when} / ${how} / ${memory}`,
-    grade:          VALID_GRADES.includes(String(parsed.grade)) ? String(parsed.grade) : 'C',
-    type:           VALID_TYPES.includes(String(parsed.type))   ? String(parsed.type)  : '중립',
+    alphabet:       VALID_ALPHA.test(String(parsed.alphabet)) ? String(parsed.alphabet) : 'D',
+    type:           VALID_TYPES.includes(String(parsed.type))  ? String(parsed.type)   : '중립',
     title:          String(parsed.title  ?? '').slice(0, 50),
     summary:        String(parsed.summary ?? ''),
     interpretation: String(parsed.interpretation ?? ''),
