@@ -74,7 +74,7 @@ export default function ChargePage() {
           notifyUrl:   paymentData.notifyUrl,
         })
       } else {
-        alert('결제 시스템 준비 중입니다. 잠시 후 다시 시도해주세요.')
+        setError('결제 시스템 준비 중입니다. 잠시 후 다시 시도해주세요.')
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : '오류 발생')

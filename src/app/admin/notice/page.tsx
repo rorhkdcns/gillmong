@@ -20,6 +20,8 @@ export default function AdminNoticePage() {
   const [saving,   setSaving]   = useState(false)
   const [error,    setError]    = useState('')
   const [showForm, setShowForm] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState<number | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
   async function load() {
     setLoading(true)
@@ -42,9 +44,12 @@ export default function AdminNoticePage() {
     load()
   }
 
-  async function handleDelete(id: number) {
-    if (!confirm('공지사항을 삭제하시겠습니까?')) return
-    await deleteAdminNotice(id)
+  async function confirmDelete() {
+    if (deleteTarget === null) return
+    setDeleting(true)
+    await deleteAdminNotice(deleteTarget)
+    setDeleting(false)
+    setDeleteTarget(null)
     load()
   }
 
@@ -130,7 +135,7 @@ export default function AdminNoticePage() {
                   <td className="px-6 py-3 text-[#999]">{formatDate(n.created_at)}</td>
                   <td className="px-6 py-3">
                     <button
-                      onClick={() => handleDelete(n.id)}
+                      onClick={() => setDeleteTarget(n.id)}
                       className="text-xs text-red-400 hover:text-red-600"
                     >
                       삭제
@@ -142,6 +147,33 @@ export default function AdminNoticePage() {
           </table>
         )}
       </div>
+
+      {deleteTarget !== null && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-2xl">
+            <h3 className="mb-2 text-center text-lg font-black text-[#01273A]">공지사항 삭제</h3>
+            <p className="mb-6 text-center text-sm text-[#555]">이 공지사항을 삭제하시겠습니까?<br />삭제 후 복구할 수 없습니다.</p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setDeleteTarget(null)}
+                disabled={deleting}
+                className="flex-1 rounded-xl border border-gray-300 py-3 text-sm font-semibold text-[#555] hover:bg-gray-50 disabled:opacity-50"
+              >
+                취소
+              </button>
+              <button
+                type="button"
+                onClick={confirmDelete}
+                disabled={deleting}
+                className="flex-1 rounded-xl bg-red-500 py-3 text-sm font-bold text-white hover:bg-red-600 disabled:opacity-50"
+              >
+                {deleting ? '삭제 중...' : '삭제 확인'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

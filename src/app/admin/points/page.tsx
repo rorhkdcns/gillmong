@@ -15,6 +15,7 @@ export default function AdminPointsPage() {
 
   const [resetting, setResetting]     = useState(false)
   const [resetResult, setResetResult] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+  const [showResetModal, setShowResetModal] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -49,7 +50,7 @@ export default function AdminPointsPage() {
   }
 
   async function handleReset() {
-    if (!window.confirm('꿈 내역과 포인트를 전부 초기화합니다. 되돌릴 수 없습니다. 계속하시겠습니까?')) return
+    setShowResetModal(false)
     setResetting(true); setResetResult(null)
     const res = await resetAllData()
     setResetting(false)
@@ -159,7 +160,7 @@ export default function AdminPointsPage() {
             </div>
           )}
           <button
-            onClick={handleReset}
+            onClick={() => setShowResetModal(true)}
             disabled={resetting}
             className="w-full bg-red-500 py-3 text-sm font-semibold text-white hover:bg-red-600 disabled:opacity-60"
           >
@@ -167,6 +168,32 @@ export default function AdminPointsPage() {
           </button>
         </div>
       </div>
+
+      {showResetModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-2xl">
+            <h3 className="mb-2 text-center text-lg font-black text-red-600">전체 초기화</h3>
+            <p className="mb-2 text-center text-sm text-[#555]">꿈 내역과 포인트를 전부 초기화합니다.</p>
+            <p className="mb-6 text-center text-sm font-semibold text-red-500">되돌릴 수 없습니다. 계속하시겠습니까?</p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setShowResetModal(false)}
+                className="flex-1 rounded-xl border border-gray-300 py-3 text-sm font-semibold text-[#555] hover:bg-gray-50"
+              >
+                취소
+              </button>
+              <button
+                type="button"
+                onClick={handleReset}
+                className="flex-1 rounded-xl bg-red-500 py-3 text-sm font-bold text-white hover:bg-red-600"
+              >
+                초기화 확인
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
