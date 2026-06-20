@@ -37,7 +37,11 @@ export async function POST(req: NextRequest) {
 
   const admin = createAdminClient()
   const DAILY_LIMIT = 3
-  const todayISO = new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
+  // KST(UTC+9) 자정을 UTC로 환산
+  const KST = 9 * 3600 * 1000
+  const kstNow = new Date(Date.now() + KST)
+  kstNow.setUTCHours(0, 0, 0, 0)
+  const todayISO = new Date(kstNow.getTime() - KST).toISOString()
   const { data: todayLogs } = await admin
     .from('analysis_logs')
     .select('id')

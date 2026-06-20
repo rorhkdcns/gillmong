@@ -98,15 +98,11 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     setPriceError(validatePrice(val))
   }
 
-  async function checkDailyLimit(supabase: ReturnType<typeof createClient>, userId: string): Promise<boolean> {
-    const todayISO = new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
-    const { data } = await supabase
-      .from('analysis_logs')
-      .select('id')
-      .eq('user_id', userId)
-      .gte('created_at', todayISO)
-      .limit(3)
-    return (data?.length ?? 0) >= 3
+  async function getRemainingToday(): Promise<number> {
+    const res = await fetch('/api/dream-remaining', { cache: 'no-store' })
+    if (!res.ok) return 0
+    const { remaining } = await res.json()
+    return remaining ?? 0
   }
 
   async function ensureProfile(supabase: ReturnType<typeof createClient>, user: { id: string; email?: string; user_metadata?: Record<string, unknown> }) {
@@ -128,7 +124,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     if (!session?.user) { setSavingPrivate(false); setSaveError('로그인이 필요합니다.'); return }
     const user = session.user
 
-    if (await checkDailyLimit(supabase, user.id)) {
+    if ((await getRemainingToday()) <= 0) {
       setSavingPrivate(false)
       setSaveError('오늘 꿈 등록 한도(하루 3개)에 도달했습니다. 내일 다시 시도해주세요.')
       return
@@ -153,7 +149,8 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     setSavingPrivate(false)
     if (error) { setSaveError(`저장 오류: ${error.message}`); return }
 
-    await fetch('/api/log-usage', { method: 'POST' })
+    const logRes = await fetch('/api/log-usage', { method: 'POST' })
+    if (!logRes.ok) console.error('[log-usage] 개인 저장 횟수 기록 실패')
 
     onClose()
     router.push('/mypage')
@@ -180,7 +177,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     }
     const user = session.user
 
-    if (await checkDailyLimit(supabase, user.id)) {
+    if ((await getRemainingToday()) <= 0) {
       setSaving(false)
       setSaveError('오늘 꿈 등록 한도(하루 3개)에 도달했습니다. 내일 다시 시도해주세요.')
       return
@@ -213,7 +210,8 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
       return
     }
 
-    await fetch('/api/log-usage', { method: 'POST' })
+    const logRes2 = await fetch('/api/log-usage', { method: 'POST' })
+    if (!logRes2.ok) console.error('[log-usage] 마켓 등록 횟수 기록 실패')
 
     onClose()
     router.push('/mypage')
