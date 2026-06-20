@@ -194,14 +194,14 @@ export async function adminDeleteUser(
 ): Promise<{ success?: boolean; error?: string }> {
   const admin = createAdminClient()
 
-  // 1~4. 보조 테이블 삭제 (테이블 미존재 등 에러 발생해도 계속 진행)
-  const aux = [
+  // 1. 보조 테이블 삭제 (테이블 미존재 등 에러가 나도 계속 진행)
+  const auxResults = await Promise.all([
+    admin.from('withdrawal_requests').delete().eq('user_id', userId),
     admin.from('reports').delete().eq('reporter_id', userId),
     admin.from('analysis_logs').delete().eq('user_id', userId),
     admin.from('saved_dreams').delete().eq('user_id', userId),
     admin.from('inquiries').delete().eq('user_id', userId),
-  ]
-  const auxResults = await Promise.all(aux)
+  ])
   auxResults.forEach(({ error }, i) => {
     if (error) console.warn(`[adminDeleteUser] aux[${i}]:`, error.message)
   })
