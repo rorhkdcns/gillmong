@@ -36,13 +36,13 @@ export async function POST(req: NextRequest) {
 
   const DAILY_LIMIT = 3
   const todayISO = new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
-  const [logsRes, dreamsRes, savedRes] = await Promise.all([
-    supabase.from('analysis_logs').select('id').eq('user_id', user.id).gte('created_at', todayISO).limit(DAILY_LIMIT),
-    supabase.from('dreams').select('id').eq('user_id', user.id).gte('created_at', todayISO).limit(DAILY_LIMIT),
-    supabase.from('saved_dreams').select('id').eq('user_id', user.id).gte('created_at', todayISO).limit(DAILY_LIMIT),
-  ])
-  const usedToday = (logsRes.data?.length ?? 0) + (dreamsRes.data?.length ?? 0) + (savedRes.data?.length ?? 0)
-  if (usedToday >= DAILY_LIMIT) {
+  const { data: todayLogs } = await supabase
+    .from('analysis_logs')
+    .select('id')
+    .eq('user_id', user.id)
+    .gte('created_at', todayISO)
+    .limit(DAILY_LIMIT)
+  if ((todayLogs?.length ?? 0) >= DAILY_LIMIT) {
     return NextResponse.json({ error: '오늘 사용 횟수(3회)를 모두 사용했습니다.' }, { status: 429 })
   }
 

@@ -100,13 +100,13 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
 
   async function checkDailyLimit(supabase: ReturnType<typeof createClient>, userId: string): Promise<boolean> {
     const todayISO = new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
-    const [logsRes, dreamsRes, savedRes] = await Promise.all([
-      supabase.from('analysis_logs').select('id').eq('user_id', userId).gte('created_at', todayISO).limit(3),
-      supabase.from('dreams').select('id').eq('user_id', userId).gte('created_at', todayISO).limit(3),
-      supabase.from('saved_dreams').select('id').eq('user_id', userId).gte('created_at', todayISO).limit(3),
-    ])
-    const used = (logsRes.data?.length ?? 0) + (dreamsRes.data?.length ?? 0) + (savedRes.data?.length ?? 0)
-    return used >= 3
+    const { data } = await supabase
+      .from('analysis_logs')
+      .select('id')
+      .eq('user_id', userId)
+      .gte('created_at', todayISO)
+      .limit(3)
+    return (data?.length ?? 0) >= 3
   }
 
   async function ensureProfile(supabase: ReturnType<typeof createClient>, user: { id: string; email?: string; user_metadata?: Record<string, unknown> }) {
@@ -152,6 +152,8 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
 
     setSavingPrivate(false)
     if (error) { setSaveError(`저장 오류: ${error.message}`); return }
+
+    await supabase.from('analysis_logs').insert({ user_id: user.id })
 
     onClose()
     router.push('/mypage')
@@ -210,6 +212,8 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
       setSaveError(`등록 오류: ${error.message}`)
       return
     }
+
+    await supabase.from('analysis_logs').insert({ user_id: user.id })
 
     onClose()
     router.push('/mypage')
