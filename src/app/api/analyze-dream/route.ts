@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
   "lucky_numbers": [1, 7, 13, 27, 38, 45]
 }
 
-alphabet: 꿈의 핵심 특성을 나타내는 영문 대문자 A~Z 중 하나. 예시 — A=Abundance(풍요), B=Burden(부담)/Blessing(축복), C=Change(변화)/Caution(주의), D=Destiny(운명)/Danger(위험), E=Energy(에너지)/Escape(도피), F=Freedom(자유)/Fear(두려움), G=Growth(성장)/Guidance(인도), H=Hope(희망)/Hazard(위험), I=Intuition(직관), J=Journey(여정), K=Knowledge(지혜), L=Love(사랑)/Loss(상실), M=Mystery(신비), N=New Beginning(새시작), O=Opportunity(기회), P=Power(힘)/Pressure(압박), Q=Quest(탐구), R=Renewal(갱신)/Risk(위험), S=Success(성공)/Stress(스트레스), T=Transformation(변화)/Trial(시련), U=Unity(화합), V=Victory(승리)/Vulnerability(취약), W=Warning(경고)/Wisdom(지혜), X=eXtraordinary(비범함), Y=Yearning(갈망), Z=Zenith(정점)
+alphabet: 반드시 A, B, C, D, E 중 하나만 사용. 다른 알파벳은 절대 사용 금지. — A=최고의 길몽(풍요·성공·행운), B=좋은 길몽(축복·성장·희망), C=평범한 꿈(중립·변화·일상), D=주의가 필요한 꿈(경고·부담·위험 암시), E=흉몽(두려움·상실·불안)
 type: "길몽" | "흉몽" | "중립" 중 하나`
 
   // 버튼 누른 시점에 횟수 차감 (Gemini 성공 여부와 무관)
@@ -127,12 +127,12 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
     return NextResponse.json({ error: '결과 파싱에 실패했습니다. 다시 시도해주세요.' }, { status: 500 })
   }
 
-  const VALID_ALPHA  = /^[A-Z]$/
+  const VALID_ALPHA  = ['A', 'B', 'C', 'D', 'E']
   const VALID_TYPES  = ['길몽', '흉몽', '중립']
 
   const result = {
     reconstructedDream: String(parsed.reconstructedDream ?? '').trim() || `${who} / ${when} / ${how} / ${memory}`,
-    alphabet:       VALID_ALPHA.test(String(parsed.alphabet)) ? String(parsed.alphabet) : 'D',
+    alphabet:       VALID_ALPHA.includes(String(parsed.alphabet)) ? String(parsed.alphabet) : 'C',
     type:           VALID_TYPES.includes(String(parsed.type))  ? String(parsed.type)   : '중립',
     title:          String(parsed.title  ?? '').slice(0, 50),
     summary:        String(parsed.summary ?? ''),

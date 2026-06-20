@@ -37,9 +37,11 @@ function parseInterpretation(text: string) {
 }
 
 const ALPHABET_BG: Record<string, string> = {
-  길몽: 'bg-emerald-500',
-  흉몽: 'bg-red-500',
-  중립: 'bg-gray-400',
+  A: 'bg-blue-500',
+  B: 'bg-green-500',
+  C: 'bg-amber-500',
+  D: 'bg-orange-500',
+  E: 'bg-red-500',
 }
 
 const TYPE_STYLE: Record<string, string> = {
@@ -66,7 +68,7 @@ interface ResultModalProps {
 
 export default function ResultModal({ dream, analysis, onClose }: ResultModalProps) {
   const router = useRouter()
-  const alphaBg = ALPHABET_BG[analysis.type] ?? ALPHABET_BG['중립']
+  const alphaBg = ALPHABET_BG[analysis.alphabet] ?? 'bg-gray-400'
 
   const [editedDream, setEditedDream] = useState(dream)
   const [title, setTitle]       = useState(analysis.title)
