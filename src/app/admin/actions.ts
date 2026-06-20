@@ -194,21 +194,17 @@ export async function adminDeleteUser(
 ): Promise<{ success?: boolean; error?: string }> {
   const admin = createAdminClient()
 
-  // 1. 신고 삭제 (reporter_id)
-  const { error: er } = await admin.from('reports').delete().eq('reporter_id', userId)
-  if (er) { console.error('[adminDeleteUser] reports:', er.message); return { error: `reports 삭제 실패: ${er.message}` } }
-
-  // 2. analysis_logs 삭제
-  const { error: ea } = await admin.from('analysis_logs').delete().eq('user_id', userId)
-  if (ea) { console.error('[adminDeleteUser] analysis_logs:', ea.message); return { error: `analysis_logs 삭제 실패: ${ea.message}` } }
-
-  // 3. saved_dreams 삭제
-  const { error: es } = await admin.from('saved_dreams').delete().eq('user_id', userId)
-  if (es) { console.error('[adminDeleteUser] saved_dreams:', es.message); return { error: `saved_dreams 삭제 실패: ${es.message}` } }
-
-  // 4. inquiries 삭제
-  const { error: ei } = await admin.from('inquiries').delete().eq('user_id', userId)
-  if (ei) { console.error('[adminDeleteUser] inquiries:', ei.message); return { error: `inquiries 삭제 실패: ${ei.message}` } }
+  // 1~4. 보조 테이블 삭제 (테이블 미존재 등 에러 발생해도 계속 진행)
+  const aux = [
+    admin.from('reports').delete().eq('reporter_id', userId),
+    admin.from('analysis_logs').delete().eq('user_id', userId),
+    admin.from('saved_dreams').delete().eq('user_id', userId),
+    admin.from('inquiries').delete().eq('user_id', userId),
+  ]
+  const auxResults = await Promise.all(aux)
+  auxResults.forEach(({ error }, i) => {
+    if (error) console.warn(`[adminDeleteUser] aux[${i}]:`, error.message)
+  })
 
   // 5. point_logs 삭제
   const { error: ep } = await admin.from('point_logs').delete().eq('user_id', userId)
