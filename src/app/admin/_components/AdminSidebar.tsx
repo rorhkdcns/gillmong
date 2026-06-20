@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
+import { logoutAction } from '@/app/actions'
 
 const navItems = [
   {
@@ -131,13 +132,21 @@ export default function AdminSidebar() {
       </nav>
 
       {/* 하단 */}
-      <div className="border-t border-white/10 px-6 py-4">
+      <div className="border-t border-white/10 px-6 py-4 space-y-2">
         <Link href="/" className="flex items-center gap-2 text-xs text-white/50 hover:text-white/80 transition-colors">
           <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
           사이트로 이동
         </Link>
+        <form action={logoutAction}>
+          <button type="submit" className="flex items-center gap-2 text-xs text-white/50 hover:text-red-400 transition-colors">
+            <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            로그아웃
+          </button>
+        </form>
       </div>
     </aside>
   )
