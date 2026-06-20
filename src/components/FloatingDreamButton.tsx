@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import ResultModal, { type AnalysisResult } from '@/app/_components/ResultModal'
@@ -45,6 +45,8 @@ export default function FloatingDreamButton() {
   const [reconstructedDream, setReconstructedDream] = useState('')
   const [dailyLimitReached, setDailyLimitReached]   = useState(false)
   const [remaining, setRemaining]                   = useState<number | null>(null)
+
+  useEffect(() => { fetchRemaining() }, [])
 
   async function fetchRemaining() {
     const res = await fetch('/api/dream-remaining', { cache: 'no-store' })
@@ -112,16 +114,30 @@ export default function FloatingDreamButton() {
   return (
     <>
       {/* 플로팅 버튼 */}
-      <button
-        type="button"
-        onClick={handleOpen}
-        aria-label="꿈 감정하기"
-        className="fixed bottom-6 right-6 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-[#01273A] shadow-lg transition-transform hover:scale-105 hover:brightness-90"
-      >
-        <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-        </svg>
-      </button>
+      <div className="fixed bottom-6 right-6 z-40">
+        <button
+          type="button"
+          onClick={handleOpen}
+          disabled={remaining === 0}
+          aria-label="꿈 감정하기"
+          className={`relative flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-transform ${
+            remaining === 0
+              ? 'cursor-not-allowed bg-gray-400'
+              : 'bg-[#01273A] hover:scale-105 hover:brightness-90'
+          }`}
+        >
+          <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+          </svg>
+          {remaining !== null && (
+            <span className={`absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full text-xs font-black text-white ${
+              remaining === 0 ? 'bg-gray-500' : 'bg-[#E07B2A]'
+            }`}>
+              {remaining}
+            </span>
+          )}
+        </button>
+      </div>
 
       {/* 꿈 입력 모달 — X 버튼으로만 닫힘 */}
       {open && !result && !loading && (
