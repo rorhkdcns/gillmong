@@ -10,23 +10,36 @@ export async function POST(req: NextRequest) {
 
   const admin = createAdminClient()
 
+  // username으로 profile 조회
   const { data: profile } = await admin
     .from('profiles')
     .select('id')
     .eq('username', username.trim().toLowerCase())
-    .eq('email', email.trim().toLowerCase())
     .maybeSingle()
 
   if (!profile) {
     return NextResponse.json({ error: '아이디 또는 이메일이 일치하지 않습니다.' }, { status: 404 })
   }
 
-  const authEmail = `${username.trim().toLowerCase()}@gillmong.com`
+  // auth 유저 메타데이터에서 실제 이메일 검증
+  const { data: authUser, error: authErr } = await admin.auth.admin.getUserById(profile.id)
+  if (authErr || !authUser.user) {
+    return NextResponse.json({ error: '아이디 또는 이메일이 일치하지 않습니다.' }, { status: 404 })
+  }
+
+  const storedEmail: string = (authUser.user.user_metadata?.email ?? '').trim().toLowerCase()
+  const inputEmail = email.trim().toLowerCase()
+
+  if (storedEmail !== inputEmail) {
+    return NextResponse.json({ error: '아이디 또는 이메일이 일치하지 않습니다.' }, { status: 404 })
+  }
+
+  // 복구 링크 생성
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
   const { data: linkData, error: linkErr } = await admin.auth.admin.generateLink({
     type: 'recovery',
-    email: authEmail,
+    email: authUser.user.email!,
     options: {
       redirectTo: `${siteUrl}/auth/callback?next=/auth/update-password`,
     },
