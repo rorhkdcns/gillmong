@@ -34,8 +34,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: '아이디 또는 이메일이 일치하지 않습니다.' }, { status: 404 })
   }
 
-  // 복구 링크 생성
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  // 복구 링크 생성 — 요청 origin으로 콜백 URL 구성
+  const origin = new URL(req.url).origin
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || origin
 
   const { data: linkData, error: linkErr } = await admin.auth.admin.generateLink({
     type: 'recovery',
