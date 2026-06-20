@@ -193,16 +193,49 @@ export async function adminDeleteUser(
   userId: string,
 ): Promise<{ success?: boolean; error?: string }> {
   const admin = createAdminClient()
-  await admin.from('point_logs').delete().eq('user_id', userId)
-  const { data: purchases } = await admin.from('purchases').select('dream_id').eq('buyer_id', userId)
-  for (const p of purchases ?? []) {
+
+  // 1. 신고 삭제 (reporter_id)
+  const { error: er } = await admin.from('reports').delete().eq('reporter_id', userId)
+  if (er) { console.error('[adminDeleteUser] reports:', er.message); return { error: `reports 삭제 실패: ${er.message}` } }
+
+  // 2. analysis_logs 삭제
+  const { error: ea } = await admin.from('analysis_logs').delete().eq('user_id', userId)
+  if (ea) { console.error('[adminDeleteUser] analysis_logs:', ea.message); return { error: `analysis_logs 삭제 실패: ${ea.message}` } }
+
+  // 3. saved_dreams 삭제
+  const { error: es } = await admin.from('saved_dreams').delete().eq('user_id', userId)
+  if (es) { console.error('[adminDeleteUser] saved_dreams:', es.message); return { error: `saved_dreams 삭제 실패: ${es.message}` } }
+
+  // 4. inquiries 삭제
+  const { error: ei } = await admin.from('inquiries').delete().eq('user_id', userId)
+  if (ei) { console.error('[adminDeleteUser] inquiries:', ei.message); return { error: `inquiries 삭제 실패: ${ei.message}` } }
+
+  // 5. point_logs 삭제
+  const { error: ep } = await admin.from('point_logs').delete().eq('user_id', userId)
+  if (ep) { console.error('[adminDeleteUser] point_logs:', ep.message); return { error: `point_logs 삭제 실패: ${ep.message}` } }
+
+  // 6. 이 유저가 구매한 꿈 → 판매 취소 처리
+  const { data: boughtDreams } = await admin.from('purchases').select('dream_id').eq('buyer_id', userId)
+  for (const p of boughtDreams ?? []) {
     await admin.from('dreams').update({ is_sold: false }).eq('id', p.dream_id)
   }
-  await admin.from('purchases').delete().eq('buyer_id', userId)
-  await admin.from('dreams').delete().eq('user_id', userId)
-  await admin.from('profiles').delete().eq('id', userId)
-  const { error } = await admin.auth.admin.deleteUser(userId)
-  if (error) return { error: error.message }
+
+  // 7. 이 유저의 구매 기록 삭제
+  const { error: epu } = await admin.from('purchases').delete().eq('buyer_id', userId)
+  if (epu) { console.error('[adminDeleteUser] purchases:', epu.message); return { error: `purchases 삭제 실패: ${epu.message}` } }
+
+  // 8. 이 유저의 꿈 삭제 (→ 연결된 purchases·reports 캐스케이드)
+  const { error: ed } = await admin.from('dreams').delete().eq('user_id', userId)
+  if (ed) { console.error('[adminDeleteUser] dreams:', ed.message); return { error: `dreams 삭제 실패: ${ed.message}` } }
+
+  // 9. 프로필 삭제
+  const { error: epr } = await admin.from('profiles').delete().eq('id', userId)
+  if (epr) { console.error('[adminDeleteUser] profiles:', epr.message); return { error: `profiles 삭제 실패: ${epr.message}` } }
+
+  // 10. Auth 유저 삭제
+  const { error: eauth } = await admin.auth.admin.deleteUser(userId)
+  if (eauth) { console.error('[adminDeleteUser] auth.deleteUser:', eauth.message); return { error: eauth.message } }
+
   return { success: true }
 }
 
