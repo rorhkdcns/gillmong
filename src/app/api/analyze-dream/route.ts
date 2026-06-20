@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 
 const GEMINI_MODEL = 'gemini-2.5-flash'
 const GEMINI_URL =
@@ -34,9 +35,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: '로그인이 필요합니다.' }, { status: 401 })
   }
 
+  const admin = createAdminClient()
   const DAILY_LIMIT = 3
   const todayISO = new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
-  const { data: todayLogs } = await supabase
+  const { data: todayLogs } = await admin
     .from('analysis_logs')
     .select('id')
     .eq('user_id', user.id)
@@ -92,7 +94,7 @@ alphabet: 반드시 A, B, C, D, E 중 하나만 사용. 다른 알파벳은 절�
 type: "길몽" | "흉몽" | "중립" 중 하나`
 
   // 버튼 누른 시점에 횟수 차감 (Gemini 성공 여부와 무관)
-  const { error: logError } = await supabase.from('analysis_logs').insert({ user_id: user.id })
+  const { error: logError } = await admin.from('analysis_logs').insert({ user_id: user.id })
   if (logError) console.error('[analysis_logs insert error]', logError.message)
 
   const reqBody = JSON.stringify({

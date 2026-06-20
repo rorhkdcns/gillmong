@@ -153,7 +153,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     setSavingPrivate(false)
     if (error) { setSaveError(`저장 오류: ${error.message}`); return }
 
-    await supabase.from('analysis_logs').insert({ user_id: user.id })
+    await fetch('/api/log-usage', { method: 'POST' })
 
     onClose()
     router.push('/mypage')
@@ -213,7 +213,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
       return
     }
 
-    await supabase.from('analysis_logs').insert({ user_id: user.id })
+    await fetch('/api/log-usage', { method: 'POST' })
 
     onClose()
     router.push('/mypage')
