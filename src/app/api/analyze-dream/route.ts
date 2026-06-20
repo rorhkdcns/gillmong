@@ -100,6 +100,7 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
   // 버튼 누른 시점에 횟수 차감 (Gemini 성공 여부와 무관)
   const { error: logError } = await admin.from('analysis_logs').insert({ user_id: user.id })
   if (logError) console.error('[analysis_logs insert error]', logError.message)
+  else console.log('[analysis_logs insert] 성공 userId:', user.id.slice(0, 8))
 
   const reqBody = JSON.stringify({
     contents: [{ parts: [{ text: prompt }] }],
@@ -159,5 +160,5 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
     lucky_numbers:  sanitizeLuckyNumbers(parsed.lucky_numbers),
   }
 
-  return NextResponse.json(result)
+  return NextResponse.json({ ...result, _insertError: logError?.message ?? null })
 }
