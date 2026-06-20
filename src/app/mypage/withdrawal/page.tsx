@@ -75,7 +75,7 @@ export default async function WithdrawalPage() {
                 출금 가능한 포인트가 부족합니다. (최소 5,000P)
               </div>
             ) : (
-              <WithdrawalForm balance={balance} realName="" />
+              <WithdrawalForm balance={balance} realName={user.user_metadata?.real_name ?? ''} />
             )}
           </section>
 
