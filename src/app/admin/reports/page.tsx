@@ -29,6 +29,8 @@ const STATUS_COLOR: Record<string, string> = {
 export default function AdminReportsPage() {
   const [reports, setReports] = useState<Report[]>([])
   const [loading, setLoading] = useState(true)
+  const [deleteTarget, setDeleteTarget] = useState<{ dreamId: number; dreamTitle: string } | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
   async function fetchReports() {
     const supabase = createClient()
@@ -74,10 +76,13 @@ export default function AdminReportsPage() {
     fetchReports()
   }
 
-  async function handleDeleteDream(dreamId: number) {
-    if (!confirm('이 꿈을 삭제하시겠습니까?\n관련 신고도 함께 삭제됩니다.')) return
+  async function confirmDeleteDream() {
+    if (!deleteTarget) return
+    setDeleting(true)
     const supabase = createClient()
-    await supabase.from('dreams').delete().eq('id', dreamId)
+    await supabase.from('dreams').delete().eq('id', deleteTarget.dreamId)
+    setDeleting(false)
+    setDeleteTarget(null)
     fetchReports()
   }
 
@@ -146,7 +151,7 @@ export default function AdminReportsPage() {
                           반려
                         </button>
                         <button
-                          onClick={() => handleDeleteDream(r.dream_id)}
+                          onClick={() => setDeleteTarget({ dreamId: r.dream_id, dreamTitle: r.dream_title ?? `#${r.dream_id}` })}
                           className="rounded border border-red-300 px-3 py-1 text-xs text-red-500 hover:bg-red-50"
                         >
                           꿈 삭제
@@ -158,6 +163,42 @@ export default function AdminReportsPage() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* 삭제 확인 모달 */}
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-2xl">
+            <h3 className="mb-2 text-center text-lg font-black text-[#01273A]">꿈 삭제 확인</h3>
+            <p className="mb-1 text-center text-sm text-[#555555]">
+              아래 꿈을 삭제하시겠습니까?
+            </p>
+            <p className="mb-6 text-center text-sm font-semibold text-red-500">
+              &ldquo;{deleteTarget.dreamTitle}&rdquo;
+            </p>
+            <p className="mb-6 text-center text-xs text-[#999]">
+              관련 신고도 함께 삭제되며 복구할 수 없습니다.
+            </p>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setDeleteTarget(null)}
+                disabled={deleting}
+                className="flex-1 rounded-xl border border-gray-300 py-3 text-sm font-semibold text-[#555555] transition hover:bg-gray-50 disabled:opacity-50"
+              >
+                취소
+              </button>
+              <button
+                type="button"
+                onClick={confirmDeleteDream}
+                disabled={deleting}
+                className="flex-1 rounded-xl bg-red-500 py-3 text-sm font-bold text-white transition hover:bg-red-600 disabled:opacity-50"
+              >
+                {deleting ? '삭제 중...' : '삭제 확인'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
