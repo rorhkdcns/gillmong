@@ -39,7 +39,8 @@
       "Bash(node *)",
       "Bash(git -C \"C:/Users/태현이형님/gillmong\" status)",
       "Bash(git -C \"C:/Users/태현이형님/gillmong\" diff)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(curl *)"
     ]
   }
 }
