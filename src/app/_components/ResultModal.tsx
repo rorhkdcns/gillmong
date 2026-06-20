@@ -151,6 +151,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
 
     const logRes = await fetch('/api/log-usage', { method: 'POST' })
     if (!logRes.ok) console.error('[log-usage] 개인 저장 횟수 기록 실패')
+    window.dispatchEvent(new Event('dream-analyzed'))
 
     onClose()
     router.push('/mypage')
@@ -212,6 +213,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
 
     const logRes2 = await fetch('/api/log-usage', { method: 'POST' })
     if (!logRes2.ok) console.error('[log-usage] 마켓 등록 횟수 기록 실패')
+    window.dispatchEvent(new Event('dream-analyzed'))
 
     onClose()
     router.push('/mypage')

@@ -27,7 +27,7 @@ export default function SiteHeader() {
   const [mobileQuery, setMobileQuery] = useState('')
   const [loggedIn, setLoggedIn] = useState(false)
   const [nickname, setNickname] = useState('')
-  const [remaining, setRemaining] = useState(3)
+  const [remaining, setRemaining] = useState<number | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const DAILY_LIMIT = 3
@@ -158,9 +158,11 @@ export default function SiteHeader() {
                 {loggedIn ? (
                   <span className="flex flex-col leading-tight">
                     <span className="text-sm font-semibold">{nickname}님</span>
-                    <span className={`text-xs font-normal ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>
-                      해몽 {remaining}회 남음
-                    </span>
+                    {remaining !== null && (
+                      <span className={`text-xs font-normal ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>
+                        해몽 {remaining}회 남음
+                      </span>
+                    )}
                   </span>
                 ) : (
                   <span className="text-sm font-semibold">로그인</span>
@@ -169,9 +171,11 @@ export default function SiteHeader() {
               {loggedIn && (
                 <Link href="/mypage" className="flex flex-col items-end md:hidden leading-tight">
                   <span className="text-xs font-semibold text-[#01273A]">{nickname}님</span>
-                  <span className={`text-[10px] ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>
-                    해몽 {remaining}회 남음
-                  </span>
+                  {remaining !== null && (
+                    <span className={`text-[10px] ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>
+                      해몽 {remaining}회 남음
+                    </span>
+                  )}
                 </Link>
               )}
               <button type="button" onClick={() => setMenuOpen(true)} className="flex items-center justify-center text-[#01273A] md:hidden">
@@ -209,9 +213,11 @@ export default function SiteHeader() {
               {loggedIn ? (
                 <span className="flex items-center justify-between">
                   <span>{nickname}님</span>
-                  <span className={`text-xs font-normal ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>
-                    해몽 {remaining}회 남음
-                  </span>
+                  {remaining !== null && (
+                    <span className={`text-xs font-normal ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>
+                      해몽 {remaining}회 남음
+                    </span>
+                  )}
                 </span>
               ) : '로그인'}
             </Link>
