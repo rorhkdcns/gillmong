@@ -32,6 +32,10 @@ export default function DreamEditForm({ dream }: Props) {
       setError('올바른 감정가를 입력해주세요.')
       return
     }
+    if (parsedPrice % 100 !== 0) {
+      setError('감정가는 100원 단위로 입력해주세요.')
+      return
+    }
     setSaving(true)
     setError('')
     const result = await updateDream(dream.id, {
@@ -114,9 +118,11 @@ export default function DreamEditForm({ dream }: Props) {
                   type="number"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  min={1}
+                  min={100}
+                  step={100}
                   className="w-full border border-gray-200 px-4 py-3 text-[#333333] outline-none focus:border-[#6B96A8]"
                 />
+                <p className="mt-1 text-xs text-[#999]">100원 단위로 입력해주세요.</p>
               </div>
 
               {error && <p className="text-center text-sm text-red-500">{error}</p>}
