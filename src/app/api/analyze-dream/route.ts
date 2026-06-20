@@ -37,12 +37,13 @@ export async function POST(req: NextRequest) {
   const todayStart = new Date()
   todayStart.setHours(0, 0, 0, 0)
   const todayISO = todayStart.toISOString()
-  const { count: usedCount } = await supabase
+  const { data: logsToday } = await supabase
     .from('analysis_logs')
-    .select('id', { count: 'exact', head: true })
+    .select('id')
     .eq('user_id', user.id)
     .gte('created_at', todayISO)
-  if ((usedCount ?? 0) >= 3) {
+  const usedCount = logsToday?.length ?? 0
+  if (usedCount >= 3) {
     return NextResponse.json(
       { error: `오늘 해몽 횟수를 모두 사용했습니다 (3/3)` },
       { status: 429 }
@@ -95,7 +96,8 @@ grade 기준: A=최고의 길몽, B=좋은 길몽, C=평범한 꿈, D=주의가 
 type: "길몽" | "흉몽" | "중립" 중 하나`
 
   // 버튼 누른 시점에 횟수 차감 (Gemini 성공 여부와 무관)
-  await supabase.from('analysis_logs').insert({ user_id: user.id })
+  const { error: logError } = await supabase.from('analysis_logs').insert({ user_id: user.id })
+  if (logError) console.error('[analysis_logs insert error]', logError.message)
 
   const reqBody = JSON.stringify({
     contents: [{ parts: [{ text: prompt }] }],

@@ -17,6 +17,7 @@ export async function GET() {
     .select('id')
     .eq('user_id', user.id)
     .gte('created_at', todayStart.toISOString())
+    .limit(DAILY_LIMIT + 1)
 
   const remaining = DAILY_LIMIT - (data?.length ?? 0)
   return NextResponse.json({ remaining: Math.max(0, remaining) })
