@@ -146,13 +146,10 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
         lucky_numbers:  analysis.lucky_numbers,
       })
 
-    setSavingPrivate(false)
-    if (error) { setSaveError(`저장 오류: ${error.message}`); return }
+    if (error) { setSavingPrivate(false); setSaveError(`저장 오류: ${error.message}`); return }
 
-    const logRes = await fetch('/api/log-usage', { method: 'POST' })
-    if (!logRes.ok) console.error('[log-usage] 개인 저장 횟수 기록 실패')
     window.dispatchEvent(new Event('dream-analyzed'))
-
+    setSavingPrivate(false)
     onClose()
     router.push('/mypage')
     router.refresh()
@@ -204,17 +201,14 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
       .select('id')
       .single()
 
-    setSaving(false)
-
     if (error) {
+      setSaving(false)
       setSaveError(`등록 오류: ${error.message}`)
       return
     }
 
-    const logRes2 = await fetch('/api/log-usage', { method: 'POST' })
-    if (!logRes2.ok) console.error('[log-usage] 마켓 등록 횟수 기록 실패')
     window.dispatchEvent(new Event('dream-analyzed'))
-
+    setSaving(false)
     onClose()
     router.push('/mypage')
     router.refresh()
