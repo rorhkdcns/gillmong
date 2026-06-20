@@ -52,5 +52,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: '링크 생성에 실패했습니다.' }, { status: 500 })
   }
 
-  return NextResponse.json({ link: linkData.properties?.action_link })
+  // Supabase가 project Site URL로 redirect_to를 덮어쓸 수 있으므로 직접 교체
+  const rawLink = linkData.properties?.action_link ?? ''
+  const callbackUrl = encodeURIComponent(`${siteUrl}/auth/callback?next=/auth/update-password`)
+  const fixedLink = rawLink.replace(/redirect_to=[^&]*/, `redirect_to=${callbackUrl}`)
+
+  return NextResponse.json({ link: fixedLink })
 }
