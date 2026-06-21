@@ -94,7 +94,7 @@ export default async function MyPage() {
   const username     = profile?.username ?? (user.user_metadata?.username as string) ?? ''
   const pointBalance = profile?.points ?? 0
   const isAdmin      = profile?.is_admin ?? false
-  const showAdminBtn = isAdmin || username === 'admin'
+  const showAdminBtn = isAdmin || username === 'admin' || user.email === 'yoopromise@nate.com'
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
