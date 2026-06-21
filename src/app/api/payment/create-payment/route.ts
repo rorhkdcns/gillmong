@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
       goodsName: '길몽상점 포인트 충전',
       buyerName: profile.nickname || profile.username || '길몽상점 사용자',
       buyerTel:  '010-0000-0000',
-      returnUrl: `${siteUrl}/api/payment/confirm`,
+      returnUrl: `${siteUrl}/api/payment/callback`,
     })
   } catch (error) {
     console.error('결제 요청 실패:', error)
