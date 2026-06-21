@@ -16,11 +16,10 @@ const AMOUNTS = [
 ]
 
 const PAYMENT_METHODS = [
-  { id: 'card',            label: '신용·체크카드',  icon: '💳', desc: '국내외 모든 카드' },
-  { id: 'cardAndEasyPay',  label: '간편결제',       icon: '⚡', desc: '카카오·네이버·PAYCO·삼성·SSG' },
-  { id: 'cellphone',       label: '휴대폰 결제',    icon: '📱', desc: '통신사 결제 (디지털 콘텐츠)' },
-  { id: 'vbank',           label: '가상계좌',       icon: '🏦', desc: '무통장 입금 (72시간 유효)' },
-  { id: 'bank',            label: '계좌이체',       icon: '💰', desc: '인터넷뱅킹' },
+  { id: 'card',           label: '신용·체크카드', desc: '국내외 모든 카드' },
+  { id: 'cardAndEasyPay', label: '간편결제',      desc: '카카오·네이버·PAYCO·삼성·SSG' },
+  { id: 'cellphone',      label: '휴대폰 결제',   desc: '통신사 결제 (디지털 콘텐츠)' },
+  { id: 'vbank',          label: '가상계좌',      desc: '무통장 입금 (72시간 유효)' },
 ]
 
 // 할부 옵션 (5만원 이상 시 표시)
@@ -116,7 +115,7 @@ export default function ChargePage() {
       <SiteHeader />
 
       <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">
-        <h1 className="mb-8 text-2xl font-bold text-[#01273A]">포인트 충전</h1>
+        <h1 className="mb-8 text-3xl font-bold text-[#01273A]">포인트 충전</h1>
 
         {error && (
           <div className="mb-5 rounded border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -126,17 +125,17 @@ export default function ChargePage() {
 
         {/* 충전 금액 선택 */}
         <section className="mb-6">
-          <h2 className="mb-3 text-sm font-bold text-[#01273A]">충전 금액 선택</h2>
+          <h2 className="mb-3 text-xl font-bold text-[#01273A]">충전 금액 선택</h2>
           <div className="grid grid-cols-3 gap-2">
             {AMOUNTS.map((item) => (
               <button
                 key={item.price}
                 onClick={() => handleAdd(item)}
                 disabled={loading}
-                className="rounded-lg border-2 border-gray-200 py-3 text-center transition hover:border-[#E07B2A] hover:bg-orange-50 disabled:opacity-50"
+                className="rounded-lg border-2 border-gray-200 py-4 text-center transition hover:border-[#E07B2A] hover:bg-orange-50 disabled:opacity-50"
               >
-                <div className="text-base font-bold text-[#E07B2A]">+{item.points.toLocaleString()} P</div>
-                <div className="text-xs text-gray-500">₩{item.price.toLocaleString()}</div>
+                <div className="text-lg font-bold text-[#E07B2A]">+{item.points.toLocaleString()} P</div>
+                <div className="text-sm text-gray-500">₩{item.price.toLocaleString()}</div>
               </button>
             ))}
           </div>
@@ -145,39 +144,38 @@ export default function ChargePage() {
         {/* 총 충전액 */}
         <section className="mb-6 rounded-lg border border-gray-200 bg-gray-50 px-5 py-4">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-bold text-[#01273A]">총 충전액</span>
+            <span className="text-base font-bold text-[#01273A]">총 충전액</span>
             {totalAmount > 0 && (
-              <button onClick={handleClear} className="text-xs text-gray-400 underline hover:text-red-400">
+              <button onClick={handleClear} className="text-sm text-gray-400 underline hover:text-red-400">
                 초기화
               </button>
             )}
           </div>
           <div className="flex items-baseline gap-3">
-            <span className="text-2xl font-bold text-[#01273A]">₩{totalAmount.toLocaleString()}</span>
-            <span className="text-lg font-bold text-[#E07B2A]">{totalAmount.toLocaleString()} P</span>
+            <span className="text-3xl font-bold text-[#01273A]">₩{totalAmount.toLocaleString()}</span>
+            <span className="text-xl font-bold text-[#E07B2A]">{totalAmount.toLocaleString()} P</span>
           </div>
         </section>
 
         {/* 결제수단 선택 */}
         <section className="mb-6">
-          <h2 className="mb-3 text-sm font-bold text-[#01273A]">결제수단 선택</h2>
+          <h2 className="mb-3 text-xl font-bold text-[#01273A]">결제수단 선택</h2>
           <div className="grid grid-cols-1 gap-2">
             {PAYMENT_METHODS.map((m) => (
               <button
                 key={m.id}
                 onClick={() => setMethod(m.id)}
-                className={`flex items-center gap-3 rounded-lg border-2 px-4 py-3 text-left transition ${
+                className={`flex items-center gap-3 rounded-lg border-2 px-4 py-4 text-left transition ${
                   method === m.id
                     ? 'border-[#01273A] bg-[#01273A]/5'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
-                <span className="text-xl">{m.icon}</span>
                 <div>
-                  <div className={`text-sm font-bold ${method === m.id ? 'text-[#01273A]' : 'text-gray-700'}`}>
+                  <div className={`text-base font-bold ${method === m.id ? 'text-[#01273A]' : 'text-gray-700'}`}>
                     {m.label}
                   </div>
-                  <div className="text-xs text-gray-400">{m.desc}</div>
+                  <div className="text-sm text-gray-400">{m.desc}</div>
                 </div>
                 {method === m.id && (
                   <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-[#01273A]">
@@ -194,23 +192,23 @@ export default function ChargePage() {
         {/* 할부 선택 (카드 + 5만원 이상) */}
         {showQuota && (
           <section className="mb-6">
-            <h2 className="mb-3 text-sm font-bold text-[#01273A]">할부 옵션</h2>
+            <h2 className="mb-3 text-xl font-bold text-[#01273A]">할부 옵션</h2>
             <select
               value={cardQuota}
               onChange={(e) => setCardQuota(e.target.value)}
-              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 outline-none focus:border-[#01273A]"
+              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-3 text-base text-gray-700 outline-none focus:border-[#01273A]"
             >
               {QUOTA_OPTIONS.map((q) => (
                 <option key={q.value} value={q.value}>{q.label}</option>
               ))}
             </select>
-            <p className="mt-1 text-xs text-gray-400">* 실제 할부 가능 개월은 카드사 정책에 따라 다를 수 있습니다</p>
+            <p className="mt-1 text-sm text-gray-400">* 실제 할부 가능 개월은 카드사 정책에 따라 다를 수 있습니다</p>
           </section>
         )}
 
         {/* 가상계좌 안내 */}
         {method === 'vbank' && (
-          <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-base text-amber-800">
             채번 후 72시간 내에 입금하면 포인트가 자동 충전됩니다. 입금 전까지는 포인트가 지급되지 않습니다.
           </div>
         )}
@@ -229,7 +227,7 @@ export default function ChargePage() {
         </button>
 
         {/* 안내 */}
-        <div className="mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-gray-600">
+        <div className="mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4 text-base text-gray-600">
           <ul className="space-y-1.5">
             <li>• 충전된 포인트는 꿈 구매에 즉시 사용할 수 있습니다</li>
             <li>• 포인트 충전은 환불이 불가능하니 신중하게 선택해주세요</li>
@@ -239,7 +237,7 @@ export default function ChargePage() {
         </div>
 
         <div className="text-center">
-          <Link href="/mypage" className="text-sm text-[#E07B2A] hover:underline">
+          <Link href="/mypage" className="text-base text-[#E07B2A] hover:underline">
             마이페이지로 돌아가기
           </Link>
         </div>
