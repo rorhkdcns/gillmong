@@ -25,15 +25,21 @@ function Field({
 const INPUT = 'w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#01273A]'
 
 export default function SignupPage() {
-  const [username,  setUsername]  = useState('')
-  const [password,  setPassword]  = useState('')
-  const [nickname,  setNickname]  = useState('')
-  const [realName,  setRealName]  = useState('')
-  const [phone,     setPhone]     = useState('')
-  const [email,     setEmail]     = useState('')
-  const [error,     setError]     = useState('')
-  const [done,      setDone]      = useState(false)
-  const [loading,   setLoading]   = useState(false)
+  const [username,     setUsername]     = useState('')
+  const [password,     setPassword]     = useState('')
+  const [nickname,     setNickname]     = useState('')
+  const [realName,     setRealName]     = useState('')
+  const [phone,        setPhone]        = useState('')
+  const [emailId,      setEmailId]      = useState('')
+  const [emailDomain,  setEmailDomain]  = useState('naver.com')
+  const [customDomain, setCustomDomain] = useState('')
+  const [error,        setError]        = useState('')
+  const [done,         setDone]         = useState(false)
+  const [loading,      setLoading]      = useState(false)
+
+  const email = emailDomain === 'direct'
+    ? (emailId && customDomain ? `${emailId}@${customDomain}` : '')
+    : (emailId ? `${emailId}@${emailDomain}` : '')
 
   const [usernameError,    setUsernameError]    = useState('')
   const [usernameStatus,   setUsernameStatus]   = useState<'idle' | 'available' | 'taken'>('idle')
@@ -113,8 +119,12 @@ export default function SignupPage() {
       setError('전화번호 형식이 올바르지 않습니다.')
       return
     }
-    if (!email.trim()) {
-      setError('이메일 주소를 입력해주세요.')
+    if (!emailId.trim()) {
+      setError('이메일 아이디를 입력해주세요.')
+      return
+    }
+    if (emailDomain === 'direct' && !customDomain.trim()) {
+      setError('이메일 도메인을 입력해주세요.')
       return
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -283,14 +293,40 @@ export default function SignupPage() {
             </Field>
 
             <Field label="이메일 주소" required>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="example@email.com"
-                required
-                className={INPUT}
-              />
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={emailId}
+                  onChange={(e) => setEmailId(e.target.value.replace(/\s/g, ''))}
+                  placeholder="이메일 아이디"
+                  className={`${INPUT} min-w-0 flex-1`}
+                />
+                <span className="shrink-0 text-base font-medium text-gray-400">@</span>
+                <select
+                  value={emailDomain}
+                  onChange={(e) => { setEmailDomain(e.target.value); setCustomDomain('') }}
+                  className={`${INPUT} shrink-0 w-[148px] cursor-pointer`}
+                >
+                  <option value="direct">직접입력</option>
+                  <option value="naver.com">naver.com</option>
+                  <option value="daum.net">daum.net</option>
+                  <option value="hanmail.net">hanmail.net</option>
+                  <option value="nate.com">nate.com</option>
+                  <option value="gmail.com">gmail.com</option>
+                </select>
+              </div>
+              {emailDomain === 'direct' && (
+                <input
+                  type="text"
+                  value={customDomain}
+                  onChange={(e) => setCustomDomain(e.target.value.replace(/\s/g, ''))}
+                  placeholder="도메인 입력 (예: yahoo.com)"
+                  className={`${INPUT} mt-2`}
+                />
+              )}
+              {email && (
+                <p className="mt-1 text-xs text-gray-400">{email}</p>
+              )}
             </Field>
 
             {/* 약관 동의 */}
