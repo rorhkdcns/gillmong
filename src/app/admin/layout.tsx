@@ -7,17 +7,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
 
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('is_admin, username')
-    .eq('id', user.id)
-    .single()
-
-  const isAdmin = profile?.is_admin
-    || profile?.username === 'admin'
-    || user.email === 'yoopromise@nate.com'
-  if (!isAdmin) redirect('/')
-
   return (
     <div className="flex h-screen overflow-hidden bg-[#F7F7F5]">
       <AdminSidebar />
