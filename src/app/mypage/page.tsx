@@ -4,54 +4,11 @@ import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import LogoutButton from './_components/LogoutButton'
 import PointTabs from './_components/PointTabs'
-import DreamCalendar from './_components/DreamCalendar'
-import type { CalendarItem } from './_components/DreamCalendar'
+import DreamListSection, { type DreamListItem } from './_components/DreamListSection'
 
 function formatDate(iso: string) {
   const d = new Date(iso)
   return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`
-}
-
-const GRADE_COLOR: Record<string, string> = {
-  A: 'bg-emerald-500',
-  B: 'bg-blue-500',
-  C: 'bg-amber-400',
-  D: 'bg-orange-400',
-  E: 'bg-red-400',
-}
-
-
-function DreamRow({ id, title, grade, price, owner }: { id: number; title: string; grade: string; price: number; owner?: boolean }) {
-  const href = owner ? `/dream/${id}?owner=1` : `/dream/${id}`
-  return (
-    <li className="flex items-center justify-between py-4">
-      <div className="flex items-center gap-3">
-        <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_COLOR[grade] ?? 'bg-gray-400'}`}>
-          {grade}
-        </span>
-        <a href={href} className="text-base text-[#333333] hover:text-[#01273A] hover:underline">
-          {title}
-        </a>
-      </div>
-      <span className="shrink-0 text-sm font-semibold text-[#E07B2A]">{price.toLocaleString()} P</span>
-    </li>
-  )
-}
-
-function Section({ title, count, children, empty }: { title: string; count: number; children?: React.ReactNode; empty?: boolean }) {
-  return (
-    <section className="border border-gray-200 bg-white p-5 md:p-8">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="bg-[#01273A] px-3 py-1 text-sm font-semibold text-white">{title}</h2>
-        <span className="text-sm text-[#777777]">{count}건</span>
-      </div>
-      {empty ? (
-        <p className="py-6 text-center text-sm text-[#999]">내역이 없습니다</p>
-      ) : (
-        <ul className="divide-y divide-gray-100">{children}</ul>
-      )}
-    </section>
-  )
 }
 
 export const dynamic = 'force-dynamic'
@@ -67,7 +24,7 @@ export default async function MyPage() {
     supabase.from('dreams').select('id, title, grade, price, is_sold, created_at').eq('user_id', user.id).order('created_at', { ascending: false }),
     supabase.from('saved_dreams').select('id, title, grade, created_at').eq('user_id', user.id).order('created_at', { ascending: false }),
     supabase.from('purchases').select('price, created_at, dreams(id, title, grade, price)').eq('buyer_id', user.id).order('created_at', { ascending: false }),
-    supabase.from('dreams').select('id, title, grade, price, purchases(price, created_at)').eq('user_id', user.id).eq('is_sold', true).order('created_at', { ascending: false }),
+    supabase.from('dreams').select('id, title, grade, price, created_at, purchases(price, created_at)').eq('user_id', user.id).eq('is_sold', true).order('created_at', { ascending: false }),
     supabase.from('inquiries').select('id, title, status, answer, created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(10),
   ])
 
@@ -81,25 +38,57 @@ export default async function MyPage() {
     title: string
     grade: string
     price: number
+    created_at: string
     purchases: Array<{ price: number; created_at: string }>
   }>
 
-  // 달력용 데이터
-  const myDreamsCalendar: CalendarItem[] = myDreams
+  // 리스트용 데이터
+  const myDreamsItems: DreamListItem[] = myDreams
     .filter(d => d.created_at)
-    .map(d => ({ id: d.id, title: d.title, grade: d.grade, price: d.price, date: d.created_at as string, href: `/dream/${d.id}?owner=1` }))
+    .map(d => ({
+      id: d.id,
+      date: d.created_at as string,
+      title: d.title,
+      grade: d.grade,
+      price: d.price,
+      href: `/dream/${d.id}?owner=1`,
+      subText: d.is_sold ? '판매완료' : undefined,
+    }))
 
-  const savedCalendar: CalendarItem[] = privateDreams
+  const savedItems: DreamListItem[] = privateDreams
     .filter(d => d.created_at)
-    .map(d => ({ id: d.id, title: d.title, grade: d.grade, date: d.created_at, href: `/saved/${d.id}` }))
+    .map(d => ({
+      id: d.id,
+      date: d.created_at,
+      title: d.title,
+      grade: d.grade,
+      href: `/saved/${d.id}`,
+    }))
 
-  const purchasedCalendar: CalendarItem[] = purchased
+  const purchasedItems: DreamListItem[] = purchased
     .flatMap(p => {
       const d = p.dreams as unknown as { id: number; title: string; grade: string; price: number } | null
       if (!d || !p.created_at) return []
-      const item: CalendarItem = { id: d.id, title: d.title, grade: d.grade, price: p.price, date: p.created_at, href: `/dream/${d.id}` }
-      return [item]
+      return [{
+        id: d.id,
+        date: p.created_at,
+        title: d.title,
+        grade: d.grade,
+        price: p.price,
+        href: `/dream/${d.id}`,
+      }]
     })
+
+  const soldItems: DreamListItem[] = soldDreams.map(d => ({
+    id: d.id,
+    date: d.created_at,
+    title: d.title,
+    grade: d.grade,
+    price: Math.floor(d.price * 0.9),
+    priceLabel: '수령',
+    href: `/dream/${d.id}`,
+    subText: '판매완료',
+  }))
 
   const nickname     = profile?.nickname ?? (user.user_metadata?.nickname as string) ?? '회원'
   const username     = profile?.username ?? (user.user_metadata?.username as string) ?? ''
@@ -136,6 +125,12 @@ export default async function MyPage() {
                     어드민
                   </a>
                 )}
+                <a
+                  href="/mypage/edit"
+                  className="rounded border border-gray-300 px-3 py-1.5 text-xs text-[#555555] transition hover:border-[#01273A] hover:text-[#01273A]"
+                >
+                  정보 변경
+                </a>
                 <LogoutButton />
               </div>
             </div>
@@ -167,76 +162,16 @@ export default async function MyPage() {
           </section>
 
           {/* 3. 내가 등록한 꿈 */}
-          <section className="border border-gray-200 bg-white p-5 md:p-8">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="bg-[#01273A] px-3 py-1 text-sm font-semibold text-white">내가 등록한 꿈</h2>
-              <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold text-[#E07B2A]">{myDreams.length}</span>
-                <span className="text-sm text-[#777777]">건</span>
-              </div>
-            </div>
-            <DreamCalendar items={myDreamsCalendar} />
-          </section>
+          <DreamListSection title="내가 등록한 꿈" items={myDreamsItems} />
 
           {/* 4. 내가 저장한 꿈 */}
-          <section className="border border-gray-200 bg-white p-5 md:p-8">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="bg-[#01273A] px-3 py-1 text-sm font-semibold text-white">내가 저장한 꿈</h2>
-              <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold text-[#E07B2A]">{privateDreams.length}</span>
-                <span className="text-sm text-[#777777]">건</span>
-              </div>
-            </div>
-            <DreamCalendar items={savedCalendar} />
-          </section>
+          <DreamListSection title="내가 저장한 꿈" items={savedItems} />
 
           {/* 5. 구매한 꿈 */}
-          <section className="border border-gray-200 bg-white p-5 md:p-8">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="bg-[#01273A] px-3 py-1 text-sm font-semibold text-white">구매한 꿈</h2>
-              <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold text-[#E07B2A]">{purchased.length}</span>
-                <span className="text-sm text-[#777777]">건</span>
-              </div>
-            </div>
-            <DreamCalendar items={purchasedCalendar} />
-          </section>
+          <DreamListSection title="구매한 꿈" items={purchasedItems} />
 
           {/* 6. 판매 현황 */}
-          <section className="border border-gray-200 bg-white p-5 md:p-8">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="bg-[#01273A] px-3 py-1 text-sm font-semibold text-white">판매 현황</h2>
-              <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold text-[#E07B2A]">{soldDreams.length}</span>
-                <span className="text-sm text-[#777777]">건</span>
-              </div>
-            </div>
-            {soldDreams.length === 0 ? (
-              <p className="py-6 text-center text-sm text-[#999]">판매 내역이 없습니다</p>
-            ) : (
-              <ul className="divide-y divide-gray-100">
-                {soldDreams.map((d) => (
-                  <li key={d.id} className="flex items-center justify-between py-4">
-                    <div className="flex items-center gap-3">
-                      <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_COLOR[d.grade] ?? 'bg-gray-400'}`}>
-                        {d.grade}
-                      </span>
-                      <div>
-                        <a href={`/dream/${d.id}`} className="text-base text-[#333333] hover:text-[#01273A] hover:underline">
-                          {d.title}
-                        </a>
-                        <p className="mt-0.5 text-xs text-[#999]">판매완료</p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-semibold text-[#E07B2A]">{Math.floor(d.price * 0.9).toLocaleString()} P 수령</p>
-                      <p className="text-xs text-[#999]">정가 {d.price.toLocaleString()} P</p>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
+          <DreamListSection title="판매 현황" items={soldItems} />
 
           {/* 7. 1:1 문의 내역 */}
           <section className="border border-gray-200 bg-white p-5 md:p-8">
@@ -273,8 +208,6 @@ export default async function MyPage() {
 
           {/* 8. 하단 링크 */}
           <div className="flex items-center justify-center gap-6 pb-4 text-sm text-[#777777]">
-            <a href="/mypage/edit" className="hover:text-[#01273A] hover:underline">정보 변경</a>
-            <span className="text-gray-300">|</span>
             <a href="/mypage/withdraw" className="hover:text-red-400 hover:underline">탈퇴하기</a>
           </div>
 
