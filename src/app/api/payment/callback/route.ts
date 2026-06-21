@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
 
     // 아직 승인 안 된 경우 승인 시도
     if (tid) {
-      const approval = await approveNicepayPayment(tid, amount, orderId)
+      const approval = await approveNicepayPayment(tid, amount)
       if (approval.resultCode !== '0000') {
         await admin.from('payments').update({ status: 'failed' }).eq('order_id', orderId)
         return NextResponse.json({ ok: true })

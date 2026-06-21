@@ -68,6 +68,10 @@ export default function ChargePage() {
         returnUrl: pd.returnUrl,
         buyerName: pd.buyerName,
         buyerTel:  pd.buyerTel,
+        fnError:   (result: { errorMsg?: string }) => {
+          setError(result.errorMsg ?? '결제창 오류가 발생했습니다.')
+          setLoading(false)
+        },
       })
     } catch (err) {
       setError(err instanceof Error ? err.message : '오류 발생')
