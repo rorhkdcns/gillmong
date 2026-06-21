@@ -83,10 +83,9 @@ export default async function Home() {
       <section className="px-6 pt-16 pb-20">
         <div className="mx-auto max-w-[800px]">
           <div className="rounded-2xl border border-brand-border bg-white p-8 shadow-sm">
-            <div className="mb-6 text-center">
-              <span className="text-3xl text-[#F5A66D]">★</span>
-              <h2 className="mt-2 text-2xl font-black text-gray-700">꿈 감정소</h2>
-              <p className="mt-1 text-sm text-gray-400">Dream Appraisal Center</p>
+            <div className="mb-8 text-center">
+              <h2 className="text-4xl font-black text-[#01273A]">꿈 감정소</h2>
+              <p className="mt-2 text-base font-medium text-[#555555]">Dream Appraisal Center</p>
             </div>
             <DreamInput />
           </div>

@@ -141,14 +141,11 @@ export default function FloatingDreamButton() {
               <div className="flex flex-col gap-4">
 
                 {/* 정확도 안내 배너 */}
-                <div className="flex items-start gap-2.5 rounded-xl border border-[#01273A]/10 bg-[#01273A]/5 px-3.5 py-2.5">
-                  <span className="mt-0.5 text-base">✨</span>
-                  <div>
-                    <p className="text-xs font-bold text-[#01273A]">더 상세하게 적을수록 해몽이 정확해집니다</p>
-                    <p className="mt-0.5 text-xs leading-relaxed text-[#555555]">
-                      색상·냄새·온도·감정까지 떠오르는 대로 적어보세요. 단어 하나가 해몽의 방향을 바꿉니다.
-                    </p>
-                  </div>
+                <div className="rounded-xl border-l-4 border-[#E07B2A] bg-[#01273A]/5 px-3.5 py-3">
+                  <p className="text-sm font-bold text-[#01273A]">더 상세하게 적을수록 해몽이 정확해집니다</p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-[#444444]">
+                    색상·냄새·온도·감정까지 떠오르는 대로 적어보세요. 단어 하나가 해몽의 방향을 바꿉니다.
+                  </p>
                 </div>
 
                 {/* 입력 필드 */}
@@ -157,13 +154,13 @@ export default function FloatingDreamButton() {
                   const isFocused = focusedKey === field.key
                   return (
                     <div key={field.key}>
-                      <label className="mb-0.5 block text-sm font-bold text-[#01273A]">
+                      <label className="mb-0.5 block text-base font-bold text-[#01273A]">
                         {field.label}
-                        <span className="ml-1.5 text-xs font-normal text-gray-400">{field.desc}</span>
                       </label>
+                      <p className="mb-1 text-xs font-medium text-[#555555]">{field.desc}</p>
 
                       {/* 심리학 팁 */}
-                      <p className="mb-1 flex items-center gap-1 text-xs text-[#6B96A8]">
+                      <p className="mb-1.5 flex items-center gap-1 text-xs text-[#6B96A8]">
                         <svg className="h-3 w-3 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                         </svg>
@@ -182,7 +179,7 @@ export default function FloatingDreamButton() {
                         />
                         {/* 글자 수 */}
                         <span className={`absolute bottom-2 right-3 text-xs transition-colors ${
-                          charCount === 0 ? 'text-transparent' : charCount >= 30 ? 'text-[#E07B2A] font-semibold' : 'text-gray-300'
+                          charCount === 0 ? 'text-transparent' : charCount >= 30 ? 'text-[#E07B2A] font-semibold' : 'text-[#AAAAAA]'
                         }`}>
                           {charCount}자{charCount >= 30 ? ' ✓' : ''}
                         </span>
@@ -193,13 +190,13 @@ export default function FloatingDreamButton() {
 
                 {/* 작성량 진행바 */}
                 <div>
-                  <div className="mb-1 flex items-center justify-between text-xs text-gray-400">
+                  <div className="mb-1 flex items-center justify-between text-sm text-[#555555]">
                     <span>작성 충실도</span>
-                    <span className={fillPercent >= 100 ? 'font-bold text-emerald-500' : fillPercent >= 50 ? 'text-[#E07B2A]' : ''}>
+                    <span className={fillPercent >= 100 ? 'font-bold text-emerald-500' : fillPercent >= 50 ? 'font-semibold text-[#E07B2A]' : 'text-[#888888]'}>
                       {fillLabel}
                     </span>
                   </div>
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
                     <div
                       className={`h-full rounded-full transition-all duration-500 ${fillColor}`}
                       style={{ width: `${fillPercent}%` }}
