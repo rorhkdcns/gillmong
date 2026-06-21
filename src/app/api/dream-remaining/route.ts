@@ -24,11 +24,8 @@ export async function GET() {
     .gte('created_at', todayISO)
     .limit(DAILY_LIMIT + 1)
 
-  if (adminError) console.error('[dream-remaining] admin 조회 오류:', adminError.message)
-
   const count = data?.length ?? 0
   const remaining = Math.max(0, DAILY_LIMIT - count)
-  console.log('[dream-remaining]', { userId: user.id.slice(0, 8), count, remaining, todayISO, adminError: adminError?.message })
 
-  return NextResponse.json({ remaining, _debug: { count, adminError: adminError?.message ?? null } })
+  return NextResponse.json({ remaining })
 }
