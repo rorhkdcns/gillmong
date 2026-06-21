@@ -41,18 +41,16 @@ export async function POST(req: NextRequest) {
     }
 
     // 4. NicePay 결제에 필요한 정보 반환
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.gillmong.com'
     return NextResponse.json({
-      success:     true,
+      success:   true,
       orderId,
-      clientId:    process.env.NEXT_PUBLIC_NICEPAY_CLIENT_ID,
-      amount:      Math.floor(amount),
-      productName: '길몽상점 포인트 충전',
-      buyerName:   profile.username || profile.nickname || '길몽상점 사용자',
-      buyerTel:    '010-0000-0000',
-      notifyUrl:   `${siteUrl}/api/payment/callback`,
-      returnUrl:   `${siteUrl}/charge/success`,
-      cancelUrl:   `${siteUrl}/charge/cancel`,
+      clientId:  process.env.NEXT_PUBLIC_NICEPAY_CLIENT_ID,
+      amount:    Math.floor(amount),
+      goodsName: '길몽상점 포인트 충전',
+      buyerName: profile.nickname || profile.username || '길몽상점 사용자',
+      buyerTel:  '010-0000-0000',
+      returnUrl: `${siteUrl}/api/payment/confirm`,
     })
   } catch (error) {
     console.error('결제 요청 실패:', error)

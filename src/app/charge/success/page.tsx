@@ -2,7 +2,14 @@ import Link from 'next/link'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 
-export default function ChargeSuccessPage() {
+export default async function ChargeSuccessPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ amount?: string }>
+}) {
+  const { amount } = await searchParams
+  const charged = amount ? Number(amount) : null
+
   return (
     <>
       <SiteHeader />
@@ -15,6 +22,11 @@ export default function ChargeSuccessPage() {
         </div>
 
         <h1 className="mb-3 text-2xl font-bold text-[#01273A]">포인트 충전 완료!</h1>
+        {charged && (
+          <p className="mb-1 text-xl font-bold text-[#E07B2A]">
+            {charged.toLocaleString()} P
+          </p>
+        )}
         <p className="mb-1 text-sm text-gray-500">포인트가 정상적으로 충전되었습니다.</p>
         <p className="mb-10 text-sm text-gray-400">마이페이지에서 포인트를 확인하실 수 있습니다.</p>
 

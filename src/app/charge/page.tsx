@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Script from 'next/script'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 
@@ -14,8 +15,8 @@ const CHARGE_AMOUNTS = [
 
 declare global {
   interface Window {
-    nicepay?: {
-      requestPayment: (config: Record<string, unknown>) => void
+    AUTHNICE?: {
+      requestPay: (config: Record<string, unknown>) => void
     }
   }
 }
@@ -37,10 +38,8 @@ export default function ChargePage() {
   }
 
   const handleCharge = async () => {
-    if (totalAmount === 0) {
-      setError('충전 금액을 선택해주세요')
-      return
-    }
+    if (totalAmount === 0) { setError('충전 금액을 선택해주세요'); return }
+    if (!window.AUTHNICE) { setError('결제 모듈 로딩 중입니다. 잠시 후 다시 시도해주세요.'); return }
 
     setLoading(true)
     setError('')
@@ -49,43 +48,39 @@ export default function ChargePage() {
       const { createClient } = await import('@/lib/supabase/client')
       const { data } = await createClient().auth.getSession()
       const userId = data?.session?.user?.id
+      if (!userId) throw new Error('로그인이 필요합니다')
 
-      if (!userId) throw new Error('사용자 ID를 찾을 수 없습니다')
-
-      const response = await fetch('/api/payment/create-payment', {
-        method: 'POST',
+      const res = await fetch('/api/payment/create-payment', {
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, amount: totalAmount }),
+        body:    JSON.stringify({ userId, amount: totalAmount }),
       })
+      if (!res.ok) throw new Error('결제 준비 실패')
 
-      if (!response.ok) throw new Error('결제 준비 실패')
+      const pd = await res.json()
 
-      const paymentData = await response.json()
-
-      if (window.nicepay) {
-        window.nicepay.requestPayment({
-          clientId:    paymentData.clientId,
-          method:      'card',
-          orderId:     paymentData.orderId,
-          amount:      paymentData.amount,
-          productName: paymentData.productName,
-          returnUrl:   paymentData.returnUrl,
-          cancelUrl:   paymentData.cancelUrl,
-          notifyUrl:   paymentData.notifyUrl,
-        })
-      } else {
-        setError('결제 시스템 준비 중입니다. 잠시 후 다시 시도해주세요.')
-      }
+      window.AUTHNICE.requestPay({
+        clientId:  pd.clientId,
+        method:    'card',
+        orderId:   pd.orderId,
+        amount:    pd.amount,
+        goodsName: pd.goodsName,
+        returnUrl: pd.returnUrl,
+        buyerName: pd.buyerName,
+        buyerTel:  pd.buyerTel,
+      })
     } catch (err) {
       setError(err instanceof Error ? err.message : '오류 발생')
-    } finally {
       setLoading(false)
     }
+    // 결제창 진행 중에는 loading 유지 (returnUrl 리다이렉트로 페이지 이동)
   }
 
   return (
     <>
+      <Script src="https://pay.nicepay.co.kr/v1/js/" strategy="lazyOnload" />
       <SiteHeader />
+
       <div className="mx-auto w-full max-w-2xl flex-1 p-6">
         <h1 className="mb-8 text-3xl font-bold">포인트 충전</h1>
 
@@ -172,6 +167,7 @@ export default function ChargePage() {
           </Link>
         </div>
       </div>
+
       <SiteFooter />
     </>
   )
