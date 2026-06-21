@@ -94,6 +94,7 @@ export default async function MyPage() {
   const username     = profile?.username ?? (user.user_metadata?.username as string) ?? ''
   const pointBalance = profile?.points ?? 0
   const isAdmin      = profile?.is_admin ?? false
+  const showAdminBtn = isAdmin || username === 'admin'
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
@@ -117,7 +118,7 @@ export default async function MyPage() {
                 </div>
               </div>
               <div className="flex shrink-0 items-center gap-2">
-                {isAdmin && (
+                {showAdminBtn && (
                   <a
                     href="/admin"
                     className="rounded-lg bg-[#E07B2A] px-4 py-2 text-sm font-medium text-white transition hover:brightness-90"
