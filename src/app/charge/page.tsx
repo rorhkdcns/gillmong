@@ -142,18 +142,21 @@ export default function ChargePage() {
         </section>
 
         {/* 총 충전액 */}
-        <section className="mb-6 rounded-lg border border-gray-200 bg-gray-50 px-5 py-4">
+        <section className="mb-6 rounded-lg bg-[#E07B2A] px-5 py-4">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-base font-bold text-[#01273A]">총 충전액</span>
+            <span className="text-base font-bold text-white">총 충전액</span>
             {totalAmount > 0 && (
-              <button onClick={handleClear} className="text-sm text-gray-400 underline hover:text-red-400">
+              <button
+                onClick={handleClear}
+                className="rounded border-2 border-white bg-white px-3 py-1 text-sm font-semibold text-[#E07B2A] transition hover:bg-[#E07B2A] hover:text-white"
+              >
                 초기화
               </button>
             )}
           </div>
           <div className="flex items-baseline gap-3">
-            <span className="text-3xl font-bold text-[#01273A]">₩{totalAmount.toLocaleString()}</span>
-            <span className="text-xl font-bold text-[#E07B2A]">{totalAmount.toLocaleString()} P</span>
+            <span className="text-3xl font-bold text-white">₩{totalAmount.toLocaleString()}</span>
+            <span className="text-xl font-bold text-white/80">{totalAmount.toLocaleString()} P</span>
           </div>
         </section>
 
