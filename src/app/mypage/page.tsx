@@ -127,7 +127,7 @@ export default async function MyPage() {
                 )}
                 <a
                   href="/mypage/edit"
-                  className="rounded border border-gray-300 px-3 py-1.5 text-xs text-[#555555] transition hover:border-[#01273A] hover:text-[#01273A]"
+                  className="bg-[#01273A] px-4 py-2 text-sm font-medium text-white transition hover:brightness-90"
                 >
                   정보 변경
                 </a>
