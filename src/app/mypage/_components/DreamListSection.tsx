@@ -105,7 +105,7 @@ export default function DreamListSection({
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <h2 className="bg-[#01273A] px-3 py-1 text-sm font-semibold text-white">{title}</h2>
-          <span className="text-sm text-[#777777]">{items.length}건</span>
+          <span className="text-sm font-bold text-[#E07B2A]">{items.length}건</span>
         </div>
         <div className="flex items-center gap-2">
           {selectedDate && (
