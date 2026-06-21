@@ -299,13 +299,13 @@ export default function SignupPage() {
                   value={emailId}
                   onChange={(e) => setEmailId(e.target.value.replace(/\s/g, ''))}
                   placeholder="이메일 아이디"
-                  className={`${INPUT} min-w-0 flex-1`}
+                  className={`${INPUT} min-w-0 flex-[7]`}
                 />
                 <span className="shrink-0 text-base font-medium text-gray-400">@</span>
                 <select
                   value={emailDomain}
                   onChange={(e) => { setEmailDomain(e.target.value); setCustomDomain('') }}
-                  className={`${INPUT} shrink-0 w-[148px] cursor-pointer`}
+                  className={`${INPUT} flex-[3] min-w-0 cursor-pointer`}
                 >
                   <option value="direct">직접입력</option>
                   <option value="naver.com">naver.com</option>
