@@ -100,12 +100,12 @@ export default function DreamListSection({
   }, [totalPages, currentPage])
 
   return (
-    <section id={`section-${title}`} className="border border-gray-200 bg-white p-5 md:p-8">
+    <section id={`section-${title}`} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm md:p-8">
       {/* 헤더 */}
-      <div className="mb-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <h2 className="bg-[#01273A] px-3 py-1 text-sm font-semibold text-white">{title}</h2>
-          <span className="text-sm font-bold text-[#E07B2A]">{items.length}건</span>
+      <div className="mb-5 flex items-center justify-between">
+        <div className="flex items-center gap-2.5">
+          <h2 className="text-xl font-black text-[#01273A]">{title}</h2>
+          <span className="text-base font-bold text-[#E07B2A]">{items.length}건</span>
         </div>
         <div className="flex items-center gap-2">
           {selectedDate && (
@@ -231,15 +231,15 @@ export default function DreamListSection({
 
       {/* 리스트 */}
       {filtered.length === 0 ? (
-        <p className="py-6 text-center text-sm text-[#999]">
+        <p className="py-8 text-center text-sm text-[#555555]">
           {selectedDate ? `${selectedDate}에 내역이 없습니다` : '내역이 없습니다'}
         </p>
       ) : (
-        <ul className="divide-y divide-gray-100">
+        <ul className="divide-y divide-gray-200">
           {pageItems.map((item, idx) => (
             <li key={`${item.id}-${idx}`} className="flex items-center gap-3 py-4">
               {/* 날짜 */}
-              <span className="w-[88px] shrink-0 text-xs tabular-nums text-[#999]">
+              <span className="w-[88px] shrink-0 text-xs tabular-nums text-[#666666]">
                 {item.date.slice(0, 10)}
               </span>
               {/* 등급 + 제목 */}
@@ -252,22 +252,22 @@ export default function DreamListSection({
                 <div className="min-w-0">
                   <Link
                     href={item.href}
-                    className="block truncate text-sm text-[#333333] hover:text-[#01273A] hover:underline"
+                    className="block truncate text-base font-medium text-[#333333] hover:text-[#01273A] hover:underline"
                   >
                     {item.title}
                   </Link>
                   {item.subText && (
-                    <p className="text-xs text-[#999]">{item.subText}</p>
+                    <p className="text-xs text-[#666666]">{item.subText}</p>
                   )}
                 </div>
               </div>
               {/* 포인트 */}
               {item.price != null && (
                 <div className="shrink-0 text-right">
-                  <p className="text-sm font-semibold text-[#E07B2A]">
+                  <p className="text-base font-bold text-[#E07B2A]">
                     {item.price.toLocaleString()} P
                     {item.priceLabel && (
-                      <span className="ml-0.5 text-xs font-normal text-[#999]">{item.priceLabel}</span>
+                      <span className="ml-0.5 text-xs font-normal text-[#666666]">{item.priceLabel}</span>
                     )}
                   </p>
                 </div>
