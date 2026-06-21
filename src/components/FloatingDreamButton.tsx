@@ -4,34 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import ResultModal, { type AnalysisResult } from '@/app/_components/ResultModal'
+import { DREAM_FIELDS } from '@/app/_components/DreamInput'
 import { useRemainingCount } from '@/hooks/useRemainingCount'
-
-const FIELDS = [
-  {
-    key: 'who' as const,
-    label: '누가/무엇이',
-    desc: '나 외에 등장한 특별한 존재나 기묘한 생명체, 인물은?',
-    placeholder: '예) 거대한 용, 돌아가신 할머니, 낯선 남자...',
-  },
-  {
-    key: 'when' as const,
-    label: '언제/어디서',
-    desc: '배경은 언제쯤, 어떤 공간이었나요?',
-    placeholder: '예) 깊은 밤, 낯선 폐건물 안, 어릴 적 살던 집...',
-  },
-  {
-    key: 'how' as const,
-    label: '어떻게/왜',
-    desc: '어떤 신비롭거나 두려운 사건이 일어났고 어떻게 전개되었나요?',
-    placeholder: '예) 갑자기 쫓기다가 날아올랐고, 하늘에서 빛이 쏟아졌어요...',
-  },
-  {
-    key: 'memory' as const,
-    label: '강렬한 기억',
-    desc: '잠에서 깨어난 순간에도 생생한 감정, 감각, 혹은 기억나는 대사는?',
-    placeholder: '예) 심장이 두근거렸고 "돌아오지 마"라는 목소리가 들렸어요...',
-  },
-]
 
 type Answers = { who: string; when: string; how: string; memory: string }
 
@@ -39,14 +13,15 @@ export default function FloatingDreamButton() {
   const router = useRouter()
   const { remaining, fetchRemaining } = useRemainingCount()
 
-  const [open, setOpen]     = useState(false)
-  const [answers, setAnswers] = useState<Answers>({ who: '', when: '', how: '', memory: '' })
+  const [open, setOpen]                             = useState(false)
+  const [answers, setAnswers]                       = useState<Answers>({ who: '', when: '', how: '', memory: '' })
   const [inputError, setInputError]                 = useState('')
   const [isRetryable, setIsRetryable]               = useState(false)
   const [loading, setLoading]                       = useState(false)
   const [result, setResult]                         = useState<AnalysisResult | null>(null)
   const [reconstructedDream, setReconstructedDream] = useState('')
   const [dailyLimitReached, setDailyLimitReached]   = useState(false)
+  const [focusedKey, setFocusedKey]                 = useState<keyof Answers | null>(null)
 
   async function handleOpen() {
     const supabase = createClient()
@@ -66,6 +41,7 @@ export default function FloatingDreamButton() {
     setReconstructedDream('')
     setLoading(false)
     setDailyLimitReached(false)
+    setFocusedKey(null)
   }
 
   function handleChange(key: keyof Answers, value: string) {
@@ -82,10 +58,10 @@ export default function FloatingDreamButton() {
     setLoading(true)
 
     try {
-      const res = await fetch('/api/analyze-dream', {
-        method: 'POST',
+      const res  = await fetch('/api/analyze-dream', {
+        method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answers }),
+        body:    JSON.stringify({ answers }),
       })
       const data = await res.json()
       if (res.status === 429) { setDailyLimitReached(true); setLoading(false); return }
@@ -102,6 +78,11 @@ export default function FloatingDreamButton() {
       setLoading(false)
     }
   }
+
+  const totalChars  = Object.values(answers).reduce((s, v) => s + v.trim().length, 0)
+  const fillPercent = Math.min(100, Math.round((totalChars / 80) * 100))
+  const fillLabel   = fillPercent >= 100 ? '상세함 ✓' : fillPercent >= 50 ? '보통' : '간략함'
+  const fillColor   = fillPercent >= 100 ? 'bg-emerald-400' : fillPercent >= 50 ? 'bg-[#E07B2A]' : 'bg-gray-300'
 
   return (
     <>
@@ -131,7 +112,7 @@ export default function FloatingDreamButton() {
         </button>
       </div>
 
-      {/* 꿈 입력 모달 — X 버튼으로만 닫힘 */}
+      {/* 꿈 입력 모달 */}
       {open && !result && !loading && (
         <div className="fixed inset-0 z-[200] overflow-y-auto bg-black/60 px-4 pb-8 pt-[84px]">
           <div className="relative mx-auto w-full max-w-2xl rounded-2xl bg-white p-7 shadow-2xl">
@@ -152,26 +133,79 @@ export default function FloatingDreamButton() {
 
             {dailyLimitReached ? (
               <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-8 text-center">
+                <p className="mb-1 text-3xl">🌙</p>
                 <p className="font-black text-[#01273A]">오늘의 해몽 횟수를 모두 사용하셨습니다</p>
                 <p className="mt-2 text-sm text-amber-700">하루 3회 제공되며, 자정에 다시 초기화됩니다.</p>
               </div>
             ) : (
               <div className="flex flex-col gap-4">
-                {FIELDS.map((field) => (
-                  <div key={field.key}>
-                    <label className="mb-1.5 block text-sm font-bold text-[#01273A]">
-                      {field.label}
-                      <span className="ml-1 font-normal text-xs text-gray-400">({field.desc})</span>
-                    </label>
-                    <textarea
-                      value={answers[field.key]}
-                      onChange={(e) => handleChange(field.key, e.target.value)}
-                      placeholder={field.placeholder}
-                      rows={2}
-                      className="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-[#01273A] placeholder:text-[#BBBBBB] outline-none focus:border-[#01273A]"
+
+                {/* 정확도 안내 배너 */}
+                <div className="flex items-start gap-2.5 rounded-xl border border-[#01273A]/10 bg-[#01273A]/5 px-3.5 py-2.5">
+                  <span className="mt-0.5 text-base">✨</span>
+                  <div>
+                    <p className="text-xs font-bold text-[#01273A]">더 상세하게 적을수록 해몽이 정확해집니다</p>
+                    <p className="mt-0.5 text-xs leading-relaxed text-[#555555]">
+                      색상·냄새·온도·감정까지 떠오르는 대로 적어보세요. 단어 하나가 해몽의 방향을 바꿉니다.
+                    </p>
+                  </div>
+                </div>
+
+                {/* 입력 필드 */}
+                {DREAM_FIELDS.map((field) => {
+                  const charCount = answers[field.key].length
+                  const isFocused = focusedKey === field.key
+                  return (
+                    <div key={field.key}>
+                      <label className="mb-0.5 block text-sm font-bold text-[#01273A]">
+                        {field.label}
+                        <span className="ml-1.5 text-xs font-normal text-gray-400">{field.desc}</span>
+                      </label>
+
+                      {/* 심리학 팁 */}
+                      <p className="mb-1 flex items-center gap-1 text-xs text-[#6B96A8]">
+                        <svg className="h-3 w-3 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                        </svg>
+                        {field.tip}
+                      </p>
+
+                      <div className="relative">
+                        <textarea
+                          value={answers[field.key]}
+                          onChange={(e) => handleChange(field.key, e.target.value)}
+                          onFocus={() => setFocusedKey(field.key)}
+                          onBlur={() => setFocusedKey(null)}
+                          placeholder={field.placeholder}
+                          rows={isFocused ? 3 : 2}
+                          className="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-2.5 pb-6 text-sm text-[#01273A] placeholder:text-[#BBBBBB] outline-none transition-all focus:border-[#01273A] focus:shadow-[0_0_0_3px_rgba(1,39,58,0.08)]"
+                        />
+                        {/* 글자 수 */}
+                        <span className={`absolute bottom-2 right-3 text-xs transition-colors ${
+                          charCount === 0 ? 'text-transparent' : charCount >= 30 ? 'text-[#E07B2A] font-semibold' : 'text-gray-300'
+                        }`}>
+                          {charCount}자{charCount >= 30 ? ' ✓' : ''}
+                        </span>
+                      </div>
+                    </div>
+                  )
+                })}
+
+                {/* 작성량 진행바 */}
+                <div>
+                  <div className="mb-1 flex items-center justify-between text-xs text-gray-400">
+                    <span>작성 충실도</span>
+                    <span className={fillPercent >= 100 ? 'font-bold text-emerald-500' : fillPercent >= 50 ? 'text-[#E07B2A]' : ''}>
+                      {fillLabel}
+                    </span>
+                  </div>
+                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-100">
+                    <div
+                      className={`h-full rounded-full transition-all duration-500 ${fillColor}`}
+                      style={{ width: `${fillPercent}%` }}
                     />
                   </div>
-                ))}
+                </div>
 
                 {inputError && (
                   <div className="flex flex-col gap-2">
@@ -196,6 +230,7 @@ export default function FloatingDreamButton() {
                     {' '}남음
                   </p>
                 )}
+
                 <button
                   type="button"
                   onClick={handleSubmit}
