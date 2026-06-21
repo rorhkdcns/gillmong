@@ -158,5 +158,5 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
     lucky_numbers:  sanitizeLuckyNumbers(parsed.lucky_numbers),
   }
 
-  return NextResponse.json({ ...result, _insertError: logError?.message ?? null })
+  return NextResponse.json(result)
 }
