@@ -120,9 +120,9 @@ export default async function MyPage() {
                 {isAdmin && (
                   <a
                     href="/admin"
-                    className="rounded-lg bg-[#E07B2A] px-3 py-1.5 text-xs font-bold text-white transition hover:brightness-90"
+                    className="rounded-lg bg-[#E07B2A] px-4 py-2 text-sm font-medium text-white transition hover:brightness-90"
                   >
-                    어드민
+                    관리자 페이지
                   </a>
                 )}
                 <a
