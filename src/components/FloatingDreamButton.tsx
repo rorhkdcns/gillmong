@@ -91,9 +91,7 @@ export default function FloatingDreamButton() {
       if (res.status === 429) { setDailyLimitReached(true); setLoading(false); return }
       if (res.status === 503) { setInputError(data.error); setIsRetryable(true); setLoading(false); return }
       if (!res.ok || data.error) throw new Error(data.error ?? '분석 실패')
-      if (data._insertError) console.error('[analyze-dream] DB 로그 삽입 실패:', data._insertError)
-      else console.log('[analyze-dream] DB 로그 삽입 성공')
-      const { reconstructedDream: rd, _insertError: _ie, ...analysis } = data
+      const { reconstructedDream: rd, ...analysis } = data
       setReconstructedDream(rd ?? '')
       setResult(analysis as AnalysisResult)
       window.dispatchEvent(new Event('dream-analyzed'))

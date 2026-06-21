@@ -98,13 +98,6 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     setPriceError(validatePrice(val))
   }
 
-  async function getRemainingToday(): Promise<number> {
-    const res = await fetch('/api/dream-remaining', { cache: 'no-store' })
-    if (!res.ok) return 0
-    const { remaining } = await res.json()
-    return remaining ?? 0
-  }
-
   async function ensureProfile(supabase: ReturnType<typeof createClient>, user: { id: string; email?: string; user_metadata?: Record<string, unknown> }) {
     const { data: existing } = await supabase.from('profiles').select('id').eq('id', user.id).single()
     if (existing) return true
@@ -123,12 +116,6 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.user) { setSavingPrivate(false); setSaveError('로그인이 필요합니다.'); return }
     const user = session.user
-
-    if ((await getRemainingToday()) <= 0) {
-      setSavingPrivate(false)
-      setSaveError('오늘 꿈 등록 한도(하루 3개)에 도달했습니다. 내일 다시 시도해주세요.')
-      return
-    }
 
     await ensureProfile(supabase, user)
 
@@ -174,12 +161,6 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
       return
     }
     const user = session.user
-
-    if ((await getRemainingToday()) <= 0) {
-      setSaving(false)
-      setSaveError('오늘 꿈 등록 한도(하루 3개)에 도달했습니다. 내일 다시 시도해주세요.')
-      return
-    }
 
     await ensureProfile(supabase, user)
 
