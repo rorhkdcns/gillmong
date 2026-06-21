@@ -89,10 +89,10 @@ export default function PointTabs() {
             key={key}
             type="button"
             onClick={() => setActive(key)}
-            className={`flex-1 whitespace-nowrap py-2.5 text-center text-sm transition-colors ${
+            className={`flex-1 whitespace-nowrap py-3 text-center text-sm font-medium transition-colors ${
               active === key
-                ? 'border-b-2 border-[#01273A] font-semibold text-[#01273A]'
-                : 'text-[#777777] hover:text-[#333333]'
+                ? 'border-b-2 border-[#01273A] font-bold text-[#01273A]'
+                : 'text-[#555555] hover:text-[#333333]'
             }`}
           >
             {TAB_LABELS[key]}
@@ -102,22 +102,22 @@ export default function PointTabs() {
 
       {/* 내역 */}
       {loading ? (
-        <p className="py-8 text-center text-sm text-[#999]">불러오는 중...</p>
+        <p className="py-8 text-center text-sm text-[#555555]">불러오는 중...</p>
       ) : active === 'withdrawal' ? (
         withdrawals.length === 0 ? (
-          <p className="py-8 text-center text-sm text-[#999]">출금 내역이 없습니다</p>
+          <p className="py-8 text-center text-sm text-[#555555]">출금 내역이 없습니다</p>
         ) : (
-          <ul className="divide-y divide-gray-100">
+          <ul className="divide-y divide-gray-200">
             {withdrawals.map((w) => {
               const st = STATUS_LABEL[w.status] ?? { label: w.status, color: 'text-gray-400' }
               return (
                 <li key={w.id} className="flex items-center justify-between py-4">
                   <div>
-                    <p className="text-sm text-[#333333]">{w.bankName} 출금 신청</p>
-                    <p className="mt-0.5 text-xs text-[#999]">{w.date}</p>
+                    <p className="text-base font-medium text-[#333333]">{w.bankName} 출금 신청</p>
+                    <p className="mt-0.5 text-xs text-[#666666]">{w.date}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-semibold text-red-400">-{w.amount.toLocaleString()} P</p>
+                    <p className="text-base font-bold text-red-400">-{w.amount.toLocaleString()} P</p>
                     <p className={`mt-0.5 text-xs font-semibold ${st.color}`}>{st.label}</p>
                   </div>
                 </li>
@@ -126,16 +126,16 @@ export default function PointTabs() {
           </ul>
         )
       ) : logs[active as 'charge' | 'use' | 'revenue'].length === 0 ? (
-        <p className="py-8 text-center text-sm text-[#999]">내역이 없습니다</p>
+        <p className="py-8 text-center text-sm text-[#555555]">내역이 없습니다</p>
       ) : (
-        <ul className="divide-y divide-gray-100">
+        <ul className="divide-y divide-gray-200">
           {logs[active as 'charge' | 'use' | 'revenue'].map((row, i) => (
             <li key={i} className="flex items-center justify-between py-4">
               <div>
-                <p className="text-sm text-[#333333]">{row.description}</p>
-                <p className="mt-0.5 text-xs text-[#999]">{row.date}</p>
+                <p className="text-base font-medium text-[#333333]">{row.description}</p>
+                <p className="mt-0.5 text-xs text-[#666666]">{row.date}</p>
               </div>
-              <span className={`text-sm font-semibold ${row.amount > 0 ? 'text-emerald-600' : 'text-red-400'}`}>
+              <span className={`text-base font-bold ${row.amount > 0 ? 'text-emerald-600' : 'text-red-400'}`}>
                 {row.amount > 0 ? '+' : ''}{row.amount.toLocaleString()} P
               </span>
             </li>

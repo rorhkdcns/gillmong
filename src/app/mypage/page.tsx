@@ -137,22 +137,22 @@ export default async function MyPage() {
           </section>
 
           {/* 2. 포인트 */}
-          <section className="border border-gray-200 bg-white p-5 md:p-8">
+          <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm md:p-8">
             {/* 포인트 타이틀 + 잔액 */}
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="bg-[#01273A] px-3 py-1 text-sm font-semibold text-white">포인트</h2>
+            <div className="mb-5 flex items-center justify-between">
+              <h2 className="text-xl font-black text-[#01273A]">포인트</h2>
               <div className="flex items-baseline gap-1">
                 <span className="text-2xl font-bold text-[#E07B2A]">{pointBalance.toLocaleString()}</span>
-                <span className="text-sm text-[#777777]">P</span>
+                <span className="text-base font-medium text-[#555555]">P</span>
               </div>
             </div>
 
             {/* 버튼 */}
             <div className="mb-5 flex gap-3">
-              <a href="/charge" className="flex-1 bg-[#E07B2A] py-2.5 text-center text-sm font-semibold text-white transition-all hover:brightness-90">
+              <a href="/charge" className="flex-1 rounded-lg bg-[#E07B2A] py-2.5 text-center text-sm font-semibold text-white transition-all hover:brightness-90">
                 포인트 충전
               </a>
-              <a href="/mypage/withdrawal" className="flex-1 border border-[#01273A] bg-white py-2.5 text-center text-sm font-semibold text-[#01273A] transition-all hover:bg-[#01273A] hover:text-white">
+              <a href="/mypage/withdrawal" className="flex-1 rounded-lg border border-[#01273A] bg-white py-2.5 text-center text-sm font-semibold text-[#01273A] transition-all hover:bg-[#01273A] hover:text-white">
                 출금 신청
               </a>
             </div>
