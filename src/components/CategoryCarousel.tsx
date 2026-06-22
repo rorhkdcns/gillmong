@@ -12,12 +12,70 @@ const GRADE_COLOR: Record<string, string> = {
   F: 'bg-gray-400',
 }
 
+const GRADE_LABEL: Record<string, string> = {
+  A: 'A등급', B: 'B등급', C: 'C등급', D: 'D등급', E: 'E등급', F: 'F등급',
+}
+
 interface Dream {
   id: number
   title: string
+  summary?: string | null
   grade: string
   price: number
   nickname?: string | null
+  username?: string | null
+}
+
+function DreamCard({ dream }: { dream: Dream }) {
+  const initial = dream.nickname?.[0]?.toUpperCase() ?? '?'
+  return (
+    <Link
+      href={`/dream/${dream.id}`}
+      className="group flex h-full flex-col rounded-2xl border border-gray-100 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg"
+    >
+      {/* ① 프로필 */}
+      <div className="flex items-center gap-2.5 px-4 pt-4">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#01273A] text-sm font-bold text-white">
+          {initial}
+        </div>
+        <span className="truncate text-xs text-gray-400">
+          @{dream.username ?? dream.nickname ?? '-'}
+        </span>
+      </div>
+
+      {/* ② 제목 */}
+      <div className="px-4 pt-3">
+        <h3 className="line-clamp-2 text-base font-bold leading-snug text-[#01273A]">
+          {dream.title}
+        </h3>
+      </div>
+
+      {/* ③ 요약 */}
+      <div className="flex-1 px-4 pt-2">
+        <p className="line-clamp-3 text-xs leading-relaxed text-gray-500">
+          {dream.summary ?? ''}
+        </p>
+      </div>
+
+      {/* ④ 등급 + 감정가 */}
+      <div className="flex items-center justify-between px-4 pt-3">
+        <span className={`inline-flex items-center gap-0.5 rounded-full px-2.5 py-1 text-xs font-bold text-white ${GRADE_COLOR[dream.grade] ?? 'bg-gray-400'}`}>
+          {dream.grade}
+          <span className="font-normal opacity-80">&nbsp;{GRADE_LABEL[dream.grade]}</span>
+        </span>
+        <span className="text-sm font-extrabold text-[#E07B2A]">
+          {dream.price.toLocaleString()} P
+        </span>
+      </div>
+
+      {/* ⑤ 버튼 */}
+      <div className="flex justify-end px-4 pb-4 pt-3">
+        <span className="rounded-full bg-[#01273A] px-4 py-1.5 text-xs font-semibold text-white transition group-hover:bg-[#E07B2A]">
+          자세히 보기
+        </span>
+      </div>
+    </Link>
+  )
 }
 
 function useVisibleCards() {
@@ -77,23 +135,7 @@ export default function CategoryCarousel({ dreams }: { dreams: Dream[] }) {
         >
           {dreams.map((dream) => (
             <div key={dream.id} style={{ width: `${cardWidth}%` }} className="shrink-0 px-2">
-              <Link
-                href={`/dream/${dream.id}`}
-                className="block h-full rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md"
-              >
-                <div className="mb-2 flex items-center gap-2">
-                  <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_COLOR[dream.grade] ?? 'bg-gray-400'}`}>
-                    {dream.grade}
-                  </span>
-                  {dream.nickname && (
-                    <span className="truncate text-xs text-gray-400">@{dream.nickname}</span>
-                  )}
-                </div>
-                <h3 className="mb-3 line-clamp-2 min-h-[2.5rem] text-sm font-semibold leading-snug text-[#333]">
-                  {dream.title}
-                </h3>
-                <p className="text-sm font-bold text-[#E07B2A]">{dream.price.toLocaleString()} P</p>
-              </Link>
+              <DreamCard dream={dream} />
             </div>
           ))}
         </div>
@@ -106,7 +148,7 @@ export default function CategoryCarousel({ dreams }: { dreams: Dream[] }) {
             onClick={prev}
             disabled={current === 0}
             aria-label="이전"
-            className="absolute left-0 top-1/2 z-10 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-white text-lg shadow-md text-[#01273A] transition hover:bg-[#01273A] hover:text-white disabled:opacity-30"
+            className="absolute left-0 top-1/2 z-10 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-xl shadow-md text-[#01273A] transition hover:bg-[#01273A] hover:text-white disabled:opacity-30"
           >
             ‹
           </button>
@@ -114,7 +156,7 @@ export default function CategoryCarousel({ dreams }: { dreams: Dream[] }) {
             onClick={next}
             disabled={current >= maxIndex}
             aria-label="다음"
-            className="absolute right-0 top-1/2 z-10 -translate-y-1/2 flex h-8 w-8 items-center justify-center rounded-full bg-white text-lg shadow-md text-[#01273A] transition hover:bg-[#01273A] hover:text-white disabled:opacity-30"
+            className="absolute right-0 top-1/2 z-10 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-xl shadow-md text-[#01273A] transition hover:bg-[#01273A] hover:text-white disabled:opacity-30"
           >
             ›
           </button>
@@ -123,14 +165,14 @@ export default function CategoryCarousel({ dreams }: { dreams: Dream[] }) {
 
       {/* 인디케이터 */}
       {maxIndex > 0 && (
-        <div className="mt-4 flex justify-center gap-1.5">
+        <div className="mt-5 flex justify-center gap-1.5">
           {Array.from({ length: maxIndex + 1 }).map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrent(i)}
               aria-label={`${i + 1}번째`}
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === current ? 'w-4 bg-[#01273A]' : 'w-1.5 bg-gray-300'
+                i === current ? 'w-5 bg-[#01273A]' : 'w-1.5 bg-gray-300'
               }`}
             />
           ))}

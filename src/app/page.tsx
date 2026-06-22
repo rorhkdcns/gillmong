@@ -29,7 +29,7 @@ export default async function Home() {
     ...CATEGORIES.map(({ slug }) =>
       supabase
         .from('dreams')
-        .select('id, title, grade, price, user_id')
+        .select('id, title, summary, grade, price, user_id')
         .eq('category', slug)
         .eq('is_sold', false)
         .order('created_at', { ascending: false })
@@ -41,14 +41,18 @@ export default async function Home() {
   const allDreams = categoryResults.flatMap((r) => r.data ?? [])
   const userIds   = [...new Set(allDreams.map((d) => d.user_id).filter(Boolean))]
   const { data: profiles } = userIds.length
-    ? await supabase.from('profiles').select('id, nickname').in('id', userIds)
+    ? await supabase.from('profiles').select('id, nickname, username').in('id', userIds)
     : { data: [] }
 
-  const nickMap: Record<string, string> = {}
-  for (const p of profiles ?? []) nickMap[p.id] = p.nickname
+  const profileMap: Record<string, { nickname: string; username: string }> = {}
+  for (const p of profiles ?? []) profileMap[p.id] = { nickname: p.nickname, username: p.username }
 
   const categoryDreams = categoryResults.map((r) =>
-    (r.data ?? []).map((d) => ({ ...d, nickname: nickMap[d.user_id] ?? null }))
+    (r.data ?? []).map((d) => ({
+      ...d,
+      nickname: profileMap[d.user_id]?.nickname ?? null,
+      username: profileMap[d.user_id]?.username ?? null,
+    }))
   )
 
   return (
@@ -108,10 +112,10 @@ export default async function Home() {
           >
             <div className="mx-auto max-w-6xl">
               {/* 섹션 헤더 */}
-              <div className="mb-6 flex items-center justify-between">
+              <div className="mb-6 text-center">
                 <Link
                   href={`/category/${slug}`}
-                  className="group flex items-center gap-2"
+                  className="group inline-flex items-center gap-1.5"
                 >
                   <h2 className="text-xl font-black text-[#01273A] transition group-hover:text-[#E07B2A] sm:text-2xl">
                     {label}
@@ -122,12 +126,6 @@ export default async function Home() {
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                   </svg>
-                </Link>
-                <Link
-                  href={`/category/${slug}`}
-                  className="text-sm text-gray-400 hover:text-[#01273A]"
-                >
-                  더 보기
                 </Link>
               </div>
 
