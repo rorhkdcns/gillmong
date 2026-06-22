@@ -41,17 +41,21 @@ export default async function Home() {
   const allDreams = categoryResults.flatMap((r) => r.data ?? [])
   const userIds   = [...new Set(allDreams.map((d) => d.user_id).filter(Boolean))]
   const { data: profiles } = userIds.length
-    ? await supabase.from('profiles').select('id, nickname, username').in('id', userIds)
+    ? await supabase.from('profiles').select('id, nickname').in('id', userIds)
     : { data: [] }
 
-  const profileMap: Record<string, { nickname: string; username: string }> = {}
-  for (const p of profiles ?? []) profileMap[p.id] = { nickname: p.nickname, username: p.username }
+  const nickMap: Record<string, string> = {}
+  for (const p of profiles ?? []) nickMap[p.id] = p.nickname
 
   const categoryDreams = categoryResults.map((r) =>
     (r.data ?? []).map((d) => ({
-      ...d,
-      nickname: profileMap[d.user_id]?.nickname ?? null,
-      username: profileMap[d.user_id]?.username ?? null,
+      id:       d.id,
+      title:    d.title,
+      body:     d.summary,
+      grade:    d.grade,
+      price:    d.price,
+      is_sold:  false,
+      nickname: nickMap[d.user_id] ?? null,
     }))
   )
 

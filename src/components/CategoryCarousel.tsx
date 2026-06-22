@@ -1,81 +1,16 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState } from 'react'
-import Link from 'next/link'
-
-const GRADE_COLOR: Record<string, string> = {
-  A: 'bg-emerald-500',
-  B: 'bg-blue-500',
-  C: 'bg-amber-400',
-  D: 'bg-orange-400',
-  E: 'bg-red-400',
-  F: 'bg-gray-400',
-}
-
-const GRADE_LABEL: Record<string, string> = {
-  A: 'A등급', B: 'B등급', C: 'C등급', D: 'D등급', E: 'E등급', F: 'F등급',
-}
+import DreamCard from '@/components/DreamCard'
 
 interface Dream {
   id: number
   title: string
-  summary?: string | null
+  body?: string | null
   grade: string
   price: number
+  is_sold?: boolean
   nickname?: string | null
-  username?: string | null
-}
-
-function DreamCard({ dream }: { dream: Dream }) {
-  const initial = dream.nickname?.[0]?.toUpperCase() ?? '?'
-  return (
-    <Link
-      href={`/dream/${dream.id}`}
-      className="group flex h-full flex-col rounded-2xl border border-gray-100 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg"
-    >
-      {/* ① 프로필 */}
-      <div className="flex items-center gap-2.5 px-4 pt-4">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#01273A] text-sm font-bold text-white">
-          {initial}
-        </div>
-        <span className="truncate text-xs text-gray-400">
-          @{dream.username ?? dream.nickname ?? '-'}
-        </span>
-      </div>
-
-      {/* ② 제목 */}
-      <div className="px-4 pt-3">
-        <h3 className="line-clamp-2 text-base font-bold leading-snug text-[#01273A]">
-          {dream.title}
-        </h3>
-      </div>
-
-      {/* ③ 요약 */}
-      <div className="flex-1 px-4 pt-2">
-        <p className="line-clamp-3 text-xs leading-relaxed text-gray-500">
-          {dream.summary ?? ''}
-        </p>
-      </div>
-
-      {/* ④ 등급 + 감정가 */}
-      <div className="flex items-center justify-between px-4 pt-3">
-        <span className={`inline-flex items-center gap-0.5 rounded-full px-2.5 py-1 text-xs font-bold text-white ${GRADE_COLOR[dream.grade] ?? 'bg-gray-400'}`}>
-          {dream.grade}
-          <span className="font-normal opacity-80">&nbsp;{GRADE_LABEL[dream.grade]}</span>
-        </span>
-        <span className="text-sm font-extrabold text-[#E07B2A]">
-          {dream.price.toLocaleString()} P
-        </span>
-      </div>
-
-      {/* ⑤ 버튼 */}
-      <div className="flex justify-end px-4 pb-4 pt-3">
-        <span className="rounded-full bg-[#01273A] px-4 py-1.5 text-xs font-semibold text-white transition group-hover:bg-[#E07B2A]">
-          자세히 보기
-        </span>
-      </div>
-    </Link>
-  )
 }
 
 function useVisibleCards() {
@@ -135,7 +70,7 @@ export default function CategoryCarousel({ dreams }: { dreams: Dream[] }) {
         >
           {dreams.map((dream) => (
             <div key={dream.id} style={{ width: `${cardWidth}%` }} className="shrink-0 px-2">
-              <DreamCard dream={dream} />
+              <DreamCard {...dream} />
             </div>
           ))}
         </div>
