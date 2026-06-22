@@ -3,13 +3,13 @@
 import { useState } from 'react'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
-import { createClient } from '@/lib/supabase/client'
+import { submitPartnershipInquiry } from './actions'
 
 export default function PartnershipsPage() {
   const [form, setForm] = useState({ name: '', email: '', company: '', phone: '', title: '', content: '' })
-  const [loading, setLoading]   = useState(false)
+  const [loading, setLoading]     = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [error, setError]       = useState<string | null>(null)
+  const [error, setError]         = useState<string | null>(null)
 
   function change(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -23,18 +23,16 @@ export default function PartnershipsPage() {
       return
     }
     setLoading(true)
-    const supabase = createClient()
-    const { error: err } = await supabase.from('partnership_inquiries').insert({
+    const result = await submitPartnershipInquiry({
       name:    form.name.trim(),
       email:   form.email.trim(),
-      company: form.company.trim() || null,
-      phone:   form.phone.trim()   || null,
+      company: form.company.trim() || undefined,
+      phone:   form.phone.trim()   || undefined,
       title:   form.title.trim(),
       content: form.content.trim(),
-      status:  'new',
     })
     setLoading(false)
-    if (err) { setError('제출 중 오류가 발생했습니다. 다시 시도해주세요.'); return }
+    if (result.error) { setError('제출 중 오류가 발생했습니다. 다시 시도해주세요.'); return }
     setSubmitted(true)
   }
 
