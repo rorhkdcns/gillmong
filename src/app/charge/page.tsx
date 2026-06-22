@@ -126,8 +126,19 @@ export default function ChargePage() {
         </section>
 
         {/* 총 충전액 */}
-        <section className="mb-6 rounded-lg bg-[#E07B2A] px-5 py-4">
-          <span className="text-base font-bold text-white">총 충전액</span>
+        <section className="mb-6 rounded-lg bg-[#01273A] px-5 py-4">
+          <div className="flex items-center justify-between">
+            <span className="text-base font-bold text-white">총 충전액</span>
+            {amount > 0 && (
+              <button
+                onClick={() => setAmount(0)}
+                disabled={loading}
+                className="rounded border-2 border-white bg-white px-3 py-1 text-sm font-semibold text-[#01273A] transition hover:bg-[#01273A] hover:text-white disabled:opacity-50"
+              >
+                초기화
+              </button>
+            )}
+          </div>
           <div className="mt-1 text-3xl font-bold text-white">
             {amount === 0 ? '금액을 선택해주세요' : `₩${amount.toLocaleString()}`}
           </div>
