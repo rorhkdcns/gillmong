@@ -54,11 +54,11 @@ export default function AdminDreams() {
   }
 
   return (
-    <div className="p-8">
-      <h1 className="mb-6 text-2xl font-bold text-[#01273A]">꿈 관리</h1>
+    <div className="p-4 sm:p-8">
+      <h1 className="mb-4 text-xl font-bold text-[#01273A] sm:mb-6 sm:text-2xl">꿈 관리</h1>
 
       {/* 필터 */}
-      <div className="mb-6 flex gap-3">
+      <div className="mb-6 flex flex-wrap gap-3">
         <select value={category} onChange={(e) => setCategory(e.target.value)}
           className="border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#01273A]">
           <option value="">전체 카테고리</option>
@@ -79,7 +79,7 @@ export default function AdminDreams() {
       )}
 
       {/* 테이블 */}
-      <div className="overflow-hidden rounded border border-gray-200 bg-white">
+      <div className="overflow-x-auto rounded border border-gray-200 bg-white">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">

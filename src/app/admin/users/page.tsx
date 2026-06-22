@@ -73,18 +73,18 @@ export default function AdminUsers() {
   }
 
   return (
-    <div className="p-8">
-      <h1 className="mb-6 text-2xl font-bold text-[#01273A]">회원 관리</h1>
+    <div className="p-4 sm:p-8">
+      <h1 className="mb-4 text-xl font-bold text-[#01273A] sm:mb-6 sm:text-2xl">회원 관리</h1>
 
       {/* 검색 */}
-      <div className="mb-6 flex gap-3">
+      <div className="mb-6 flex flex-wrap gap-3">
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && load(search || undefined)}
           placeholder="닉네임 또는 아이디 검색"
-          className="w-64 border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#01273A]"
+          className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#01273A] sm:w-64"
         />
         <button
           onClick={() => load(search || undefined)}
@@ -106,7 +106,7 @@ export default function AdminUsers() {
       )}
 
       {/* 테이블 */}
-      <div className="overflow-hidden rounded border border-gray-200 bg-white">
+      <div className="overflow-x-auto rounded border border-gray-200 bg-white">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">

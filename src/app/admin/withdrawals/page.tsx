@@ -45,7 +45,7 @@ export default function AdminWithdrawals() {
 
   if (tableError) {
     return (
-      <div className="p-8">
+      <div className="p-4 sm:p-8">
         <h1 className="mb-4 text-2xl font-bold text-[#01273A]">출금 신청 관리</h1>
         <div className="rounded border border-amber-200 bg-amber-50 p-6 text-sm text-amber-700">
           <p className="font-semibold">withdrawals 테이블이 없습니다.</p>
@@ -66,10 +66,10 @@ export default function AdminWithdrawals() {
   }
 
   return (
-    <div className="p-8">
-      <h1 className="mb-6 text-2xl font-bold text-[#01273A]">출금 신청 관리</h1>
+    <div className="p-4 sm:p-8">
+      <h1 className="mb-4 text-xl font-bold text-[#01273A] sm:mb-6 sm:text-2xl">출금 신청 관리</h1>
 
-      <div className="overflow-hidden rounded border border-gray-200 bg-white">
+      <div className="overflow-x-auto rounded border border-gray-200 bg-white">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">

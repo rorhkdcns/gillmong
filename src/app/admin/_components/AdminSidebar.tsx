@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { logoutAction } from '@/app/actions'
@@ -99,6 +100,7 @@ const navItems = [
 
 export default function AdminSidebar() {
   const pathname = usePathname()
+  const [isOpen, setIsOpen] = useState(false)
 
   function isActive(href: string) {
     if (href === '/admin') return pathname === '/admin'
@@ -106,48 +108,89 @@ export default function AdminSidebar() {
   }
 
   return (
-    <aside className="flex h-screen w-56 shrink-0 flex-col bg-[#01273A]">
-      {/* 로고 */}
-      <div className="border-b border-white/10 px-6 py-5">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-[#E07B2A]">Admin</p>
-        <p className="mt-0.5 text-base font-bold text-white">길몽상점</p>
-      </div>
+    <>
+      {/* 모바일 햄버거 버튼 */}
+      <button
+        onClick={() => setIsOpen(true)}
+        className="fixed left-4 top-4 z-40 flex h-10 w-10 items-center justify-center rounded-lg bg-[#01273A] text-white shadow-md md:hidden"
+        aria-label="메뉴 열기"
+      >
+        <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
 
-      {/* 메뉴 */}
-      <nav className="flex-1 overflow-y-auto py-4">
-        {navItems.map((item) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={`flex items-center gap-3 px-6 py-3 text-sm transition-colors ${
-              isActive(item.href)
-                ? 'bg-white/10 font-semibold text-white'
-                : 'text-white/60 hover:bg-white/5 hover:text-white'
-            }`}
-          >
-            {item.icon}
-            {item.label}
-          </Link>
-        ))}
-      </nav>
+      {/* 모바일 오버레이 배경 */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
 
-      {/* 하단 */}
-      <div className="border-t border-white/10 px-6 py-4 space-y-2">
-        <Link href="/" className="flex items-center gap-2 text-xs text-white/50 hover:text-white/80 transition-colors">
-          <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      {/* 사이드바 */}
+      <aside
+        className={`
+          flex h-screen w-56 shrink-0 flex-col bg-[#01273A]
+          fixed left-0 top-0 z-50 transition-transform duration-300 ease-in-out
+          md:static md:z-auto md:translate-x-0
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        `}
+      >
+        {/* 모바일 닫기 버튼 */}
+        <button
+          onClick={() => setIsOpen(false)}
+          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded text-white/60 hover:text-white md:hidden"
+          aria-label="메뉴 닫기"
+        >
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
-          사이트로 이동
-        </Link>
-        <form action={logoutAction}>
-          <button type="submit" className="flex items-center gap-2 text-xs text-white/50 hover:text-red-400 transition-colors">
+        </button>
+
+        {/* 로고 */}
+        <div className="border-b border-white/10 px-6 py-5">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[#E07B2A]">Admin</p>
+          <p className="mt-0.5 text-base font-bold text-white">길몽상점</p>
+        </div>
+
+        {/* 메뉴 */}
+        <nav className="flex-1 overflow-y-auto py-4">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setIsOpen(false)}
+              className={`flex items-center gap-3 px-6 py-3 text-sm transition-colors ${
+                isActive(item.href)
+                  ? 'bg-white/10 font-semibold text-white'
+                  : 'text-white/60 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              {item.icon}
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+
+        {/* 하단 */}
+        <div className="space-y-2 border-t border-white/10 px-6 py-4">
+          <Link href="/" className="flex items-center gap-2 text-xs text-white/50 transition-colors hover:text-white/80">
             <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            로그아웃
-          </button>
-        </form>
-      </div>
-    </aside>
+            사이트로 이동
+          </Link>
+          <form action={logoutAction}>
+            <button type="submit" className="flex items-center gap-2 text-xs text-white/50 transition-colors hover:text-red-400">
+              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              로그아웃
+            </button>
+          </form>
+        </div>
+      </aside>
+    </>
   )
 }

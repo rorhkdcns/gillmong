@@ -59,8 +59,8 @@ export default function AdminPointsPage() {
   }
 
   return (
-    <div className="p-8">
-      <h1 className="mb-8 text-2xl font-bold text-[#01273A]">포인트 관리</h1>
+    <div className="p-4 sm:p-8">
+      <h1 className="mb-6 text-xl font-bold text-[#01273A] sm:mb-8 sm:text-2xl">포인트 관리</h1>
 
       <div className="max-w-md space-y-6">
         {/* 포인트 지급 / 차감 */}

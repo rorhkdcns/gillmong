@@ -31,11 +31,11 @@ export default function AdminDashboard() {
   if (!stats) return null
 
   return (
-    <div className="p-8">
-      <h1 className="mb-8 text-2xl font-bold text-[#01273A]">대시보드</h1>
+    <div className="p-4 sm:p-8">
+      <h1 className="mb-6 text-xl font-bold text-[#01273A] sm:mb-8 sm:text-2xl">대시보드</h1>
 
       {/* 통계 카드 */}
-      <div className="mb-10 grid grid-cols-2 gap-4 xl:grid-cols-4">
+      <div className="mb-8 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         <StatCard label="총 회원수" value={stats.totalUsers} />
         <StatCard label="총 꿈 등록수" value={stats.totalDreams} />
         <StatCard label="총 거래수" value={stats.totalTransactions} />
@@ -45,9 +45,10 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         {/* 최근 가입 회원 */}
         <div className="rounded border border-gray-200 bg-white">
-          <div className="border-b border-gray-100 px-6 py-4">
+          <div className="border-b border-gray-100 px-4 py-3 sm:px-6 sm:py-4">
             <h2 className="font-semibold text-[#01273A]">최근 가입 회원</h2>
           </div>
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
@@ -68,13 +69,15 @@ export default function AdminDashboard() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
 
         {/* 최근 거래 */}
         <div className="rounded border border-gray-200 bg-white">
-          <div className="border-b border-gray-100 px-6 py-4">
+          <div className="border-b border-gray-100 px-4 py-3 sm:px-6 sm:py-4">
             <h2 className="font-semibold text-[#01273A]">최근 거래</h2>
           </div>
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
@@ -95,6 +98,7 @@ export default function AdminDashboard() {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       </div>
     </div>

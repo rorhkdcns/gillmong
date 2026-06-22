@@ -27,10 +27,10 @@ export default function AdminTransactions() {
   }, [])
 
   return (
-    <div className="p-8">
-      <h1 className="mb-6 text-2xl font-bold text-[#01273A]">거래 내역</h1>
+    <div className="p-4 sm:p-8">
+      <h1 className="mb-4 text-xl font-bold text-[#01273A] sm:mb-6 sm:text-2xl">거래 내역</h1>
 
-      <div className="overflow-hidden rounded border border-gray-200 bg-white">
+      <div className="overflow-x-auto rounded border border-gray-200 bg-white">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">

@@ -87,9 +87,9 @@ export default function AdminReportsPage() {
   }
 
   return (
-    <div className="p-8">
-      <h1 className="mb-2 text-2xl font-bold text-[#01273A]">신고 관리</h1>
-      <p className="mb-8 text-sm text-[#999]">
+    <div className="p-4 sm:p-8">
+      <h1 className="mb-2 text-xl font-bold text-[#01273A] sm:text-2xl">신고 관리</h1>
+      <p className="mb-6 text-sm text-[#999] sm:mb-8">
         사용자 신고 내역을 확인하고 처리합니다.
       </p>
 

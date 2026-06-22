@@ -46,8 +46,8 @@ export default function AdminInquiriesPage() {
   }
 
   return (
-    <div className="p-8">
-      <h1 className="mb-8 text-2xl font-bold text-[#01273A]">1:1 문의 관리</h1>
+    <div className="p-4 sm:p-8">
+      <h1 className="mb-6 text-xl font-bold text-[#01273A] sm:mb-8 sm:text-2xl">1:1 문의 관리</h1>
 
       {loading ? (
         <div className="py-16 text-center text-sm text-gray-400">불러오는 중...</div>
