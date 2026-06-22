@@ -379,6 +379,19 @@ export async function getPendingWithdrawals() {
   return withdrawals.map((w) => ({ ...w, profiles: profileMap[w.user_id] ?? null }))
 }
 
+// ── 대시보드용 대기 중 제휴문의 ───────────────────────────────────
+export async function getPendingPartnerships() {
+  const admin = createAdminClient()
+  const { data, error } = await admin
+    .from('partnership_inquiries')
+    .select('id, name, company, title, status, created_at')
+    .eq('status', 'new')
+    .order('created_at', { ascending: false })
+    .limit(8)
+  if (error) return []
+  return data ?? []
+}
+
 // ── 출금 신청 ──────────────────────────────────────────────────
 export async function getAdminWithdrawals() {
   const admin = createAdminClient()

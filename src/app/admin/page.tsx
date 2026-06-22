@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { getAdminStats, getPendingWithdrawals } from './actions'
+import { getAdminStats, getPendingWithdrawals, getPendingPartnerships } from './actions'
 
 type Stats = Awaited<ReturnType<typeof getAdminStats>>
-type PendingWithdrawal = Awaited<ReturnType<typeof getPendingWithdrawals>>[number]
+type PendingWithdrawal  = Awaited<ReturnType<typeof getPendingWithdrawals>>[number]
+type PendingPartnership = Awaited<ReturnType<typeof getPendingPartnerships>>[number]
 
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
@@ -29,14 +30,17 @@ function formatDateTime(iso: string) {
 }
 
 export default function AdminDashboard() {
-  const [stats, setStats]             = useState<Stats | null>(null)
-  const [loading, setLoading]         = useState(true)
-  const [withdrawals, setWithdrawals] = useState<PendingWithdrawal[]>([])
-  const [wLoading, setWLoading]       = useState(true)
+  const [stats, setStats]                   = useState<Stats | null>(null)
+  const [loading, setLoading]               = useState(true)
+  const [withdrawals, setWithdrawals]       = useState<PendingWithdrawal[]>([])
+  const [wLoading, setWLoading]             = useState(true)
+  const [partnerships, setPartnerships]     = useState<PendingPartnership[]>([])
+  const [pLoading, setPLoading]             = useState(true)
 
   useEffect(() => {
     getAdminStats().then((s) => { setStats(s); setLoading(false) })
     getPendingWithdrawals().then((data) => { setWithdrawals(data); setWLoading(false) })
+    getPendingPartnerships().then((data) => { setPartnerships(data); setPLoading(false) })
   }, [])
 
   if (loading) return <div className="flex h-full items-center justify-center text-sm text-[#999]">불러오는 중...</div>
@@ -170,6 +174,63 @@ export default function AdminDashboard() {
                       <Link
                         href="/admin/withdrawals"
                         className="rounded bg-[#01273A] px-3 py-1 text-xs text-white hover:brightness-90"
+                      >
+                        처리하기
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* 대기 중인 제휴문의 */}
+      <div className="mt-6 rounded border border-gray-200 bg-white">
+        <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3 sm:px-6 sm:py-4">
+          <div className="flex items-center gap-2">
+            <h2 className="font-semibold text-[#01273A]">대기 중인 제휴문의</h2>
+            {!pLoading && partnerships.length > 0 && (
+              <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-blue-500 px-1.5 text-[11px] font-bold text-white">
+                {partnerships.length}
+              </span>
+            )}
+          </div>
+          <Link href="/admin/partnerships" className="text-xs text-[#01273A] hover:underline">
+            모두 보기 →
+          </Link>
+        </div>
+
+        {pLoading ? (
+          <div className="py-10 text-center text-sm text-[#999]">불러오는 중...</div>
+        ) : partnerships.length === 0 ? (
+          <div className="py-10 text-center text-sm text-[#999]">대기 중인 제휴문의가 없습니다</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+                  <th className="px-4 py-3 sm:px-6">신청자</th>
+                  <th className="px-4 py-3 sm:px-6">회사명</th>
+                  <th className="px-4 py-3 sm:px-6">제목</th>
+                  <th className="px-4 py-3 sm:px-6">신청일시</th>
+                  <th className="px-4 py-3 sm:px-6">처리</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {partnerships.map((p) => (
+                  <tr key={p.id} className="hover:bg-blue-50/30">
+                    <td className="px-4 py-3 font-medium text-[#333] sm:px-6">{p.name}</td>
+                    <td className="px-4 py-3 text-[#777] sm:px-6">{p.company ?? '-'}</td>
+                    <td className="max-w-[200px] truncate px-4 py-3 text-[#555] sm:px-6">{p.title}</td>
+                    <td className="whitespace-nowrap px-4 py-3 text-[#999] sm:px-6">
+                      {formatDateTime(p.created_at)}
+                    </td>
+                    <td className="px-4 py-3 sm:px-6">
+                      <Link
+                        href="/admin/partnerships"
+                        className="rounded bg-blue-600 px-3 py-1 text-xs text-white hover:brightness-90"
                       >
                         처리하기
                       </Link>
