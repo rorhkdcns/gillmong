@@ -87,7 +87,7 @@ export default function ChargePage() {
         buyerTel:  pd.buyerTel,
         buyerEmail: pd.buyerEmail,
         fnError:   (result: { errorMsg?: string }) => {
-          setError(result.errorMsg ?? '결제창 오류가 발생했습니다.')
+          alert(result.errorMsg ?? '결제 중 오류가 발생했습니다.')
           setLoading(false)
         },
       }
