@@ -81,7 +81,32 @@ export async function POST(req: NextRequest) {
     return NextResponse.redirect(`${SITE}/mypage`, { status: 302 })
   }
 
-  // 포인트 충전
+  // 가상계좌: 채번 완료, 입금 대기
+  if (approval.status === 'ready' && approval.vbank) {
+    const v = approval.vbank
+    console.log('[Callback] 가상계좌 채번 완료:', v)
+    await admin.from('payments').update({
+      status:         'ready',
+      payment_id:     tid,
+      balance_amt:    amount,
+      vbank_name:     v.vbankName,
+      vbank_number:   v.vbankNumber,
+      vbank_holder:   v.vbankHolder,
+      vbank_exp_date: v.vbankExpDate,
+    }).eq('order_id', orderId)
+
+    const q = new URLSearchParams({
+      method:       'vbank',
+      amount:       String(amount),
+      vbankName:    v.vbankName,
+      vbankNumber:  v.vbankNumber,
+      vbankHolder:  v.vbankHolder,
+      vbankExpDate: v.vbankExpDate,
+    })
+    return NextResponse.redirect(`${SITE}/charge/success?${q}`, { status: 302 })
+  }
+
+  // 즉시 결제 완료 (카드)
   const { data: profile } = await admin
     .from('profiles')
     .select('points')

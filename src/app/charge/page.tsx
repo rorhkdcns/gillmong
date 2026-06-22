@@ -9,10 +9,8 @@ import SiteFooter from '@/components/SiteFooter'
 const AMOUNTS = [5000, 10000, 30000, 50000, 100000, 200000]
 
 const METHODS = [
-  { id: 'card',           label: '신용·체크카드', desc: '국내외 모든 카드' },
-  { id: 'cardAndEasyPay', label: '간편결제',      desc: '카카오·네이버·PAYCO·삼성·SSG' },
-  { id: 'cellphone',      label: '휴대폰 결제',   desc: '통신사 결제 (디지털 콘텐츠)' },
-  { id: 'bank',           label: '계좌이체',      desc: '실시간 계좌이체' },
+  { id: 'card',  label: '신용·체크카드', desc: '국내외 모든 카드' },
+  { id: 'vbank', label: '무통장입금',     desc: '가상계좌 채번 후 72시간 내 입금' },
 ]
 
 declare global {
@@ -78,7 +76,10 @@ export default function ChargePage() {
         },
       }
 
-      if (method === 'cellphone') config.isDigital = true
+      if (method === 'vbank') {
+        config.vbankHolder     = '길몽상점'
+        config.vbankValidHours = 72
+      }
 
       window.AUTHNICE.requestPay(config)
     } catch (err) {
@@ -163,6 +164,12 @@ export default function ChargePage() {
               </button>
             ))}
           </div>
+
+          {method === 'vbank' && (
+            <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+              채번 후 72시간 내에 입금하면 포인트가 자동 충전됩니다. 입금 전까지는 포인트가 지급되지 않습니다.
+            </div>
+          )}
         </section>
 
         {/* 충전 버튼 */}
@@ -182,6 +189,7 @@ export default function ChargePage() {
           <ul className="space-y-1.5">
             <li>• 충전된 포인트는 꿈 구매에 즉시 사용할 수 있습니다</li>
             <li>• 포인트 충전은 환불이 불가능하니 신중하게 선택해주세요</li>
+            <li>• 가상계좌는 채번 후 72시간 내 입금 시 포인트가 충전됩니다</li>
             <li>• 결제 문의: 마이페이지 → 1:1 문의</li>
           </ul>
         </div>
