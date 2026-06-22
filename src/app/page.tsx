@@ -95,7 +95,7 @@ export default async function Home() {
       </section>
 
       {/* ② 꿈 감정소 */}
-      <section className="px-6 pb-20 pt-16">
+      <section id="appraisal" className="px-6 pb-20 pt-16">
         <div className="mx-auto max-w-[800px]">
           <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
             <div className="mb-8 text-center">
