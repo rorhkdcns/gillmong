@@ -3,54 +3,62 @@ import DreamInput from './_components/DreamInput'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import BannerSlider from '@/components/BannerSlider'
+import CategoryCarousel from '@/components/CategoryCarousel'
+import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
-const GRADE_COLOR: Record<string, string> = {
-  A: 'bg-emerald-500',
-  B: 'bg-blue-500',
-  C: 'bg-amber-400',
-  D: 'bg-orange-400',
-  E: 'bg-red-400',
-  F: 'bg-gray-400',
-}
+const CATEGORIES = [
+  { slug: 'people',  label: '인물·신체' },
+  { slug: 'animals', label: '동물·식물' },
+  { slug: 'nature',  label: '자연·사물' },
+  { slug: 'action',  label: '행동·상황' },
+  { slug: 'etc',     label: '기타' },
+]
 
 export default async function Home() {
   const supabase = createAdminClient()
 
-  const [{ data: recentDreams }, { data: activeBanners }] = await Promise.all([
-    supabase
-      .from('dreams')
-      .select('id, title, summary, grade, price, user_id')
-      .order('created_at', { ascending: false })
-      .limit(6),
+  // 배너 + 5개 카테고리 병렬 조회
+  const [{ data: activeBanners }, ...categoryResults] = await Promise.all([
     supabase
       .from('banners')
       .select('id, image_url, link_url')
       .eq('is_active', true)
       .order('order', { ascending: true }),
+    ...CATEGORIES.map(({ slug }) =>
+      supabase
+        .from('dreams')
+        .select('id, title, grade, price, user_id')
+        .eq('category', slug)
+        .eq('is_sold', false)
+        .order('created_at', { ascending: false })
+        .limit(10)
+    ),
   ])
 
-  const rawDreams = recentDreams ?? []
-  const banners   = activeBanners ?? []
-
-  const userIds = [...new Set(rawDreams.map((d) => d.user_id).filter(Boolean))]
+  // 모든 카테고리의 user_id 수집 → 프로필 한 번에 조회
+  const allDreams = categoryResults.flatMap((r) => r.data ?? [])
+  const userIds   = [...new Set(allDreams.map((d) => d.user_id).filter(Boolean))]
   const { data: profiles } = userIds.length
     ? await supabase.from('profiles').select('id, nickname').in('id', userIds)
     : { data: [] }
+
   const nickMap: Record<string, string> = {}
   for (const p of profiles ?? []) nickMap[p.id] = p.nickname
 
-  const dreams = rawDreams.map((d) => ({ ...d, nickname: nickMap[d.user_id] ?? null }))
+  const categoryDreams = categoryResults.map((r) =>
+    (r.data ?? []).map((d) => ({ ...d, nickname: nickMap[d.user_id] ?? null }))
+  )
 
   return (
-    <div className="flex min-h-screen flex-col bg-brand-page">
-
+    <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
       <SiteHeader />
 
-      <BannerSlider banners={banners} />
+      {/* ① 배너 */}
+      <BannerSlider banners={activeBanners ?? []} />
 
-      {/* ───── 히어로 섹션 ───── */}
+      {/* ① 히어로 */}
       <section
         className="relative px-6 py-14 text-center"
         style={{
@@ -61,7 +69,6 @@ export default async function Home() {
         }}
       >
         <div className="absolute inset-0 bg-black/40" />
-
         <div className="relative z-10 mx-auto max-w-3xl">
           <span className="mb-6 inline-block rounded-full bg-white/20 px-5 py-2 text-base font-semibold text-white ring-1 ring-white/40">
             우리의 모든 꿈은 가치가 있습니다
@@ -79,10 +86,10 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ───── 꿈 감정소 ───── */}
-      <section className="px-6 pt-16 pb-20">
+      {/* ② 꿈 감정소 */}
+      <section className="px-6 pb-20 pt-16">
         <div className="mx-auto max-w-[800px]">
-          <div className="rounded-2xl border border-brand-border bg-white p-8 shadow-sm">
+          <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
             <div className="mb-8 text-center">
               <h2 className="text-4xl font-black text-[#01273A]">꿈 감정소</h2>
               <p className="mt-2 text-base font-medium text-[#555555]">Dream Appraisal Center</p>
@@ -92,84 +99,46 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ───── EVERYONE'S DREAMS ───── */}
-      <section className="border-t border-brand-border bg-[#F2F2F2] px-6 py-20">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-12 text-center">
-            <p className="mb-2 text-sm font-bold uppercase tracking-widest text-gray-400">Community</p>
-            <h2 className="text-3xl font-black text-[#E07B2A]">EVERYONE'S DREAMS</h2>
-            <p className="mt-3 text-base text-brand-muted">모든 사람의 꿈에는 의미가 있습니다</p>
-          </div>
-
-          {dreams.length === 0 ? (
-            <div className="py-16 text-center">
-              <p className="text-lg text-[#777777]">아직 등록된 꿈이 없습니다</p>
-              <p className="mt-2 text-sm text-[#999]">첫 번째 꿈을 감정하고 마켓에 등록해보세요</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 gap-3 md:gap-6 md:grid-cols-3">
-              {dreams.map((dream) => (
-                <article
-                  key={dream.id}
-                  className="flex flex-col rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md md:rounded-2xl md:p-6"
+      {/* ③–⑦ 카테고리 섹션 */}
+      <div className="border-t border-gray-200 bg-[#F2F2F2]">
+        {CATEGORIES.map(({ slug, label }, idx) => (
+          <section
+            key={slug}
+            className={`px-6 py-12 ${idx !== 0 ? 'border-t border-gray-200' : ''}`}
+          >
+            <div className="mx-auto max-w-6xl">
+              {/* 섹션 헤더 */}
+              <div className="mb-6 flex items-center justify-between">
+                <Link
+                  href={`/category/${slug}`}
+                  className="group flex items-center gap-2"
                 >
-                  {/* 등급 + 닉네임 */}
-                  <div className="mb-2 flex items-center gap-1.5 md:mb-3 md:gap-2">
-                    <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white md:h-6 md:w-6 ${GRADE_COLOR[dream.grade] ?? 'bg-gray-400'}`}>
-                      {dream.grade}
-                    </span>
-                    {dream.nickname && (
-                      <span className="truncate text-xs text-gray-400 md:text-sm">@{dream.nickname}</span>
-                    )}
-                  </div>
+                  <h2 className="text-xl font-black text-[#01273A] transition group-hover:text-[#E07B2A] sm:text-2xl">
+                    {label}
+                  </h2>
+                  <svg
+                    className="h-5 w-5 text-[#01273A] transition group-hover:text-[#E07B2A]"
+                    fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+                <Link
+                  href={`/category/${slug}`}
+                  className="text-sm text-gray-400 hover:text-[#01273A]"
+                >
+                  더 보기
+                </Link>
+              </div>
 
-                  {/* 제목 */}
-                  <h3 className="mb-2 text-sm font-semibold leading-snug text-[#555555] line-clamp-2 md:mb-3 md:text-lg">{dream.title}</h3>
-
-                  {/* 요약 */}
-                  <p className="flex-1 text-xs leading-relaxed text-[#555555] line-clamp-2 md:text-sm md:line-clamp-3">{dream.summary}</p>
-
-                  {/* 감정가 + 버튼 */}
-                  <div className="mt-3 border-t border-gray-100 pt-3 md:mt-4 md:pt-4">
-                    {/* 모바일: 세로 배치 */}
-                    <div className="flex flex-col items-center gap-2 md:hidden">
-                      <div className="text-center">
-                        <span className="text-xs text-gray-400">감정가</span>
-                        <p className="text-sm font-bold text-[#E07B2A]">{dream.price.toLocaleString()} P</p>
-                      </div>
-                      <a href={`/dream/${dream.id}`} className="w-full rounded-full bg-[#6B96A8] py-2 text-center text-xs font-semibold text-white transition-all hover:brightness-90">
-                        자세히 보기
-                      </a>
-                    </div>
-                    {/* PC: 가로 배치 */}
-                    <div className="hidden items-center justify-between md:flex">
-                      <div>
-                        <span className="text-xs text-gray-400">감정가</span>
-                        <p className="text-base font-bold text-[#E07B2A]">{dream.price.toLocaleString()} P</p>
-                      </div>
-                      <a href={`/dream/${dream.id}`} className="rounded-full bg-[#6B96A8] px-5 py-2 text-sm font-semibold text-white transition-all hover:brightness-90">
-                        자세히 보기
-                      </a>
-                    </div>
-                  </div>
-                </article>
-              ))}
+              {/* 캐러셀 */}
+              <CategoryCarousel dreams={categoryDreams[idx]} />
             </div>
-          )}
-
-          <div className="mt-12 text-center">
-            <a
-              href="/category/people"
-              className="inline-block rounded-full bg-[#E07B2A] px-10 py-3 text-base font-bold text-white transition-colors hover:brightness-90"
-            >
-              꿈 이야기 더 보기
-            </a>
-          </div>
-        </div>
-      </section>
+          </section>
+        ))}
+      </div>
 
       <SiteFooter />
-
     </div>
   )
 }
