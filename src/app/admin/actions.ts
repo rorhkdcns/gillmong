@@ -355,6 +355,30 @@ export async function adminAnswerInquiry(
   return { success: true }
 }
 
+// ── 대시보드용 대기 중 출금신청 ───────────────────────────────────
+export async function getPendingWithdrawals() {
+  const admin = createAdminClient()
+  const { data: withdrawals, error } = await admin
+    .from('withdrawal_requests')
+    .select('id, user_id, amount, bank_name, account_holder, created_at')
+    .eq('status', 'pending')
+    .order('created_at', { ascending: false })
+    .limit(8)
+
+  if (error || !withdrawals || withdrawals.length === 0) return []
+
+  const userIds = [...new Set(withdrawals.map((w) => w.user_id).filter(Boolean))]
+  const { data: profiles } = await admin
+    .from('profiles')
+    .select('id, nickname, username')
+    .in('id', userIds)
+
+  const profileMap: Record<string, { nickname: string; username: string }> = {}
+  for (const p of profiles ?? []) profileMap[p.id] = { nickname: p.nickname, username: p.username }
+
+  return withdrawals.map((w) => ({ ...w, profiles: profileMap[w.user_id] ?? null }))
+}
+
 // ── 출금 신청 ──────────────────────────────────────────────────
 export async function getAdminWithdrawals() {
   const admin = createAdminClient()
