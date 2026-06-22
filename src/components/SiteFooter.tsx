@@ -13,7 +13,7 @@ export default function SiteFooter() {
           <span>상호명: 티에이치 컴퍼니 · 대표자: 유태현</span>
           <span>사업자등록번호: 795-44-00873 · 통신판매업신고: 제2026-수원팔달-0211호</span>
           <span>주소: 경기도 수원시 팔달구 정조로900번길 23, 104호</span>
-          <div className="mt-2 flex items-center justify-between text-gray-400">
+          <div className="mt-2 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between text-gray-400">
             <div className="flex items-center gap-3">
               <a href="/terms"   className="hover:underline">이용약관</a>
               <span>·</span>
