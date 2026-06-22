@@ -119,17 +119,11 @@ export default async function Home() {
               <div className="mb-6 text-center">
                 <Link
                   href={`/category/${slug}`}
-                  className="group inline-flex items-center gap-1.5"
+                  className="group inline-flex items-center"
                 >
                   <h2 className="text-xl font-black text-[#01273A] transition group-hover:text-[#E07B2A] sm:text-2xl">
                     {label}
                   </h2>
-                  <svg
-                    className="h-5 w-5 text-[#01273A] transition group-hover:text-[#E07B2A]"
-                    fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                  </svg>
                 </Link>
               </div>
 
