@@ -4,7 +4,8 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId, amount, paymentMethod = 'card', cardQuota } = await req.json()
+    const { userId, amount } = await req.json()
+    console.log('[CreatePayment] 요청:', { userId, amount })
 
     if (!userId || !amount) {
       return NextResponse.json({ error: '필수 정보 누락' }, { status: 400 })
@@ -14,7 +15,7 @@ export async function POST(req: NextRequest) {
 
     const { data: profile } = await admin
       .from('profiles')
-      .select('nickname, username, email, phone')
+      .select('nickname, username, email')
       .eq('id', userId)
       .single()
 
@@ -30,42 +31,27 @@ export async function POST(req: NextRequest) {
       order_id:       orderId,
       amount:         Math.floor(amount),
       status:         'pending',
-      payment_method: paymentMethod,
+      payment_method: 'card',
     })
 
     if (insertError) {
+      console.error('[CreatePayment] DB 삽입 실패:', insertError)
       return NextResponse.json({ error: '결제 준비 실패' }, { status: 500 })
     }
 
-    // 결제수단별 추가 파라미터
-    const extra: Record<string, unknown> = {}
-
-    if (paymentMethod === 'card' && cardQuota) {
-      extra.cardQuota = cardQuota   // '00:02:03:06:12'
-    }
-    if (paymentMethod === 'vbank') {
-      extra.vbankHolder     = '길몽상점'
-      extra.vbankValidHours = 72
-    }
-    if (paymentMethod === 'cellphone') {
-      extra.isDigital = true
-    }
-
-    return NextResponse.json({
-      success:       true,
+    const result = {
       orderId,
-      clientId:      process.env.NEXT_PUBLIC_NICEPAY_CLIENT_ID,
-      amount:        Math.floor(amount),
-      goodsName:     '길몽상점 포인트 충전',
-      buyerName:     profile.nickname || profile.username || '길몽상점 사용자',
-      buyerTel:      (profile.phone ?? '').replace(/-/g, '') || '01000000000',
-      buyerEmail:    profile.email || '',
-      returnUrl:     `${siteUrl}/api/payment/callback`,
-      notifyUrl:     `${siteUrl}/api/payment/vbank-notify`,
-      paymentMethod,
-      ...extra,
-    })
-  } catch {
+      amount:     Math.floor(amount),
+      goodsName:  '길몽상점 포인트',
+      returnUrl:  `${siteUrl}/api/payment/callback`,
+      buyerName:  profile.nickname || profile.username || '길몽상점 사용자',
+      buyerEmail: profile.email || '',
+    }
+
+    console.log('[CreatePayment] 완료:', result)
+    return NextResponse.json(result)
+  } catch (err) {
+    console.error('[CreatePayment] 오류:', err)
     return NextResponse.json({ error: '결제 요청 중 오류 발생' }, { status: 500 })
   }
 }

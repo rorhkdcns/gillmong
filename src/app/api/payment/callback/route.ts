@@ -4,94 +4,84 @@ import { approveNicepayPayment, verifyNicepaySignature } from '@/lib/nicepay'
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.gillmong.com'
 
-// NicePay가 결제 인증 후 POST(application/x-www-form-urlencoded)
+// NicePay 인증 후 POST (application/x-www-form-urlencoded)
 export async function POST(req: NextRequest) {
   const text   = await req.text()
   const params = new URLSearchParams(text)
 
   const authResultCode = params.get('authResultCode') ?? ''
+  const authResultMsg  = params.get('authResultMsg')  ?? ''
   const tid            = params.get('tid')            ?? ''
   const orderId        = params.get('orderId')        ?? ''
   const amount         = Number(params.get('amount'))
   const authToken      = params.get('authToken')      ?? ''
   const signature      = params.get('signature')      ?? ''
 
+  console.log('[Callback] 수신:', { authResultCode, authResultMsg, tid, orderId, amount })
+
   const admin = createAdminClient()
 
   if (!orderId || !amount) {
+    console.error('[Callback] 필수값 누락')
     return NextResponse.redirect(`${SITE}/mypage`, { status: 302 })
   }
 
-  // 결제 취소 / 인증 실패
+  // 인증 실패 (사용자 취소 포함)
   if (authResultCode !== '0000') {
+    console.error('[Callback] 인증 실패:', authResultCode, authResultMsg)
     await admin.from('payments').update({ status: 'failed' }).eq('order_id', orderId)
-    return NextResponse.redirect(`${SITE}/mypage`, { status: 302 })
+    return NextResponse.redirect(`${SITE}/charge`, { status: 302 })
   }
 
-  // 위변조 검증: hex(sha256(authToken + clientId + amount + SecretKey))
+  // 위변조 검증
   if (!verifyNicepaySignature(authToken, amount, signature)) {
+    console.error('[Callback] 위변조 감지:', orderId)
     await admin.from('payments').update({ status: 'failed' }).eq('order_id', orderId)
     return NextResponse.redirect(`${SITE}/mypage`, { status: 302 })
   }
 
-  // 결제 기록 조회
+  // DB 결제 조회
   const { data: payment } = await admin
     .from('payments')
-    .select('user_id, status, amount, payment_method')
+    .select('user_id, status, amount')
     .eq('order_id', orderId)
     .single()
 
   if (!payment) {
+    console.error('[Callback] 결제 기록 없음:', orderId)
     return NextResponse.redirect(`${SITE}/mypage`, { status: 302 })
   }
+
   if (payment.status === 'completed') {
+    console.log('[Callback] 이미 완료된 결제:', orderId)
     return NextResponse.redirect(`${SITE}/charge/success?amount=${amount}`, { status: 302 })
   }
 
   // 금액 위변조 검증
   if (payment.amount !== amount) {
+    console.error('[Callback] 금액 불일치:', { db: payment.amount, received: amount })
     await admin.from('payments').update({ status: 'failed' }).eq('order_id', orderId)
     return NextResponse.redirect(`${SITE}/mypage`, { status: 302 })
   }
 
-  // 승인 API 호출
+  // NicePay 승인 API 호출
+  console.log('[Callback] 승인 API 호출:', { tid, amount })
   let approval: Awaited<ReturnType<typeof approveNicepayPayment>>
   try {
     approval = await approveNicepayPayment(tid, amount)
-  } catch {
+    console.log('[Callback] 승인 결과:', approval)
+  } catch (err) {
+    console.error('[Callback] 승인 API 오류:', err)
     return NextResponse.redirect(`${SITE}/mypage`, { status: 302 })
   }
 
   if (approval.resultCode !== '0000') {
+    console.error('[Callback] 승인 실패:', approval.resultCode, approval.resultMsg)
     await admin.from('payments').update({ status: 'failed' }).eq('order_id', orderId)
     return NextResponse.redirect(`${SITE}/mypage`, { status: 302 })
   }
 
-  // ── 가상계좌: 채번 완료, 입금 대기 ──────────────────────────────
-  if (approval.status === 'ready' && approval.vbank) {
-    const v = approval.vbank
-    await admin.from('payments').update({
-      status:       'ready',
-      payment_id:   tid,
-      balance_amt:  amount,
-      vbank_name:   v.vbankName,
-      vbank_number: v.vbankNumber,
-      vbank_holder: v.vbankHolder,
-      vbank_exp_date: v.vbankExpDate,
-    }).eq('order_id', orderId)
-
-    const q = new URLSearchParams({
-      amount:       String(amount),
-      method:       'vbank',
-      vbankName:    v.vbankName,
-      vbankNumber:  v.vbankNumber,
-      vbankHolder:  v.vbankHolder,
-      vbankExpDate: v.vbankExpDate,
-    })
-    return NextResponse.redirect(`${SITE}/charge/success?${q}`, { status: 302 })
-  }
-
-  // ── 즉시 결제 완료 (카드 / 간편결제 / 휴대폰 / 계좌이체) ────────
+  // 포인트 충전
   const { data: profile } = await admin
     .from('profiles')
     .select('points')
@@ -99,7 +89,7 @@ export async function POST(req: NextRequest) {
     .single()
 
   const newPoints = (profile?.points ?? 0) + amount
-  const cardInfo  = approval.card
+  console.log('[Callback] 포인트 충전:', { userId: payment.user_id, newPoints })
 
   await Promise.all([
     admin.from('payments').update({
@@ -107,17 +97,18 @@ export async function POST(req: NextRequest) {
       payment_id:   tid,
       balance_amt:  amount,
       completed_at: new Date().toISOString(),
-      card_name:    cardInfo?.cardName ?? null,
-      card_quota:   cardInfo?.cardQuota ?? null,
+      card_name:    approval.card?.cardName   ?? null,
+      card_quota:   approval.card?.cardQuota  ?? null,
     }).eq('order_id', orderId),
     admin.from('profiles').update({ points: newPoints }).eq('id', payment.user_id),
     admin.from('point_logs').insert({
       user_id:     payment.user_id,
       amount,
       type:        'charge',
-      description: `포인트 충전 (${approval.payMethod ?? payment.payment_method}, 주문 ${orderId})`,
+      description: `포인트 충전 (${approval.payMethod ?? 'card'}, 주문 ${orderId})`,
     }),
   ])
 
+  console.log('[Callback] 완료, 리다이렉트:', orderId)
   return NextResponse.redirect(`${SITE}/charge/success?amount=${amount}`, { status: 302 })
 }
