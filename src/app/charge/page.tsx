@@ -1,12 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Script from 'next/script'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 
 const AMOUNTS = [5000, 10000, 30000, 50000, 100000, 200000]
+
+const METHODS = [
+  { id: 'card',           label: '신용·체크카드', desc: '국내외 모든 카드' },
+  { id: 'cardAndEasyPay', label: '간편결제',      desc: '카카오·네이버·PAYCO·삼성·SSG' },
+  { id: 'cellphone',      label: '휴대폰 결제',   desc: '통신사 결제 (디지털 콘텐츠)' },
+]
 
 declare global {
   interface Window {
@@ -16,8 +22,19 @@ declare global {
 
 export default function ChargePage() {
   const [amount, setAmount]   = useState(0)
+  const [method, setMethod]   = useState('card')
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
+
+  // NicePay 팝업이 fnError 없이 닫히는 경우 loading 자동 해제
+  useEffect(() => {
+    if (!loading) return
+    const handleFocus = () => {
+      setTimeout(() => setLoading((prev) => { if (prev) { console.log('[Charge] 팝업 닫힘 감지, loading 해제'); } return false }), 800)
+    }
+    window.addEventListener('focus', handleFocus)
+    return () => window.removeEventListener('focus', handleFocus)
+  }, [loading])
 
   const handleCharge = async () => {
     if (amount === 0) { setError('충전 금액을 선택해주세요'); return }
@@ -32,21 +49,21 @@ export default function ChargePage() {
       const userId   = data?.session?.user?.id
       if (!userId) throw new Error('로그인이 필요합니다')
 
-      console.log('[Charge] 결제 준비 요청:', { userId, amount })
+      console.log('[Charge] 결제 준비 요청:', { userId, amount, method })
 
       const res = await fetch('/api/payment/create-payment', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ userId, amount }),
+        body:    JSON.stringify({ userId, amount, paymentMethod: method }),
       })
       if (!res.ok) throw new Error('결제 준비 실패')
 
       const pd = await res.json()
       console.log('[Charge] 결제 준비 완료:', pd)
 
-      window.AUTHNICE.requestPay({
+      const config: Record<string, unknown> = {
         clientId:   'R2_017e98e61ba345f298d6b497b6c52afa',
-        method:     'card',
+        method,
         orderId:    pd.orderId,
         amount:     pd.amount,
         goodsName:  '길몽상점 포인트',
@@ -54,11 +71,15 @@ export default function ChargePage() {
         buyerName:  pd.buyerName,
         buyerEmail: pd.buyerEmail,
         fnError: (result: { errorMsg?: string }) => {
-          console.error('[Charge] 결제창 오류:', result)
+          console.error('[Charge] 결제창 오류/취소:', result)
           alert(result.errorMsg ?? '결제 중 오류가 발생했습니다.')
           setLoading(false)
         },
-      })
+      }
+
+      if (method === 'cellphone') config.isDigital = true
+
+      window.AUTHNICE.requestPay(config)
     } catch (err) {
       console.error('[Charge] 오류:', err)
       setError(err instanceof Error ? err.message : '오류 발생')
@@ -80,6 +101,7 @@ export default function ChargePage() {
           </div>
         )}
 
+        {/* 충전 금액 선택 */}
         <section className="mb-6">
           <h2 className="mb-3 text-xl font-bold text-[#01273A]">충전 금액 선택</h2>
           <div className="grid grid-cols-3 gap-2">
@@ -101,6 +123,7 @@ export default function ChargePage() {
           </div>
         </section>
 
+        {/* 총 충전액 */}
         <section className="mb-6 rounded-lg bg-[#E07B2A] px-5 py-4">
           <span className="text-base font-bold text-white">총 충전액</span>
           <div className="mt-1 text-3xl font-bold text-white">
@@ -108,6 +131,40 @@ export default function ChargePage() {
           </div>
         </section>
 
+        {/* 결제수단 선택 */}
+        <section className="mb-6">
+          <h2 className="mb-3 text-xl font-bold text-[#01273A]">결제수단 선택</h2>
+          <div className="grid grid-cols-1 gap-2">
+            {METHODS.map((m) => (
+              <button
+                key={m.id}
+                onClick={() => setMethod(m.id)}
+                disabled={loading}
+                className={`flex items-center gap-3 rounded-lg border-2 px-4 py-4 text-left transition disabled:opacity-50 ${
+                  method === m.id
+                    ? 'border-[#01273A] bg-[#01273A]/5'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <div>
+                  <div className={`text-base font-bold ${method === m.id ? 'text-[#01273A]' : 'text-gray-700'}`}>
+                    {m.label}
+                  </div>
+                  <div className="text-sm text-gray-400">{m.desc}</div>
+                </div>
+                {method === m.id && (
+                  <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-[#01273A]">
+                    <svg className="h-3 w-3 text-white" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </span>
+                )}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* 충전 버튼 */}
         <button
           onClick={handleCharge}
           disabled={loading || amount === 0}

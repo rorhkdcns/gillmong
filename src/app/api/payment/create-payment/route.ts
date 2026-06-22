@@ -4,8 +4,8 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId, amount } = await req.json()
-    console.log('[CreatePayment] 요청:', { userId, amount })
+    const { userId, amount, paymentMethod = 'card' } = await req.json()
+    console.log('[CreatePayment] 요청:', { userId, amount, paymentMethod })
 
     if (!userId || !amount) {
       return NextResponse.json({ error: '필수 정보 누락' }, { status: 400 })
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
       order_id:       orderId,
       amount:         Math.floor(amount),
       status:         'pending',
-      payment_method: 'card',
+      payment_method: paymentMethod,
     })
 
     if (insertError) {
