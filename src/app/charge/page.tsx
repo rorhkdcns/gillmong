@@ -110,7 +110,7 @@ export default function ChargePage() {
             {AMOUNTS.map((v) => (
               <button
                 key={v}
-                onClick={() => setAmount(v)}
+                onClick={() => setAmount(prev => prev + v)}
                 disabled={loading}
                 className={`rounded-lg border-2 py-4 text-center transition disabled:opacity-50 ${
                   amount === v
