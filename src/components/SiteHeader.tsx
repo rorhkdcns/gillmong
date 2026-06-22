@@ -146,9 +146,7 @@ export default function SiteHeader() {
                   /* 드롭다운 메뉴 */
                   <div key={item.label} className="group relative">
                     <button
-                      className={`flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium transition-colors hover:text-[#01273A] ${
-                        isActive(item) ? 'text-[#E07B2A]' : 'text-[#333333]'
-                      }`}
+                      className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-[#333333] transition-colors hover:text-[#01273A]"
                     >
                       {item.label}
                       <ChevronDown className="h-3 w-3 transition-transform duration-200 group-hover:rotate-180" />
@@ -177,9 +175,7 @@ export default function SiteHeader() {
                   <Link
                     key={item.label}
                     href={item.href!}
-                    className={`rounded-md px-3 py-2 text-sm font-medium transition-colors hover:text-[#01273A] ${
-                      isActive(item) ? 'text-[#E07B2A]' : 'text-[#333333]'
-                    }`}
+                    className="rounded-md px-3 py-2 text-sm font-medium text-[#333333] transition-colors hover:text-[#01273A]"
                   >
                     {item.label}
                   </Link>
