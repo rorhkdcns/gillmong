@@ -12,6 +12,7 @@ const METHODS = [
   { id: 'card',           label: '신용·체크카드', desc: '국내외 모든 카드' },
   { id: 'cardAndEasyPay', label: '간편결제',      desc: '카카오·네이버·PAYCO·삼성·SSG' },
   { id: 'cellphone',      label: '휴대폰 결제',   desc: '통신사 결제 (디지털 콘텐츠)' },
+  { id: 'trans',          label: '계좌이체',      desc: '실시간 계좌이체' },
 ]
 
 declare global {
