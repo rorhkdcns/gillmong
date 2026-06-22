@@ -35,7 +35,7 @@ const NAV: NavItem[] = [
       { label: 'FAQ',        href: '/faq'     },
       { label: '공지사항',    href: '/notice'  },
       { label: '1:1 문의',   href: '/inquiry' },
-      { label: '제휴문의',    href: '/inquiry' },
+      { label: '제휴문의',    href: '/partnerships' },
     ],
   },
 ]
