@@ -19,6 +19,7 @@ export const metadata: Metadata = {
   verification: {
     other: {
       "naver-site-verification": "1f9e49922333b3b5f5d1d851ba8ddcd9f1deaaba",
+      "daum-verification": "c512cb55bb5601ce7478f908f5bba5d499cdf00740abc1da238ce1806b5a5dff",
     },
   },
 };
