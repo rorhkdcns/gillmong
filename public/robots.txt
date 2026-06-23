@@ -6,7 +6,4 @@ Disallow: /admin
 Disallow: /api
 Disallow: /auth
 
-User-agent: Yeti
-Allow: /
-
-Sitemap: https://www.gillmong.com/sitemap.xml
+Sitemap: https://gillmong.com/sitemap.xml
