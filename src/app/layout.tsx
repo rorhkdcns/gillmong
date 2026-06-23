@@ -16,6 +16,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "길몽상점",
   description: "꿈은 누구에게나 기회와 아이디어가 될 수 있어요",
+  verification: {
+    other: {
+      "naver-site-verification": "1f9e49922333b3b5f5d1d851ba8ddcd9f1deaaba",
+    },
+  },
 };
 
 export default function RootLayout({
