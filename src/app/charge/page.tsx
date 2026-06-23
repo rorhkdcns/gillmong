@@ -9,9 +9,18 @@ import SiteFooter from '@/components/SiteFooter'
 const AMOUNTS = [5000, 10000, 30000, 50000, 100000, 200000]
 
 const METHODS = [
-  { id: 'card',  label: '신용·체크카드', desc: '국내외 모든 카드' },
-  { id: 'vbank', label: '무통장입금',     desc: '가상계좌 채번 후 72시간 내 입금' },
-]
+  { id: 'card',       label: '신용·체크카드', desc: '국내외 모든 카드',   group: 'general' },
+  { id: 'bank',       label: '계좌이체',       desc: '실시간 계좌이체',   group: 'general' },
+  { id: 'vbank',      label: '가상계좌',        desc: '72시간 내 입금',    group: 'general' },
+  { id: 'cellphone',  label: '휴대폰',          desc: '휴대폰 소액결제',   group: 'general' },
+  { id: 'kakaopay',   label: '카카오페이',      desc: 'Kakao Pay',         group: 'simple'  },
+  { id: 'naverpay',   label: '네이버페이',      desc: 'Naver Pay',         group: 'simple'  },
+  { id: 'payco',      label: 'PAYCO',           desc: 'PAYCO 간편결제',    group: 'simple'  },
+  { id: 'samsungpay', label: '삼성페이',        desc: 'Samsung Pay',       group: 'simple'  },
+  { id: 'ssgpay',     label: 'SSGPAY',          desc: 'SSG Pay',           group: 'simple'  },
+] as const
+
+type MethodId = typeof METHODS[number]['id']
 
 declare global {
   interface Window {
@@ -21,15 +30,14 @@ declare global {
 
 export default function ChargePage() {
   const [amount, setAmount]   = useState(0)
-  const [method, setMethod]   = useState('card')
+  const [method, setMethod]   = useState<MethodId>('card')
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
 
-  // NicePay 팝업이 fnError 없이 닫히는 경우 loading 자동 해제
   useEffect(() => {
     if (!loading) return
     const handleFocus = () => {
-      setTimeout(() => setLoading((prev) => { if (prev) { console.log('[Charge] 팝업 닫힘 감지, loading 해제'); } return false }), 800)
+      setTimeout(() => setLoading((prev) => { if (prev) { console.log('[Charge] 팝업 닫힘 감지, loading 해제') } return false }), 800)
     }
     window.addEventListener('focus', handleFocus)
     return () => window.removeEventListener('focus', handleFocus)
@@ -89,6 +97,9 @@ export default function ChargePage() {
     }
   }
 
+  const generalMethods = METHODS.filter(m => m.group === 'general')
+  const simpleMethods  = METHODS.filter(m => m.group === 'simple')
+
   return (
     <>
       <Script src="https://pay.nicepay.co.kr/v1/js/" strategy="lazyOnload" />
@@ -147,38 +158,37 @@ export default function ChargePage() {
         {/* 결제수단 선택 */}
         <section className="mb-6">
           <h2 className="mb-3 text-xl font-bold text-[#01273A]">결제수단 선택</h2>
-          <div className="grid grid-cols-1 gap-2">
-            {METHODS.map((m) => (
-              <button
-                key={m.id}
-                onClick={() => setMethod(m.id)}
-                disabled={loading}
-                className={`flex items-center gap-3 rounded-lg border-2 px-4 py-4 text-left transition disabled:opacity-50 ${
-                  method === m.id
-                    ? 'border-[#01273A] bg-[#01273A]/5'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-              >
-                <div>
-                  <div className={`text-base font-bold ${method === m.id ? 'text-[#01273A]' : 'text-gray-700'}`}>
-                    {m.label}
-                  </div>
-                  <div className="text-sm text-gray-400">{m.desc}</div>
-                </div>
-                {method === m.id && (
-                  <span className="ml-auto flex h-5 w-5 items-center justify-center rounded-full bg-[#01273A]">
-                    <svg className="h-3 w-3 text-white" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                  </span>
-                )}
-              </button>
-            ))}
+
+          {/* 일반 결제 */}
+          <div className="mb-1">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">일반 결제</p>
+            <div className="grid grid-cols-2 gap-2">
+              {generalMethods.map((m) => (
+                <MethodButton key={m.id} m={m} selected={method === m.id} loading={loading} onClick={() => setMethod(m.id)} />
+              ))}
+            </div>
+          </div>
+
+          <div className="my-4 border-t border-gray-100" />
+
+          {/* 간편결제 */}
+          <div>
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">간편결제</p>
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+              {simpleMethods.map((m) => (
+                <SimpleMethodButton key={m.id} m={m} selected={method === m.id} loading={loading} onClick={() => setMethod(m.id)} />
+              ))}
+            </div>
           </div>
 
           {method === 'vbank' && (
             <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
               채번 후 72시간 내에 입금하면 포인트가 자동 충전됩니다. 입금 전까지는 포인트가 지급되지 않습니다.
+            </div>
+          )}
+          {method === 'cellphone' && (
+            <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+              휴대폰 소액결제는 월 한도가 적용됩니다. 통신사 정책에 따라 제한될 수 있습니다.
             </div>
           )}
         </section>
@@ -214,5 +224,63 @@ export default function ChargePage() {
 
       <SiteFooter />
     </>
+  )
+}
+
+function MethodButton({
+  m, selected, loading, onClick,
+}: {
+  m: { id: string; label: string; desc: string }
+  selected: boolean
+  loading: boolean
+  onClick: () => void
+}) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={loading}
+      className={`flex items-center gap-3 rounded-lg border-2 px-4 py-3 text-left transition disabled:opacity-50 ${
+        selected
+          ? 'border-[#01273A] bg-[#01273A]/5'
+          : 'border-gray-200 hover:border-gray-300'
+      }`}
+    >
+      <div className="flex-1">
+        <div className={`text-sm font-bold ${selected ? 'text-[#01273A]' : 'text-gray-700'}`}>
+          {m.label}
+        </div>
+        <div className="text-xs text-gray-400">{m.desc}</div>
+      </div>
+      {selected && (
+        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#01273A]">
+          <svg className="h-3 w-3 text-white" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </span>
+      )}
+    </button>
+  )
+}
+
+function SimpleMethodButton({
+  m, selected, loading, onClick,
+}: {
+  m: { id: string; label: string }
+  selected: boolean
+  loading: boolean
+  onClick: () => void
+}) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={loading}
+      className={`rounded-lg border-2 py-3 text-center text-sm font-bold transition disabled:opacity-50 ${
+        selected
+          ? 'border-[#01273A] bg-[#01273A] text-white'
+          : 'border-gray-200 text-gray-700 hover:border-gray-300'
+      }`}
+    >
+      {m.label}
+    </button>
   )
 }
