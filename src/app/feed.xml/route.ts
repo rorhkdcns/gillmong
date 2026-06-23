@@ -1,6 +1,6 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 
-const SITE_URL = 'https://www.gillmong.com'
+const SITE_URL = 'https://gillmong.com'
 
 function escapeXml(str: string) {
   return str
@@ -9,6 +9,22 @@ function escapeXml(str: string) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&apos;')
+}
+
+function toRfc2822Kst(iso: string) {
+  const d = new Date(iso)
+  // Format: "Tue, 23 Jun 2026 12:00:00 +0900"
+  const days   = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  const kst    = new Date(d.getTime() + 9 * 60 * 60 * 1000)
+  const day    = days[kst.getUTCDay()]
+  const date   = String(kst.getUTCDate()).padStart(2, '0')
+  const month  = months[kst.getUTCMonth()]
+  const year   = kst.getUTCFullYear()
+  const hh     = String(kst.getUTCHours()).padStart(2, '0')
+  const mm     = String(kst.getUTCMinutes()).padStart(2, '0')
+  const ss     = String(kst.getUTCSeconds()).padStart(2, '0')
+  return `${day}, ${date} ${month} ${year} ${hh}:${mm}:${ss} +0900`
 }
 
 export async function GET() {
@@ -21,17 +37,18 @@ export async function GET() {
 
   const items = (notices ?? [])
     .map((n) => {
-      const pubDate = new Date(n.created_at).toUTCString()
+      const pubDate = toRfc2822Kst(n.created_at)
       const link    = `${SITE_URL}/notice/${n.id}`
+      const guid    = `${SITE_URL}/#notice-${n.id}`
       const desc    = escapeXml((n.content ?? '').slice(0, 200))
       return `
-  <item>
-    <title>${escapeXml(n.title)}</title>
-    <link>${link}</link>
-    <guid isPermaLink="true">${link}</guid>
-    <pubDate>${pubDate}</pubDate>
-    <description>${desc}</description>
-  </item>`
+    <item>
+      <title>${escapeXml(n.title)}</title>
+      <link>${link}</link>
+      <guid isPermaLink="false">${guid}</guid>
+      <pubDate>${pubDate}</pubDate>
+      <description>${desc}</description>
+    </item>`
     })
     .join('')
 
