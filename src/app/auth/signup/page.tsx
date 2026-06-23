@@ -25,9 +25,10 @@ function Field({
 const INPUT = 'w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#01273A]'
 
 export default function SignupPage() {
-  const [username,     setUsername]     = useState('')
-  const [password,     setPassword]     = useState('')
-  const [nickname,     setNickname]     = useState('')
+  const [username,         setUsername]         = useState('')
+  const [password,         setPassword]         = useState('')
+  const [passwordConfirm,  setPasswordConfirm]  = useState('')
+  const [nickname,         setNickname]         = useState('')
   const [realName,     setRealName]     = useState('')
   const [phone,        setPhone]        = useState('')
   const [emailId,      setEmailId]      = useState('')
@@ -101,6 +102,10 @@ export default function SignupPage() {
     }
     if (password.length < 6) {
       setError('비밀번호는 6자리 이상 입력해주세요.')
+      return
+    }
+    if (password !== passwordConfirm) {
+      setError('비밀번호가 일치하지 않습니다.')
       return
     }
     if (!nickname.trim()) {
@@ -257,6 +262,23 @@ export default function SignupPage() {
                 minLength={6}
                 className={INPUT}
               />
+            </Field>
+
+            <Field label="비밀번호 확인" required>
+              <input
+                type="password"
+                value={passwordConfirm}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
+                placeholder="비밀번호를 다시 입력해주세요"
+                required
+                className={INPUT}
+              />
+              {passwordConfirm && password !== passwordConfirm && (
+                <p className="mt-1 text-xs text-red-500">비밀번호가 일치하지 않습니다.</p>
+              )}
+              {passwordConfirm && password === passwordConfirm && (
+                <p className="mt-1 text-xs text-emerald-600">비밀번호가 일치합니다.</p>
+              )}
             </Field>
 
             <Field label="닉네임" required>

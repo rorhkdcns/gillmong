@@ -107,7 +107,8 @@ export default async function MyPage() {
 
           {/* 1. 프로필 */}
           <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm md:p-8">
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              {/* 1줄: 프로필 이미지 + 닉네임 */}
               <div className="flex min-w-0 items-center gap-4">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#01273A] text-xl font-bold text-white md:h-16 md:w-16 md:text-2xl">
                   {nickname.charAt(0).toUpperCase()}
@@ -117,7 +118,14 @@ export default async function MyPage() {
                   <p className="mt-0.5 truncate text-sm text-[#555555]">@{username}</p>
                 </div>
               </div>
+              {/* 2줄(모바일) / 오른쪽(데스크탑): 버튼들 */}
               <div className="flex shrink-0 items-center gap-2">
+                <a
+                  href="/mypage/edit"
+                  className="rounded-lg bg-[#01273A] px-4 py-2 text-sm font-medium text-white transition hover:brightness-90"
+                >
+                  정보 변경
+                </a>
                 {showAdminBtn && (
                   <a
                     href="/admin"
@@ -126,12 +134,6 @@ export default async function MyPage() {
                     관리자 페이지
                   </a>
                 )}
-                <a
-                  href="/mypage/edit"
-                  className="rounded-lg bg-[#01273A] px-4 py-2 text-sm font-medium text-white transition hover:brightness-90"
-                >
-                  정보 변경
-                </a>
                 <LogoutButton />
               </div>
             </div>
