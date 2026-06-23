@@ -10,7 +10,6 @@ const AMOUNTS = [5000, 10000, 30000, 50000, 100000, 200000]
 
 const METHODS = [
   { id: 'card',           label: '신용·체크카드', desc: '국내외 모든 카드', group: 'general' },
-  { id: 'bank',           label: '계좌이체',       desc: '실시간 계좌이체', group: 'general' },
   { id: 'vbank',          label: '가상계좌',        desc: '72시간 내 입금',  group: 'general' },
   { id: 'kakaopay',       label: '카카오페이',      desc: 'Kakao Pay',       group: 'simple'  },
   { id: 'naverpayCard',   label: '네이버페이',      desc: 'Naver Pay',       group: 'simple'  },
