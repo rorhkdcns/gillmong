@@ -9,15 +9,12 @@ import SiteFooter from '@/components/SiteFooter'
 const AMOUNTS = [5000, 10000, 30000, 50000, 100000, 200000]
 
 const METHODS = [
-  { id: 'card',       label: '신용·체크카드', desc: '국내외 모든 카드',   group: 'general' },
-  { id: 'bank',       label: '계좌이체',       desc: '실시간 계좌이체',   group: 'general' },
-  { id: 'vbank',      label: '가상계좌',        desc: '72시간 내 입금',    group: 'general' },
-  { id: 'cellphone',  label: '휴대폰',          desc: '휴대폰 소액결제',   group: 'general' },
-  { id: 'kakaopay',   label: '카카오페이',      desc: 'Kakao Pay',         group: 'simple'  },
-  { id: 'naverpay',   label: '네이버페이',      desc: 'Naver Pay',         group: 'simple'  },
-  { id: 'payco',      label: 'PAYCO',           desc: 'PAYCO 간편결제',    group: 'simple'  },
-  { id: 'samsungpay', label: '삼성페이',        desc: 'Samsung Pay',       group: 'simple'  },
-  { id: 'ssgpay',     label: 'SSGPAY',          desc: 'SSG Pay',           group: 'simple'  },
+  { id: 'card',           label: '신용·체크카드', desc: '국내외 모든 카드', group: 'general' },
+  { id: 'bank',           label: '계좌이체',       desc: '실시간 계좌이체', group: 'general' },
+  { id: 'vbank',          label: '가상계좌',        desc: '72시간 내 입금',  group: 'general' },
+  { id: 'kakaopay',       label: '카카오페이',      desc: 'Kakao Pay',       group: 'simple'  },
+  { id: 'naverpayCard',   label: '네이버페이',      desc: 'Naver Pay',       group: 'simple'  },
+  { id: 'samsungpayCard', label: '삼성페이',        desc: 'Samsung Pay',     group: 'simple'  },
 ] as const
 
 type MethodId = typeof METHODS[number]['id']
@@ -184,11 +181,6 @@ export default function ChargePage() {
           {method === 'vbank' && (
             <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
               채번 후 72시간 내에 입금하면 포인트가 자동 충전됩니다. 입금 전까지는 포인트가 지급되지 않습니다.
-            </div>
-          )}
-          {method === 'cellphone' && (
-            <div className="mt-3 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
-              휴대폰 소액결제는 월 한도가 적용됩니다. 통신사 정책에 따라 제한될 수 있습니다.
             </div>
           )}
         </section>
