@@ -1,9 +1,16 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { createAdminNotice, deleteAdminNotice, getAdminNotices } from '../actions'
+import {
+  createAdminNotice,
+  deleteAdminNotice,
+  getAdminNotices,
+  getAdminNoticeById,
+  updateAdminNotice,
+} from '../actions'
 
 type Notice = { id: number; title: string; is_pinned: boolean; created_at: string }
+type FormMode = 'create' | 'edit'
 
 function formatDate(iso: string) {
   const d = new Date(iso)
@@ -14,14 +21,17 @@ export default function AdminNoticePage() {
   const [notices, setNotices] = useState<Notice[]>([])
   const [loading, setLoading] = useState(true)
 
-  const [title,    setTitle]    = useState('')
-  const [content,  setContent]  = useState('')
-  const [isPinned, setIsPinned] = useState(false)
-  const [saving,   setSaving]   = useState(false)
-  const [error,    setError]    = useState('')
-  const [showForm, setShowForm] = useState(false)
+  const [formMode,  setFormMode]  = useState<FormMode>('create')
+  const [editId,    setEditId]    = useState<number | null>(null)
+  const [title,     setTitle]     = useState('')
+  const [content,   setContent]   = useState('')
+  const [isPinned,  setIsPinned]  = useState(false)
+  const [saving,    setSaving]    = useState(false)
+  const [error,     setError]     = useState('')
+  const [showForm,  setShowForm]  = useState(false)
+
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null)
-  const [deleting, setDeleting] = useState(false)
+  const [deleting,     setDeleting]     = useState(false)
 
   async function load() {
     setLoading(true)
@@ -32,15 +42,50 @@ export default function AdminNoticePage() {
 
   useEffect(() => { load() }, [])
 
-  async function handleCreate(e: React.FormEvent) {
+  function openCreateForm() {
+    setFormMode('create')
+    setEditId(null)
+    setTitle(''); setContent(''); setIsPinned(false)
+    setError('')
+    setShowForm(true)
+  }
+
+  async function openEditForm(id: number) {
+    setError('')
+    setShowForm(true)
+    setFormMode('edit')
+    setEditId(id)
+    setTitle('로딩 중...'); setContent(''); setIsPinned(false)
+    const notice = await getAdminNoticeById(id)
+    if (!notice) { setError('공지사항을 불러올 수 없습니다.'); return }
+    setTitle(notice.title)
+    setContent(notice.content)
+    setIsPinned(notice.is_pinned)
+  }
+
+  function closeForm() {
+    setShowForm(false)
+    setEditId(null)
+    setTitle(''); setContent(''); setIsPinned(false)
+    setError('')
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!title.trim() || !content.trim()) { setError('제목과 내용을 모두 입력해주세요.'); return }
     setSaving(true)
     setError('')
-    const result = await createAdminNotice(title, content, isPinned)
+
+    let result: { error?: string }
+    if (formMode === 'edit' && editId !== null) {
+      result = await updateAdminNotice(editId, title, content, isPinned)
+    } else {
+      result = await createAdminNotice(title, content, isPinned)
+    }
+
     setSaving(false)
     if (result.error) { setError(result.error); return }
-    setTitle(''); setContent(''); setIsPinned(false); setShowForm(false)
+    closeForm()
     load()
   }
 
@@ -58,7 +103,7 @@ export default function AdminNoticePage() {
       <div className="mb-8 flex items-center justify-between">
         <h1 className="text-2xl font-bold text-[#01273A]">공지사항 관리</h1>
         <button
-          onClick={() => setShowForm((v) => !v)}
+          onClick={showForm ? closeForm : openCreateForm}
           className="rounded bg-[#01273A] px-4 py-2 text-sm font-semibold text-white hover:brightness-90"
         >
           {showForm ? '취소' : '+ 공지 작성'}
@@ -66,8 +111,10 @@ export default function AdminNoticePage() {
       </div>
 
       {showForm && (
-        <form onSubmit={handleCreate} className="mb-8 rounded border border-gray-200 bg-white p-6">
-          <h2 className="mb-4 font-semibold text-[#01273A]">새 공지사항</h2>
+        <form onSubmit={handleSubmit} className="mb-8 rounded border border-gray-200 bg-white p-6">
+          <h2 className="mb-4 font-semibold text-[#01273A]">
+            {formMode === 'edit' ? '공지사항 수정' : '새 공지사항'}
+          </h2>
           <div className="mb-3">
             <label className="mb-1 block text-sm text-[#555]">제목</label>
             <input
@@ -93,13 +140,22 @@ export default function AdminNoticePage() {
             상단 고정 (공지)
           </label>
           {error && <p className="mb-3 text-sm text-red-500">{error}</p>}
-          <button
-            type="submit"
-            disabled={saving}
-            className="rounded bg-[#01273A] px-5 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
-          >
-            {saving ? '저장 중...' : '공지 등록'}
-          </button>
+          <div className="flex gap-2">
+            <button
+              type="submit"
+              disabled={saving}
+              className="rounded bg-[#01273A] px-5 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
+            >
+              {saving ? '저장 중...' : formMode === 'edit' ? '수정 완료' : '공지 등록'}
+            </button>
+            <button
+              type="button"
+              onClick={closeForm}
+              className="rounded border border-gray-300 px-5 py-2 text-sm font-semibold text-[#555] hover:bg-gray-50"
+            >
+              취소
+            </button>
+          </div>
         </form>
       )}
 
@@ -134,12 +190,20 @@ export default function AdminNoticePage() {
                   </td>
                   <td className="px-6 py-3 text-[#999]">{formatDate(n.created_at)}</td>
                   <td className="px-6 py-3">
-                    <button
-                      onClick={() => setDeleteTarget(n.id)}
-                      className="text-xs text-red-400 hover:text-red-600"
-                    >
-                      삭제
-                    </button>
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => openEditForm(n.id)}
+                        className="text-xs text-blue-500 hover:text-blue-700"
+                      >
+                        수정
+                      </button>
+                      <button
+                        onClick={() => setDeleteTarget(n.id)}
+                        className="text-xs text-red-400 hover:text-red-600"
+                      >
+                        삭제
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -324,6 +324,21 @@ export async function deleteAdminNotice(id: number): Promise<{ success?: boolean
   return { success: true }
 }
 
+export async function getAdminNoticeById(id: number): Promise<{ id: number; title: string; content: string; is_pinned: boolean } | null> {
+  const admin = createAdminClient()
+  const { data } = await admin.from('notices').select('id, title, content, is_pinned').eq('id', id).single()
+  return data ?? null
+}
+
+export async function updateAdminNotice(
+  id: number, title: string, content: string, isPinned: boolean,
+): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const { error } = await admin.from('notices').update({ title, content, is_pinned: isPinned }).eq('id', id)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
 // ── 1:1 문의 ───────────────────────────────────────────────────
 export async function getAdminInquiries() {
   const admin = createAdminClient()
