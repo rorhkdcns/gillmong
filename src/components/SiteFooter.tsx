@@ -4,9 +4,10 @@ export default function SiteFooter() {
       <div className="mx-auto max-w-6xl">
 
         {/* 고객센터 */}
-        <p className="text-sm text-[#555555]">
-          고객센터: 이메일 문의 (gillmong@nate.com) · 평일 10:00 ~ 18:00
-        </p>
+        <div className="flex flex-col gap-0.5 text-sm text-[#555555]">
+          <span>고객센터 : gillmong@nate.com</span>
+          <span>운영시간 : 평일 10:00 ~ 18:00</span>
+        </div>
 
         {/* 사업자 정보 + 카피라이트 */}
         <div className="mt-6 flex flex-col gap-1 text-xs text-[#888888]">
