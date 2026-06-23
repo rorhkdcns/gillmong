@@ -39,7 +39,7 @@ function SearchResults() {
     supabase
       .from('dreams')
       .select('id, title, summary, grade, price, is_sold')
-      .or(`title.ilike.%${q}%,summary.ilike.%${q}%`)
+      .or(`title.ilike.%${q}%,summary.ilike.%${q}%,content.ilike.%${q}%,interpretation.ilike.%${q}%,advice.ilike.%${q}%`)
       .order('created_at', { ascending: false })
       .then((result: { data: SearchCard[] | null }) => {
         setResults(result.data ?? [])
