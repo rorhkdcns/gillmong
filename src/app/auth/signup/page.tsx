@@ -24,7 +24,18 @@ function Field({
 
 const INPUT = 'w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#01273A]'
 
+type MemberType = 'general' | 'business'
+type Step = 'select' | 'form'
+
+function formatBusinessNumber(value: string) {
+  const digits = value.replace(/\D/g, '').slice(0, 9)
+  return digits
+}
+
 export default function SignupPage() {
+  const [step, setStep] = useState<Step>('select')
+  const [memberType, setMemberType] = useState<MemberType>('general')
+
   const [username,         setUsername]         = useState('')
   const [password,         setPassword]         = useState('')
   const [passwordConfirm,  setPasswordConfirm]  = useState('')
@@ -34,9 +45,14 @@ export default function SignupPage() {
   const [emailId,      setEmailId]      = useState('')
   const [emailDomain,  setEmailDomain]  = useState('naver.com')
   const [customDomain, setCustomDomain] = useState('')
-  const [error,        setError]        = useState('')
-  const [done,         setDone]         = useState(false)
-  const [loading,      setLoading]      = useState(false)
+
+  const [businessName,       setBusinessName]       = useState('')
+  const [businessNumber,     setBusinessNumber]     = useState('')
+  const [representativeName, setRepresentativeName] = useState('')
+
+  const [error,   setError]   = useState('')
+  const [done,    setDone]    = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const email = emailDomain === 'direct'
     ? (emailId && customDomain ? `${emailId}@${customDomain}` : '')
@@ -88,6 +104,11 @@ export default function SignupPage() {
     setAgreeMarketing(next)
   }
 
+  function handleSelectType(type: MemberType) {
+    setMemberType(type)
+    setStep('form')
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
@@ -137,23 +158,46 @@ export default function SignupPage() {
       return
     }
 
+    if (memberType === 'business') {
+      if (!businessName.trim()) {
+        setError('상호명을 입력해주세요.')
+        return
+      }
+      const digits = businessNumber.replace(/\D/g, '')
+      if (digits.length !== 9) {
+        setError('사업자등록번호는 숫자 9자리로 입력해주세요.')
+        return
+      }
+      if (!representativeName.trim()) {
+        setError('대표자명을 입력해주세요.')
+        return
+      }
+    }
+
     setLoading(true)
 
     const supabase = createClient()
     const authEmail = usernameToEmail(username)
 
+    const metadata: Record<string, string> = {
+      username:  username.trim().toLowerCase(),
+      nickname:  nickname.trim(),
+      real_name: realName.trim(),
+      phone:     phone.trim(),
+      email:     email.trim(),
+      member_type: memberType,
+    }
+
+    if (memberType === 'business') {
+      metadata.business_name       = businessName.trim()
+      metadata.business_number     = businessNumber.replace(/\D/g, '')
+      metadata.representative_name = representativeName.trim()
+    }
+
     const { data, error: signUpError } = await supabase.auth.signUp({
       email: authEmail,
       password,
-      options: {
-        data: {
-          username:  username.trim().toLowerCase(),
-          nickname:  nickname.trim(),
-          real_name: realName.trim(),
-          phone:     phone.trim(),
-          email:     email.trim(),
-        },
-      },
+      options: { data: metadata },
     })
 
     setLoading(false)
@@ -187,6 +231,11 @@ export default function SignupPage() {
             </div>
           </div>
           <h2 className="mb-3 text-2xl text-[#01273A]">가입 완료!</h2>
+          {memberType === 'business' && (
+            <p className="mb-4 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-700 border border-amber-200">
+              사업자 정보는 관리자 검토 후 승인됩니다.
+            </p>
+          )}
           <p className="mb-8 text-sm text-[#777777]">바로 로그인하실 수 있습니다.</p>
           <a
             href="/auth/login"
@@ -199,21 +248,77 @@ export default function SignupPage() {
     )
   }
 
+  const Header = (
+    <header className="border-b border-gray-200 bg-white px-6 py-4">
+      <div className="mx-auto max-w-6xl">
+        <a href="/">
+          <Image src="/logo_1.jpg" alt="길몽상점" height={50} width={160} className="h-[50px] w-auto object-contain" priority />
+        </a>
+      </div>
+    </header>
+  )
+
+  /* ── Step 1: 회원 유형 선택 ── */
+  if (step === 'select') {
+    return (
+      <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
+        {Header}
+        <main className="flex flex-1 items-center justify-center px-6 py-16">
+          <div className="w-full max-w-sm">
+            <h1 className="mb-2 text-center text-2xl text-[#01273A]">회원가입</h1>
+            <p className="mb-10 text-center text-sm text-[#777777]">가입 유형을 선택해주세요</p>
+
+            <div className="flex flex-col gap-4">
+              <button
+                type="button"
+                onClick={() => handleSelectType('general')}
+                className="flex flex-col items-start gap-2 border-2 border-gray-200 bg-white px-6 py-5 text-left transition-all hover:border-[#01273A] hover:shadow-sm"
+              >
+                <span className="text-base font-semibold text-[#01273A]">일반회원</span>
+                <span className="text-sm text-[#777777]">개인 사용자로 가입합니다</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleSelectType('business')}
+                className="flex flex-col items-start gap-2 border-2 border-gray-200 bg-white px-6 py-5 text-left transition-all hover:border-[#01273A] hover:shadow-sm"
+              >
+                <span className="text-base font-semibold text-[#01273A]">사업자회원</span>
+                <span className="text-sm text-[#777777]">사업자등록번호로 가입합니다 (관리자 승인 필요)</span>
+              </button>
+            </div>
+
+            <p className="mt-8 text-center text-sm text-[#777777]">
+              이미 계정이 있으신가요?{' '}
+              <a href="/auth/login" className="text-[#01273A] underline underline-offset-2 hover:brightness-75">
+                로그인
+              </a>
+            </p>
+          </div>
+        </main>
+        <SiteFooter />
+      </div>
+    )
+  }
+
+  /* ── Step 2: 정보 입력 ── */
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
+      {Header}
 
-      {/* 헤더 */}
-      <header className="border-b border-gray-200 bg-white px-6 py-4">
-        <div className="mx-auto max-w-6xl">
-          <a href="/">
-            <Image src="/logo_1.jpg" alt="길몽상점" height={50} width={160} className="h-[50px] w-auto object-contain" priority />
-          </a>
-        </div>
-      </header>
-
-      {/* 본문 */}
       <main className="flex flex-1 items-center justify-center px-6 py-16">
         <div className="w-full max-w-sm">
+          <button
+            type="button"
+            onClick={() => setStep('select')}
+            className="mb-6 flex items-center gap-1 text-sm text-[#777777] hover:text-[#01273A]"
+          >
+            <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            {memberType === 'business' ? '사업자회원' : '일반회원'} 선택됨
+          </button>
+
           <h1 className="mb-2 text-center text-2xl text-[#01273A]">회원가입</h1>
           <p className="mb-10 text-center text-sm text-[#777777]">길몽상점과 함께 꿈을 거래해보세요</p>
 
@@ -351,9 +456,49 @@ export default function SignupPage() {
               )}
             </Field>
 
+            {/* 사업자회원 추가 정보 */}
+            {memberType === 'business' && (
+              <div className="flex flex-col gap-4 rounded-xl border border-amber-200 bg-amber-50 p-4">
+                <p className="text-xs font-semibold text-amber-700">사업자 정보 입력</p>
+
+                <Field label="상호명" required>
+                  <input
+                    type="text"
+                    value={businessName}
+                    onChange={(e) => setBusinessName(e.target.value)}
+                    placeholder="사업체 상호명"
+                    className={INPUT}
+                  />
+                </Field>
+
+                <Field label="사업자등록번호" required>
+                  <input
+                    type="text"
+                    value={businessNumber}
+                    onChange={(e) => setBusinessNumber(formatBusinessNumber(e.target.value))}
+                    placeholder="숫자 9자리"
+                    maxLength={9}
+                    className={INPUT}
+                  />
+                  <p className="mt-1 text-xs text-gray-400">숫자만 입력 (9자리)</p>
+                </Field>
+
+                <Field label="대표자명" required>
+                  <input
+                    type="text"
+                    value={representativeName}
+                    onChange={(e) => setRepresentativeName(e.target.value)}
+                    placeholder="대표자 성명"
+                    className={INPUT}
+                  />
+                </Field>
+
+                <p className="text-xs text-amber-600">※ 사업자 정보는 관리자 검토 후 승인됩니다.</p>
+              </div>
+            )}
+
             {/* 약관 동의 */}
             <div className="mt-2 flex flex-col gap-0 rounded-xl border border-gray-200 bg-white">
-              {/* 전체 동의 */}
               <label className="flex cursor-pointer items-center gap-3 border-b border-gray-100 px-4 py-3.5">
                 <input
                   type="checkbox"
@@ -364,7 +509,6 @@ export default function SignupPage() {
                 <span className="text-sm font-bold text-[#01273A]">전체 동의</span>
               </label>
 
-              {/* 이용약관 */}
               <label className="flex cursor-pointer items-center gap-3 border-b border-gray-100 px-4 py-3">
                 <input
                   type="checkbox"
@@ -380,7 +524,6 @@ export default function SignupPage() {
                 </span>
               </label>
 
-              {/* 개인정보처리방침 */}
               <label className="flex cursor-pointer items-center gap-3 border-b border-gray-100 px-4 py-3">
                 <input
                   type="checkbox"
@@ -396,7 +539,6 @@ export default function SignupPage() {
                 </span>
               </label>
 
-              {/* 만 14세 이상 */}
               <label className="flex cursor-pointer items-center gap-3 border-b border-gray-100 px-4 py-3">
                 <input
                   type="checkbox"
@@ -409,7 +551,6 @@ export default function SignupPage() {
                 </span>
               </label>
 
-              {/* 마케팅 */}
               <label className="flex cursor-pointer items-center gap-3 px-4 py-3">
                 <input
                   type="checkbox"

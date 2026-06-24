@@ -37,6 +37,12 @@ export interface DbProfile {
   phone: string
   email: string
   points: number
+  member_type: 'general' | 'business'
+  business_name: string | null
+  business_number: string | null
+  representative_name: string | null
+  verified_at: string | null
+  verification_status: 'pending' | 'approved' | 'rejected' | null
   created_at: string
 }
 
