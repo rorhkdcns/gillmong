@@ -28,14 +28,15 @@ const NAV: NavItem[] = [
     ],
   },
   {
-    label: '고객센터',
+    label: '고객지원',
     dropdown: [
-      { label: '길몽상점소개', href: '/guide'   },
-      { label: '이용방법',    href: '/support' },
-      { label: 'FAQ',        href: '/faq'     },
-      { label: '공지사항',    href: '/notice'  },
-      { label: '1:1 문의',   href: '/inquiry' },
-      { label: '제휴문의',    href: '/partnerships' },
+      { label: '길몽상점소개', href: '/guide'       },
+      { label: '고객센터',    href: '/support'     },
+      { label: '이용안내',    href: '/usage-guide' },
+      { label: 'FAQ',        href: '/faq'         },
+      { label: '공지사항',    href: '/notice'      },
+      { label: '1:1 문의',   href: '/inquiry'     },
+      { label: '제휴문의',    href: '/partnerships'},
     ],
   },
 ]

@@ -273,18 +273,28 @@ export default function SignupPage() {
               <button
                 type="button"
                 onClick={() => { setMemberType('general'); setStep('form') }}
-                className="flex flex-col items-start gap-1.5 border-2 border-gray-200 bg-white px-6 py-5 text-left transition-all hover:border-[#01273A] hover:shadow-sm"
+                className="flex flex-col items-start gap-2 border-2 border-gray-200 bg-white px-6 py-5 text-left transition-all hover:border-[#01273A] hover:shadow-sm"
               >
                 <span className="text-base font-semibold text-[#01273A]">일반회원</span>
                 <span className="text-sm text-[#777777]">개인 사용자로 가입합니다</span>
+                <div className="mt-1 flex flex-wrap gap-1.5">
+                  {['주 2회 판매', '1회 10만원', '반기 600만원'].map((t) => (
+                    <span key={t} className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs text-[#555555]">{t}</span>
+                  ))}
+                </div>
               </button>
               <button
                 type="button"
                 onClick={() => { setMemberType('business'); setStep('verify-business') }}
-                className="flex flex-col items-start gap-1.5 border-2 border-gray-200 bg-white px-6 py-5 text-left transition-all hover:border-[#01273A] hover:shadow-sm"
+                className="flex flex-col items-start gap-2 border-2 border-gray-200 bg-white px-6 py-5 text-left transition-all hover:border-[#01273A] hover:shadow-sm"
               >
                 <span className="text-base font-semibold text-[#01273A]">사업자회원</span>
                 <span className="text-sm text-[#777777]">사업자등록번호로 가입합니다 (관리자 승인 필요)</span>
+                <div className="mt-1 flex flex-wrap gap-1.5">
+                  {['판매 제한 없음', '세금계산서 발급'].map((t) => (
+                    <span key={t} className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs text-amber-700">{t}</span>
+                  ))}
+                </div>
               </button>
             </div>
             <p className="mt-8 text-center text-sm text-[#777777]">
