@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import type { BusinessVerificationResponse } from '@/lib/types/api'
 
-const API_KEY = '5dd6e64f9d260f177d27269885d550193db754a19f3718c25e879aadaf3e5e0d'
+const API_KEY = '0719f9dc21014f9aad2fe3053cbac4d3325bfef72eae1b9738643b0fe81b9cb4'
 const NTS_URL = 'https://api.odcloud.kr/api/nts-businessman/v1/status'
 
 export async function POST(req: NextRequest) {
