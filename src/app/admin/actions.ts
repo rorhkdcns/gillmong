@@ -235,6 +235,36 @@ export async function adminDeleteUser(
   return { success: true }
 }
 
+// ── 사업자회원 승인 ────────────────────────────────────────────
+export async function getBusinessApplications(
+  status?: string,
+): Promise<{ data: unknown[]; error?: string }> {
+  const admin = createAdminClient()
+  let q = admin
+    .from('profiles')
+    .select('id, username, nickname, real_name, phone, email, business_name, business_number, representative_name, verification_status, verified_at, created_at')
+    .eq('member_type', 'business')
+    .order('created_at', { ascending: false })
+  if (status && status !== 'all') q = q.eq('verification_status', status)
+  const { data, error } = await q
+  if (error) return { data: [], error: error.message }
+  return { data: data ?? [] }
+}
+
+export async function adminHandleBusinessApproval(
+  userId: string,
+  action: 'approve' | 'reject',
+): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const patch: Record<string, unknown> = {
+    verification_status: action === 'approve' ? 'approved' : 'rejected',
+  }
+  if (action === 'approve') patch.verified_at = new Date().toISOString()
+  const { error } = await admin.from('profiles').update(patch).eq('id', userId)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
 // ── 꿈 관리 ───────────────────────────────────────────────────
 export async function getAdminDreams(category?: string, isSold?: string): Promise<{ data: unknown[]; error?: string }> {
   const admin = createAdminClient()
