@@ -114,7 +114,7 @@ export async function purchaseDream(
 
   // ── 8. 판매자 포인트 지급 ────────────────────────────────────
   steps.push('sellerEarning')
-  const sellerEarning = Math.floor(price * 0.9)
+  const sellerEarning = Math.floor(price * 0.8)
   const { data: sellerProfile, error: sellerErr } = await admin
     .from('profiles')
     .select('points')

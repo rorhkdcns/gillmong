@@ -84,7 +84,7 @@ export default async function MyPage() {
     date: d.created_at,
     title: d.title,
     grade: d.grade,
-    price: Math.floor(d.price * 0.9),
+    price: Math.floor(d.price * 0.8),
     priceLabel: '수령',
     href: `/dream/${d.id}`,
     subText: '판매완료',

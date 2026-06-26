@@ -47,7 +47,7 @@ export async function syncSalePoints(): Promise<{
       soldFixed++
     }
 
-    const sellerEarning = Math.floor(purchase.price * 0.9)
+    const sellerEarning = Math.floor(purchase.price * 0.8)
     const description = `꿈 판매 수익 — ${dream.title}`
     const key = `${dream.user_id}::${description}`
 
