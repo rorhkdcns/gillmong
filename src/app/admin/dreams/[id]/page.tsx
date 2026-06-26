@@ -15,8 +15,8 @@ type Report = {
 }
 type Dream = {
   id: number; title: string; grade: string; category: string; price: number
-  is_sold: boolean; created_at: string; user_id: string; summary: string
-  interpretation: string; advice: string; reconstructed_dream: string
+  is_sold: boolean; created_at: string; user_id: string; content: string
+  summary: string; interpretation: string; advice: string; reconstructed_dream: string
   seller: { nickname: string; username: string } | null
   buyers: Buyer[]
   reports: Report[]
@@ -126,10 +126,24 @@ export default function AdminDreamDetailPage() {
         </div>
       </div>
 
-      {/* 꿈 원본 내용 */}
+      {/* 원본 내용 */}
+      <div className="mb-4 rounded-2xl border border-amber-200 bg-amber-50/40 shadow-sm">
+        <div className="border-b border-amber-200 px-6 py-3">
+          <h2 className="text-sm font-bold text-amber-800">원본 내용 (사용자 입력)</h2>
+        </div>
+        <div className="px-6 py-5">
+          {dream.content ? (
+            <p className="whitespace-pre-line text-sm leading-relaxed text-[#333]">{dream.content}</p>
+          ) : (
+            <p className="text-sm text-[#999]">원본 내용 없음</p>
+          )}
+        </div>
+      </div>
+
+      {/* AI 해석 */}
       <div className="mb-4 rounded-2xl border border-gray-200 bg-white shadow-sm">
         <div className="border-b border-gray-100 px-6 py-3">
-          <h2 className="text-sm font-bold text-[#01273A]">원본 내용 (전체 열람)</h2>
+          <h2 className="text-sm font-bold text-[#01273A]">AI 해석 (전체 열람)</h2>
         </div>
         <div className="space-y-4 px-6 py-5 text-sm">
           {dream.reconstructed_dream && (

@@ -322,7 +322,7 @@ export async function getAdminDreamDetail(dreamId: number): Promise<{ data?: unk
 
   const { data: dream, error } = await admin
     .from('dreams')
-    .select('id, title, grade, category, price, is_sold, created_at, user_id, summary, interpretation, advice, reconstructed_dream')
+    .select('id, title, grade, category, price, is_sold, created_at, user_id, content, summary, interpretation, advice, reconstructed_dream')
     .eq('id', dreamId)
     .single()
   if (error || !dream) return { error: error?.message ?? '꿈을 찾을 수 없습니다.' }
