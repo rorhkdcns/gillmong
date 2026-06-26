@@ -281,15 +281,24 @@ export async function getAdminDreams(category?: string, isSold?: string): Promis
   }
   if (!dreams || dreams.length === 0) return { data: [] }
 
-  const userIds = [...new Set(dreams.map((d) => d.user_id).filter(Boolean))]
-  const { data: profileRows } = await admin
-    .from('profiles')
-    .select('id, nickname, username')
-    .in('id', userIds)
+  const dreamIds = dreams.map((d) => d.id)
+  const userIds  = [...new Set(dreams.map((d) => d.user_id).filter(Boolean))]
+
+  const [{ data: profileRows }, { data: reportRows }] = await Promise.all([
+    admin.from('profiles').select('id, nickname, username').in('id', userIds),
+    admin.from('reports').select('dream_id, status').in('dream_id', dreamIds),
+  ])
 
   const profileMap: Record<string, { nickname: string; username: string }> = {}
   for (const p of profileRows ?? []) {
     profileMap[p.id] = { nickname: p.nickname, username: p.username }
+  }
+
+  const reportCountMap: Record<number, number> = {}
+  const pendingCountMap: Record<number, number> = {}
+  for (const r of reportRows ?? []) {
+    reportCountMap[r.dream_id] = (reportCountMap[r.dream_id] ?? 0) + 1
+    if (r.status === 'pending') pendingCountMap[r.dream_id] = (pendingCountMap[r.dream_id] ?? 0) + 1
   }
 
   return {
@@ -302,7 +311,56 @@ export async function getAdminDreams(category?: string, isSold?: string): Promis
       is_sold: d.is_sold,
       created_at: d.created_at,
       profiles: profileMap[d.user_id] ?? null,
+      report_count: reportCountMap[d.id] ?? 0,
+      pending_report_count: pendingCountMap[d.id] ?? 0,
     })),
+  }
+}
+
+export async function getAdminDreamDetail(dreamId: number): Promise<{ data?: unknown; error?: string }> {
+  const admin = createAdminClient()
+
+  const { data: dream, error } = await admin
+    .from('dreams')
+    .select('id, title, grade, category, price, is_sold, created_at, user_id, summary, interpretation, advice, reconstructed_dream')
+    .eq('id', dreamId)
+    .single()
+  if (error || !dream) return { error: error?.message ?? '꿈을 찾을 수 없습니다.' }
+
+  const [
+    { data: seller },
+    { data: purchases },
+    { data: reports },
+  ] = await Promise.all([
+    admin.from('profiles').select('nickname, username').eq('id', dream.user_id).single(),
+    admin.from('purchases').select('id, price, buyer_id, created_at').eq('dream_id', dreamId),
+    admin.from('reports').select('id, reason, detail, status, created_at, reporter_id').eq('dream_id', dreamId).order('created_at', { ascending: false }),
+  ])
+
+  const buyerIds    = [...new Set((purchases ?? []).map((p) => p.buyer_id))]
+  const reporterIds = [...new Set((reports ?? []).map((r) => r.reporter_id))]
+  const allIds      = [...new Set([...buyerIds, ...reporterIds])]
+
+  const { data: profileRows } = allIds.length
+    ? await admin.from('profiles').select('id, nickname, username').in('id', allIds)
+    : { data: [] }
+
+  const profileMap: Record<string, { nickname: string; username: string }> = {}
+  for (const p of profileRows ?? []) profileMap[p.id] = { nickname: p.nickname, username: p.username }
+
+  return {
+    data: {
+      ...dream,
+      seller: seller ?? null,
+      buyers: (purchases ?? []).map((p) => ({
+        ...p,
+        profile: profileMap[p.buyer_id] ?? null,
+      })),
+      reports: (reports ?? []).map((r) => ({
+        ...r,
+        reporter: profileMap[r.reporter_id] ?? null,
+      })),
+    },
   }
 }
 
