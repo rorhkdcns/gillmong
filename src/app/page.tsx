@@ -79,7 +79,7 @@ export default async function Home() {
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 mx-auto max-w-3xl">
           <span className="mb-6 inline-block rounded-full bg-white/20 px-5 py-2 text-base font-semibold text-white ring-1 ring-white/40">
-            우리의 모든 꿈은 가치가 있습니다
+            세상에 없던 꿈 거래소
           </span>
           <h1 className="mb-6 text-3xl font-black leading-tight tracking-wide text-white md:text-5xl">
             꿈은 누구에게나<br />
