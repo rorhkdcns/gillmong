@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { hasInappropriateContent } from '@/lib/contentFilter'
 
 const GEMINI_MODEL = 'gemini-2.5-flash'
 const GEMINI_URL =
@@ -36,6 +37,15 @@ export async function POST(req: NextRequest) {
   }
 
   const admin = createAdminClient()
+
+  // 어드민 여부 확인
+  const { data: profile } = await admin
+    .from('profiles')
+    .select('is_admin')
+    .eq('id', user.id)
+    .single()
+  const isAdmin = !!profile?.is_admin
+
   const DAILY_LIMIT = 3
   // KST(UTC+9) 자정을 UTC로 환산
   const KST = 9 * 3600 * 1000
@@ -63,6 +73,17 @@ export async function POST(req: NextRequest) {
   const when   = answers?.when?.trim()   || '(없음)'
   const how    = answers?.how?.trim()    || '(없음)'
   const memory = answers?.memory?.trim() || '(없음)'
+
+  // 일반 사용자만 필터링 적용
+  if (!isAdmin) {
+    const combined = [who, when, how, memory].join(' ')
+    if (hasInappropriateContent(combined)) {
+      return NextResponse.json(
+        { error: '부적절한 표현이 포함되어 있습니다. 내용을 수정한 후 다시 시도해주세요.' },
+        { status: 400 },
+      )
+    }
+  }
 
   const prompt = `너는 한국 전통 해몽, 동양(중국/일본) 철학적 해몽, 서양 융/프로이트 심리학적 꿈 해석을 모두 통달한 30년 경력의 전문 해몽가야.
 

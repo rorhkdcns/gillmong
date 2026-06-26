@@ -29,8 +29,9 @@ const STATUS_COLOR: Record<string, string> = {
 export default function AdminReportsPage() {
   const [reports, setReports] = useState<Report[]>([])
   const [loading, setLoading] = useState(true)
-  const [deleteTarget, setDeleteTarget] = useState<{ dreamId: number; dreamTitle: string } | null>(null)
+  const [deleteTarget, setDeleteTarget] = useState<{ dreamId: number; reportId: number; dreamTitle: string } | null>(null)
   const [deleting, setDeleting] = useState(false)
+  const [deleteResult, setDeleteResult] = useState<{ ok: boolean; msg: string } | null>(null)
 
   async function fetchReports() {
     const supabase = createClient()
@@ -79,15 +80,34 @@ export default function AdminReportsPage() {
   async function confirmDeleteDream() {
     if (!deleteTarget) return
     setDeleting(true)
-    const supabase = createClient()
-    await supabase.from('dreams').delete().eq('id', deleteTarget.dreamId)
+    setDeleteResult(null)
+    const res = await fetch('/api/admin/process-report', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dreamId: deleteTarget.dreamId, reportId: deleteTarget.reportId }),
+    })
+    const json = await res.json()
     setDeleting(false)
-    setDeleteTarget(null)
-    fetchReports()
+    if (!res.ok) {
+      setDeleteResult({ ok: false, msg: json.error ?? '삭제 실패' })
+    } else {
+      setDeleteResult({
+        ok: true,
+        msg: `삭제 완료. 구매자 ${json.refunded}명에게 포인트 환불됨.`,
+      })
+      setDeleteTarget(null)
+      fetchReports()
+    }
   }
 
   return (
     <div className="p-4 sm:p-8">
+      {deleteResult && (
+        <div className={`mb-4 rounded-xl px-4 py-3 text-sm font-medium ${deleteResult.ok ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'}`}>
+          {deleteResult.msg}
+          <button onClick={() => setDeleteResult(null)} className="ml-3 text-xs opacity-60 hover:opacity-100">✕</button>
+        </div>
+      )}
       <h1 className="mb-2 text-xl font-bold text-[#01273A] sm:text-2xl">신고 관리</h1>
       <p className="mb-6 text-sm text-[#999] sm:mb-8">
         사용자 신고 내역을 확인하고 처리합니다.
@@ -151,7 +171,7 @@ export default function AdminReportsPage() {
                           반려
                         </button>
                         <button
-                          onClick={() => setDeleteTarget({ dreamId: r.dream_id, dreamTitle: r.dream_title ?? `#${r.dream_id}` })}
+                          onClick={() => { setDeleteResult(null); setDeleteTarget({ dreamId: r.dream_id, reportId: r.id, dreamTitle: r.dream_title ?? `#${r.dream_id}` }) }}
                           className="rounded border border-red-300 px-3 py-1 text-xs text-red-500 hover:bg-red-50"
                         >
                           꿈 삭제
@@ -178,7 +198,8 @@ export default function AdminReportsPage() {
               &ldquo;{deleteTarget.dreamTitle}&rdquo;
             </p>
             <p className="mb-6 text-center text-xs text-[#999]">
-              관련 신고도 함께 삭제되며 복구할 수 없습니다.
+              해당 꿈의 구매자에게 포인트가 자동 환불되며, 관련 신고는 처리완료로 변경됩니다.
+              삭제 후 복구할 수 없습니다.
             </p>
             <div className="flex gap-3">
               <button
