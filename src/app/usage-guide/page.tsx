@@ -66,6 +66,34 @@ export default function UsageGuidePage() {
 
           </div>
 
+          {/* 수수료 안내 */}
+          <div className="mt-6 overflow-hidden rounded-2xl border border-[#01273A] bg-white shadow-sm">
+            <div className="bg-[#01273A] px-6 py-4">
+              <h2 className="text-base font-bold text-white">수수료 안내</h2>
+            </div>
+            <div className="px-6 py-6">
+              <div className="flex items-center justify-between gap-6 sm:gap-12">
+                <div className="text-center">
+                  <p className="text-xs text-[#999]">판매금액</p>
+                  <p className="mt-1 text-2xl font-black text-[#01273A]">100%</p>
+                </div>
+                <div className="flex-1 border-t-2 border-dashed border-gray-200" />
+                <div className="text-center">
+                  <p className="text-xs text-[#999]">서비스 수수료</p>
+                  <p className="mt-1 text-2xl font-black text-red-400">– 20%</p>
+                </div>
+                <div className="flex-1 border-t-2 border-dashed border-gray-200" />
+                <div className="text-center">
+                  <p className="text-xs text-[#999]">판매자 수령</p>
+                  <p className="mt-1 text-2xl font-black text-[#E07B2A]">80%</p>
+                </div>
+              </div>
+              <p className="mt-5 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-[#777777]">
+                예시: 10,000원 판매 시 → 수수료 2,000원 공제 → 판매자 포인트 <strong className="text-[#01273A]">8,000P</strong> 즉시 적립
+              </p>
+            </div>
+          </div>
+
           {/* 비교표 */}
           <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
             <div className="bg-[#01273A] px-6 py-4">
