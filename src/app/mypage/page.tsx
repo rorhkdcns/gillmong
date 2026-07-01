@@ -146,7 +146,7 @@ export default async function MyPage() {
           <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm md:p-8">
             {/* 포인트 타이틀 + 잔액 */}
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-black text-[#01273A]">포인트</h2>
+              <h2 className="text-xl font-black text-[#01273A]">판매금액</h2>
               <div className="flex items-baseline gap-1">
                 <span className="text-2xl font-bold text-[#E07B2A]">{pointBalance.toLocaleString()}</span>
                 <span className="text-base font-medium text-[#555555]">원</span>
