@@ -49,9 +49,11 @@ const paymentPolicies = [
 ]
 
 const grades = [
-  { grade: 'A', label: '최상위 등급', desc: '드물게 나타나는 최고의 길몽',     color: 'bg-emerald-500' },
-  { grade: 'B', label: '상위 등급',   desc: '뚜렷한 행운의 전조가 보이는 꿈', color: 'bg-blue-500' },
-  { grade: 'C', label: '일반 등급',   desc: '긍정적인 의미를 담은 좋은 꿈',   color: 'bg-amber-400' },
+  { grade: 'A', label: '최상위 등급', desc: '드물게 나타나는 최고의 길몽',       color: 'bg-emerald-500' },
+  { grade: 'B', label: '상위 등급',   desc: '뚜렷한 행운의 전조가 보이는 꿈',   color: 'bg-blue-500'    },
+  { grade: 'C', label: '일반 등급',   desc: '긍정적인 의미를 담은 좋은 꿈',     color: 'bg-amber-400'   },
+  { grade: 'D', label: '주의 등급',   desc: '경고·부담·위험을 암시하는 꿈',     color: 'bg-orange-500'  },
+  { grade: 'E', label: '흉몽 등급',   desc: '두려움·상실·불안이 담긴 꿈',       color: 'bg-red-500'     },
 ]
 
 
@@ -305,16 +307,14 @@ export default function GuidePage() {
               <span className="text-lg text-white">GRADE</span>
             </div>
           </div>
-          <div className="grid gap-4 md:grid-cols-3 md:gap-6">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 md:gap-5">
             {grades.map((g, i) => (
-              <div key={i} className="flex items-center gap-5 rounded-2xl bg-white p-5 shadow-sm md:gap-6 md:p-8">
-                <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-xl font-bold text-white shadow md:h-16 md:w-16 md:text-2xl ${g.color}`}>
+              <div key={i} className="flex flex-col items-center rounded-2xl bg-white p-5 text-center shadow-sm md:p-6">
+                <div className={`mb-3 flex h-12 w-12 items-center justify-center rounded-full text-xl font-bold text-white shadow md:h-14 md:w-14 md:text-2xl ${g.color}`}>
                   {g.grade}
                 </div>
-                <div>
-                  <p className="mb-1 text-base text-[#01273A] md:text-lg">{g.label}</p>
-                  <p className="text-sm text-[#333333] md:text-base">{g.desc}</p>
-                </div>
+                <p className="mb-1 text-sm font-semibold text-[#01273A] md:text-base">{g.label}</p>
+                <p className="text-xs leading-relaxed text-[#555555] md:text-sm">{g.desc}</p>
               </div>
             ))}
           </div>
