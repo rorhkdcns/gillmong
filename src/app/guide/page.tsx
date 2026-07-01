@@ -10,11 +10,11 @@ import {
   Lock,
   Globe,
   BadgeCheck,
-  Coins,
   TrendingUp,
   CreditCard,
   Star,
   ChevronRight,
+  BookOpen,
 } from 'lucide-react'
 
 const processSteps = [
@@ -42,11 +42,10 @@ const trustCards = [
   },
 ]
 
-const pointPolicies = [
-  { Icon: BrainCircuit, service: 'AI 정밀 해몽',  policy: '고정 포인트 차감',       detail: '전용 분석 리포트 전체 포함' },
-  { Icon: ShoppingCart, service: '꿈 구매 (길몽)', policy: '시장 가치 기반 산정',     detail: '희소성 및 등급에 따른 차등 적용' },
-  { Icon: TrendingUp,   service: '꿈 판매 리워드', policy: '판매가의 일정 비율 적립', detail: '판매 완료 시 즉시 정산 지급' },
-  { Icon: CreditCard,   service: '포인트 충전',    policy: '유료 결제 시 충전',       detail: '다양한 간편 결제 수단 지원' },
+const paymentPolicies = [
+  { Icon: BrainCircuit, service: 'AI 정밀 해몽',  policy: '고정 요금 결제',      detail: '전용 분석 리포트 전체 포함' },
+  { Icon: ShoppingCart, service: '꿈 구매 (길몽)', policy: '시장 가치 기반 산정', detail: '희소성 및 등급에 따라 자동 적용' },
+  { Icon: TrendingUp,   service: '꿈 판매 정산',   policy: '판매가의 80% 정산',   detail: '구매확정 또는 결제 후 7일 경과 시 자동 정산 (수수료 20%)' },
 ]
 
 const grades = [
@@ -79,17 +78,39 @@ export default function GuidePage() {
               </p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6 md:p-10">
-              <Coins className="mb-4 text-[#FFD700] md:mb-6" size={28} strokeWidth={1.5} />
-              <h3 className="mb-3 text-lg text-white md:mb-4 md:text-xl">포인트 기반 거래</h3>
+              <CreditCard className="mb-4 text-[#FFD700] md:mb-6" size={28} strokeWidth={1.5} />
+              <h3 className="mb-3 text-lg text-white md:mb-4 md:text-xl">안전 결제 시스템</h3>
               <p className="text-sm leading-relaxed text-white/85 md:text-base">
-                좋은 꿈을 판매하여 리워드를 얻거나, 필요한 행운을 포인트로 구매할 수 있는 독창적인 마켓 플랫폼입니다.
+                좋은 꿈을 판매해 수익을 얻거나, 필요한 행운을 안전하게 결제로 구매할 수 있는 독창적인 마켓 플랫폼입니다.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ───── 2. 서비스 프로세스 ───── */}
+      {/* ───── 2. 한국 꿈 문화 ───── */}
+      <section className="bg-[#F7F2E8] px-5 py-14 md:px-8 md:py-28">
+        <div className="mx-auto max-w-4xl">
+          <div className="mb-8 text-center md:mb-14">
+            <p className="mb-3 text-xs tracking-widest text-[#9B7D4B] md:mb-4 md:text-base">KOREAN DREAM CULTURE</p>
+            <h2 className="text-2xl text-[#01273A] md:text-3xl">대한민국 고유의 문화, 꿈을 사고팔다</h2>
+          </div>
+          <div className="mx-auto max-w-2xl rounded-2xl border border-[#E8D9B8] bg-white/70 p-7 md:p-12">
+            <BookOpen className="mb-5 text-[#9B7D4B] md:mb-8" size={28} strokeWidth={1.5} />
+            <p className="mb-4 text-sm leading-relaxed text-[#444444] md:text-base md:leading-loose">
+              예로부터 한국에는 좋은 꿈, 특히 복권 당첨이나 큰 행운을 암시하는 &quot;길몽&quot;을 사고파는 풍습이 있었습니다.
+              태몽을 나눠주고 답례를 받거나, 복권을 사기 전 좋은 꿈을 미리 구매하는 문화 —
+              꿈은 오랫동안 한국인의 삶 속에서 하나의 가치있는 자산으로 여겨져 왔습니다.
+            </p>
+            <p className="text-sm leading-relaxed text-[#444444] md:text-base md:leading-loose">
+              GILLMONG은 한국 고유의 이 전통을 디지털로 옮겨와,
+              누구나 안전하고 투명하게 꿈을 거래할 수 있는 플랫폼을 만들었습니다.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ───── 3. 서비스 프로세스 ───── */}
       <section className="bg-white px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl">
           <div className="mb-10 text-center md:mb-20">
@@ -132,7 +153,7 @@ export default function GuidePage() {
         </div>
       </section>
 
-      {/* ───── 3. 행운을 구매하세요 ───── */}
+      {/* ───── 4. 행운을 구매하세요 ───── */}
       <section className="bg-[#F2F2F2] px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl md:flex md:items-start md:gap-20">
           <div className="mb-8 text-center md:mb-0 md:w-1/2 md:text-left">
@@ -145,7 +166,7 @@ export default function GuidePage() {
               {[
                 '상징, 요약, 운세 등급 확인',
                 '해몽 및 행운 번호 제공',
-                '포인트 결제 시 해몽 전문 열람',
+                '결제 완료 시 해몽 전문 즉시 열람',
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-3 md:gap-4">
                   <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#E07B2A] text-xs text-white md:h-7 md:w-7">
@@ -158,7 +179,7 @@ export default function GuidePage() {
           </div>
           <div className="mt-8 rounded-2xl bg-[#01273A] p-6 shadow-sm md:mt-0 md:w-1/2 md:p-10">
             <p className="mb-4 text-base text-white md:mb-6 md:text-xl">구매 흐름</p>
-            {['꿈 마켓 탐색', '운세 등급 & 상징 확인', '포인트 결제', '행운 상징물 소유'].map((step, i) => (
+            {['꿈 마켓 탐색', '운세 등급 & 상징 확인', '직접 결제', '행운 상징물 소유'].map((step, i) => (
               <div key={i} className="flex items-center gap-4 border-b border-white/10 py-4 last:border-0 md:gap-5 md:py-5">
                 <span className="text-sm text-[#FFD700] md:text-base">{String(i + 1).padStart(2, '0')}</span>
                 <span className="text-sm text-white md:text-lg">{step}</span>
@@ -168,7 +189,7 @@ export default function GuidePage() {
         </div>
       </section>
 
-      {/* ───── 4. 당신의 꿈이 수익이 됩니다 ───── */}
+      {/* ───── 5. 당신의 꿈이 수익이 됩니다 ───── */}
       <section className="bg-white px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl md:flex md:flex-row-reverse md:items-start md:gap-20">
           <div className="mb-8 text-center md:mb-0 md:w-1/2 md:text-left">
@@ -199,7 +220,7 @@ export default function GuidePage() {
         </div>
       </section>
 
-      {/* ───── 5. 안심하고 거래하세요 ───── */}
+      {/* ───── 6. 안심하고 거래하세요 ───── */}
       <section className="bg-[#F2F2F2] px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl">
           <div className="mb-10 text-center md:mb-20">
@@ -218,17 +239,17 @@ export default function GuidePage() {
         </div>
       </section>
 
-      {/* ───── 6. 포인트 정책 안내 ───── */}
+      {/* ───── 7. 결제 및 정산 정책 안내 ───── */}
       <section className="bg-white px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl">
           <div className="mb-10 text-center md:mb-20">
-            <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">POINT POLICY</p>
-            <h2 className="text-2xl text-[#01273A] md:text-3xl">포인트 정책 안내</h2>
+            <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">PAYMENT POLICY</p>
+            <h2 className="text-2xl text-[#01273A] md:text-3xl">결제 및 정산 정책 안내</h2>
           </div>
 
           {/* 모바일: 카드형 */}
           <div className="flex flex-col gap-4 md:hidden">
-            {pointPolicies.map((row, i) => (
+            {paymentPolicies.map((row, i) => (
               <div key={i} className="rounded-xl border border-gray-200 bg-white p-5">
                 <div className="mb-3 flex items-center gap-2">
                   <row.Icon size={18} strokeWidth={1.5} className="shrink-0 text-[#E07B2A]" />
@@ -251,7 +272,7 @@ export default function GuidePage() {
                 </tr>
               </thead>
               <tbody>
-                {pointPolicies.map((row, i) => (
+                {paymentPolicies.map((row, i) => (
                   <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-3">
@@ -269,7 +290,7 @@ export default function GuidePage() {
         </div>
       </section>
 
-      {/* ───── 7. 운세 등급 시스템 ───── */}
+      {/* ───── 8. 운세 등급 시스템 ───── */}
       <section className="bg-[#F2F2F2] px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl">
           <div className="mb-10 text-center md:mb-20">
