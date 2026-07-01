@@ -59,7 +59,7 @@ export default function PointTabs() {
       ])
 
       setRevenue(
-        (pointData ?? []).map(row => ({
+        (pointData ?? []).map((row: { created_at: string; description: string | null; amount: number }) => ({
           date:        formatDate(row.created_at),
           description: row.description ?? '',
           amount:      row.amount,
