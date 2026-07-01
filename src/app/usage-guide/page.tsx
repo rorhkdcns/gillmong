@@ -89,7 +89,55 @@ export default function UsageGuidePage() {
                 </div>
               </div>
               <p className="mt-5 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-[#777777]">
-                예시: 10,000원 판매 시 → 수수료 2,000원 공제 → 판매자 정산금액 <strong className="text-[#01273A]">8,000원</strong> 즉시 적립
+                예시: 10,000원 판매 시 → 수수료 2,000원 공제 → 판매자 정산금액 <strong className="text-[#01273A]">8,000원</strong><br />
+                구매자 확정 또는 결제 후 7일 경과 시 자동 정산됩니다.
+              </p>
+            </div>
+          </div>
+
+          {/* 에스크로 정산 프로세스 */}
+          <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+            <div className="bg-[#01273A] px-6 py-4">
+              <h2 className="text-base font-bold text-white">에스크로 정산 프로세스</h2>
+            </div>
+            <div className="px-6 py-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-0">
+                {/* Step 1 */}
+                <div className="flex flex-1 flex-col items-center text-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#01273A] text-sm font-bold text-white">1</div>
+                  <p className="mt-2 text-xs font-semibold text-[#01273A]">구매자 결제</p>
+                  <p className="mt-1 text-xs leading-relaxed text-[#777]">카드·간편결제<br />결제금 에스크로 보관</p>
+                </div>
+                <div className="hidden flex-1 items-center sm:flex">
+                  <div className="w-full border-t-2 border-dashed border-gray-200" />
+                </div>
+                {/* Step 2 */}
+                <div className="flex flex-1 flex-col items-center text-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#E07B2A] text-sm font-bold text-white">2</div>
+                  <p className="mt-2 text-xs font-semibold text-[#E07B2A]">구매확정</p>
+                  <p className="mt-1 text-xs leading-relaxed text-[#777]">7일 이내 확정 버튼<br />클릭 시 즉시 정산</p>
+                </div>
+                <div className="hidden flex-1 items-center sm:flex">
+                  <div className="w-full border-t-2 border-dashed border-gray-200" />
+                </div>
+                {/* Step 3 */}
+                <div className="flex flex-1 flex-col items-center text-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-sm font-bold text-white">3</div>
+                  <p className="mt-2 text-xs font-semibold text-emerald-600">자동 정산</p>
+                  <p className="mt-1 text-xs leading-relaxed text-[#777]">결제 후 7일 경과 시<br />판매금의 80% 자동 지급</p>
+                </div>
+                <div className="hidden flex-1 items-center sm:flex">
+                  <div className="w-full border-t-2 border-dashed border-gray-200" />
+                </div>
+                {/* Step 4 */}
+                <div className="flex flex-1 flex-col items-center text-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-300 text-sm font-bold text-white">4</div>
+                  <p className="mt-2 text-xs font-semibold text-gray-500">분쟁 신청</p>
+                  <p className="mt-1 text-xs leading-relaxed text-[#777]">7일 내 환불 요청 시<br />관리자 검토 후 처리</p>
+                </div>
+              </div>
+              <p className="mt-6 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-[#777777]">
+                정산된 금액은 마이페이지 → <strong className="text-[#01273A]">출금 신청</strong>을 통해 현금으로 받을 수 있습니다. (최소 5,000원 · 1,000원 단위)
               </p>
             </div>
           </div>
