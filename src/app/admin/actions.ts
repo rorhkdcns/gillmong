@@ -517,3 +517,106 @@ export async function adminHandleWithdrawal(
   if (error) return { error: error.message }
   return { success: true }
 }
+
+// ── 에스크로 주문 관리 ─────────────────────────────────────────
+export async function getAdminOrders(status: string): Promise<unknown[]> {
+  const admin = createAdminClient()
+  const { data: orders } = await admin
+    .from('orders')
+    .select('id, buyer_id, seller_id, dream_id, amount, seller_amount, payment_method, status, paid_at, confirm_deadline, dispute_reason, settled_at')
+    .eq('status', status)
+    .order('paid_at', { ascending: false })
+
+  if (!orders || orders.length === 0) return []
+
+  const buyerIds  = [...new Set(orders.map((o) => o.buyer_id))]
+  const sellerIds = [...new Set(orders.map((o) => o.seller_id))]
+  const dreamIds  = [...new Set(orders.map((o) => o.dream_id))]
+  const allUserIds = [...new Set([...buyerIds, ...sellerIds])]
+
+  const [{ data: profileRows }, { data: dreamRows }] = await Promise.all([
+    admin.from('profiles').select('id, nickname, username').in('id', allUserIds),
+    admin.from('dreams').select('id, title').in('id', dreamIds),
+  ])
+
+  const profileMap: Record<string, { nickname: string; username: string }> = {}
+  for (const p of profileRows ?? []) profileMap[p.id] = { nickname: p.nickname, username: p.username }
+
+  const dreamMap: Record<number, string> = {}
+  for (const d of dreamRows ?? []) dreamMap[d.id] = d.title
+
+  return orders.map((o) => ({
+    ...o,
+    buyer_profile:  profileMap[o.buyer_id]  ?? null,
+    seller_profile: profileMap[o.seller_id] ?? null,
+    dream_title:    dreamMap[o.dream_id]    ?? null,
+  }))
+}
+
+export async function adminSettleOrder(
+  orderId: string,
+): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const { data: order } = await admin
+    .from('orders')
+    .select('id, seller_id, seller_amount, status')
+    .eq('id', orderId)
+    .single()
+
+  if (!order) return { error: '주문을 찾을 수 없습니다' }
+  if (order.status === 'settled') return { success: true }
+
+  const now = new Date().toISOString()
+  const { data: sellerProfile } = await admin
+    .from('profiles')
+    .select('points')
+    .eq('id', order.seller_id)
+    .single()
+
+  await Promise.all([
+    admin.from('orders').update({
+      status:       'settled',
+      confirmed_at: now,
+      settled_at:   now,
+      updated_at:   now,
+    }).eq('id', orderId),
+    ...(sellerProfile ? [
+      admin.from('profiles')
+        .update({ points: sellerProfile.points + order.seller_amount })
+        .eq('id', order.seller_id),
+      admin.from('point_logs').insert({
+        user_id:     order.seller_id,
+        amount:      order.seller_amount,
+        type:        'earn',
+        description: `꿈 판매 정산 (관리자 처리, 주문 ${orderId.substring(0, 8)}...)`,
+      }),
+    ] : []),
+  ])
+  return { success: true }
+}
+
+export async function adminRefundOrder(
+  orderId: string,
+): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const { data: order } = await admin
+    .from('orders')
+    .select('id, buyer_id, dream_id, amount, nicepay_tid, status')
+    .eq('id', orderId)
+    .single()
+
+  if (!order) return { error: '주문을 찾을 수 없습니다' }
+  if (order.status === 'refunded') return { success: true }
+
+  const now = new Date().toISOString()
+
+  await Promise.all([
+    admin.from('orders').update({ status: 'refunded', updated_at: now }).eq('id', orderId),
+    // 구매 기록 삭제 (열람 권한 회수)
+    admin.from('purchases').delete().eq('buyer_id', order.buyer_id).eq('dream_id', order.dream_id),
+    // 꿈 판매완료 해제
+    admin.from('dreams').update({ is_sold: false }).eq('id', order.dream_id),
+  ])
+
+  return { success: true }
+}

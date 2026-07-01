@@ -7,8 +7,24 @@ import type { DbDream } from '@/lib/supabase/types'
 import { CATEGORY_PATH } from '@/lib/supabase/types'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
+import Script from 'next/script'
 import { purchaseDream, deleteDream } from '../actions'
 import ReportModal from './ReportModal'
+
+const PAY_METHODS = [
+  { id: 'card',           label: '신용·체크카드', desc: '국내외 모든 카드' },
+  { id: 'vbank',          label: '가상계좌',        desc: '72시간 내 입금' },
+  { id: 'kakaopay',       label: '카카오페이',      desc: 'Kakao Pay' },
+  { id: 'naverpayCard',   label: '네이버페이',      desc: 'Naver Pay' },
+  { id: 'samsungpayCard', label: '삼성페이',        desc: 'Samsung Pay' },
+] as const
+type PayMethodId = typeof PAY_METHODS[number]['id']
+
+declare global {
+  interface Window {
+    AUTHNICE?: { requestPay: (config: Record<string, unknown>) => void }
+  }
+}
 
 const INTERP_SECTIONS = [
   { pattern: /한국\s*전통\s*해몽\s*관점\s*:/, color: '#01273A' },
@@ -70,6 +86,8 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deleting, setDeleting]               = useState(false)
   const [deleteError, setDeleteError]         = useState('')
+  const [payMethod, setPayMethod]             = useState<PayMethodId>('card')
+  const [payStep, setPayStep]                 = useState<'method' | 'confirm'>('method')
 
   const categoryPath = CATEGORY_PATH[dream.category] ?? '/'
   const afterBalance = myPoints !== null ? myPoints - dream.price : null
@@ -80,6 +98,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
   async function openPurchaseModal() {
     setLoadingPoints(true)
     setBuyError('')
+    setPayStep('method')
     const supabase = createClient()
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.user) { setLoadingPoints(false); router.push('/auth/login'); return }
@@ -87,6 +106,47 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
     setMyPoints(profile?.points ?? 0)
     setLoadingPoints(false)
     setShowModal(true)
+  }
+
+  async function handleNicepayPurchase() {
+    if (!window.AUTHNICE) { setBuyError('결제 모듈 로딩 중입니다. 잠시 후 다시 시도해주세요.'); return }
+    setBuying(true)
+    setBuyError('')
+    try {
+      const res = await fetch('/api/payment/create-order', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ dreamId: dream.id, paymentMethod: payMethod }),
+      })
+      const pd = await res.json()
+      if (!res.ok) throw new Error(pd.error ?? '주문 준비 실패')
+
+      const config: Record<string, unknown> = {
+        clientId:   process.env.NEXT_PUBLIC_NICEPAY_CLIENT_ID ?? 'R2_017e98e61ba345f298d6b497b6c52afa',
+        method:     payMethod,
+        orderId:    pd.orderId,
+        amount:     pd.amount,
+        goodsName:  pd.goodsName,
+        returnUrl:  pd.returnUrl,
+        buyerName:  pd.buyerName,
+        buyerEmail: pd.buyerEmail,
+        fnError: (result: { errorMsg?: string }) => {
+          console.error('[Purchase] 결제창 오류/취소:', result)
+          setBuyError(result.errorMsg ?? '결제 중 오류가 발생했습니다.')
+          setBuying(false)
+        },
+      }
+
+      if (payMethod === 'vbank') {
+        config.vbankHolder     = '길몽상점'
+        config.vbankValidHours = 72
+      }
+
+      window.AUTHNICE.requestPay(config)
+    } catch (err) {
+      setBuyError(err instanceof Error ? err.message : '오류 발생')
+      setBuying(false)
+    }
   }
 
   async function handleDelete() {
@@ -118,6 +178,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
+      <Script src="https://pay.nicepay.co.kr/v1/js/" strategy="lazyOnload" />
       <SiteHeader />
 
       {/* 뒤로가기 */}
@@ -413,57 +474,136 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
         <ReportModal dreamId={dream.id} onClose={() => setShowReport(false)} />
       )}
 
-      {/* 구매 확인 모달 */}
+      {/* 구매 모달 */}
       {showModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
           onClick={(e) => { if (e.target === e.currentTarget) { setShowModal(false); setBuyError('') } }}
         >
-          <div className="w-full max-w-sm rounded-xl bg-white p-8 shadow-2xl">
-            <h2 className="mb-6 text-center text-xl text-[#01273A]">구매 확인</h2>
-            <div className="mb-5 rounded-xl bg-[#F7F7F5] p-5">
-              <p className="mb-1 text-sm text-[#777777]">구매할 꿈</p>
-              <p className="mb-3 font-semibold text-[#01273A]">{dream.title}</p>
+          <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-2xl">
+            {/* 꿈 정보 요약 */}
+            <div className="mb-4 rounded-xl bg-[#F7F7F5] p-4">
+              <p className="mb-0.5 text-xs text-[#777777]">구매할 꿈</p>
+              <p className="mb-2 font-semibold text-[#01273A] text-sm">{dream.title}</p>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-[#777777]">감정가</span>
-                <span className="text-lg font-bold text-[#E07B2A]">{dream.price.toLocaleString()} P</span>
+                <span className="text-xs text-[#777777]">결제금액</span>
+                <span className="text-base font-bold text-[#E07B2A]">₩{dream.price.toLocaleString()}</span>
               </div>
             </div>
-            <div className="mb-6 space-y-2 rounded-xl border border-gray-100 p-4 text-sm">
-              <div className="flex items-center justify-between">
-                <span className="text-[#777777]">내 포인트 잔액</span>
-                <span className="font-semibold text-[#333333]">{myPoints?.toLocaleString() ?? '-'} P</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-[#777777]">구매 후 잔액</span>
-                <span className={`font-semibold ${afterBalance !== null && afterBalance < 0 ? 'text-red-500' : 'text-[#333333]'}`}>
-                  {afterBalance !== null ? afterBalance.toLocaleString() : '-'} P
-                </span>
-              </div>
-            </div>
-            {afterBalance !== null && afterBalance < 0 && (
-              <p className="mb-4 rounded-xl bg-red-50 px-3 py-2 text-center text-sm text-red-500">
-                포인트가 부족합니다. 충전 후 이용해주세요.
-              </p>
+
+            {payStep === 'method' ? (
+              <>
+                <h2 className="mb-3 text-base font-bold text-[#01273A]">결제수단 선택</h2>
+
+                {/* 포인트 결제 (보유 포인트 있을 때만) */}
+                {myPoints !== null && myPoints >= dream.price && (
+                  <div className="mb-3">
+                    <button
+                      onClick={() => setPayStep('confirm')}
+                      className="w-full rounded-xl border-2 border-[#E07B2A] bg-orange-50 px-4 py-3 text-left transition hover:bg-orange-100"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-bold text-[#E07B2A]">포인트로 결제</p>
+                          <p className="text-xs text-gray-500">보유: {myPoints.toLocaleString()} P (즉시 확정)</p>
+                        </div>
+                        <span className="text-xs bg-[#E07B2A] text-white rounded-full px-2 py-0.5">추천</span>
+                      </div>
+                    </button>
+                    <div className="my-3 flex items-center gap-2">
+                      <div className="flex-1 border-t border-gray-200" />
+                      <span className="text-xs text-gray-400">또는</span>
+                      <div className="flex-1 border-t border-gray-200" />
+                    </div>
+                  </div>
+                )}
+
+                {/* NicePay 결제수단 */}
+                <div className="space-y-2">
+                  {PAY_METHODS.map((m) => (
+                    <button
+                      key={m.id}
+                      onClick={() => setPayMethod(m.id)}
+                      className={`flex w-full items-center justify-between rounded-xl border-2 px-4 py-3 text-left transition ${
+                        payMethod === m.id
+                          ? 'border-[#01273A] bg-[#01273A]/5'
+                          : 'border-gray-200 hover:border-gray-300'
+                      }`}
+                    >
+                      <div>
+                        <p className={`text-sm font-bold ${payMethod === m.id ? 'text-[#01273A]' : 'text-gray-700'}`}>{m.label}</p>
+                        <p className="text-xs text-gray-400">{m.desc}</p>
+                      </div>
+                      {payMethod === m.id && (
+                        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#01273A]">
+                          <svg className="h-3 w-3 text-white" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+
+                {buyError && <p className="mt-3 text-center text-sm text-red-500">{buyError}</p>}
+
+                <p className="mt-3 text-center text-xs text-gray-400">
+                  결제 후 7일 내 구매확정 또는 환불요청 가능 · 7일 경과 시 자동 정산
+                </p>
+
+                <div className="mt-4 flex gap-3">
+                  <button
+                    onClick={() => { setShowModal(false); setBuyError('') }}
+                    disabled={buying}
+                    className="flex-1 border border-gray-300 py-3 text-sm text-[#555555] transition-colors hover:border-[#01273A] hover:text-[#01273A]"
+                  >
+                    취소
+                  </button>
+                  <button
+                    onClick={handleNicepayPurchase}
+                    disabled={buying}
+                    className="flex-1 rounded-xl bg-[#01273A] py-3 text-sm font-semibold text-white transition-all hover:brightness-90 disabled:opacity-50"
+                  >
+                    {buying ? '처리 중...' : `${PAY_METHODS.find(m => m.id === payMethod)?.label ?? ''} 결제`}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* 포인트 결제 확인 단계 */}
+                <h2 className="mb-4 text-center text-base font-bold text-[#01273A]">포인트 결제 확인</h2>
+                <div className="mb-4 space-y-2 rounded-xl border border-gray-100 p-4 text-sm">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[#777777]">내 포인트 잔액</span>
+                    <span className="font-semibold text-[#333333]">{myPoints?.toLocaleString() ?? '-'} P</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[#777777]">결제 후 잔액</span>
+                    <span className="font-semibold text-[#333333]">
+                      {afterBalance !== null ? afterBalance.toLocaleString() : '-'} P
+                    </span>
+                  </div>
+                </div>
+                <p className="mb-4 text-center text-xs text-[#999]">포인트 결제는 즉시 구매확정 처리됩니다.</p>
+                {buyError && <p className="mb-3 text-center text-sm text-red-500">{buyError}</p>}
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => { setPayStep('method'); setBuyError('') }}
+                    disabled={buying}
+                    className="flex-1 border border-gray-300 py-3 text-sm text-[#555555] transition-colors hover:border-[#01273A] hover:text-[#01273A]"
+                  >
+                    뒤로
+                  </button>
+                  <button
+                    onClick={handlePurchase}
+                    disabled={buying}
+                    className="flex-1 rounded-xl bg-[#E07B2A] py-3 text-sm font-semibold text-white transition-all hover:brightness-90 disabled:opacity-50"
+                  >
+                    {buying ? '처리 중...' : '포인트로 구매'}
+                  </button>
+                </div>
+              </>
             )}
-            {buyError && <p className="mb-4 text-center text-sm text-red-500">{buyError}</p>}
-            <p className="mb-5 text-center text-xs text-[#999]">구매 후에는 환불이 불가합니다.</p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => { setShowModal(false); setBuyError('') }}
-                disabled={buying}
-                className="flex-1 border border-gray-300 py-3 text-[#555555] transition-colors hover:border-[#01273A] hover:text-[#01273A]"
-              >
-                취소
-              </button>
-              <button
-                onClick={handlePurchase}
-                disabled={buying || (afterBalance !== null && afterBalance < 0)}
-                className="flex-1 rounded-xl bg-[#01273A] py-3 font-semibold text-white transition-all hover:brightness-90 disabled:opacity-50"
-              >
-                {buying ? '처리 중...' : '구매하기'}
-              </button>
-            </div>
           </div>
         </div>
       )}

@@ -5,6 +5,8 @@ import SiteFooter from '@/components/SiteFooter'
 import LogoutButton from './_components/LogoutButton'
 import PointTabs from './_components/PointTabs'
 import DreamListSection, { type DreamListItem } from './_components/DreamListSection'
+import EscrowOrders from './_components/EscrowOrders'
+import { getMyOrders } from '@/app/actions'
 
 function formatDate(iso: string) {
   const d = new Date(iso)
@@ -18,14 +20,15 @@ export default async function MyPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
 
-  // 프로필 + 공개 꿈 + 개인 저장 꿈 + 구매한 꿈 + 판매한 꿈 병렬 조회
-  const [profileRes, myDreamsRes, privateDreamsRes, purchasedRes, soldRes, inquiriesRes] = await Promise.all([
+  // 프로필 + 공개 꿈 + 개인 저장 꿈 + 구매한 꿈 + 판매한 꿈 + 에스크로 주문 병렬 조회
+  const [profileRes, myDreamsRes, privateDreamsRes, purchasedRes, soldRes, inquiriesRes, escrowOrders] = await Promise.all([
     supabase.from('profiles').select('nickname, username, points, is_admin').eq('id', user.id).single(),
     supabase.from('dreams').select('id, title, grade, price, is_sold, created_at').eq('user_id', user.id).order('created_at', { ascending: false }),
     supabase.from('saved_dreams').select('id, title, grade, created_at').eq('user_id', user.id).order('created_at', { ascending: false }),
     supabase.from('purchases').select('price, created_at, dreams(id, title, grade, price)').eq('buyer_id', user.id).order('created_at', { ascending: false }),
     supabase.from('dreams').select('id, title, grade, price, created_at, purchases(price, created_at)').eq('user_id', user.id).eq('is_sold', true).order('created_at', { ascending: false }),
     supabase.from('inquiries').select('id, title, status, answer, created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(10),
+    getMyOrders(),
   ])
 
   const profile       = profileRes.data
@@ -142,7 +145,7 @@ export default async function MyPage() {
           {/* 2. 포인트 */}
           <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm md:p-8">
             {/* 포인트 타이틀 + 잔액 */}
-            <div className="mb-5 flex items-center justify-between">
+            <div className="mb-4 flex items-center justify-between">
               <h2 className="text-xl font-black text-[#01273A]">포인트</h2>
               <div className="flex items-baseline gap-1">
                 <span className="text-2xl font-bold text-[#E07B2A]">{pointBalance.toLocaleString()}</span>
@@ -150,12 +153,16 @@ export default async function MyPage() {
               </div>
             </div>
 
-            {/* 버튼 */}
-            <div className="mb-5 flex gap-3">
-              <a href="/charge" className="flex-1 rounded-lg bg-[#E07B2A] py-2.5 text-center text-sm font-semibold text-white transition-all hover:brightness-90">
-                포인트 충전
-              </a>
-              <a href="/mypage/withdrawal" className="flex-1 rounded-lg border border-[#01273A] bg-white py-2.5 text-center text-sm font-semibold text-[#01273A] transition-all hover:bg-[#01273A] hover:text-white">
+            {/* 충전 종료 안내 */}
+            {pointBalance > 0 && (
+              <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs text-amber-700">
+                보유 포인트는 사용 가능합니다. 충전 서비스는 종료되었습니다.
+              </div>
+            )}
+
+            {/* 버튼 — 충전 버튼 제거, 출금 신청만 유지 */}
+            <div className="mb-5">
+              <a href="/mypage/withdrawal" className="block w-full rounded-lg border border-[#01273A] bg-white py-2.5 text-center text-sm font-semibold text-[#01273A] transition-all hover:bg-[#01273A] hover:text-white">
                 출금 신청
               </a>
             </div>
@@ -172,6 +179,10 @@ export default async function MyPage() {
 
           {/* 5. 구매한 꿈 */}
           <DreamListSection title="구매한 꿈" items={purchasedItems} />
+
+          {/* 5-1. 결제 주문 내역 (에스크로) */}
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+          <EscrowOrders orders={escrowOrders as any} />
 
           {/* 6. 판매 현황 */}
           <DreamListSection title="판매 현황" items={soldItems} />

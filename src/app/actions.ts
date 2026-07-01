@@ -149,3 +149,31 @@ export async function deleteMyAccountAction(): Promise<{ error?: string }> {
   await supabase.auth.signOut()
   redirect('/')
 }
+
+// ── 에스크로 주문 내역 (마이페이지) ────────────────────────────────
+export async function getMyOrders() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return []
+
+  const admin = createAdminClient()
+  const { data: orders } = await admin
+    .from('orders')
+    .select('id, dream_id, amount, payment_method, status, paid_at, confirm_deadline, dispute_reason, settled_at')
+    .eq('buyer_id', user.id)
+    .in('status', ['paid_escrow', 'confirmed', 'settled', 'disputed', 'refunded'])
+    .order('paid_at', { ascending: false })
+
+  if (!orders || orders.length === 0) return []
+
+  const dreamIds = [...new Set(orders.map((o) => o.dream_id))]
+  const { data: dreams } = await admin
+    .from('dreams')
+    .select('id, title')
+    .in('id', dreamIds)
+
+  const dreamMap: Record<number, string> = {}
+  for (const d of dreams ?? []) dreamMap[d.id] = d.title
+
+  return orders.map((o) => ({ ...o, dream_title: dreamMap[o.dream_id] ?? null }))
+}

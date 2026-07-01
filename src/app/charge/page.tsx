@@ -24,11 +24,40 @@ declare global {
   }
 }
 
+// 포인트 충전 서비스 종료 — 새 에스크로 결제 방식으로 전환됨 (2026-07-01)
+const CHARGE_DISABLED = true
+
 export default function ChargePage() {
   const [amount, setAmount]   = useState(0)
   const [method, setMethod]   = useState<MethodId>('card')
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
+
+  if (CHARGE_DISABLED) {
+    return (
+      <>
+        <SiteHeader />
+        <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-16 text-center">
+          <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
+            <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+            </svg>
+          </div>
+          <h1 className="mb-3 text-2xl font-bold text-[#01273A]">포인트 충전 서비스 종료</h1>
+          <p className="mb-2 text-gray-600">포인트 충전 서비스가 종료되었습니다.</p>
+          <p className="mb-6 text-gray-600">이제 꿈 게시물을 <strong>건별 직접 결제</strong>로 구매하실 수 있습니다.</p>
+          <p className="mb-8 text-sm text-gray-400">보유하신 포인트 잔액은 소멸 시까지 기존 방식으로 사용 가능합니다.</p>
+          <a
+            href="/mypage"
+            className="inline-block rounded-lg bg-[#01273A] px-8 py-3 font-semibold text-white transition hover:brightness-90"
+          >
+            마이페이지로 이동
+          </a>
+        </div>
+        <SiteFooter />
+      </>
+    )
+  }
 
   useEffect(() => {
     if (!loading) return
