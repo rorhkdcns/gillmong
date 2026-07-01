@@ -5,7 +5,7 @@ export default function SiteFooter() {
 
         {/* 고객센터 */}
         <div className="flex flex-col gap-0.5 text-sm text-[#555555]">
-          <span>고객센터 : gillmong@nate.com</span>
+          <span>고객센터 : admin@gillmong.com</span>
           <span>운영시간 : 평일 10:00 ~ 18:00</span>
         </div>
 

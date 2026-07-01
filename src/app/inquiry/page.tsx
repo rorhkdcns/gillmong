@@ -125,7 +125,7 @@ export default function InquiryPage() {
             <ul className="mt-2 space-y-1 text-xs text-amber-600">
               <li>• 답변은 마이페이지 → 1:1 문의 내역에서 확인하실 수 있습니다.</li>
               <li>• 운영시간: 평일 10:00 ~ 18:00 (주말·공휴일 제외)</li>
-              <li>• 긴급 문의: gillmong@nate.com</li>
+              <li>• 긴급 문의: admin@gillmong.com</li>
             </ul>
           </div>
         </div>

@@ -26,10 +26,10 @@ export default function SupportPage() {
                 영업일 기준 1~2일 내에 답변드립니다.
               </p>
               <a
-                href="mailto:gillmong@nate.com"
+                href="mailto:admin@gillmong.com"
                 className="inline-block rounded-xl bg-[#01273A] px-5 py-2.5 text-sm font-semibold text-white hover:brightness-90 transition-all"
               >
-                gillmong@nate.com
+                admin@gillmong.com
               </a>
             </div>
 
