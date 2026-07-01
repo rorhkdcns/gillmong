@@ -4,11 +4,9 @@ import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { getMyWithdrawals } from '@/app/actions'
 
-type TabKey = 'charge' | 'use' | 'revenue' | 'withdrawal'
+type TabKey = 'revenue' | 'withdrawal'
 
 const TAB_LABELS: Record<TabKey, string> = {
-  charge:     '충전 내역 (종료)',
-  use:        '사용 내역',
   revenue:    '수익 내역',
   withdrawal: '출금 내역',
 }
@@ -39,8 +37,8 @@ function formatDate(iso: string) {
 }
 
 export default function PointTabs() {
-  const [active, setActive]           = useState<TabKey>('charge')
-  const [logs, setLogs]               = useState<Record<'charge' | 'use' | 'revenue', LogRow[]>>({ charge: [], use: [], revenue: [] })
+  const [active, setActive]           = useState<TabKey>('revenue')
+  const [revenue, setRevenue]         = useState<LogRow[]>([])
   const [withdrawals, setWithdrawals] = useState<WithdrawalRow[]>([])
   const [loading, setLoading]         = useState(true)
 
@@ -55,19 +53,18 @@ export default function PointTabs() {
           .from('point_logs')
           .select('amount, type, description, created_at')
           .eq('user_id', session.user.id)
+          .eq('type', 'earn')
           .order('created_at', { ascending: false }),
         getMyWithdrawals(),
       ])
 
-      const buckets: Record<'charge' | 'use' | 'revenue', LogRow[]> = { charge: [], use: [], revenue: [] }
-      for (const row of pointData ?? []) {
-        const entry: LogRow = { date: formatDate(row.created_at), description: row.description ?? '', amount: row.amount }
-        if (row.type === 'charge')      buckets.charge.push(entry)
-        else if (row.type === 'use')    buckets.use.push(entry)
-        else if (row.type === 'earn')   buckets.revenue.push(entry)
-      }
-
-      setLogs(buckets)
+      setRevenue(
+        (pointData ?? []).map(row => ({
+          date:        formatDate(row.created_at),
+          description: row.description ?? '',
+          amount:      row.amount,
+        }))
+      )
       setWithdrawals(wData.map(w => ({
         id:       w.id,
         date:     formatDate(w.created_at),
@@ -125,18 +122,18 @@ export default function PointTabs() {
             })}
           </ul>
         )
-      ) : logs[active as 'charge' | 'use' | 'revenue'].length === 0 ? (
+      ) : revenue.length === 0 ? (
         <p className="py-8 text-center text-sm text-[#555555]">내역이 없습니다</p>
       ) : (
         <ul className="divide-y divide-gray-200">
-          {logs[active as 'charge' | 'use' | 'revenue'].map((row, i) => (
+          {revenue.map((row, i) => (
             <li key={i} className="flex items-center justify-between py-4">
               <div>
                 <p className="text-base font-medium text-[#333333]">{row.description}</p>
                 <p className="mt-0.5 text-xs text-[#666666]">{row.date}</p>
               </div>
-              <span className={`text-base font-bold ${row.amount > 0 ? 'text-emerald-600' : 'text-red-400'}`}>
-                {row.amount > 0 ? '+' : ''}{row.amount.toLocaleString()}원
+              <span className="text-base font-bold text-emerald-600">
+                +{row.amount.toLocaleString()}원
               </span>
             </li>
           ))}
