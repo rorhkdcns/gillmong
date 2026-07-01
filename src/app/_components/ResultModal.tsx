@@ -81,7 +81,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
 
   function validatePrice(val: number): string {
     if (!val || isNaN(val)) return '올바른 금액을 입력해주세요.'
-    if (val < 5000)         return '최소 5,000P 이상 입력해주세요.'
+    if (val < 5000)         return '최소 5,000원 이상 입력해주세요.'
     if (val % 100 !== 0)    return '판매금액은 100원 단위로 입력해주세요.'
     return ''
   }
@@ -146,7 +146,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     if (!title.trim()) { setSaveError('꿈 제목을 입력해주세요.'); return }
     if (!category)     { setSaveError('카테고리를 선택해주세요.'); return }
     const priceVal = Number(price)
-    if (!price || priceVal < 5000)  { setSaveError('최소 5,000P 이상 입력해주세요.'); return }
+    if (!price || priceVal < 5000)  { setSaveError('최소 5,000원 이상 입력해주세요.'); return }
     if (priceVal % 100 !== 0)       { setSaveError('판매금액은 100원 단위로 입력해주세요.'); return }
 
     setSaveError('')

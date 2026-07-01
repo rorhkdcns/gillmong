@@ -265,7 +265,7 @@ export default function DreamListSection({
               {item.price != null && (
                 <div className="shrink-0 text-right">
                   <p className="text-base font-bold text-[#E07B2A]">
-                    {item.price.toLocaleString()} P
+                    {item.price.toLocaleString()}원
                     {item.priceLabel && (
                       <span className="ml-0.5 text-xs font-normal text-[#666666]">{item.priceLabel}</span>
                     )}

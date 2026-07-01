@@ -35,7 +35,7 @@ export default function AdminPointsPage() {
       const action = mode === 'give' ? '지급' : '차감'
       setResult({
         type: 'success',
-        message: `@${username.trim()}에게 ${amt.toLocaleString()}P ${action} 완료 (잔액: ${res.new_points?.toLocaleString()}P)`,
+        message: `@${username.trim()}에게 ${amt.toLocaleString()}원 ${action} 완료 (잔액: ${res.new_points?.toLocaleString()}원)`,
       })
       setUsername(''); setAmount('')
     }

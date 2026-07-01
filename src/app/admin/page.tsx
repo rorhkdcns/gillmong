@@ -55,7 +55,7 @@ export default function AdminDashboard() {
         <StatCard label="총 회원수" value={stats.totalUsers} />
         <StatCard label="총 꿈 등록수" value={stats.totalDreams} />
         <StatCard label="총 거래수" value={stats.totalTransactions} />
-        <StatCard label="총 충전 포인트" value={`${stats.totalPoints.toLocaleString()} P`} />
+        <StatCard label="총 거래금액" value={`${stats.totalPoints.toLocaleString()}원`} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
@@ -70,7 +70,7 @@ export default function AdminDashboard() {
                 <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
                   <th className="px-6 py-3">닉네임</th>
                   <th className="px-6 py-3">아이디</th>
-                  <th className="px-6 py-3">포인트</th>
+                  <th className="px-6 py-3">잔액</th>
                   <th className="px-6 py-3">가입일</th>
                 </tr>
               </thead>
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
                   <tr key={u.id}>
                     <td className="px-6 py-3 text-[#333]">{u.nickname}</td>
                     <td className="px-6 py-3 text-[#777]">@{u.username}</td>
-                    <td className="px-6 py-3 text-[#E07B2A]">{u.points.toLocaleString()} P</td>
+                    <td className="px-6 py-3 text-[#E07B2A]">{u.points.toLocaleString()}원</td>
                     <td className="px-6 py-3 text-[#999]">{formatDate(u.created_at)}</td>
                   </tr>
                 ))}
@@ -108,7 +108,7 @@ export default function AdminDashboard() {
                   <tr key={tx.id}>
                     <td className="px-6 py-3 text-[#333]">{tx.profiles?.nickname ?? '-'}</td>
                     <td className="max-w-[160px] truncate px-6 py-3 text-[#777]">{tx.dreams?.title ?? '-'}</td>
-                    <td className="px-6 py-3 text-[#E07B2A]">{tx.price.toLocaleString()} P</td>
+                    <td className="px-6 py-3 text-[#E07B2A]">{tx.price.toLocaleString()}원</td>
                     <td className="px-6 py-3 text-[#999]">{formatDate(tx.created_at)}</td>
                   </tr>
                 ))}
@@ -161,7 +161,7 @@ export default function AdminDashboard() {
                       <p className="text-xs text-[#999]">@{w.profiles?.username ?? '-'}</p>
                     </td>
                     <td className="px-4 py-3 font-semibold text-[#E07B2A] sm:px-6">
-                      {w.amount.toLocaleString()} P
+                      {w.amount.toLocaleString()}원
                     </td>
                     <td className="px-4 py-3 text-[#555] sm:px-6">
                       <p>{w.bank_name ?? '-'}</p>

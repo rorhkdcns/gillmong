@@ -164,7 +164,7 @@ export async function adminAdjustPointsByUsername(
   const { data: profile } = await admin.from('profiles').select('id, points').eq('username', username).single()
   if (!profile) return { error: '존재하지 않는 아이디입니다.' }
   const newPoints = profile.points + amount
-  if (newPoints < 0) return { error: `포인트가 부족합니다. (보유: ${profile.points.toLocaleString()}P)` }
+  if (newPoints < 0) return { error: `포인트가 부족합니다. (보유: ${profile.points.toLocaleString()}원)` }
   const { error: e1 } = await admin.from('profiles').update({ points: newPoints }).eq('id', profile.id)
   if (e1) return { error: e1.message }
   await admin.from('point_logs').insert({

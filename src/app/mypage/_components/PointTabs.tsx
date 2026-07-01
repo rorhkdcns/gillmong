@@ -7,7 +7,7 @@ import { getMyWithdrawals } from '@/app/actions'
 type TabKey = 'charge' | 'use' | 'revenue' | 'withdrawal'
 
 const TAB_LABELS: Record<TabKey, string> = {
-  charge:     '충전 내역',
+  charge:     '충전 내역 (종료)',
   use:        '사용 내역',
   revenue:    '수익 내역',
   withdrawal: '출금 내역',
@@ -117,7 +117,7 @@ export default function PointTabs() {
                     <p className="mt-0.5 text-xs text-[#666666]">{w.date}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-base font-bold text-red-400">-{w.amount.toLocaleString()} P</p>
+                    <p className="text-base font-bold text-red-400">-{w.amount.toLocaleString()}원</p>
                     <p className={`mt-0.5 text-xs font-semibold ${st.color}`}>{st.label}</p>
                   </div>
                 </li>
@@ -136,7 +136,7 @@ export default function PointTabs() {
                 <p className="mt-0.5 text-xs text-[#666666]">{row.date}</p>
               </div>
               <span className={`text-base font-bold ${row.amount > 0 ? 'text-emerald-600' : 'text-red-400'}`}>
-                {row.amount > 0 ? '+' : ''}{row.amount.toLocaleString()} P
+                {row.amount > 0 ? '+' : ''}{row.amount.toLocaleString()}원
               </span>
             </li>
           ))}

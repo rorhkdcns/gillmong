@@ -234,7 +234,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                             disabled={loadingPoints}
                             className="rounded-full bg-[#E07B2A] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
                           >
-                            {loadingPoints ? '잠시만요...' : `${dream.price.toLocaleString()} P 구매하기`}
+                            {loadingPoints ? '잠시만요...' : `${dream.price.toLocaleString()}원 구매하기`}
                           </button>
                         ) : (
                           <span className="text-xs text-gray-500">판매 완료된 꿈입니다</span>
@@ -294,7 +294,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                               disabled={loadingPoints}
                               className="rounded-full bg-[#E07B2A] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
                             >
-                              {loadingPoints ? '잠시만요...' : `${dream.price.toLocaleString()} P 구매하기`}
+                              {loadingPoints ? '잠시만요...' : `${dream.price.toLocaleString()}원 구매하기`}
                             </button>
                           ) : (
                             <span className="text-xs text-gray-500">판매 완료된 꿈입니다</span>
@@ -335,7 +335,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                               disabled={loadingPoints}
                               className="rounded-full bg-[#E07B2A] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
                             >
-                              {loadingPoints ? '잠시만요...' : `${dream.price.toLocaleString()} P 구매하기`}
+                              {loadingPoints ? '잠시만요...' : `${dream.price.toLocaleString()}원 구매하기`}
                             </button>
                           ) : (
                             <span className="text-xs text-gray-500">판매 완료된 꿈입니다</span>
@@ -377,7 +377,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
             <div className="mb-6 flex flex-col items-center gap-4 rounded-xl bg-brand-page px-6 py-6">
               <div className="flex flex-col items-center">
                 <span className="mb-1 text-sm font-semibold text-[#555555]">감정가</span>
-                <span className="text-3xl font-black text-[#E07B2A]">{dream.price.toLocaleString()} P</span>
+                <span className="text-3xl font-black text-[#E07B2A]">{dream.price.toLocaleString()}원</span>
               </div>
               {dream.is_sold && !purchased && (
                 <span className="rounded-full bg-gray-400 px-5 py-1.5 text-sm font-bold text-white">판매완료</span>
@@ -505,7 +505,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                       <div className="flex items-center justify-between">
                         <div>
                           <p className="text-sm font-bold text-[#E07B2A]">포인트로 결제</p>
-                          <p className="text-xs text-gray-500">보유: {myPoints.toLocaleString()} P (즉시 확정)</p>
+                          <p className="text-xs text-gray-500">보유: {myPoints.toLocaleString()}원 (즉시 확정)</p>
                         </div>
                         <span className="text-xs bg-[#E07B2A] text-white rounded-full px-2 py-0.5">추천</span>
                       </div>
@@ -575,12 +575,12 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                 <div className="mb-4 space-y-2 rounded-xl border border-gray-100 p-4 text-sm">
                   <div className="flex items-center justify-between">
                     <span className="text-[#777777]">내 포인트 잔액</span>
-                    <span className="font-semibold text-[#333333]">{myPoints?.toLocaleString() ?? '-'} P</span>
+                    <span className="font-semibold text-[#333333]">{myPoints?.toLocaleString() ?? '-'}원</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-[#777777]">결제 후 잔액</span>
                     <span className="font-semibold text-[#333333]">
-                      {afterBalance !== null ? afterBalance.toLocaleString() : '-'} P
+                      {afterBalance !== null ? afterBalance.toLocaleString() : '-'}원
                     </span>
                   </div>
                 </div>

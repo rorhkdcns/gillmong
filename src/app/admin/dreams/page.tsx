@@ -125,7 +125,7 @@ export default function AdminDreams() {
                   </Link>
                 </td>
                 <td className="px-6 py-3 text-[#777]">{CATEGORY_LABEL[d.category] ?? d.category}</td>
-                <td className="px-6 py-3 text-[#E07B2A]">{d.price.toLocaleString()} P</td>
+                <td className="px-6 py-3 text-[#E07B2A]">{d.price.toLocaleString()}원</td>
                 <td className="px-6 py-3">
                   <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${d.is_sold ? 'bg-gray-100 text-gray-500' : 'bg-emerald-50 text-emerald-600'}`}>
                     {d.is_sold ? '판매완료' : '판매중'}

@@ -212,7 +212,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
                   </div>
                   {item.price != null && (
                     <span className="ml-2 shrink-0 text-sm font-semibold text-[#E07B2A]">
-                      {item.price.toLocaleString()} P
+                      {item.price.toLocaleString()}원
                     </span>
                   )}
                 </li>

@@ -92,7 +92,7 @@ export default function AdminWithdrawals() {
               return (
                 <tr key={w.id} className="hover:bg-gray-50">
                   <td className="px-6 py-3 text-[#999]">{formatDate(w.created_at)}</td>
-                  <td className="px-6 py-3 font-semibold text-[#E07B2A]">{w.amount.toLocaleString()} P</td>
+                  <td className="px-6 py-3 font-semibold text-[#E07B2A]">{w.amount.toLocaleString()}원</td>
                   <td className="px-6 py-3 text-[#555]">{w.bank_name ?? '-'}</td>
                   <td className="px-6 py-3 text-[#555]">{w.account_number ?? '-'}</td>
                   <td className="px-6 py-3 text-[#555]">{w.account_holder ?? '-'}</td>

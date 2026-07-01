@@ -115,7 +115,7 @@ export default function AdminUsers() {
               <th className="px-4 py-3">실명</th>
               <th className="px-4 py-3">전화번호</th>
               <th className="px-4 py-3">이메일</th>
-              <th className="px-4 py-3">포인트</th>
+              <th className="px-4 py-3">잔액</th>
               <th className="px-4 py-3">가입일</th>
               <th className="px-4 py-3">관리</th>
             </tr>
@@ -132,7 +132,7 @@ export default function AdminUsers() {
                 <td className="px-4 py-3 text-[#333]">{u.real_name || <span className="text-gray-300">-</span>}</td>
                 <td className="px-4 py-3 text-[#555]">{u.phone || <span className="text-gray-300">-</span>}</td>
                 <td className="px-4 py-3 text-[#555]">{u.email || <span className="text-gray-300">-</span>}</td>
-                <td className="px-4 py-3 text-[#E07B2A]">{u.points.toLocaleString()} P</td>
+                <td className="px-4 py-3 text-[#E07B2A]">{u.points.toLocaleString()}원</td>
                 <td className="px-4 py-3 text-[#999]">{formatDate(u.created_at)}</td>
                 <td className="px-4 py-3">
                   <div className="flex gap-2">
@@ -156,7 +156,7 @@ export default function AdminUsers() {
             {modal.type === 'points' && (
               <>
                 <h2 className="mb-1 text-lg font-bold text-[#01273A]">포인트 지급/차감</h2>
-                <p className="mb-5 text-sm text-[#777]">{modal.user.nickname} (@{modal.user.username})<br />현재: {modal.user.points.toLocaleString()} P</p>
+                <p className="mb-5 text-sm text-[#777]">{modal.user.nickname} (@{modal.user.username})<br />현재: {modal.user.points.toLocaleString()}원</p>
                 <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)}
                   placeholder="양수=지급, 음수=차감 (예: -5000)"
                   className="mb-3 w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#01273A]" />

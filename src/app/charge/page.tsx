@@ -154,7 +154,7 @@ export default function ChargePage() {
                     : 'border-gray-200 hover:border-[#E07B2A] hover:bg-orange-50'
                 }`}
               >
-                <div className="text-lg font-bold text-[#E07B2A]">{v.toLocaleString()} P</div>
+                <div className="text-lg font-bold text-[#E07B2A]">{v.toLocaleString()}원</div>
                 <div className="text-sm text-gray-500">₩{v.toLocaleString()}</div>
               </button>
             ))}

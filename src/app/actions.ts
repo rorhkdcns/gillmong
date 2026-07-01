@@ -56,8 +56,8 @@ export async function withdrawalAction(
   const accountNum  = ((formData.get('account_number') as string) ?? '').trim()
   const accountHolder = ((formData.get('account_holder') as string) ?? '').trim()
 
-  if (!amount || amount < 5000)        return { error: '최소 출금 금액은 5,000P입니다.' }
-  if (amount % 1000 !== 0)            return { error: '1,000P 단위로 신청 가능합니다.' }
+  if (!amount || amount < 5000)        return { error: '최소 출금 금액은 5,000원입니다.' }
+  if (amount % 1000 !== 0)            return { error: '1,000원 단위로 신청 가능합니다.' }
   if (!bankName || !accountNum || !accountHolder) return { error: '은행 정보를 모두 입력해주세요.' }
 
   // DB 작업은 admin 클라이언트로 RLS 우회 (유저 인증은 위에서 완료)
@@ -70,7 +70,7 @@ export async function withdrawalAction(
     .single()
 
   if (!profile || profile.points < amount)
-    return { error: `포인트가 부족합니다. (보유: ${(profile?.points ?? 0).toLocaleString()}P)` }
+    return { error: `잔액이 부족합니다. (보유: ${(profile?.points ?? 0).toLocaleString()}원)` }
 
   const { error } = await admin.from('withdrawal_requests').insert({
     user_id:         user.id,

@@ -60,10 +60,10 @@ export default async function WithdrawalPage() {
 
           {/* 현재 잔액 */}
           <section className="border border-gray-200 bg-white p-5">
-            <p className="mb-1 text-sm text-[#777777]">출금 가능 포인트</p>
+            <p className="mb-1 text-sm text-[#777777]">출금 가능 잔액</p>
             <div className="flex items-baseline gap-1">
               <span className="text-3xl font-bold text-[#E07B2A]">{balance.toLocaleString()}</span>
-              <span className="text-base text-[#777777]">P</span>
+              <span className="text-base text-[#777777]">원</span>
             </div>
           </section>
 
@@ -72,7 +72,7 @@ export default async function WithdrawalPage() {
             <h2 className="mb-5 inline-block bg-[#01273A] px-3 py-1 text-sm font-semibold text-white">신청 정보</h2>
             {balance < 5000 ? (
               <div className="rounded border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-700">
-                출금 가능한 포인트가 부족합니다. (최소 5,000P)
+                출금 가능한 잔액이 부족합니다. (최소 5,000원)
               </div>
             ) : (
               <WithdrawalForm balance={balance} realName={user.user_metadata?.real_name ?? ''} />
@@ -90,7 +90,7 @@ export default async function WithdrawalPage() {
                   return (
                     <li key={row.id} className="flex items-center justify-between py-3">
                       <div>
-                        <p className="text-sm font-semibold text-[#333333]">{row.amount.toLocaleString()}P</p>
+                        <p className="text-sm font-semibold text-[#333333]">{row.amount.toLocaleString()}원</p>
                         <p className="mt-0.5 text-xs text-[#999]">{row.bank_name} · {row.account_number} · {date}</p>
                       </div>
                       <span className={`text-sm font-semibold ${st.color}`}>{st.label}</span>

@@ -89,7 +89,7 @@ export default function UsageGuidePage() {
                 </div>
               </div>
               <p className="mt-5 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-[#777777]">
-                예시: 10,000원 판매 시 → 수수료 2,000원 공제 → 판매자 포인트 <strong className="text-[#01273A]">8,000P</strong> 즉시 적립
+                예시: 10,000원 판매 시 → 수수료 2,000원 공제 → 판매자 정산금액 <strong className="text-[#01273A]">8,000원</strong> 즉시 적립
               </p>
             </div>
           </div>

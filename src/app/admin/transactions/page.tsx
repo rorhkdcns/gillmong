@@ -68,7 +68,7 @@ export default function AdminTransactions() {
                     </span>
                   )}
                 </td>
-                <td className="px-6 py-3 font-semibold text-[#E07B2A]">{tx.price.toLocaleString()} P</td>
+                <td className="px-6 py-3 font-semibold text-[#E07B2A]">{tx.price.toLocaleString()}원</td>
                 <td className="px-6 py-3 text-[#999]">{formatDate(tx.created_at)}</td>
               </tr>
             ))}
@@ -77,7 +77,7 @@ export default function AdminTransactions() {
       </div>
 
       {!loading && (
-        <p className="mt-4 text-right text-sm text-[#999]">총 {txs.length}건 · 합계 {txs.reduce((s, t) => s + t.price, 0).toLocaleString()} P</p>
+        <p className="mt-4 text-right text-sm text-[#999]">총 {txs.length}건 · 합계 {txs.reduce((s, t) => s + t.price, 0).toLocaleString()}원</p>
       )}
     </div>
   )

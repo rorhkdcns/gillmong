@@ -55,7 +55,7 @@ export default function DreamCard({ id, title, body, grade, price, is_sold = fal
           <div className="text-center">
             <span className="text-xs text-gray-400">감정가</span>
             <p className={`text-sm font-bold ${is_sold ? 'text-gray-400' : 'text-[#E07B2A]'}`}>
-              {price.toLocaleString()} P
+              {price.toLocaleString()}원
             </p>
           </div>
           {is_sold ? (
@@ -76,7 +76,7 @@ export default function DreamCard({ id, title, body, grade, price, is_sold = fal
           <div>
             <span className="text-xs text-gray-400">감정가</span>
             <p className={`text-base font-bold ${is_sold ? 'text-gray-400' : 'text-[#E07B2A]'}`}>
-              {price.toLocaleString()} P
+              {price.toLocaleString()}원
             </p>
           </div>
           {is_sold ? (

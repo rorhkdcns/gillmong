@@ -149,14 +149,14 @@ export default async function MyPage() {
               <h2 className="text-xl font-black text-[#01273A]">포인트</h2>
               <div className="flex items-baseline gap-1">
                 <span className="text-2xl font-bold text-[#E07B2A]">{pointBalance.toLocaleString()}</span>
-                <span className="text-base font-medium text-[#555555]">P</span>
+                <span className="text-base font-medium text-[#555555]">원</span>
               </div>
             </div>
 
             {/* 충전 종료 안내 */}
             {pointBalance > 0 && (
               <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs text-amber-700">
-                보유 포인트는 사용 가능합니다. 충전 서비스는 종료되었습니다.
+                보유 포인트 잔액은 구매 시 사용 가능합니다. 충전 서비스는 종료되었습니다.
               </div>
             )}
 

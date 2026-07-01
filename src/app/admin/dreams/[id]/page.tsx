@@ -119,7 +119,7 @@ export default function AdminDreamDetailPage() {
           </span>
         </div>
         <div className="grid grid-cols-2 gap-4 px-6 py-4 text-sm sm:grid-cols-4">
-          <div><p className="text-xs text-[#999]">감정가</p><p className="font-semibold text-[#E07B2A]">{dream.price.toLocaleString()} P</p></div>
+          <div><p className="text-xs text-[#999]">감정가</p><p className="font-semibold text-[#E07B2A]">{dream.price.toLocaleString()}원</p></div>
           <div><p className="text-xs text-[#999]">등록자</p><p className="font-semibold text-[#333]">{dream.seller?.nickname ?? '-'}</p></div>
           <div><p className="text-xs text-[#999]">등록일</p><p className="text-[#555]">{formatDate(dream.created_at)}</p></div>
           <div><p className="text-xs text-[#999]">꿈 ID</p><p className="font-mono text-[#777]">#{dream.id}</p></div>
@@ -195,7 +195,7 @@ export default function AdminDreamDetailPage() {
                 <tr key={b.id} className="hover:bg-gray-50">
                   <td className="px-6 py-3 text-[#333]">{b.profile?.nickname ?? b.buyer_id.slice(0,8)}</td>
                   <td className="px-6 py-3 text-[#999]">{formatDate(b.created_at)}</td>
-                  <td className="px-6 py-3 text-right font-semibold text-[#E07B2A]">{b.price.toLocaleString()} P</td>
+                  <td className="px-6 py-3 text-right font-semibold text-[#E07B2A]">{b.price.toLocaleString()}원</td>
                 </tr>
               ))}
             </tbody>

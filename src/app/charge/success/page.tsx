@@ -75,7 +75,7 @@ export default async function ChargeSuccessPage({
             </div>
             <h1 className="mb-2 text-2xl font-bold text-[#01273A]">포인트 충전 완료!</h1>
             {amount && (
-              <p className="mb-1 text-2xl font-bold text-[#E07B2A]">{amount.toLocaleString()} P</p>
+              <p className="mb-1 text-2xl font-bold text-[#E07B2A]">{amount.toLocaleString()}원</p>
             )}
             <p className="mb-1 text-sm text-gray-500">포인트가 정상적으로 충전되었습니다.</p>
             <p className="mb-8 text-sm text-gray-400">마이페이지에서 포인트를 확인하실 수 있습니다.</p>

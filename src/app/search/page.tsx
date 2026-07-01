@@ -124,7 +124,7 @@ function SearchResults() {
                   <div>
                     <span className="text-xs text-gray-400">감정가</span>
                     <p className={`text-base font-bold ${card.is_sold ? 'text-gray-400' : 'text-[#E07B2A]'}`}>
-                      {card.price.toLocaleString()} P
+                      {card.price.toLocaleString()}원
                     </p>
                   </div>
                   {card.is_sold ? (
