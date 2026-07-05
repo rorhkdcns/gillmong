@@ -23,7 +23,7 @@ function Field({
   )
 }
 
-const INPUT = 'w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#01273A]'
+const INPUT = 'w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#0B2433]'
 
 type MemberType = 'general' | 'business'
 type Step = 'select' | 'verify-business' | 'form'
@@ -211,13 +211,13 @@ export default function SignupPage() {
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#F7F7F5] px-6">
         <div className="w-full max-w-sm text-center">
           <div className="mb-6 flex justify-center">
-            <div className="flex h-16 w-16 items-center justify-center bg-[#01273A]">
+            <div className="flex h-16 w-16 items-center justify-center bg-[#0B2433]">
               <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             </div>
           </div>
-          <h2 className="mb-3 text-2xl text-[#01273A]">가입 완료!</h2>
+          <h2 className="mb-3 text-2xl text-[#0B2433]">가입 완료!</h2>
           {memberType === 'business' && (
             <p className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
               사업자 정보는 관리자 검토 후 승인됩니다.
@@ -226,7 +226,7 @@ export default function SignupPage() {
           <p className="mb-8 text-sm text-[#777777]">바로 로그인하실 수 있습니다.</p>
           <a
             href="/auth/login"
-            className="inline-block w-full bg-[#01273A] py-3 text-base font-semibold text-white transition-all hover:brightness-90"
+            className="inline-block w-full bg-[#0B2433] py-3 text-base font-semibold text-white transition-all hover:brightness-90"
           >
             로그인하러 가기
           </a>
@@ -250,7 +250,7 @@ export default function SignupPage() {
       <button
         type="button"
         onClick={() => { setVerifyError(''); setError(''); setStep(to) }}
-        className="mb-6 flex items-center gap-1 text-sm text-[#777777] hover:text-[#01273A]"
+        className="mb-6 flex items-center gap-1 text-sm text-[#777777] hover:text-[#0B2433]"
       >
         <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -267,15 +267,15 @@ export default function SignupPage() {
         {Logo}
         <main className="flex flex-1 items-center justify-center px-6 py-16">
           <div className="w-full max-w-sm">
-            <h1 className="mb-2 text-center text-2xl text-[#01273A]">회원가입</h1>
+            <h1 className="mb-2 text-center text-2xl text-[#0B2433]">회원가입</h1>
             <p className="mb-10 text-center text-sm text-[#777777]">가입 유형을 선택해주세요</p>
             <div className="flex flex-col gap-4">
               <button
                 type="button"
                 onClick={() => { setMemberType('general'); setStep('form') }}
-                className="flex flex-col items-start gap-2 border-2 border-gray-200 bg-white px-6 py-5 text-left transition-all hover:border-[#01273A] hover:shadow-sm"
+                className="flex flex-col items-start gap-2 border-2 border-gray-200 bg-white px-6 py-5 text-left transition-all hover:border-[#0B2433] hover:shadow-sm"
               >
-                <span className="text-base font-semibold text-[#01273A]">일반회원</span>
+                <span className="text-base font-semibold text-[#0B2433]">일반회원</span>
                 <span className="text-sm text-[#777777]">개인 사용자로 가입합니다</span>
                 <div className="mt-1 flex flex-wrap gap-1.5">
                   {['주 2회 판매', '1회 10만원', '반기 600만원'].map((t) => (
@@ -286,9 +286,9 @@ export default function SignupPage() {
               <button
                 type="button"
                 onClick={() => { setMemberType('business'); setStep('verify-business') }}
-                className="flex flex-col items-start gap-2 border-2 border-gray-200 bg-white px-6 py-5 text-left transition-all hover:border-[#01273A] hover:shadow-sm"
+                className="flex flex-col items-start gap-2 border-2 border-gray-200 bg-white px-6 py-5 text-left transition-all hover:border-[#0B2433] hover:shadow-sm"
               >
-                <span className="text-base font-semibold text-[#01273A]">사업자회원</span>
+                <span className="text-base font-semibold text-[#0B2433]">사업자회원</span>
                 <span className="text-sm text-[#777777]">사업자등록번호로 가입합니다 (관리자 승인 필요)</span>
                 <div className="mt-1 flex flex-wrap gap-1.5">
                   {['판매 제한 없음', '세금계산서 발급'].map((t) => (
@@ -299,7 +299,7 @@ export default function SignupPage() {
             </div>
             <p className="mt-8 text-center text-sm text-[#777777]">
               이미 계정이 있으신가요?{' '}
-              <a href="/auth/login" className="text-[#01273A] underline underline-offset-2 hover:brightness-75">
+              <a href="/auth/login" className="text-[#0B2433] underline underline-offset-2 hover:brightness-75">
                 로그인
               </a>
             </p>
@@ -318,7 +318,7 @@ export default function SignupPage() {
         <main className="flex flex-1 items-center justify-center px-6 py-16">
           <div className="w-full max-w-sm">
             <BackButton to="select" label="회원 유형 선택으로" />
-            <h1 className="mb-2 text-center text-2xl text-[#01273A]">사업자 정보 입력</h1>
+            <h1 className="mb-2 text-center text-2xl text-[#0B2433]">사업자 정보 입력</h1>
             <p className="mb-10 text-center text-sm text-[#777777]">사업자등록번호를 검증합니다</p>
 
             <div className="flex flex-col gap-4">
@@ -364,7 +364,7 @@ export default function SignupPage() {
                 type="button"
                 onClick={handleVerifyBusiness}
                 disabled={verifyLoading}
-                className="mt-2 w-full bg-[#01273A] py-3 text-base font-semibold text-white transition-all hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-40"
+                className="mt-2 w-full bg-[#0B2433] py-3 text-base font-semibold text-white transition-all hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 {verifyLoading ? '검증 중...' : '검증 후 다음 단계'}
               </button>
@@ -386,7 +386,7 @@ export default function SignupPage() {
             to={memberType === 'business' ? 'verify-business' : 'select'}
             label={memberType === 'business' ? '사업자 정보 입력으로' : '회원 유형 선택으로'}
           />
-          <h1 className="mb-2 text-center text-2xl text-[#01273A]">회원가입</h1>
+          <h1 className="mb-2 text-center text-2xl text-[#0B2433]">회원가입</h1>
           <p className="mb-10 text-center text-sm text-[#777777]">길몽상점과 함께 꿈을 거래해보세요</p>
 
           {/* 사업자회원 정보 요약 */}
@@ -413,7 +413,7 @@ export default function SignupPage() {
                   type="button"
                   onClick={checkUsername}
                   disabled={checkingUsername || !username}
-                  className="shrink-0 whitespace-nowrap border border-[#01273A] px-4 py-3 text-sm font-semibold text-[#01273A] transition-all hover:bg-[#01273A] hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                  className="shrink-0 whitespace-nowrap border border-[#0B2433] px-4 py-3 text-sm font-semibold text-[#0B2433] transition-all hover:bg-[#0B2433] hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {checkingUsername ? '확인 중...' : '중복 확인'}
                 </button>
@@ -530,29 +530,29 @@ export default function SignupPage() {
             {/* 약관 동의 */}
             <div className="mt-2 flex flex-col rounded-xl border border-gray-200 bg-white">
               <label className="flex cursor-pointer items-center gap-3 border-b border-gray-100 px-4 py-3.5">
-                <input type="checkbox" checked={allChecked} onChange={handleAgreeAll} className="h-4 w-4 cursor-pointer accent-[#01273A]" />
-                <span className="text-sm font-bold text-[#01273A]">전체 동의</span>
+                <input type="checkbox" checked={allChecked} onChange={handleAgreeAll} className="h-4 w-4 cursor-pointer accent-[#0B2433]" />
+                <span className="text-sm font-bold text-[#0B2433]">전체 동의</span>
               </label>
               <label className="flex cursor-pointer items-center gap-3 border-b border-gray-100 px-4 py-3">
-                <input type="checkbox" checked={agreeTerms} onChange={(e) => setAgreeTerms(e.target.checked)} className="h-4 w-4 cursor-pointer accent-[#01273A]" />
+                <input type="checkbox" checked={agreeTerms} onChange={(e) => setAgreeTerms(e.target.checked)} className="h-4 w-4 cursor-pointer accent-[#0B2433]" />
                 <span className="flex-1 text-sm text-[#333333]">
-                  <a href="/terms" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-[#01273A]" onClick={(e) => e.stopPropagation()}>이용약관</a>{' '}
+                  <a href="/terms" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-[#0B2433]" onClick={(e) => e.stopPropagation()}>이용약관</a>{' '}
                   동의 <span className="text-red-400">(필수)</span>
                 </span>
               </label>
               <label className="flex cursor-pointer items-center gap-3 border-b border-gray-100 px-4 py-3">
-                <input type="checkbox" checked={agreePrivacy} onChange={(e) => setAgreePrivacy(e.target.checked)} className="h-4 w-4 cursor-pointer accent-[#01273A]" />
+                <input type="checkbox" checked={agreePrivacy} onChange={(e) => setAgreePrivacy(e.target.checked)} className="h-4 w-4 cursor-pointer accent-[#0B2433]" />
                 <span className="flex-1 text-sm text-[#333333]">
-                  <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-[#01273A]" onClick={(e) => e.stopPropagation()}>개인정보처리방침</a>{' '}
+                  <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2 hover:text-[#0B2433]" onClick={(e) => e.stopPropagation()}>개인정보처리방침</a>{' '}
                   동의 <span className="text-red-400">(필수)</span>
                 </span>
               </label>
               <label className="flex cursor-pointer items-center gap-3 border-b border-gray-100 px-4 py-3">
-                <input type="checkbox" checked={agreeAge} onChange={(e) => setAgreeAge(e.target.checked)} className="h-4 w-4 cursor-pointer accent-[#01273A]" />
+                <input type="checkbox" checked={agreeAge} onChange={(e) => setAgreeAge(e.target.checked)} className="h-4 w-4 cursor-pointer accent-[#0B2433]" />
                 <span className="text-sm text-[#333333]">만 14세 이상입니다 <span className="text-red-400">(필수)</span></span>
               </label>
               <label className="flex cursor-pointer items-center gap-3 px-4 py-3">
-                <input type="checkbox" checked={agreeMarketing} onChange={(e) => setAgreeMarketing(e.target.checked)} className="h-4 w-4 cursor-pointer accent-[#01273A]" />
+                <input type="checkbox" checked={agreeMarketing} onChange={(e) => setAgreeMarketing(e.target.checked)} className="h-4 w-4 cursor-pointer accent-[#0B2433]" />
                 <span className="text-sm text-[#333333]">마케팅 정보 수신 동의 <span className="text-gray-400">(선택)</span></span>
               </label>
             </div>
@@ -562,7 +562,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading || !allRequired}
-              className="mt-2 w-full bg-[#01273A] py-3 text-base font-semibold text-white transition-all hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-40"
+              className="mt-2 w-full bg-[#0B2433] py-3 text-base font-semibold text-white transition-all hover:brightness-90 disabled:cursor-not-allowed disabled:opacity-40"
             >
               {loading ? '처리 중...' : '가입하기'}
             </button>
@@ -570,7 +570,7 @@ export default function SignupPage() {
 
           <p className="mt-8 text-center text-sm text-[#777777]">
             이미 계정이 있으신가요?{' '}
-            <a href="/auth/login" className="text-[#01273A] underline underline-offset-2 hover:brightness-75">로그인</a>
+            <a href="/auth/login" className="text-[#0B2433] underline underline-offset-2 hover:brightness-75">로그인</a>
           </p>
         </div>
       </main>

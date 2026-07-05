@@ -56,7 +56,7 @@ export default function UpdatePasswordPage() {
       {/* 본문 */}
       <main className="flex flex-1 items-center justify-center px-6 py-16">
         <div className="w-full max-w-sm">
-          <h1 className="mb-2 text-center text-2xl text-[#01273A]">새 비밀번호 설정</h1>
+          <h1 className="mb-2 text-center text-2xl text-[#0B2433]">새 비밀번호 설정</h1>
           <p className="mb-10 text-center text-sm text-[#777777]">사용할 새 비밀번호를 입력해주세요</p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -69,7 +69,7 @@ export default function UpdatePasswordPage() {
                 placeholder="6자리 이상"
                 required
                 minLength={6}
-                className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#01273A]"
+                className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#0B2433]"
               />
             </div>
 
@@ -81,7 +81,7 @@ export default function UpdatePasswordPage() {
                 onChange={(e) => setConfirm(e.target.value)}
                 placeholder="비밀번호 재입력"
                 required
-                className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#01273A]"
+                className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#0B2433]"
               />
             </div>
 
@@ -92,7 +92,7 @@ export default function UpdatePasswordPage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-2 w-full bg-[#01273A] py-3 text-base font-semibold text-white transition-all hover:brightness-90 disabled:opacity-60"
+              className="mt-2 w-full bg-[#0B2433] py-3 text-base font-semibold text-white transition-all hover:brightness-90 disabled:opacity-60"
             >
               {loading ? '변경 중...' : '변경하기'}
             </button>
