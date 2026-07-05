@@ -35,7 +35,7 @@ export default async function SavedDreamPage({
 
       <div className="border-b border-gray-100 bg-white px-6 py-3">
         <div className="mx-auto max-w-[800px]">
-          <a href="/mypage" className="inline-flex items-center gap-1 text-sm text-[#777777] hover:text-[#01273A]">
+          <a href="/mypage" className="inline-flex items-center gap-1 text-sm text-[#777777] hover:text-[#0B2433]">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
@@ -65,7 +65,7 @@ export default async function SavedDreamPage({
               )}
             </div>
 
-            <h1 className="mb-6 text-center text-2xl font-black leading-snug text-[#01273A]">{d.title}</h1>
+            <h1 className="mb-6 text-center text-2xl font-black leading-snug text-[#0B2433]">{d.title}</h1>
 
             <hr className="mb-6 border-brand-border" />
 
@@ -113,7 +113,7 @@ export default async function SavedDreamPage({
                 <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-brand-muted">행운의 추천 번호</h3>
                 <div className="flex flex-wrap gap-2">
                   {d.lucky_numbers.map((num) => (
-                    <div key={num} className="flex h-11 w-11 items-center justify-center rounded-full bg-[#E07B2A] text-base font-black text-white shadow">
+                    <div key={num} className="flex h-11 w-11 items-center justify-center rounded-full bg-[#14547A] text-base font-black text-white shadow">
                       {num}
                     </div>
                   ))}

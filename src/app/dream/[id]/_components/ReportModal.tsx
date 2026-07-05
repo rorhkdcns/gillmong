@@ -57,20 +57,20 @@ export default function ReportModal({ dreamId, onClose }: Props) {
                 </svg>
               </div>
             </div>
-            <h2 className="mb-3 text-center text-xl text-[#01273A]">신고 완료</h2>
+            <h2 className="mb-3 text-center text-xl text-[#0B2433]">신고 완료</h2>
             <p className="mb-6 text-center text-sm text-[#555555]">
               신고가 접수되었습니다.<br />검토 후 신속하게 조치하겠습니다.
             </p>
             <button
               onClick={onClose}
-              className="w-full rounded-xl bg-[#01273A] py-3 font-semibold text-white hover:brightness-90"
+              className="w-full rounded-xl bg-[#0B2433] py-3 font-semibold text-white hover:brightness-90"
             >
               닫기
             </button>
           </>
         ) : (
           <>
-            <h2 className="mb-6 text-center text-xl text-[#01273A]">신고하기</h2>
+            <h2 className="mb-6 text-center text-xl text-[#0B2433]">신고하기</h2>
 
             <div className="mb-5">
               <p className="mb-3 text-sm font-semibold text-[#333333]">신고 이유</p>
@@ -83,7 +83,7 @@ export default function ReportModal({ dreamId, onClose }: Props) {
                       value={r}
                       checked={reason === r}
                       onChange={() => setReason(r)}
-                      className="h-4 w-4 accent-[#01273A]"
+                      className="h-4 w-4 accent-[#0B2433]"
                     />
                     <span className="text-sm text-[#333333]">{r}</span>
                   </label>
@@ -102,7 +102,7 @@ export default function ReportModal({ dreamId, onClose }: Props) {
                 placeholder="신고 내용을 자세히 입력해주세요"
                 rows={3}
                 maxLength={500}
-                className="w-full resize-none border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-[#01273A]"
+                className="w-full resize-none border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-[#0B2433]"
               />
             </div>
 
@@ -114,7 +114,7 @@ export default function ReportModal({ dreamId, onClose }: Props) {
               <button
                 onClick={onClose}
                 disabled={submitting}
-                className="flex-1 border border-gray-300 py-3 text-sm text-[#555555] transition-colors hover:border-[#01273A] hover:text-[#01273A]"
+                className="flex-1 border border-gray-300 py-3 text-sm text-[#555555] transition-colors hover:border-[#0B2433] hover:text-[#0B2433]"
               >
                 취소
               </button>
