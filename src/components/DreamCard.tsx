@@ -1,11 +1,4 @@
-const GRADE_COLOR: Record<string, string> = {
-  A: 'bg-emerald-500',
-  B: 'bg-blue-500',
-  C: 'bg-amber-400',
-  D: 'bg-orange-400',
-  E: 'bg-red-400',
-  F: 'bg-gray-400',
-}
+import { GRADE_INFO, type Grade } from '@/lib/dreamDisplay'
 
 export interface DreamCardProps {
   id: number
@@ -28,7 +21,7 @@ export default function DreamCard({ id, title, body, grade, price, is_sold = fal
     >
       {/* 등급 + 닉네임 */}
       <div className="mb-2 flex items-center gap-1.5 md:mb-3 md:gap-2">
-        <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white md:h-6 md:w-6 ${GRADE_COLOR[grade] ?? 'bg-gray-400'}`}>
+        <span className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white md:h-6 md:w-6 ${GRADE_INFO[grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
           {grade}
         </span>
         {is_sold ? (

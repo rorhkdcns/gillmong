@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { GRADE_INFO, TYPE_STYLE, parseInterpretation, type Grade } from '@/lib/dreamDisplay'
+
 const CATEGORIES = [
   { label: '인물·신체', value: 'people'  },
   { label: '동물·식물', value: 'animals' },
@@ -10,45 +12,6 @@ const CATEGORIES = [
   { label: '행동·상황', value: 'action'  },
   { label: '기타',      value: 'etc'     },
 ]
-
-const INTERP_SECTIONS = [
-  { pattern: /한국\s*전통\s*해몽\s*관점\s*:/, color: '#01273A' },
-  { pattern: /아시아\s*관점[^:]*:/,            color: '#E07B2A' },
-  { pattern: /서양\s*심리학적\s*관점\s*:/,     color: '#6B96A8' },
-  { pattern: /종합\s*해석\s*:/,                color: '#01273A' },
-]
-
-function parseInterpretation(text: string) {
-  const lines = text.split('\n')
-  const sections: { title: string; content: string; color: string }[] = []
-  let cur: { title: string; lines: string[]; color: string } | null = null
-
-  for (const line of lines) {
-    const matched = INTERP_SECTIONS.find((s) => s.pattern.test(line.trim()))
-    if (matched) {
-      if (cur) sections.push({ title: cur.title, content: cur.lines.join('\n').trim(), color: cur.color })
-      cur = { title: line.trim(), lines: [], color: matched.color }
-    } else if (cur) {
-      cur.lines.push(line)
-    }
-  }
-  if (cur) sections.push({ title: cur.title, content: cur.lines.join('\n').trim(), color: cur.color })
-  return sections
-}
-
-const ALPHABET_BG: Record<string, string> = {
-  A: 'bg-blue-500',
-  B: 'bg-green-500',
-  C: 'bg-amber-500',
-  D: 'bg-orange-500',
-  E: 'bg-red-500',
-}
-
-const TYPE_STYLE: Record<string, string> = {
-  길몽: 'bg-emerald-50 text-emerald-600 border-emerald-200',
-  흉몽: 'bg-red-50 text-red-500 border-red-200',
-  중립: 'bg-gray-100 text-gray-500 border-gray-200',
-}
 
 export interface AnalysisResult {
   alphabet: string
@@ -68,7 +31,7 @@ interface ResultModalProps {
 
 export default function ResultModal({ dream, analysis, onClose }: ResultModalProps) {
   const router = useRouter()
-  const alphaBg = ALPHABET_BG[analysis.alphabet] ?? 'bg-gray-400'
+  const alphaBg = GRADE_INFO[analysis.alphabet as Grade]?.badgeBg ?? 'bg-gray-400'
 
   const [editedDream, setEditedDream] = useState(dream)
   const [title, setTitle]       = useState(analysis.title)

@@ -3,45 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import type { DbSavedDream } from '@/lib/supabase/types'
-
-const GRADE_STYLE: Record<string, { bg: string; text: string; label: string }> = {
-  A: { bg: 'bg-emerald-500', text: 'text-emerald-600', label: '최고의 길몽' },
-  B: { bg: 'bg-blue-500',    text: 'text-blue-600',    label: '좋은 길몽' },
-  C: { bg: 'bg-amber-400',   text: 'text-amber-500',   label: '평범한 꿈' },
-  D: { bg: 'bg-orange-400',  text: 'text-orange-500',  label: '주의가 필요한 꿈' },
-  E: { bg: 'bg-red-400',     text: 'text-red-500',     label: '흉몽의 기운' },
-  F: { bg: 'bg-gray-400',    text: 'text-gray-500',    label: '해석 불가' },
-}
-
-const TYPE_STYLE: Record<string, string> = {
-  길몽: 'bg-emerald-50 text-emerald-600 border-emerald-200',
-  흉몽: 'bg-red-50 text-red-500 border-red-200',
-  중립: 'bg-gray-100 text-gray-500 border-gray-200',
-}
-
-const INTERP_SECTIONS = [
-  { pattern: /한국\s*전통\s*해몽\s*관점\s*:/, color: '#01273A' },
-  { pattern: /아시아\s*관점[^:]*:/,            color: '#E07B2A' },
-  { pattern: /서양\s*심리학적\s*관점\s*:/,     color: '#6B96A8' },
-  { pattern: /종합\s*해석\s*:/,                color: '#01273A' },
-]
-
-function parseInterpretation(text: string) {
-  const lines = text.split('\n')
-  const sections: { title: string; content: string; color: string }[] = []
-  let cur: { title: string; lines: string[]; color: string } | null = null
-  for (const line of lines) {
-    const matched = INTERP_SECTIONS.find((s) => s.pattern.test(line.trim()))
-    if (matched) {
-      if (cur) sections.push({ title: cur.title, content: cur.lines.join('\n').trim(), color: cur.color })
-      cur = { title: line.trim(), lines: [], color: matched.color }
-    } else if (cur) {
-      cur.lines.push(line)
-    }
-  }
-  if (cur) sections.push({ title: cur.title, content: cur.lines.join('\n').trim(), color: cur.color })
-  return sections
-}
+import { GRADE_INFO, TYPE_STYLE, parseInterpretation, type Grade } from '@/lib/dreamDisplay'
 
 export default async function SavedDreamPage({
   params,
@@ -64,7 +26,7 @@ export default async function SavedDreamPage({
   if (!dream) notFound()
 
   const d = dream as DbSavedDream
-  const gradeStyle = GRADE_STYLE[d.grade] ?? GRADE_STYLE['C']
+  const gradeStyle = GRADE_INFO[d.grade as Grade] ?? GRADE_INFO['C']
   const sections = d.interpretation ? parseInterpretation(d.interpretation) : []
 
   return (
@@ -92,7 +54,7 @@ export default async function SavedDreamPage({
 
             {/* 등급 + 유형 */}
             <div className="mb-6 flex flex-col items-center gap-3">
-              <div className={`flex h-24 w-24 items-center justify-center rounded-full ${gradeStyle.bg} shadow-lg`}>
+              <div className={`flex h-24 w-24 items-center justify-center rounded-full ${gradeStyle.badgeBg} shadow-lg`}>
                 <span className="text-5xl font-black text-white">{d.grade}</span>
               </div>
               <span className={`text-base font-bold ${gradeStyle.text}`}>{gradeStyle.label}</span>

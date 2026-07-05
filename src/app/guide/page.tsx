@@ -16,6 +16,7 @@ import {
   ChevronRight,
   BookOpen,
 } from 'lucide-react'
+import { GRADE_GUIDE_LIST } from '@/lib/dreamDisplay'
 
 const processSteps = [
   { step: '01', title: '꿈 등록', desc: '꿈의 내용을 상세히 기록합니다', Icon: BrainCircuit },
@@ -47,15 +48,6 @@ const paymentPolicies = [
   { Icon: ShoppingCart, service: '꿈 구매 (길몽)', policy: '시장 가치 기반 산정', detail: '희소성 및 등급에 따라 자동 적용' },
   { Icon: TrendingUp,   service: '꿈 판매 정산',   policy: '판매가의 80% 정산',   detail: '구매확정 또는 결제 후 7일 경과 시 자동 정산 (수수료 20%)' },
 ]
-
-const grades = [
-  { grade: 'A', label: '최상위 등급', desc: '드물게 나타나는 최고의 길몽',       color: 'bg-emerald-500' },
-  { grade: 'B', label: '상위 등급',   desc: '뚜렷한 행운의 전조가 보이는 꿈',   color: 'bg-blue-500'    },
-  { grade: 'C', label: '일반 등급',   desc: '긍정적인 의미를 담은 좋은 꿈',     color: 'bg-amber-400'   },
-  { grade: 'D', label: '주의 등급',   desc: '경고·부담·위험을 암시하는 꿈',     color: 'bg-orange-500'  },
-  { grade: 'E', label: '흉몽 등급',   desc: '두려움·상실·불안이 담긴 꿈',       color: 'bg-red-500'     },
-]
-
 
 export default function GuidePage() {
   return (
@@ -308,12 +300,12 @@ export default function GuidePage() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 md:gap-5">
-            {grades.map((g, i) => (
-              <div key={i} className="flex flex-col items-center rounded-2xl bg-white p-5 text-center shadow-sm md:p-6">
-                <div className={`mb-3 flex h-12 w-12 items-center justify-center rounded-full text-xl font-bold text-white shadow md:h-14 md:w-14 md:text-2xl ${g.color}`}>
+            {GRADE_GUIDE_LIST.map((g) => (
+              <div key={g.grade} className="flex flex-col items-center rounded-2xl bg-white p-5 text-center shadow-sm md:p-6">
+                <div className={`mb-3 flex h-12 w-12 items-center justify-center rounded-full text-xl font-bold text-white shadow md:h-14 md:w-14 md:text-2xl ${g.badgeBg}`}>
                   {g.grade}
                 </div>
-                <p className="mb-1 text-sm font-semibold text-[#01273A] md:text-base">{g.label}</p>
+                <p className="mb-1 text-sm font-semibold text-[#01273A] md:text-base">{g.rank}</p>
                 <p className="text-xs leading-relaxed text-[#555555] md:text-sm">{g.desc}</p>
               </div>
             ))}
