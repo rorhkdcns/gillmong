@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { getAdminDreams, adminDeleteDreamById } from '../actions'
+import { createClient } from '@/lib/supabase/client'
 import { GRADE_INFO, type Grade } from '@/lib/dreamDisplay'
 
 type Dream = {
@@ -12,9 +13,7 @@ type Dream = {
   report_count: number; pending_report_count: number
 }
 
-const CATEGORY_LABEL: Record<string, string> = {
-  people: '인물·신체', animals: '동물·식물', nature: '자연·사물', action: '행동·상황', etc: '기타',
-}
+type CategoryRow = { name: string; slug: string }
 
 function formatDate(iso: string) {
   const d = new Date(iso)
@@ -31,6 +30,20 @@ export default function AdminDreams() {
   const [confirm, setConfirm]     = useState<Dream | null>(null)
   const [deleting, setDeleting]   = useState(false)
   const [msg, setMsg]             = useState('')
+  const [categoryLabel, setCategoryLabel] = useState<Record<string, string>>({})
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase
+      .from('categories')
+      .select('name, slug')
+      .order('sort_order', { ascending: true })
+      .then(({ data }: { data: CategoryRow[] | null }) => {
+        const map: Record<string, string> = {}
+        for (const c of data ?? []) map[c.slug] = c.name
+        setCategoryLabel(map)
+      })
+  }, [])
 
   async function load() {
     setLoading(true)
@@ -68,7 +81,7 @@ export default function AdminDreams() {
         <select value={category} onChange={(e) => setCategory(e.target.value)}
           className="border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#0B2433]">
           <option value="">전체 카테고리</option>
-          {Object.entries(CATEGORY_LABEL).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+          {Object.entries(categoryLabel).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </select>
         <select value={isSold} onChange={(e) => setIsSold(e.target.value)}
           className="border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#0B2433]">
@@ -121,7 +134,7 @@ export default function AdminDreams() {
                     {d.title}
                   </Link>
                 </td>
-                <td className="px-6 py-3 text-[#777]">{CATEGORY_LABEL[d.category] ?? d.category}</td>
+                <td className="px-6 py-3 text-[#777]">{categoryLabel[d.category] ?? d.category}</td>
                 <td className="px-6 py-3 text-[#14547A]">{d.price.toLocaleString()}원</td>
                 <td className="px-6 py-3">
                   <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${d.is_sold ? 'bg-gray-100 text-gray-500' : 'bg-emerald-50 text-emerald-600'}`}>

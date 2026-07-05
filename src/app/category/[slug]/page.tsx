@@ -1,15 +1,26 @@
+import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getActiveCategories } from '@/lib/categories'
 import CategoryPage from '../_components/CategoryPage'
 
 export const dynamic = 'force-dynamic'
 
-export default async function NaturePage() {
+export default async function CategorySlugPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+  const categories = await getActiveCategories()
+  const category = categories.find((c) => c.slug === slug)
+  if (!category) notFound()
+
   const admin = createAdminClient()
 
   const { data: dreams } = await admin
     .from('dreams')
     .select('id, title, summary, grade, price, is_sold, user_id')
-    .eq('category', 'nature')
+    .eq('category_id', category.id)
     .order('created_at', { ascending: false })
 
   const userIds = [...new Set((dreams ?? []).map((d) => d.user_id).filter(Boolean))]
@@ -31,9 +42,9 @@ export default async function NaturePage() {
 
   return (
     <CategoryPage
-      title="자연·사물"
-      description="자연 현상과 사물이 등장하는 꿈들을 탐색해보세요"
-      activePath="/category/nature"
+      title={category.name}
+      description={category.description ?? `${category.name}에 관한 꿈들을 탐색해보세요`}
+      activePath={`/category/${slug}`}
       cards={cards}
     />
   )

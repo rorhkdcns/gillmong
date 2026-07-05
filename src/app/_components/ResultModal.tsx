@@ -1,17 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { GRADE_INFO, TYPE_STYLE, parseInterpretation, type Grade } from '@/lib/dreamDisplay'
 
-const CATEGORIES = [
-  { label: '인물·신체', value: 'people'  },
-  { label: '동물·식물', value: 'animals' },
-  { label: '자연·사물', value: 'nature'  },
-  { label: '행동·상황', value: 'action'  },
-  { label: '기타',      value: 'etc'     },
-]
+interface CategoryOption {
+  id: string
+  name: string
+  slug: string
+}
 
 export interface AnalysisResult {
   alphabet: string
@@ -36,11 +34,22 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
   const [editedDream, setEditedDream] = useState(dream)
   const [title, setTitle]       = useState(analysis.title)
   const [category, setCategory] = useState('')
+  const [categories, setCategories] = useState<CategoryOption[]>([])
   const [price, setPrice]       = useState('5000')
   const [priceError, setPriceError] = useState('')
   const [saving, setSaving]         = useState(false)
   const [savingPrivate, setSavingPrivate] = useState(false)
   const [saveError, setSaveError]   = useState('')
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase
+      .from('categories')
+      .select('id, name, slug')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true })
+      .then(({ data }: { data: CategoryOption[] | null }) => setCategories(data ?? []))
+  }, [])
 
   function validatePrice(val: number): string {
     if (!val || isNaN(val)) return '올바른 금액을 입력해주세요.'
@@ -127,6 +136,8 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
 
     await ensureProfile(supabase, user)
 
+    const selectedCategory = categories.find((c) => c.slug === category)
+
     const { data: inserted, error } = await supabase
       .from('dreams')
       .insert({
@@ -139,6 +150,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
         interpretation: analysis.interpretation,
         advice:         analysis.advice,
         category:       category || 'etc',
+        category_id:    selectedCategory?.id ?? null,
         price:          Number(price),
         lucky_numbers:  analysis.lucky_numbers,
       })
@@ -290,8 +302,8 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
                 className="w-full rounded-lg border border-[#CCCCCC] bg-white px-3 py-2 text-sm text-brand-heading outline-none"
               >
                 <option value="">카테고리를 선택해주세요</option>
-                {CATEGORIES.map((cat) => (
-                  <option key={cat.value} value={cat.value}>{cat.label}</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.slug}>{cat.name}</option>
                 ))}
               </select>
             </div>

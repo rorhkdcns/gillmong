@@ -14,31 +14,23 @@ type NavItem =
   | { label: string; href: string; dropdown?: never }
   | { label: string; href?: never; dropdown: DropdownItem[] }
 
-const NAV: NavItem[] = [
-  { label: '홈', href: '/' },
-  { label: '꿈 감정하기', href: '/#appraisal' },
-  {
-    label: '꿈 구경하기',
-    dropdown: [
-      { label: '인물·신체', href: '/category/people' },
-      { label: '동물·식물', href: '/category/animals' },
-      { label: '자연·사물', href: '/category/nature' },
-      { label: '행동·상황', href: '/category/action' },
-      { label: '기타',     href: '/category/etc' },
-    ],
-  },
-  {
-    label: '고객지원',
-    dropdown: [
-      { label: '길몽상점소개', href: '/guide'       },
-      { label: '고객센터',    href: '/support'     },
-      { label: '이용안내',    href: '/usage-guide' },
-      { label: 'FAQ',        href: '/faq'         },
-      { label: '공지사항',    href: '/notice'      },
-      { label: '1:1 문의',   href: '/inquiry'     },
-      { label: '제휴문의',    href: '/partnerships'},
-    ],
-  },
+// 카테고리 목록을 불러오기 전 잠깐 보여줄 폴백 (깜빡임 방지용, DB 응답 오면 즉시 교체됨)
+const FALLBACK_CATEGORIES: DropdownItem[] = [
+  { label: '인물·신체', href: '/category/people' },
+  { label: '동물·식물', href: '/category/animals' },
+  { label: '자연·사물', href: '/category/nature' },
+  { label: '행동·상황', href: '/category/action' },
+  { label: '기타',     href: '/category/etc' },
+]
+
+const SUPPORT_DROPDOWN: DropdownItem[] = [
+  { label: '길몽상점소개', href: '/guide'       },
+  { label: '고객센터',    href: '/support'     },
+  { label: '이용안내',    href: '/usage-guide' },
+  { label: 'FAQ',        href: '/faq'         },
+  { label: '공지사항',    href: '/notice'      },
+  { label: '1:1 문의',   href: '/inquiry'     },
+  { label: '제휴문의',    href: '/partnerships'},
 ]
 
 function ChevronDown({ className }: { className?: string }) {
@@ -62,11 +54,33 @@ export default function SiteHeader() {
   const [nickname, setNickname]     = useState('')
   // 모바일 아코디언: 드롭다운 label로 관리
   const [mobileOpen, setMobileOpen] = useState<string | null>(null)
+  const [categoryItems, setCategoryItems] = useState<DropdownItem[]>(FALLBACK_CATEGORIES)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const NAV: NavItem[] = [
+    { label: '홈', href: '/' },
+    { label: '꿈 감정하기', href: '/#appraisal' },
+    { label: '꿈 구경하기', dropdown: categoryItems },
+    { label: '고객지원',   dropdown: SUPPORT_DROPDOWN },
+  ]
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : 'unset'
   }, [menuOpen])
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase
+      .from('categories')
+      .select('name, slug')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true })
+      .then(({ data }: { data: { name: string; slug: string }[] | null }) => {
+        if (data && data.length > 0) {
+          setCategoryItems(data.map((c) => ({ label: c.name, href: `/category/${c.slug}` })))
+        }
+      })
+  }, [])
 
   useEffect(() => {
     if (searchOpen) inputRef.current?.focus()

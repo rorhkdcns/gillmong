@@ -6,33 +6,27 @@ import BannerSlider from '@/components/BannerSlider'
 import HeroSlider from '@/components/HeroSlider'
 import CategoryCarousel from '@/components/CategoryCarousel'
 import { GRADE_GUIDE_LIST } from '@/lib/dreamDisplay'
+import { getActiveCategories } from '@/lib/categories'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
-const CATEGORIES = [
-  { slug: 'people',  label: '인물·신체' },
-  { slug: 'animals', label: '동물·식물' },
-  { slug: 'nature',  label: '자연·사물' },
-  { slug: 'action',  label: '행동·상황' },
-  { slug: 'etc',     label: '기타' },
-]
-
 export default async function Home() {
   const supabase = createAdminClient()
+  const categories = await getActiveCategories()
 
-  // 배너 + 5개 카테고리 병렬 조회
+  // 배너 + 카테고리별 꿈 병렬 조회
   const [{ data: activeBanners }, ...categoryResults] = await Promise.all([
     supabase
       .from('banners')
       .select('id, image_url, link_url')
       .eq('is_active', true)
       .order('order', { ascending: true }),
-    ...CATEGORIES.map(({ slug }) =>
+    ...categories.map(({ id }) =>
       supabase
         .from('dreams')
         .select('id, title, summary, grade, price, user_id')
-        .eq('category', slug)
+        .eq('category_id', id)
         .eq('is_sold', false)
         .order('created_at', { ascending: false })
         .limit(10)
@@ -112,7 +106,7 @@ export default async function Home() {
 
       {/* ③–⑦ 카테고리 섹션 */}
       <div id="categories" className="scroll-mt-20 border-t border-brand-line bg-brand-page">
-        {CATEGORIES.map(({ slug, label }, idx) => (
+        {categories.map(({ slug, name }, idx) => (
           <section
             key={slug}
             className={`px-6 py-12 ${idx !== 0 ? 'border-t border-brand-line' : ''}`}
@@ -125,7 +119,7 @@ export default async function Home() {
                   className="group inline-flex items-center"
                 >
                   <h2 className="text-xl font-black text-brand-ink transition group-hover:text-brand-violet sm:text-2xl">
-                    {label}
+                    {name}
                   </h2>
                 </Link>
               </div>
