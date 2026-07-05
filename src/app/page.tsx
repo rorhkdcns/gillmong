@@ -5,7 +5,6 @@ import SiteFooter from '@/components/SiteFooter'
 import BannerSlider from '@/components/BannerSlider'
 import HeroSlider from '@/components/HeroSlider'
 import CategoryCarousel from '@/components/CategoryCarousel'
-import { GRADE_GUIDE_LIST } from '@/lib/dreamDisplay'
 import { getActiveCategories } from '@/lib/categories'
 import Link from 'next/link'
 
@@ -74,32 +73,6 @@ export default async function Home() {
               <p className="mt-2 text-base font-medium text-brand-ink-soft">Dream Appraisal Center</p>
             </div>
             <DreamInput />
-          </div>
-        </div>
-      </section>
-
-      {/* ②-b 등급 안내 */}
-      <section className="bg-white px-6 py-16 md:py-20">
-        <div className="mx-auto max-w-4xl text-center">
-          <div className="mb-10 flex justify-center">
-            <div className="flex h-28 w-28 flex-col items-center justify-center rounded-full bg-brand-ink shadow-xl md:h-32 md:w-32">
-              <span className="mb-1 text-lg text-brand-gold">☆</span>
-              <span className="text-[10px] tracking-widest text-brand-gold">EXCEL</span>
-              <span className="text-[10px] text-white/80">GILLMONG</span>
-              <span className="text-sm text-white">GRADE</span>
-            </div>
-          </div>
-          <h2 className="mb-8 text-2xl font-black text-brand-ink md:text-3xl">등급 안내</h2>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 md:gap-5">
-            {GRADE_GUIDE_LIST.map((g) => (
-              <div key={g.grade} className="flex flex-col items-center rounded-2xl bg-brand-page p-5 text-center shadow-sm">
-                <div className={`mb-3 flex h-12 w-12 items-center justify-center rounded-full text-xl font-bold text-white shadow ${g.badgeBg}`}>
-                  {g.grade}
-                </div>
-                <p className="mb-1 text-sm font-semibold text-brand-ink">{g.rank}</p>
-                <p className="text-xs leading-relaxed text-brand-ink-soft">{g.desc}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
