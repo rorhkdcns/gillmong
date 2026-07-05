@@ -93,10 +93,10 @@ export default function FloatingDreamButton() {
           onClick={handleOpen}
           disabled={remaining === 0}
           aria-label="꿈 감정하기"
-          className={`relative flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-transform ${
+          className={`relative flex h-14 w-14 items-center justify-center rounded-full shadow-[0_12px_30px_rgba(11,36,51,0.35)] transition-transform ${
             remaining === 0
               ? 'cursor-not-allowed bg-gray-400'
-              : 'bg-[#01273A] hover:scale-105 hover:brightness-90'
+              : 'bg-gradient-to-br from-brand-violet to-brand-pink hover:scale-105 hover:brightness-95'
           }`}
         >
           <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24">
@@ -104,7 +104,7 @@ export default function FloatingDreamButton() {
           </svg>
           {remaining !== null && (
             <span className={`absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full text-xs font-black text-white ${
-              remaining === 0 ? 'bg-gray-500' : 'bg-[#E07B2A]'
+              remaining === 0 ? 'bg-gray-500' : 'bg-brand-gold'
             }`}>
               {remaining}
             </span>

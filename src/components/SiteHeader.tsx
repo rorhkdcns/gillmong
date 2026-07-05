@@ -132,7 +132,7 @@ export default function SiteHeader() {
     <>
       <FloatingDreamButton />
       <div className="sticky top-0 z-50">
-        <header className="border-b border-gray-200 bg-white">
+        <header className="border-b border-brand-line bg-white/85 backdrop-blur-lg">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
 
             {/* 로고 */}
@@ -147,21 +147,21 @@ export default function SiteHeader() {
                   /* 드롭다운 메뉴 */
                   <div key={item.label} className="group relative">
                     <button
-                      className="flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-[#333333] transition-colors hover:text-[#01273A]"
+                      className="flex items-center gap-1 rounded-full px-3 py-2 text-[0.95rem] font-semibold text-brand-ink-soft transition-colors hover:text-brand-ink"
                     >
                       {item.label}
-                      <ChevronDown className="h-3 w-3 transition-transform duration-200 group-hover:rotate-180" />
+                      <ChevronDown className="h-2.5 w-2.5 opacity-60 transition-transform duration-200 group-hover:rotate-180" />
                     </button>
 
                     {/* 드롭다운 패널 */}
-                    <div className="absolute left-0 top-full invisible pt-1 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100">
-                      <ul className="min-w-[140px] overflow-hidden rounded-xl border border-gray-100 bg-white py-1.5 shadow-lg">
+                    <div className="absolute left-1/2 top-full -translate-x-1/2 pt-2.5 invisible opacity-0 translate-y-1.5 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0">
+                      <ul className="min-w-[150px] overflow-hidden rounded-2xl border border-brand-line bg-white p-1.5 shadow-[0_14px_34px_rgba(11,36,51,0.12)]">
                         {item.dropdown.map((d) => (
                           <li key={d.label}>
                             <Link
                               href={d.href}
-                              className={`block px-4 py-2 text-sm transition-colors hover:bg-[#F7F7F5] hover:text-[#01273A] ${
-                                pathname === d.href ? 'font-semibold text-[#E07B2A]' : 'text-[#333333]'
+                              className={`block rounded-lg px-4 py-2.5 text-sm transition-colors hover:bg-brand-primary-light hover:text-brand-primary-hover ${
+                                pathname === d.href ? 'font-semibold text-brand-primary' : 'text-brand-ink-soft'
                               }`}
                             >
                               {d.label}
@@ -176,7 +176,7 @@ export default function SiteHeader() {
                   <Link
                     key={item.label}
                     href={item.href!}
-                    className="rounded-md px-3 py-2 text-sm font-medium text-[#333333] transition-colors hover:text-[#01273A]"
+                    className="rounded-full px-3 py-2 text-[0.95rem] font-semibold text-brand-ink-soft transition-colors hover:text-brand-ink"
                   >
                     {item.label}
                   </Link>
@@ -185,12 +185,12 @@ export default function SiteHeader() {
             </nav>
 
             {/* 우측 액션 */}
-            <div className="flex items-center gap-4 text-[#333333]">
+            <div className="flex items-center gap-4 text-brand-ink-soft">
               {/* 검색 버튼 (데스크탑) */}
               <button
                 type="button"
                 onClick={() => setSearchOpen((v) => !v)}
-                className={`hidden transition-colors hover:text-[#01273A] md:block ${searchOpen ? 'text-[#01273A]' : ''}`}
+                className={`hidden transition-colors hover:text-brand-ink md:block ${searchOpen ? 'text-brand-ink' : ''}`}
               >
                 {searchOpen
                   ? <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -200,16 +200,16 @@ export default function SiteHeader() {
               {/* 로그인/유저 (데스크탑) */}
               <Link
                 href={loggedIn ? '/mypage' : '/auth/login'}
-                className="flex items-center gap-1.5 text-[#333333] transition-colors hover:text-[#01273A] max-md:hidden"
+                className="flex items-center gap-1.5 text-brand-ink-soft transition-colors hover:text-brand-ink max-md:hidden"
               >
                 <svg className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z" />
                 </svg>
                 {loggedIn ? (
                   <span className="flex flex-col leading-tight">
-                    <span className="text-sm font-semibold">{nickname}님</span>
+                    <span className="text-sm font-semibold text-brand-ink">{nickname}님</span>
                     {remaining !== null && (
-                      <span className={`text-xs font-normal ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>
+                      <span className={`text-xs font-normal ${remaining === 0 ? 'text-red-400' : 'text-brand-primary'}`}>
                         해몽 {remaining}회 남음
                       </span>
                     )}
@@ -222,9 +222,9 @@ export default function SiteHeader() {
               {/* 로그인 상태 (모바일) */}
               {loggedIn && (
                 <Link href="/mypage" className="flex flex-col items-end leading-tight md:hidden">
-                  <span className="text-xs font-semibold text-[#01273A]">{nickname}님</span>
+                  <span className="text-xs font-semibold text-brand-ink">{nickname}님</span>
                   {remaining !== null && (
-                    <span className={`text-[10px] ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>
+                    <span className={`text-[10px] ${remaining === 0 ? 'text-red-400' : 'text-brand-primary'}`}>
                       해몽 {remaining}회 남음
                     </span>
                   )}
@@ -232,7 +232,7 @@ export default function SiteHeader() {
               )}
 
               {/* 햄버거 (모바일) */}
-              <button type="button" onClick={() => setMenuOpen(true)} className="flex items-center justify-center text-[#01273A] md:hidden">
+              <button type="button" onClick={() => setMenuOpen(true)} className="flex items-center justify-center text-brand-ink md:hidden">
                 <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
@@ -242,10 +242,10 @@ export default function SiteHeader() {
         </header>
 
         {/* 데스크탑 검색바 */}
-        <div className={`overflow-hidden border-b border-gray-200 bg-white transition-all duration-300 ease-in-out ${searchOpen ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0'}`}>
+        <div className={`overflow-hidden border-b border-brand-line bg-white transition-all duration-300 ease-in-out ${searchOpen ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0'}`}>
           <form onSubmit={(e) => handleSearch(e, query, 'desktop')} className="mx-auto flex max-w-6xl items-center gap-3 px-6 py-3">
-            <input ref={inputRef} type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="꿈 제목 또는 내용으로 검색" className="flex-1 bg-transparent text-base outline-none" />
-            <button type="submit" className="shrink-0 bg-[#01273A] px-5 py-2 text-sm font-semibold text-white">검색</button>
+            <input ref={inputRef} type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="꿈 제목 또는 내용으로 검색" className="flex-1 bg-transparent text-base text-brand-ink outline-none placeholder:text-brand-ink-soft/60" />
+            <button type="submit" className="shrink-0 rounded-full bg-brand-ink px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-primary-hover">검색</button>
           </form>
         </div>
       </div>
@@ -259,9 +259,9 @@ export default function SiteHeader() {
       {/* 모바일 사이드 패널 */}
       <div className={`fixed right-0 top-0 z-[70] h-full w-72 bg-white shadow-2xl transition-transform duration-300 ease-in-out md:hidden ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         {/* 패널 헤더 */}
-        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
-          <span className="text-base font-semibold text-[#01273A]">메뉴</span>
-          <button type="button" onClick={() => setMenuOpen(false)} className="text-[#01273A]">
+        <div className="flex items-center justify-between border-b border-brand-line px-5 py-4">
+          <span className="text-base font-semibold text-brand-ink">메뉴</span>
+          <button type="button" onClick={() => setMenuOpen(false)} className="text-brand-ink">
             <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -270,20 +270,20 @@ export default function SiteHeader() {
 
         <div className="flex flex-col overflow-y-auto" style={{ height: 'calc(100% - 57px)' }}>
           {/* 검색 */}
-          <div className="border-b border-gray-100 px-5 py-4">
-            <form onSubmit={(e) => handleSearch(e, mobileQuery, 'mobile')} className="flex items-center gap-2 rounded-full border border-gray-200 px-4 py-2">
-              <input type="text" value={mobileQuery} onChange={(e) => setMobileQuery(e.target.value)} placeholder="꿈 검색" className="flex-1 bg-transparent text-sm outline-none" />
+          <div className="border-b border-brand-line px-5 py-4">
+            <form onSubmit={(e) => handleSearch(e, mobileQuery, 'mobile')} className="flex items-center gap-2 rounded-full border border-brand-line px-4 py-2">
+              <input type="text" value={mobileQuery} onChange={(e) => setMobileQuery(e.target.value)} placeholder="꿈 검색" className="flex-1 bg-transparent text-sm text-brand-ink outline-none" />
             </form>
           </div>
 
           {/* 로그인/회원가입 */}
-          <div className="flex flex-col gap-1 border-b border-gray-100 px-5 py-3">
-            <Link href={loggedIn ? '/mypage' : '/auth/login'} onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-semibold text-[#01273A] hover:bg-gray-50">
+          <div className="flex flex-col gap-1 border-b border-brand-line px-5 py-3">
+            <Link href={loggedIn ? '/mypage' : '/auth/login'} onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2.5 text-sm font-semibold text-brand-ink hover:bg-brand-primary-light">
               {loggedIn ? (
                 <span className="flex items-center justify-between">
                   <span>{nickname}님</span>
                   {remaining !== null && (
-                    <span className={`text-xs font-normal ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>
+                    <span className={`text-xs font-normal ${remaining === 0 ? 'text-red-400' : 'text-brand-primary'}`}>
                       해몽 {remaining}회 남음
                     </span>
                   )}
@@ -291,12 +291,12 @@ export default function SiteHeader() {
               ) : '로그인'}
             </Link>
             {!loggedIn && (
-              <Link href="/auth/signup" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2.5 text-sm text-[#01273A] hover:bg-gray-50">회원가입</Link>
+              <Link href="/auth/signup" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-2.5 text-sm text-brand-ink hover:bg-brand-primary-light">회원가입</Link>
             )}
           </div>
 
           {/* 네비게이션 */}
-          <div className="flex flex-col gap-0.5 border-b border-gray-100 px-5 py-3">
+          <div className="flex flex-col gap-0.5 border-b border-brand-line px-5 py-3">
             {NAV.map((item) =>
               item.dropdown ? (
                 <div key={item.label}>
@@ -304,20 +304,20 @@ export default function SiteHeader() {
                   <button
                     type="button"
                     onClick={() => setMobileOpen(mobileOpen === item.label ? null : item.label)}
-                    className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm text-[#01273A] hover:bg-gray-50"
+                    className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm text-brand-ink hover:bg-brand-primary-light"
                   >
-                    <span className={isActive(item) ? 'font-semibold text-[#E07B2A]' : ''}>{item.label}</span>
+                    <span className={isActive(item) ? 'font-semibold text-brand-primary' : ''}>{item.label}</span>
                     <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${mobileOpen === item.label ? 'rotate-180' : ''}`} />
                   </button>
                   {/* 아코디언 내용 */}
                   {mobileOpen === item.label && (
-                    <div className="ml-3 mt-0.5 flex flex-col gap-0.5 border-l-2 border-gray-100 pl-3">
+                    <div className="ml-3 mt-0.5 flex flex-col gap-0.5 border-l-2 border-brand-line pl-3">
                       {item.dropdown.map((d) => (
                         <Link
                           key={d.label}
                           href={d.href}
                           onClick={() => { setMenuOpen(false); setMobileOpen(null) }}
-                          className={`rounded-lg px-3 py-2 text-sm ${pathname === d.href ? 'font-semibold text-[#E07B2A]' : 'text-[#555555] hover:bg-gray-50 hover:text-[#01273A]'}`}
+                          className={`rounded-lg px-3 py-2 text-sm ${pathname === d.href ? 'font-semibold text-brand-primary' : 'text-brand-ink-soft hover:bg-brand-primary-light hover:text-brand-ink'}`}
                         >
                           {d.label}
                         </Link>
@@ -330,7 +330,7 @@ export default function SiteHeader() {
                   key={item.label}
                   href={item.href!}
                   onClick={() => setMenuOpen(false)}
-                  className={`rounded-lg px-3 py-2.5 text-sm ${isActive(item) ? 'font-semibold text-[#E07B2A]' : 'text-[#01273A] hover:bg-gray-50'}`}
+                  className={`rounded-lg px-3 py-2.5 text-sm ${isActive(item) ? 'font-semibold text-brand-primary' : 'text-brand-ink hover:bg-brand-primary-light'}`}
                 >
                   {item.label}
                 </Link>
