@@ -19,12 +19,12 @@ export default async function WithdrawPage() {
         <div className="mx-auto w-full max-w-lg space-y-6">
 
           <div className="flex items-center gap-3">
-            <Link href="/mypage" className="text-[#777777] hover:text-[#01273A]">
+            <Link href="/mypage" className="text-[#777777] hover:text-[#0B2433]">
               <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
             </Link>
-            <h1 className="text-xl font-bold text-[#01273A]">회원 탈퇴</h1>
+            <h1 className="text-xl font-bold text-[#0B2433]">회원 탈퇴</h1>
           </div>
 
           <section className="rounded-2xl border border-red-200 bg-white p-6 md:p-8">
@@ -34,7 +34,7 @@ export default async function WithdrawPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                 </svg>
               </div>
-              <h2 className="text-lg font-black text-[#01273A]">정말로 탈퇴하시겠습니까?</h2>
+              <h2 className="text-lg font-black text-[#0B2433]">정말로 탈퇴하시겠습니까?</h2>
               <p className="text-sm text-[#777777]">탈퇴 시 아래의 모든 데이터가 <span className="font-semibold text-red-500">영구 삭제</span>됩니다.</p>
             </div>
 

@@ -88,7 +88,7 @@ export default function PointTabs() {
             onClick={() => setActive(key)}
             className={`flex-1 whitespace-nowrap py-3 text-center text-sm font-medium transition-colors ${
               active === key
-                ? 'border-b-2 border-[#01273A] font-bold text-[#01273A]'
+                ? 'border-b-2 border-[#0B2433] font-bold text-[#0B2433]'
                 : 'text-[#555555] hover:text-[#333333]'
             }`}
           >

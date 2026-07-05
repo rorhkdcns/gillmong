@@ -77,7 +77,7 @@ export default function EscrowOrders({ orders }: { orders: Order[] }) {
 
   return (
     <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm md:p-8">
-      <h2 className="mb-5 text-xl font-black text-[#01273A]">결제 주문 내역</h2>
+      <h2 className="mb-5 text-xl font-black text-[#0B2433]">결제 주문 내역</h2>
       <ul className="divide-y divide-gray-100">
         {orders.map((o) => {
           const st   = STATUS_META[o.status] ?? { label: o.status, cls: 'bg-gray-100 text-gray-500' }
@@ -88,7 +88,7 @@ export default function EscrowOrders({ orders }: { orders: Order[] }) {
                 <div className="min-w-0 flex-1">
                   <a
                     href={`/dream/${o.dream_id}`}
-                    className="block truncate text-base font-semibold text-[#333] hover:text-[#E07B2A]"
+                    className="block truncate text-base font-semibold text-[#333] hover:text-[#14547A]"
                   >
                     {o.dream_title ?? `꿈 #${o.dream_id}`}
                   </a>
@@ -109,7 +109,7 @@ export default function EscrowOrders({ orders }: { orders: Order[] }) {
                   <button
                     onClick={() => handleConfirm(o.id)}
                     disabled={working === o.id}
-                    className="rounded-lg bg-[#01273A] px-4 py-2 text-xs font-semibold text-white transition hover:brightness-90 disabled:opacity-50"
+                    className="rounded-lg bg-[#0B2433] px-4 py-2 text-xs font-semibold text-white transition hover:brightness-90 disabled:opacity-50"
                   >
                     {working === o.id ? '처리 중...' : '구매확정'}
                   </button>

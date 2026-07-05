@@ -50,26 +50,26 @@ export default async function WithdrawalPage() {
 
           {/* 헤더 */}
           <div className="flex items-center gap-3">
-            <Link href="/mypage" className="text-[#777777] hover:text-[#01273A]">
+            <Link href="/mypage" className="text-[#777777] hover:text-[#0B2433]">
               <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
             </Link>
-            <h1 className="text-xl font-bold text-[#01273A]">출금 신청</h1>
+            <h1 className="text-xl font-bold text-[#0B2433]">출금 신청</h1>
           </div>
 
           {/* 현재 잔액 */}
           <section className="border border-gray-200 bg-white p-5">
             <p className="mb-1 text-sm text-[#777777]">출금 가능 잔액</p>
             <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-bold text-[#E07B2A]">{balance.toLocaleString()}</span>
+              <span className="text-3xl font-bold text-[#14547A]">{balance.toLocaleString()}</span>
               <span className="text-base text-[#777777]">원</span>
             </div>
           </section>
 
           {/* 출금 신청 폼 */}
           <section className="border border-gray-200 bg-white p-5 md:p-8">
-            <h2 className="mb-5 inline-block bg-[#01273A] px-3 py-1 text-sm font-semibold text-white">신청 정보</h2>
+            <h2 className="mb-5 inline-block bg-[#0B2433] px-3 py-1 text-sm font-semibold text-white">신청 정보</h2>
             {balance < 5000 ? (
               <div className="rounded border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-700">
                 출금 가능한 잔액이 부족합니다. (최소 5,000원)
@@ -82,7 +82,7 @@ export default async function WithdrawalPage() {
           {/* 신청 내역 */}
           {(history ?? []).length > 0 && (
             <section className="border border-gray-200 bg-white p-5 md:p-8">
-              <h2 className="mb-4 inline-block bg-[#01273A] px-3 py-1 text-sm font-semibold text-white">신청 내역</h2>
+              <h2 className="mb-4 inline-block bg-[#0B2433] px-3 py-1 text-sm font-semibold text-white">신청 내역</h2>
               <ul className="divide-y divide-gray-100">
                 {(history ?? []).map((row) => {
                   const st = STATUS_LABEL[row.status] ?? { label: row.status, color: 'text-gray-400' }

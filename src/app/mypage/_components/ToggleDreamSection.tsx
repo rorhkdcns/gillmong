@@ -20,7 +20,7 @@ export default function ToggleDreamSection({
     <section className="border border-gray-200 bg-white p-5 md:p-8">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h2 className="text-lg text-[#01273A]">{title}</h2>
+          <h2 className="text-lg text-[#0B2433]">{title}</h2>
           <span className="text-sm text-[#777777]">{count}건</span>
         </div>
         <button
@@ -28,8 +28,8 @@ export default function ToggleDreamSection({
           onClick={() => setView(v => v === 'list' ? 'calendar' : 'list')}
           className={`flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors ${
             view === 'calendar'
-              ? 'border-[#01273A] bg-[#01273A] text-white'
-              : 'border-gray-300 text-[#555555] hover:border-[#01273A] hover:text-[#01273A]'
+              ? 'border-[#0B2433] bg-[#0B2433] text-white'
+              : 'border-gray-300 text-[#555555] hover:border-[#0B2433] hover:text-[#0B2433]'
           }`}
         >
           {view === 'list' ? (

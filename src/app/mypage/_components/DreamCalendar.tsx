@@ -2,14 +2,7 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
-
-const GRADE_COLOR: Record<string, string> = {
-  A: 'bg-emerald-500',
-  B: 'bg-blue-500',
-  C: 'bg-amber-400',
-  D: 'bg-orange-400',
-  E: 'bg-red-400',
-}
+import { GRADE_INFO, type Grade } from '@/lib/dreamDisplay'
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -100,7 +93,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
             value={startDate}
             onChange={handleStartDate}
             max={endDate || undefined}
-            className="flex-1 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-[#333333] outline-none focus:border-[#01273A]"
+            className="flex-1 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-[#333333] outline-none focus:border-[#0B2433]"
           />
           <span className="text-sm text-[#777777]">~</span>
           <input
@@ -108,7 +101,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
             value={endDate}
             onChange={handleEndDate}
             min={startDate || undefined}
-            className="flex-1 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-[#333333] outline-none focus:border-[#01273A]"
+            className="flex-1 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-[#333333] outline-none focus:border-[#0B2433]"
           />
           {hasFilter && (
             <button
@@ -121,7 +114,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
           )}
         </div>
         {hasFilter && (
-          <p className="mt-2 text-xs text-[#E07B2A]">
+          <p className="mt-2 text-xs text-[#14547A]">
             {filteredItems.length}건 표시 중
           </p>
         )}
@@ -136,7 +129,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
         >
           ‹ 이전
         </button>
-        <span className="text-sm font-semibold text-[#01273A]">{year}년 {month + 1}월</span>
+        <span className="text-sm font-semibold text-[#0B2433]">{year}년 {month + 1}월</span>
         <button
           type="button"
           onClick={() => { setBase(new Date(year, month + 1, 1)); setSelected(null) }}
@@ -173,7 +166,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
               onClick={() => setSelected(isSelected ? null : dateStr)}
               className={`flex flex-col items-center justify-center rounded-lg py-2 transition-colors ${
                 isSelected
-                  ? 'bg-[#01273A] text-white'
+                  ? 'bg-[#0B2433] text-white'
                   : count > 0
                   ? 'bg-amber-50 hover:bg-amber-100'
                   : hasFilter && !inRange
@@ -181,11 +174,11 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
                   : 'hover:bg-gray-50'
               } ${!isSelected && dow === 0 ? 'text-red-400' : ''} ${!isSelected && dow === 6 ? 'text-blue-400' : ''}`}
             >
-              <span className={`text-xs font-medium leading-none ${isToday && !isSelected ? 'underline decoration-[#E07B2A] underline-offset-2' : ''}`}>
+              <span className={`text-xs font-medium leading-none ${isToday && !isSelected ? 'underline decoration-[#14547A] underline-offset-2' : ''}`}>
                 {day}
               </span>
               {count > 0 && (
-                <span className={`mt-0.5 h-1 w-1 rounded-full ${isSelected ? 'bg-white' : 'bg-[#E07B2A]'}`} />
+                <span className={`mt-0.5 h-1 w-1 rounded-full ${isSelected ? 'bg-white' : 'bg-[#14547A]'}`} />
               )}
             </button>
           )
@@ -203,7 +196,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
               {(byDate[selected] ?? []).map(item => (
                 <li key={item.id} className="flex items-center justify-between py-3">
                   <div className="flex min-w-0 items-center gap-2">
-                    <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_COLOR[item.grade] ?? 'bg-gray-400'}`}>
+                    <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_INFO[item.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
                       {item.grade}
                     </span>
                     <Link href={item.href} className="truncate text-sm text-[#333333] hover:underline">
@@ -211,7 +204,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
                     </Link>
                   </div>
                   {item.price != null && (
-                    <span className="ml-2 shrink-0 text-sm font-semibold text-[#E07B2A]">
+                    <span className="ml-2 shrink-0 text-sm font-semibold text-[#14547A]">
                       {item.price.toLocaleString()}원
                     </span>
                   )}

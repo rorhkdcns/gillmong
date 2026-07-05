@@ -37,7 +37,7 @@ export default function WithdrawConfirm() {
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-2xl">
-            <h3 className="mb-2 text-center text-lg font-black text-[#01273A]">마지막 확인</h3>
+            <h3 className="mb-2 text-center text-lg font-black text-[#0B2433]">마지막 확인</h3>
             <p className="mb-6 text-center text-sm text-[#777777]">
               탈퇴하면 모든 데이터가 즉시 삭제됩니다.<br />
               이 작업은 되돌릴 수 없습니다.
