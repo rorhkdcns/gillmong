@@ -83,7 +83,7 @@ export default function CategoryCarousel({ dreams }: { dreams: Dream[] }) {
             onClick={prev}
             disabled={current === 0}
             aria-label="이전"
-            className="absolute left-0 top-1/2 z-10 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-xl shadow-md text-[#01273A] transition hover:bg-[#01273A] hover:text-white disabled:opacity-30"
+            className="absolute left-0 top-1/2 z-10 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-xl text-brand-ink shadow-md transition hover:bg-brand-violet hover:text-white disabled:opacity-30"
           >
             ‹
           </button>
@@ -91,7 +91,7 @@ export default function CategoryCarousel({ dreams }: { dreams: Dream[] }) {
             onClick={next}
             disabled={current >= maxIndex}
             aria-label="다음"
-            className="absolute right-0 top-1/2 z-10 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-xl shadow-md text-[#01273A] transition hover:bg-[#01273A] hover:text-white disabled:opacity-30"
+            className="absolute right-0 top-1/2 z-10 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-xl text-brand-ink shadow-md transition hover:bg-brand-violet hover:text-white disabled:opacity-30"
           >
             ›
           </button>
@@ -107,7 +107,7 @@ export default function CategoryCarousel({ dreams }: { dreams: Dream[] }) {
               onClick={() => setCurrent(i)}
               aria-label={`${i + 1}번째`}
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === current ? 'w-5 bg-[#01273A]' : 'w-1.5 bg-gray-300'
+                i === current ? 'w-5 bg-brand-violet' : 'w-1.5 bg-gray-300'
               }`}
             />
           ))}

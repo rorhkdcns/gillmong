@@ -211,7 +211,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
               value={editedDream}
               onChange={(e) => setEditedDream(e.target.value)}
               rows={3}
-              className="w-full resize-none rounded-lg bg-brand-page px-3 py-2 text-sm leading-relaxed text-brand-body outline-none focus:ring-1 focus:ring-[#01273A]"
+              className="w-full resize-none rounded-lg bg-brand-page px-3 py-2 text-sm leading-relaxed text-brand-body outline-none focus:ring-1 focus:ring-brand-violet"
             />
           </section>
 
@@ -257,7 +257,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
               {analysis.lucky_numbers.map((num) => (
                 <div
                   key={num}
-                  className="flex h-11 w-11 items-center justify-center rounded-full bg-[#E07B2A] text-sm font-black text-white shadow"
+                  className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-brand-violet to-brand-pink text-sm font-black text-white shadow"
                 >
                   {num}
                 </div>
@@ -278,7 +278,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="꿈을 한 줄로 표현해주세요"
-                className="w-full rounded-lg border border-[#CCCCCC] bg-white px-3 py-2 text-sm text-brand-heading outline-none focus:border-[#01273A]"
+                className="w-full rounded-lg border border-[#CCCCCC] bg-white px-3 py-2 text-sm text-brand-heading outline-none focus:border-brand-violet"
               />
             </div>
 
@@ -306,7 +306,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
                   onBlur={handlePriceBlur}
                   min="5000"
                   step="100"
-                  className="w-full rounded-lg border border-[#CCCCCC] bg-white px-3 py-2 pr-8 text-sm text-brand-heading outline-none focus:border-[#01273A]"
+                  className="w-full rounded-lg border border-[#CCCCCC] bg-white px-3 py-2 pr-8 text-sm text-brand-heading outline-none focus:border-brand-violet"
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-brand-muted">P</span>
               </div>
@@ -321,14 +321,14 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
               <button
                 onClick={handleRegister}
                 disabled={saving || savingPrivate || !!priceError}
-                className="flex-1 rounded-lg bg-[#01273A] py-2.5 text-sm font-bold text-white transition-colors hover:brightness-90 disabled:opacity-60"
+                className="flex-1 rounded-lg bg-gradient-to-r from-brand-violet to-brand-pink py-2.5 text-sm font-bold text-white transition-all hover:brightness-95 disabled:opacity-60"
               >
                 {saving ? '등록 중...' : '마켓 등록'}
               </button>
               <button
                 onClick={handlePrivateSave}
                 disabled={saving || savingPrivate}
-                className="flex-1 rounded-lg border-2 border-[#01273A] bg-white py-2.5 text-sm font-bold text-[#01273A] transition-colors hover:bg-[#01273A] hover:text-white disabled:opacity-60"
+                className="flex-1 rounded-lg border-2 border-brand-violet bg-white py-2.5 text-sm font-bold text-brand-violet-deep transition-colors hover:bg-brand-violet hover:text-white disabled:opacity-60"
               >
                 {savingPrivate ? '저장 중...' : '개인 저장'}
               </button>

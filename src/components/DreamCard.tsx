@@ -15,8 +15,8 @@ export default function DreamCard({ id, title, body, grade, price, is_sold = fal
     <article
       className={`flex flex-col rounded-xl border p-4 shadow-sm transition-shadow md:rounded-2xl md:p-6 ${
         is_sold
-          ? 'border-gray-200 bg-gray-50 opacity-70'
-          : 'border-gray-200 bg-white hover:shadow-md'
+          ? 'border-brand-line bg-gray-50 opacity-70'
+          : 'border-brand-line bg-white hover:shadow-[0_20px_34px_rgba(11,36,51,0.12)]'
       }`}
     >
       {/* 등급 + 닉네임 */}
@@ -27,27 +27,27 @@ export default function DreamCard({ id, title, body, grade, price, is_sold = fal
         {is_sold ? (
           <span className="rounded-full bg-gray-400 px-2 py-0.5 text-xs font-bold text-white">판매완료</span>
         ) : nickname ? (
-          <span className="truncate text-xs text-gray-400 md:text-sm">@{nickname}</span>
+          <span className="truncate text-xs text-brand-ink-soft md:text-sm">@{nickname}</span>
         ) : null}
       </div>
 
       {/* 제목 */}
-      <h3 className="mb-2 line-clamp-2 text-sm font-semibold leading-snug text-[#555555] md:mb-3 md:text-lg">
+      <h3 className="mb-2 line-clamp-2 text-sm font-semibold leading-snug text-brand-ink md:mb-3 md:text-lg">
         {title}
       </h3>
 
       {/* 내용 요약 */}
-      <p className="flex-1 line-clamp-2 text-xs leading-relaxed text-[#555555] md:text-sm md:line-clamp-3">
+      <p className="flex-1 line-clamp-2 text-xs leading-relaxed text-brand-ink-soft md:text-sm md:line-clamp-3">
         {body ?? ''}
       </p>
 
       {/* 감정가 + 버튼 */}
-      <div className="mt-3 border-t border-gray-100 pt-3 md:mt-4 md:pt-4">
+      <div className="mt-3 border-t border-brand-line pt-3 md:mt-4 md:pt-4">
         {/* 모바일: 세로 배치 */}
         <div className="flex flex-col items-center gap-2 md:hidden">
           <div className="text-center">
-            <span className="text-xs text-gray-400">감정가</span>
-            <p className={`text-sm font-bold ${is_sold ? 'text-gray-400' : 'text-[#E07B2A]'}`}>
+            <span className="text-xs text-brand-ink-soft">감정가</span>
+            <p className={`text-sm font-bold ${is_sold ? 'text-gray-400' : 'text-brand-ink'}`}>
               {price.toLocaleString()}원
             </p>
           </div>
@@ -58,7 +58,7 @@ export default function DreamCard({ id, title, body, grade, price, is_sold = fal
           ) : (
             <a
               href={`/dream/${id}`}
-              className="w-full rounded-full bg-[#6B96A8] py-2 text-center text-xs font-semibold text-white transition-all hover:brightness-90"
+              className="w-full rounded-full bg-brand-primary-light py-2 text-center text-xs font-semibold text-brand-primary-hover transition-colors hover:bg-brand-primary hover:text-white"
             >
               자세히 보기
             </a>
@@ -67,8 +67,8 @@ export default function DreamCard({ id, title, body, grade, price, is_sold = fal
         {/* PC: 가로 배치 */}
         <div className="hidden items-center justify-between md:flex">
           <div>
-            <span className="text-xs text-gray-400">감정가</span>
-            <p className={`text-base font-bold ${is_sold ? 'text-gray-400' : 'text-[#E07B2A]'}`}>
+            <span className="text-xs text-brand-ink-soft">감정가</span>
+            <p className={`text-base font-bold ${is_sold ? 'text-gray-400' : 'text-brand-ink'}`}>
               {price.toLocaleString()}원
             </p>
           </div>
@@ -79,7 +79,7 @@ export default function DreamCard({ id, title, body, grade, price, is_sold = fal
           ) : (
             <a
               href={`/dream/${id}`}
-              className="rounded-full bg-[#6B96A8] px-5 py-2 text-sm font-semibold text-white transition-all hover:brightness-90"
+              className="rounded-full bg-brand-primary-light px-5 py-2 text-sm font-semibold text-brand-primary-hover transition-colors hover:bg-brand-primary hover:text-white"
             >
               자세히 보기
             </a>

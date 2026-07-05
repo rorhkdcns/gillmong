@@ -129,45 +129,52 @@ export default function FloatingDreamButton() {
               </svg>
             </button>
 
-            <h2 className="mb-5 text-center text-xl font-black text-[#01273A]">나의 꿈 감정하기</h2>
+            <h2 className="mb-5 text-center text-xl font-black text-brand-ink">나의 꿈 감정하기</h2>
 
             {dailyLimitReached ? (
               <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-8 text-center">
                 <p className="mb-1 text-3xl">🌙</p>
-                <p className="font-black text-[#01273A]">오늘의 해몽 횟수를 모두 사용하셨습니다</p>
+                <p className="font-black text-brand-ink">오늘의 해몽 횟수를 모두 사용하셨습니다</p>
                 <p className="mt-2 text-sm text-amber-700">하루 3회 제공되며, 자정에 다시 초기화됩니다.</p>
               </div>
             ) : (
               <div className="flex flex-col gap-4">
 
                 {/* 정확도 안내 배너 */}
-                <div className="rounded-xl border-l-4 border-[#E07B2A] bg-[#01273A]/5 px-3.5 py-3">
-                  <p className="text-sm font-bold text-[#01273A]">더 상세하게 적을수록 해몽이 정확해집니다</p>
-                  <p className="mt-0.5 text-xs leading-relaxed text-[#444444]">
+                <div className="rounded-xl border-l-4 border-brand-violet bg-brand-primary-light px-3.5 py-3">
+                  <p className="text-sm font-bold text-brand-ink">더 상세하게 적을수록 해몽이 정확해집니다</p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-brand-ink-soft">
                     색상·냄새·온도·감정까지 떠오르는 대로 적어보세요. 단어 하나가 해몽의 방향을 바꿉니다.
                   </p>
                 </div>
 
                 {/* 입력 필드 */}
-                {DREAM_FIELDS.map((field) => {
+                {DREAM_FIELDS.map((field, i) => {
                   const charCount = answers[field.key].length
                   const isFocused = focusedKey === field.key
                   return (
                     <div key={field.key}>
-                      <label className="mb-0.5 block text-base font-bold text-[#01273A]">
-                        {field.label}
-                      </label>
-                      <p className="mb-1 text-xs font-medium text-[#555555]">{field.desc}</p>
+                      <div className="mb-0.5 flex items-start gap-2.5">
+                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-violet to-brand-pink text-xs font-bold text-white">
+                          {i + 1}
+                        </span>
+                        <div>
+                          <label className="block text-base font-bold text-brand-ink">
+                            {field.label}
+                          </label>
+                          <p className="text-xs font-medium text-brand-ink-soft">{field.desc}</p>
+                        </div>
+                      </div>
 
                       {/* 심리학 팁 */}
-                      <p className="mb-1.5 flex items-center gap-1 text-xs text-[#6B96A8]">
+                      <p className="mb-1.5 flex items-center gap-1 pl-[34px] text-xs text-[#6B96A8]">
                         <svg className="h-3 w-3 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                         </svg>
                         {field.tip}
                       </p>
 
-                      <div className="relative">
+                      <div className="relative pl-[34px]">
                         <textarea
                           value={answers[field.key]}
                           onChange={(e) => handleChange(field.key, e.target.value)}
@@ -175,11 +182,11 @@ export default function FloatingDreamButton() {
                           onBlur={() => setFocusedKey(null)}
                           placeholder={field.placeholder}
                           rows={isFocused ? 3 : 2}
-                          className="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-2.5 pb-6 text-sm text-[#01273A] placeholder:text-[#BBBBBB] outline-none transition-all focus:border-[#01273A] focus:shadow-[0_0_0_3px_rgba(1,39,58,0.08)]"
+                          className="w-full resize-none rounded-xl border border-brand-line bg-white px-4 py-2.5 pb-6 text-sm text-brand-ink placeholder:text-[#BBBBBB] outline-none transition-all focus:border-brand-violet focus:shadow-[0_0_0_3px_rgba(46,125,209,0.14)]"
                         />
                         {/* 글자 수 */}
                         <span className={`absolute bottom-2 right-3 text-xs transition-colors ${
-                          charCount === 0 ? 'text-transparent' : charCount >= 30 ? 'text-[#E07B2A] font-semibold' : 'text-[#AAAAAA]'
+                          charCount === 0 ? 'text-transparent' : charCount >= 30 ? 'text-brand-violet-deep font-semibold' : 'text-[#AAAAAA]'
                         }`}>
                           {charCount}자{charCount >= 30 ? ' ✓' : ''}
                         </span>
@@ -190,9 +197,9 @@ export default function FloatingDreamButton() {
 
                 {/* 작성량 진행바 */}
                 <div>
-                  <div className="mb-1 flex items-center justify-between text-sm text-[#555555]">
+                  <div className="mb-1 flex items-center justify-between text-sm text-brand-ink-soft">
                     <span>작성 충실도</span>
-                    <span className={fillPercent >= 100 ? 'font-bold text-emerald-500' : fillPercent >= 50 ? 'font-semibold text-[#E07B2A]' : 'text-[#888888]'}>
+                    <span className={fillPercent >= 100 ? 'font-bold text-emerald-500' : fillPercent >= 50 ? 'font-semibold text-brand-violet-deep' : 'text-[#888888]'}>
                       {fillLabel}
                     </span>
                   </div>
@@ -221,9 +228,9 @@ export default function FloatingDreamButton() {
                 )}
 
                 {remaining !== null && (
-                  <p className="text-center text-sm text-[#777777]">
+                  <p className="text-center text-sm text-brand-ink-soft">
                     오늘 해몽{' '}
-                    <span className={`font-bold ${remaining === 0 ? 'text-red-400' : 'text-[#E07B2A]'}`}>{remaining}회</span>
+                    <span className={`font-bold ${remaining === 0 ? 'text-red-400' : 'text-brand-violet-deep'}`}>{remaining}회</span>
                     {' '}남음
                   </p>
                 )}
@@ -232,7 +239,7 @@ export default function FloatingDreamButton() {
                   type="button"
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="w-full rounded-xl bg-[#01273A] py-4 text-lg font-black text-white transition-all hover:brightness-90 disabled:opacity-60"
+                  className="w-full rounded-xl bg-gradient-to-r from-brand-violet to-brand-pink py-4 text-lg font-black text-white transition-all hover:brightness-95 disabled:opacity-60"
                 >
                   나의 꿈 감정하기
                 </button>
@@ -246,10 +253,10 @@ export default function FloatingDreamButton() {
       {loading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="flex w-full max-w-sm flex-col items-center gap-6 rounded-2xl bg-white px-8 py-12 shadow-2xl text-center">
-            <div className="h-14 w-14 animate-spin rounded-full border-4 border-gray-200 border-t-[#01273A]" />
+            <div className="h-14 w-14 animate-spin rounded-full border-4 border-gray-200 border-t-brand-violet" />
             <div>
-              <p className="text-lg font-black text-[#01273A]">무의식의 서사를 분석하고 있습니다...</p>
-              <p className="mt-2 text-base text-[#777777]">AI가 꿈의 상징과 의미를 해석하는 중입니다.</p>
+              <p className="text-lg font-black text-brand-ink">무의식의 서사를 분석하고 있습니다...</p>
+              <p className="mt-2 text-base text-brand-ink-soft">AI가 꿈의 상징과 의미를 해석하는 중입니다.</p>
             </div>
           </div>
         </div>
