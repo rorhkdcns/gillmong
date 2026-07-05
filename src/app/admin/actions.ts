@@ -622,24 +622,62 @@ export async function adminRefundOrder(
 }
 
 // ── 카테고리 관리 ───────────────────────────────────────────────
+export interface AdminCategoryFields {
+  name: string
+  slug: string
+  domain: 'dream' | 'shop'
+  parentId: string | null
+  imageUrl: string | null
+}
+
 export async function createAdminCategory(
-  name: string, slug: string, sortOrder: number,
+  fields: AdminCategoryFields, sortOrder: number,
 ): Promise<{ success?: boolean; error?: string }> {
   const admin = createAdminClient()
   const { error } = await admin.from('categories').insert({
-    name, slug, sort_order: sortOrder, is_active: true,
+    name: fields.name,
+    slug: fields.slug,
+    domain: fields.domain,
+    parent_id: fields.parentId,
+    image_url: fields.imageUrl,
+    sort_order: sortOrder,
+    is_active: true,
   })
   if (error) return { error: error.message }
   return { success: true }
 }
 
 export async function updateAdminCategory(
-  id: string, name: string, slug: string,
+  id: string, fields: Omit<AdminCategoryFields, 'domain'>,
 ): Promise<{ success?: boolean; error?: string }> {
   const admin = createAdminClient()
-  const { error } = await admin.from('categories').update({ name, slug }).eq('id', id)
+  const { error } = await admin.from('categories').update({
+    name: fields.name,
+    slug: fields.slug,
+    parent_id: fields.parentId,
+    image_url: fields.imageUrl,
+  }).eq('id', id)
   if (error) return { error: error.message }
   return { success: true }
+}
+
+export async function uploadAdminCategoryImage(
+  formData: FormData,
+): Promise<{ url?: string; error?: string }> {
+  const file = formData.get('file')
+  if (!(file instanceof File)) return { error: '파일이 없습니다.' }
+
+  const admin = createAdminClient()
+  const ext  = file.name.split('.').pop() ?? 'jpg'
+  const path = `category_${Date.now()}.${ext}`
+
+  const { error: uploadErr } = await admin.storage
+    .from('categories')
+    .upload(path, file, { upsert: true })
+  if (uploadErr) return { error: uploadErr.message }
+
+  const { data: { publicUrl } } = admin.storage.from('categories').getPublicUrl(path)
+  return { url: publicUrl }
 }
 
 export async function toggleAdminCategoryActive(

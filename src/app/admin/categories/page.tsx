@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import {
   createAdminCategory,
@@ -8,15 +8,27 @@ import {
   toggleAdminCategoryActive,
   reorderAdminCategories,
   deleteAdminCategory,
+  uploadAdminCategoryImage,
 } from '../actions'
+
+type Domain = 'dream' | 'shop'
 
 interface Category {
   id: string
   name: string
   slug: string
+  domain: Domain
+  parent_id: string | null
+  image_url: string | null
   sort_order: number
   is_active: boolean
 }
+
+// 제휴사 도메인은 나중에 여기에 { value: 'affiliate', label: '제휴사 카테고리' }만 추가하면 됨.
+const DOMAIN_TABS: { value: Domain; label: string }[] = [
+  { value: 'dream', label: '꿈 카테고리' },
+  { value: 'shop',  label: '쇼핑몰 카테고리' },
+]
 
 const COMBINING_MARKS = new RegExp('[\\u0300-\\u036f]', 'g')
 
@@ -31,31 +43,39 @@ function slugify(text: string) {
 }
 
 function friendlyError(message: string) {
-  if (message.includes('categories_name_key') || message.toLowerCase().includes('name')) {
-    return '이미 존재하는 이름입니다.'
+  if (message.includes('categories_domain_parent_name')) {
+    return '같은 상위 카테고리 안에 이미 존재하는 이름입니다.'
   }
-  if (message.includes('categories_slug_key') || message.toLowerCase().includes('slug')) {
+  if (message.includes('categories_domain_slug_key')) {
     return '이미 존재하는 slug입니다.'
   }
   return message
 }
 
 export default function AdminCategoriesPage() {
-  const [categories, setCategories] = useState<Category[]>([])
-  const [dreamCounts, setDreamCounts] = useState<Record<string, number>>({})
-  const [loading, setLoading]       = useState(true)
+  const [activeDomain, setActiveDomain] = useState<Domain>('dream')
+  const [categories, setCategories]     = useState<Category[]>([])
+  const [dreamCounts, setDreamCounts]   = useState<Record<string, number>>({})
+  const [loading, setLoading]           = useState(true)
 
   // 생성 폼
   const [name, setName]           = useState('')
   const [slug, setSlug]           = useState('')
   const [slugTouched, setSlugTouched] = useState(false)
+  const [parentId, setParentId]   = useState('')
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState('')
   const [creating, setCreating]   = useState(false)
   const [createError, setCreateError] = useState('')
+  const fileRef = useRef<HTMLInputElement>(null)
 
   // 수정 상태
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editName, setEditName]   = useState('')
   const [editSlug, setEditSlug]   = useState('')
+  const [editParentId, setEditParentId] = useState('')
+  const [editImageFile, setEditImageFile] = useState<File | null>(null)
+  const [editImagePreview, setEditImagePreview] = useState('')
   const [saving, setSaving]       = useState(false)
   const [editError, setEditError] = useState('')
 
@@ -64,17 +84,21 @@ export default function AdminCategoriesPage() {
   const [deleting, setDeleting]         = useState(false)
   const [blockMsg, setBlockMsg]         = useState('')
 
+  const isShop = activeDomain === 'shop'
+  const topLevelOptions = categories.filter((c) => c.parent_id === null)
+
   async function load() {
     setLoading(true)
     const supabase = createClient()
     const { data } = await supabase
       .from('categories')
-      .select('id, name, slug, sort_order, is_active')
+      .select('id, name, slug, domain, parent_id, image_url, sort_order, is_active')
+      .eq('domain', activeDomain)
       .order('sort_order', { ascending: true })
     const cats: Category[] = data ?? []
     setCategories(cats)
 
-    if (cats.length > 0) {
+    if (activeDomain === 'dream' && cats.length > 0) {
       const counts = await Promise.all(
         cats.map((c: Category) =>
           supabase.from('dreams').select('id', { count: 'exact', head: true }).eq('category_id', c.id)
@@ -83,15 +107,46 @@ export default function AdminCategoriesPage() {
       const map: Record<string, number> = {}
       cats.forEach((c: Category, i: number) => { map[c.id] = counts[i].count ?? 0 })
       setDreamCounts(map)
+    } else {
+      setDreamCounts({})
     }
     setLoading(false)
   }
 
-  useEffect(() => { load() }, [])
+  useEffect(() => { load() }, [activeDomain])
+
+  function switchTab(d: Domain) {
+    if (d === activeDomain) return
+    setActiveDomain(d)
+    resetCreateForm()
+    setEditingId(null)
+  }
+
+  function resetCreateForm() {
+    setName(''); setSlug(''); setSlugTouched(false)
+    setParentId('')
+    setImageFile(null); setImagePreview('')
+    setCreateError('')
+    if (fileRef.current) fileRef.current.value = ''
+  }
 
   function handleNameChange(v: string) {
     setName(v)
     if (!slugTouched) setSlug(slugify(v))
+  }
+
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setImageFile(file)
+    setImagePreview(URL.createObjectURL(file))
+  }
+
+  function handleEditImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setEditImageFile(file)
+    setEditImagePreview(URL.createObjectURL(file))
   }
 
   async function handleCreate() {
@@ -101,12 +156,31 @@ export default function AdminCategoriesPage() {
     if (!finalSlug) { setCreateError('slug을 입력해주세요.'); return }
 
     setCreating(true)
+
+    let imageUrl: string | null = null
+    if (isShop && imageFile) {
+      const fd = new FormData()
+      fd.append('file', imageFile)
+      const { url, error: uploadError } = await uploadAdminCategoryImage(fd)
+      if (uploadError) { setCreateError(`이미지 업로드 실패: ${uploadError}`); setCreating(false); return }
+      imageUrl = url ?? null
+    }
+
     const nextOrder = categories.length > 0 ? Math.max(...categories.map((c) => c.sort_order)) + 1 : 1
-    const { error } = await createAdminCategory(name.trim(), finalSlug, nextOrder)
+    const { error } = await createAdminCategory(
+      {
+        name: name.trim(),
+        slug: finalSlug,
+        domain: activeDomain,
+        parentId: isShop && parentId ? parentId : null,
+        imageUrl,
+      },
+      nextOrder,
+    )
     setCreating(false)
 
     if (error) { setCreateError(friendlyError(error)); return }
-    setName(''); setSlug(''); setSlugTouched(false)
+    resetCreateForm()
     load()
   }
 
@@ -114,6 +188,9 @@ export default function AdminCategoriesPage() {
     setEditingId(cat.id)
     setEditName(cat.name)
     setEditSlug(cat.slug)
+    setEditParentId(cat.parent_id ?? '')
+    setEditImageFile(null)
+    setEditImagePreview(cat.image_url ?? '')
     setEditError('')
   }
 
@@ -123,7 +200,22 @@ export default function AdminCategoriesPage() {
     if (!editSlug.trim()) { setEditError('slug을 입력해주세요.'); return }
 
     setSaving(true)
-    const { error } = await updateAdminCategory(cat.id, editName.trim(), editSlug.trim())
+
+    let imageUrl = cat.image_url
+    if (isShop && editImageFile) {
+      const fd = new FormData()
+      fd.append('file', editImageFile)
+      const { url, error: uploadError } = await uploadAdminCategoryImage(fd)
+      if (uploadError) { setEditError(`이미지 업로드 실패: ${uploadError}`); setSaving(false); return }
+      imageUrl = url ?? null
+    }
+
+    const { error } = await updateAdminCategory(cat.id, {
+      name: editName.trim(),
+      slug: editSlug.trim(),
+      parentId: isShop && editParentId ? editParentId : null,
+      imageUrl: isShop ? imageUrl : null,
+    })
     setSaving(false)
 
     if (error) { setEditError(friendlyError(error)); return }
@@ -168,9 +260,31 @@ export default function AdminCategoriesPage() {
     load()
   }
 
+  function parentName(id: string | null) {
+    if (!id) return '—'
+    return categories.find((c) => c.id === id)?.name ?? '—'
+  }
+
   return (
     <div className="p-4 sm:p-8">
       <h1 className="mb-6 text-xl font-bold text-brand-ink sm:mb-8 sm:text-2xl">카테고리 관리</h1>
+
+      {/* 도메인 탭 */}
+      <div className="mb-6 flex gap-1 border-b border-gray-200">
+        {DOMAIN_TABS.map((tab) => (
+          <button
+            key={tab.value}
+            onClick={() => switchTab(tab.value)}
+            className={`px-4 py-2 text-sm font-semibold transition-colors ${
+              activeDomain === tab.value
+                ? 'border-b-2 border-brand-ink text-brand-ink'
+                : 'text-gray-400 hover:text-gray-600'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
       {/* 새 카테고리 추가 */}
       <div className="mb-8 max-w-xl space-y-4 rounded border border-gray-200 bg-white p-6">
@@ -199,6 +313,38 @@ export default function AdminCategoriesPage() {
           <p className="mt-1 text-xs text-gray-400">직접 수정할 수 있습니다.</p>
         </div>
 
+        {isShop && (
+          <>
+            <div>
+              <label className="mb-1 block text-sm font-semibold text-[#333]">상위 카테고리</label>
+              <select
+                value={parentId}
+                onChange={(e) => setParentId(e.target.value)}
+                className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-violet"
+              >
+                <option value="">없음 (최상위 카테고리)</option>
+                {topLevelOptions.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="mb-1 block text-sm font-semibold text-[#333]">썸네일 이미지</label>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="w-full text-sm text-gray-600 file:mr-3 file:border-0 file:bg-brand-ink file:px-4 file:py-2 file:text-white file:text-sm file:cursor-pointer hover:file:brightness-90"
+              />
+              {imagePreview && (
+                <img src={imagePreview} alt="미리보기" className="mt-3 h-20 w-20 rounded object-cover" />
+              )}
+            </div>
+          </>
+        )}
+
         {createError && (
           <div className="rounded px-4 py-3 text-sm bg-red-50 text-red-600">{createError}</div>
         )}
@@ -213,7 +359,7 @@ export default function AdminCategoriesPage() {
       </div>
 
       {/* 목록 */}
-      <div className="max-w-3xl">
+      <div className="max-w-4xl">
         <h2 className="mb-4 text-base font-bold text-brand-ink">
           등록된 카테고리 ({categories.length}개)
         </h2>
@@ -232,7 +378,9 @@ export default function AdminCategoriesPage() {
                   <th className="px-4 py-3">순서</th>
                   <th className="px-4 py-3">이름</th>
                   <th className="px-4 py-3">slug</th>
-                  <th className="px-4 py-3">등록된 꿈</th>
+                  {isShop && <th className="px-4 py-3">상위 카테고리</th>}
+                  {isShop && <th className="px-4 py-3">이미지</th>}
+                  {!isShop && <th className="px-4 py-3">등록된 꿈</th>}
                   <th className="px-4 py-3">활성 상태</th>
                   <th className="px-4 py-3">관리</th>
                 </tr>
@@ -257,7 +405,31 @@ export default function AdminCategoriesPage() {
                             className="w-28 border border-gray-300 px-2 py-1 text-sm outline-none focus:border-brand-violet"
                           />
                         </td>
-                        <td className="px-4 py-3 text-[#777]">{dreamCounts[cat.id] ?? 0}개</td>
+                        {isShop && (
+                          <td className="px-4 py-3">
+                            <select
+                              value={editParentId}
+                              onChange={(e) => setEditParentId(e.target.value)}
+                              className="w-32 border border-gray-300 px-2 py-1 text-sm outline-none focus:border-brand-violet"
+                            >
+                              <option value="">없음 (최상위)</option>
+                              {topLevelOptions.filter((c) => c.id !== cat.id).map((c) => (
+                                <option key={c.id} value={c.id}>{c.name}</option>
+                              ))}
+                            </select>
+                          </td>
+                        )}
+                        {isShop && (
+                          <td className="px-4 py-3">
+                            <div className="flex flex-col gap-1">
+                              {editImagePreview && (
+                                <img src={editImagePreview} alt="" className="h-10 w-10 rounded object-cover" />
+                              )}
+                              <input type="file" accept="image/*" onChange={handleEditImageChange} className="w-32 text-xs text-gray-500" />
+                            </div>
+                          </td>
+                        )}
+                        {!isShop && <td className="px-4 py-3 text-[#777]">{dreamCounts[cat.id] ?? 0}개</td>}
                         <td className="px-4 py-3">
                           <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${cat.is_active ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500'}`}>
                             {cat.is_active ? '활성' : '비활성'}
@@ -308,7 +480,17 @@ export default function AdminCategoriesPage() {
                         </td>
                         <td className="px-4 py-3 font-medium text-[#333]">{cat.name}</td>
                         <td className="px-4 py-3 font-mono text-[#777]">{cat.slug}</td>
-                        <td className="px-4 py-3 text-[#777]">{dreamCounts[cat.id] ?? 0}개</td>
+                        {isShop && <td className="px-4 py-3 text-[#777]">{parentName(cat.parent_id)}</td>}
+                        {isShop && (
+                          <td className="px-4 py-3">
+                            {cat.image_url ? (
+                              <img src={cat.image_url} alt="" className="h-10 w-10 rounded object-cover bg-gray-100" />
+                            ) : (
+                              <span className="text-xs text-gray-300">없음</span>
+                            )}
+                          </td>
+                        )}
+                        {!isShop && <td className="px-4 py-3 text-[#777]">{dreamCounts[cat.id] ?? 0}개</td>}
                         <td className="px-4 py-3">
                           <button
                             onClick={() => toggleActive(cat)}

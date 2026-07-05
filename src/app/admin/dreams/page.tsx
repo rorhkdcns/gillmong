@@ -37,6 +37,7 @@ export default function AdminDreams() {
     supabase
       .from('categories')
       .select('name, slug')
+      .eq('domain', 'dream')
       .order('sort_order', { ascending: true })
       .then(({ data }: { data: CategoryRow[] | null }) => {
         const map: Record<string, string> = {}
