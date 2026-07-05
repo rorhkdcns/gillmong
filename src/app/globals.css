@@ -8,8 +8,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-pretendard);
 }
 
 html {
@@ -19,34 +18,45 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-pretendard), Arial, Helvetica, sans-serif;
 }
 
 /* ============================================================
-   길몽상점 브랜드 컬러
+   길몽상점 브랜드 컬러 (2026 리디자인 — violet/ink 팔레트)
    색상을 바꾸려면 아래 값만 수정하세요.
    ============================================================ */
 @theme {
   /* 배경 */
-  --color-brand-page:    #F7F7F5;   /* 아이보리 흰색 — 전체 페이지 배경 */
+  --color-brand-page:    #F4F7F9;   /* 페이지 배경 */
   --color-brand-surface: #FFFFFF;   /* 순백 — 카드·섹션 배경 */
 
-  /* 골드 포인트 — 버튼·뱃지·강조 */
-  --color-brand-primary:        #C9A84C;   /* 골드 */
-  --color-brand-primary-hover:  #B08A30;   /* 골드 hover */
-  --color-brand-primary-light:  #FAF3E0;   /* 연한 골드 배경 */
-  --color-brand-primary-border: #E0C87A;   /* 골드 테두리 */
+  /* 바이올렛 포인트 — 버튼·뱃지·강조 */
+  --color-brand-primary:        #2E7DD1;   /* 바이올렛 */
+  --color-brand-primary-hover:  #14547A;   /* 바이올렛 딥 (hover) */
+  --color-brand-primary-light:  #E8F2FA;   /* 연한 바이올렛 배경 */
+  --color-brand-primary-border: #CFE3F5;   /* 바이올렛 테두리 */
 
-  /* 로고·딥 네이비 — 헤더·푸터·히어로 */
-  --color-brand-logo:    #01273A;
-  --color-brand-dark:    #01273A;
+  /* 잉크 — 헤더·푸터·히어로·제목 */
+  --color-brand-logo:    #0B2433;
+  --color-brand-dark:    #0B2433;
 
   /* 텍스트 */
-  --color-brand-heading: #01273A;   /* 딥 네이비 — 제목 */
-  --color-brand-body:    #333333;   /* 본문 */
-  --color-brand-muted:   #666666;   /* 보조 */
-  --color-brand-link:    #C9A84C;   /* 골드 링크 */
+  --color-brand-heading: #0B2433;   /* 딥 잉크 — 제목 */
+  --color-brand-body:    #0B2433;   /* 본문 */
+  --color-brand-muted:   #5C6E7C;   /* 보조 */
+  --color-brand-link:    #2E7DD1;   /* 바이올렛 링크 */
 
   /* 구분선·테두리 */
-  --color-brand-border:  #E8E8E4;   /* 연한 회색 */
+  --color-brand-border:  #E2E9EE;   /* 연한 회색-블루 */
+
+  /* 확장 팔레트 (그라디언트·포인트 색) */
+  --color-brand-ink:         #0B2433;
+  --color-brand-ink-soft:    #5C6E7C;
+  --color-brand-line:        #E2E9EE;
+  --color-brand-bg:          #F4F7F9;
+  --color-brand-violet:      #2E7DD1;
+  --color-brand-violet-deep: #14547A;
+  --color-brand-pink:        #54D0E0;
+  --color-brand-gold:        #F2B33D;
+  --color-brand-mint:        #2FB68E;
 }
