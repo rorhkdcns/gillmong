@@ -56,7 +56,7 @@ export default function GuidePage() {
       <SiteHeader />
 
       {/* ───── 1. 꿈의 가치를 거래합니다 ───── */}
-      <section className="bg-[#01273A] px-5 py-14 text-white md:px-8 md:py-32">
+      <section className="bg-[#0B2433] px-5 py-14 text-white md:px-8 md:py-32">
         <div className="mx-auto max-w-4xl text-center">
           <p className="mb-4 text-xs tracking-widest text-[#FFD700] md:mb-5 md:text-base">GILLMONG SERVICE</p>
           <h1 className="mb-4 text-3xl leading-tight text-white md:mb-6 md:text-5xl">꿈의 가치를 거래합니다</h1>
@@ -87,7 +87,7 @@ export default function GuidePage() {
         <div className="mx-auto max-w-4xl">
           <div className="mb-8 text-center md:mb-14">
             <p className="mb-3 text-xs tracking-widest text-[#9B7D4B] md:mb-4 md:text-base">KOREAN DREAM CULTURE</p>
-            <h2 className="text-2xl text-[#01273A] md:text-3xl">대한민국 고유의 문화, 꿈을 사고팔다</h2>
+            <h2 className="text-2xl text-[#0B2433] md:text-3xl">대한민국 고유의 문화, 꿈을 사고팔다</h2>
           </div>
           <div className="mx-auto max-w-2xl rounded-2xl border border-[#E8D9B8] bg-white/70 p-7 md:p-12">
             <BookOpen className="mb-5 text-[#9B7D4B] md:mb-8" size={28} strokeWidth={1.5} />
@@ -109,17 +109,17 @@ export default function GuidePage() {
         <div className="mx-auto max-w-4xl">
           <div className="mb-10 text-center md:mb-20">
             <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">HOW IT WORKS</p>
-            <h2 className="text-2xl text-[#01273A] md:text-3xl">GILLMONG 서비스 프로세스</h2>
+            <h2 className="text-2xl text-[#0B2433] md:text-3xl">GILLMONG 서비스 프로세스</h2>
           </div>
           {/* 모바일: 2×2 그리드 */}
           <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:hidden">
             {processSteps.map((item, i) => (
               <div key={i} className="flex flex-col items-center px-1 text-center">
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#01273A]">
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#0B2433]">
                   <item.Icon size={22} strokeWidth={1.5} className="text-[#FFD700]" />
                 </div>
-                <p className="mb-1 text-xs text-[#E07B2A]">{item.step}</p>
-                <p className="mb-2 text-sm font-semibold text-[#01273A]">{item.title}</p>
+                <p className="mb-1 text-xs text-[#14547A]">{item.step}</p>
+                <p className="mb-2 text-sm font-semibold text-[#0B2433]">{item.title}</p>
                 <p className="text-xs leading-relaxed text-[#555555]">{item.desc}</p>
               </div>
             ))}
@@ -129,11 +129,11 @@ export default function GuidePage() {
             {processSteps.map((item, i) => (
               <Fragment key={i}>
                 <div className="flex flex-1 flex-col items-center px-4 text-center">
-                  <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#01273A]">
+                  <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#0B2433]">
                     <item.Icon size={28} strokeWidth={1.5} className="text-[#FFD700]" />
                   </div>
-                  <p className="mb-1 text-base text-[#E07B2A]">{item.step}</p>
-                  <p className="mb-3 text-lg text-[#01273A]">{item.title}</p>
+                  <p className="mb-1 text-base text-[#14547A]">{item.step}</p>
+                  <p className="mb-3 text-lg text-[#0B2433]">{item.title}</p>
                   <p className="text-base leading-relaxed text-[#333333]">{item.desc}</p>
                 </div>
                 {i < processSteps.length - 1 && (
@@ -152,7 +152,7 @@ export default function GuidePage() {
         <div className="mx-auto max-w-4xl md:flex md:items-start md:gap-20">
           <div className="mb-8 text-center md:mb-0 md:w-1/2 md:text-left">
             <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">BUY LUCK</p>
-            <h2 className="mb-4 text-2xl text-[#01273A] md:mb-5 md:text-3xl">행운을 구매하세요</h2>
+            <h2 className="mb-4 text-2xl text-[#0B2433] md:mb-5 md:text-3xl">행운을 구매하세요</h2>
             <p className="mb-8 text-sm leading-relaxed text-[#333333] md:mb-10 md:text-lg">
               꿈 구경하기 메뉴에서 등록된 꿈들을 탐색하세요.
             </p>
@@ -163,7 +163,7 @@ export default function GuidePage() {
                 '결제 완료 시 해몽 전문 즉시 열람',
               ].map((item, i) => (
                 <li key={i} className="flex items-start gap-3 md:gap-4">
-                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#E07B2A] text-xs text-white md:h-7 md:w-7">
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#14547A] text-xs text-white md:h-7 md:w-7">
                     {i + 1}
                   </span>
                   <span className="text-sm leading-relaxed text-[#333333] md:text-lg">{item}</span>
@@ -171,7 +171,7 @@ export default function GuidePage() {
               ))}
             </ul>
           </div>
-          <div className="mt-8 rounded-2xl bg-[#01273A] p-6 shadow-sm md:mt-0 md:w-1/2 md:p-10">
+          <div className="mt-8 rounded-2xl bg-[#0B2433] p-6 shadow-sm md:mt-0 md:w-1/2 md:p-10">
             <p className="mb-4 text-base text-white md:mb-6 md:text-xl">구매 흐름</p>
             {['꿈 마켓 탐색', '운세 등급 & 상징 확인', '직접 결제', '행운 상징물 소유'].map((step, i) => (
               <div key={i} className="flex items-center gap-4 border-b border-white/10 py-4 last:border-0 md:gap-5 md:py-5">
@@ -188,13 +188,13 @@ export default function GuidePage() {
         <div className="mx-auto max-w-4xl md:flex md:flex-row-reverse md:items-start md:gap-20">
           <div className="mb-8 text-center md:mb-0 md:w-1/2 md:text-left">
             <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">SELL YOUR DREAM</p>
-            <h2 className="mb-8 text-2xl text-[#01273A] md:mb-10 md:text-3xl">
+            <h2 className="mb-8 text-2xl text-[#0B2433] md:mb-10 md:text-3xl">
               당신의 꿈이<br />수익이 됩니다
             </h2>
             <ul className="flex flex-col gap-4 text-left md:gap-6">
               {['상세한 꿈 일기 작성', 'AI 해몽 생성', '마켓 등록 및 리워드'].map((item, i) => (
                 <li key={i} className="flex items-start gap-3 md:gap-4">
-                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#01273A] text-xs text-white md:h-7 md:w-7">
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#0B2433] text-xs text-white md:h-7 md:w-7">
                     {i + 1}
                   </span>
                   <span className="text-sm leading-relaxed text-[#333333] md:text-lg">{item}</span>
@@ -202,7 +202,7 @@ export default function GuidePage() {
               ))}
             </ul>
           </div>
-          <div className="mt-8 rounded-2xl bg-[#01273A] p-6 md:mt-0 md:w-1/2 md:p-10">
+          <div className="mt-8 rounded-2xl bg-[#0B2433] p-6 md:mt-0 md:w-1/2 md:p-10">
             <p className="mb-4 text-base text-white md:mb-6 md:text-xl">판매 흐름</p>
             {['꿈 일기 상세 작성', 'AI 정밀 해몽 실행', '마켓 가격 설정', '판매 & 리워드 수령'].map((step, i) => (
               <div key={i} className="flex items-center gap-4 border-b border-white/10 py-4 last:border-0 md:gap-5 md:py-5">
@@ -219,13 +219,13 @@ export default function GuidePage() {
         <div className="mx-auto max-w-4xl">
           <div className="mb-10 text-center md:mb-20">
             <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">TRUST & SAFETY</p>
-            <h2 className="text-2xl text-[#01273A] md:text-3xl">안심하고 거래하세요</h2>
+            <h2 className="text-2xl text-[#0B2433] md:text-3xl">안심하고 거래하세요</h2>
           </div>
           <div className="grid gap-5 md:grid-cols-3 md:gap-8">
             {trustCards.map((card, i) => (
               <div key={i} className="rounded-2xl bg-white p-6 shadow-sm md:p-10">
-                <card.Icon className="mb-4 text-[#E07B2A] md:mb-8" size={28} strokeWidth={1.5} />
-                <p className="mb-3 text-lg text-[#01273A] md:mb-4 md:text-xl">{card.title}</p>
+                <card.Icon className="mb-4 text-[#14547A] md:mb-8" size={28} strokeWidth={1.5} />
+                <p className="mb-3 text-lg text-[#0B2433] md:mb-4 md:text-xl">{card.title}</p>
                 <p className="text-sm leading-relaxed text-[#333333] md:text-base">{card.desc}</p>
               </div>
             ))}
@@ -238,7 +238,7 @@ export default function GuidePage() {
         <div className="mx-auto max-w-4xl">
           <div className="mb-10 text-center md:mb-20">
             <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">PAYMENT POLICY</p>
-            <h2 className="text-2xl text-[#01273A] md:text-3xl">결제 및 정산 정책 안내</h2>
+            <h2 className="text-2xl text-[#0B2433] md:text-3xl">결제 및 정산 정책 안내</h2>
           </div>
 
           {/* 모바일: 카드형 */}
@@ -246,8 +246,8 @@ export default function GuidePage() {
             {paymentPolicies.map((row, i) => (
               <div key={i} className="rounded-xl border border-gray-200 bg-white p-5">
                 <div className="mb-3 flex items-center gap-2">
-                  <row.Icon size={18} strokeWidth={1.5} className="shrink-0 text-[#E07B2A]" />
-                  <span className="font-semibold text-[#01273A]">{row.service}</span>
+                  <row.Icon size={18} strokeWidth={1.5} className="shrink-0 text-[#14547A]" />
+                  <span className="font-semibold text-[#0B2433]">{row.service}</span>
                 </div>
                 <p className="mb-1 text-sm text-[#333333]">{row.policy}</p>
                 <p className="text-xs text-[#777777]">{row.detail}</p>
@@ -259,7 +259,7 @@ export default function GuidePage() {
           <div className="hidden overflow-hidden rounded-2xl border border-gray-200 md:block">
             <table className="w-full">
               <thead>
-                <tr className="bg-[#01273A] text-white">
+                <tr className="bg-[#0B2433] text-white">
                   <th className="px-8 py-5 text-left text-base">서비스</th>
                   <th className="px-8 py-5 text-left text-base">정책</th>
                   <th className="px-8 py-5 text-left text-base">상세</th>
@@ -270,8 +270,8 @@ export default function GuidePage() {
                   <tr key={i} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-3">
-                        <row.Icon size={20} strokeWidth={1.5} className="text-[#E07B2A]" />
-                        <span className="text-base text-[#01273A]">{row.service}</span>
+                        <row.Icon size={20} strokeWidth={1.5} className="text-[#14547A]" />
+                        <span className="text-base text-[#0B2433]">{row.service}</span>
                       </div>
                     </td>
                     <td className="px-8 py-5 text-base text-[#333333]">{row.policy}</td>
@@ -289,10 +289,10 @@ export default function GuidePage() {
         <div className="mx-auto max-w-4xl">
           <div className="mb-10 text-center md:mb-20">
             <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">GRADE SYSTEM</p>
-            <h2 className="text-2xl text-[#01273A] md:text-3xl">운세 등급 시스템</h2>
+            <h2 className="text-2xl text-[#0B2433] md:text-3xl">운세 등급 시스템</h2>
           </div>
           <div className="mb-8 flex justify-center md:mb-16">
-            <div className="flex h-32 w-32 flex-col items-center justify-center rounded-full bg-[#01273A] shadow-xl md:h-40 md:w-40">
+            <div className="flex h-32 w-32 flex-col items-center justify-center rounded-full bg-[#0B2433] shadow-xl md:h-40 md:w-40">
               <Star size={20} strokeWidth={1.5} className="mb-1 text-[#FFD700]" />
               <span className="text-xs tracking-widest text-[#FFD700]">EXCEL</span>
               <span className="text-xs text-white/80">GILLMONG</span>
@@ -305,7 +305,7 @@ export default function GuidePage() {
                 <div className={`mb-3 flex h-12 w-12 items-center justify-center rounded-full text-xl font-bold text-white shadow md:h-14 md:w-14 md:text-2xl ${g.badgeBg}`}>
                   {g.grade}
                 </div>
-                <p className="mb-1 text-sm font-semibold text-[#01273A] md:text-base">{g.rank}</p>
+                <p className="mb-1 text-sm font-semibold text-[#0B2433] md:text-base">{g.rank}</p>
                 <p className="text-xs leading-relaxed text-[#555555] md:text-sm">{g.desc}</p>
               </div>
             ))}

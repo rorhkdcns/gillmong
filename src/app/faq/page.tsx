@@ -87,8 +87,8 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left transition-colors hover:bg-gray-50"
       >
-        <span className="text-base font-medium text-[#01273A]">
-          <span className="mr-2 font-bold text-[#E07B2A]">Q.</span>{q}
+        <span className="text-base font-medium text-[#0B2433]">
+          <span className="mr-2 font-bold text-[#14547A]">Q.</span>{q}
         </span>
         <svg
           className={`h-5 w-5 shrink-0 text-gray-400 transition-transform ${open ? 'rotate-180' : ''}`}
@@ -115,13 +115,13 @@ export default function FaqPage() {
       <main className="flex-1 px-6 py-16">
         <div className="mx-auto max-w-3xl">
           <div className="mb-10 text-center">
-            <h1 className="text-3xl font-black text-[#01273A]">자주 묻는 질문</h1>
+            <h1 className="text-3xl font-black text-[#0B2433]">자주 묻는 질문</h1>
             <p className="mt-2 text-sm text-gray-400">FAQ · Frequently Asked Questions</p>
           </div>
           <div className="space-y-6">
             {FAQS.map((section) => (
               <div key={section.category} className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-                <div className="border-b border-gray-100 bg-[#01273A] px-6 py-3">
+                <div className="border-b border-gray-100 bg-[#0B2433] px-6 py-3">
                   <h2 className="text-sm font-bold text-white">{section.category}</h2>
                 </div>
                 {section.items.map((item) => (
@@ -133,10 +133,10 @@ export default function FaqPage() {
           <div className="mt-10 rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
             <p className="text-base text-[#555555]">원하는 답변을 찾지 못하셨나요?</p>
             <div className="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-              <a href="/support" className="rounded-xl border border-[#01273A] px-6 py-2.5 text-sm font-semibold text-[#01273A] hover:bg-[#01273A] hover:text-white transition-colors">
+              <a href="/support" className="rounded-xl border border-[#0B2433] px-6 py-2.5 text-sm font-semibold text-[#0B2433] hover:bg-[#0B2433] hover:text-white transition-colors">
                 고객센터 안내
               </a>
-              <a href="/inquiry" className="rounded-xl bg-[#01273A] px-6 py-2.5 text-sm font-semibold text-white hover:brightness-90 transition-all">
+              <a href="/inquiry" className="rounded-xl bg-[#0B2433] px-6 py-2.5 text-sm font-semibold text-white hover:brightness-90 transition-all">
                 1:1 문의하기
               </a>
             </div>

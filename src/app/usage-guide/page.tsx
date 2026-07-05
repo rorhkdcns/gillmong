@@ -9,7 +9,7 @@ export const metadata = {
 function Section({ title, color, children }: { title: string; color: string; children: React.ReactNode }) {
   return (
     <div className={`rounded-2xl border bg-white p-8 shadow-sm ${color}`}>
-      <h2 className="mb-6 text-xl font-bold text-[#01273A]">{title}</h2>
+      <h2 className="mb-6 text-xl font-bold text-[#0B2433]">{title}</h2>
       {children}
     </div>
   )
@@ -19,7 +19,7 @@ function Row({ label, value, highlight }: { label: string; value: string; highli
   return (
     <div className="flex items-start justify-between gap-4 border-b border-gray-100 py-3 last:border-0">
       <span className="text-sm text-[#555555]">{label}</span>
-      <span className={`text-right text-sm font-semibold ${highlight ? 'text-[#E07B2A]' : 'text-[#01273A]'}`}>
+      <span className={`text-right text-sm font-semibold ${highlight ? 'text-[#14547A]' : 'text-[#0B2433]'}`}>
         {value}
       </span>
     </div>
@@ -34,7 +34,7 @@ export default function UsageGuidePage() {
         <div className="mx-auto max-w-3xl">
 
           <div className="mb-12 text-center">
-            <h1 className="text-3xl font-black text-[#01273A]">이용안내</h1>
+            <h1 className="text-3xl font-black text-[#0B2433]">이용안내</h1>
             <p className="mt-2 text-sm text-gray-400">Service Usage Guide</p>
           </div>
 
@@ -67,15 +67,15 @@ export default function UsageGuidePage() {
           </div>
 
           {/* 수수료 안내 */}
-          <div className="mt-6 overflow-hidden rounded-2xl border border-[#01273A] bg-white shadow-sm">
-            <div className="bg-[#01273A] px-6 py-4">
+          <div className="mt-6 overflow-hidden rounded-2xl border border-[#0B2433] bg-white shadow-sm">
+            <div className="bg-[#0B2433] px-6 py-4">
               <h2 className="text-base font-bold text-white">수수료 안내</h2>
             </div>
             <div className="px-6 py-6">
               <div className="flex items-center justify-between gap-6 sm:gap-12">
                 <div className="text-center">
                   <p className="text-xs text-[#999]">판매금액</p>
-                  <p className="mt-1 text-2xl font-black text-[#01273A]">100%</p>
+                  <p className="mt-1 text-2xl font-black text-[#0B2433]">100%</p>
                 </div>
                 <div className="flex-1 border-t-2 border-dashed border-gray-200" />
                 <div className="text-center">
@@ -85,11 +85,11 @@ export default function UsageGuidePage() {
                 <div className="flex-1 border-t-2 border-dashed border-gray-200" />
                 <div className="text-center">
                   <p className="text-xs text-[#999]">판매자 수령</p>
-                  <p className="mt-1 text-2xl font-black text-[#E07B2A]">80%</p>
+                  <p className="mt-1 text-2xl font-black text-[#14547A]">80%</p>
                 </div>
               </div>
               <p className="mt-5 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-[#777777]">
-                예시: 10,000원 판매 시 → 수수료 2,000원 공제 → 판매자 정산금액 <strong className="text-[#01273A]">8,000원</strong><br />
+                예시: 10,000원 판매 시 → 수수료 2,000원 공제 → 판매자 정산금액 <strong className="text-[#0B2433]">8,000원</strong><br />
                 구매자 확정 또는 결제 후 7일 경과 시 자동 정산됩니다.
               </p>
             </div>
@@ -97,15 +97,15 @@ export default function UsageGuidePage() {
 
           {/* 에스크로 정산 프로세스 */}
           <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-            <div className="bg-[#01273A] px-6 py-4">
+            <div className="bg-[#0B2433] px-6 py-4">
               <h2 className="text-base font-bold text-white">에스크로 정산 프로세스</h2>
             </div>
             <div className="px-6 py-6">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-0">
                 {/* Step 1 */}
                 <div className="flex flex-1 flex-col items-center text-center">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#01273A] text-sm font-bold text-white">1</div>
-                  <p className="mt-2 text-xs font-semibold text-[#01273A]">구매자 결제</p>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0B2433] text-sm font-bold text-white">1</div>
+                  <p className="mt-2 text-xs font-semibold text-[#0B2433]">구매자 결제</p>
                   <p className="mt-1 text-xs leading-relaxed text-[#777]">카드·간편결제<br />결제금 에스크로 보관</p>
                 </div>
                 <div className="hidden flex-1 items-center sm:flex">
@@ -113,8 +113,8 @@ export default function UsageGuidePage() {
                 </div>
                 {/* Step 2 */}
                 <div className="flex flex-1 flex-col items-center text-center">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#E07B2A] text-sm font-bold text-white">2</div>
-                  <p className="mt-2 text-xs font-semibold text-[#E07B2A]">구매확정</p>
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#14547A] text-sm font-bold text-white">2</div>
+                  <p className="mt-2 text-xs font-semibold text-[#14547A]">구매확정</p>
                   <p className="mt-1 text-xs leading-relaxed text-[#777]">7일 이내 확정 버튼<br />클릭 시 즉시 정산</p>
                 </div>
                 <div className="hidden flex-1 items-center sm:flex">
@@ -137,23 +137,23 @@ export default function UsageGuidePage() {
                 </div>
               </div>
               <p className="mt-6 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-[#777777]">
-                정산된 금액은 마이페이지 → <strong className="text-[#01273A]">출금 신청</strong>을 통해 현금으로 받을 수 있습니다. (최소 5,000원 · 1,000원 단위)
+                정산된 금액은 마이페이지 → <strong className="text-[#0B2433]">출금 신청</strong>을 통해 현금으로 받을 수 있습니다. (최소 5,000원 · 1,000원 단위)
               </p>
             </div>
           </div>
 
           {/* 비교표 */}
           <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-            <div className="bg-[#01273A] px-6 py-4">
+            <div className="bg-[#0B2433] px-6 py-4">
               <h2 className="text-base font-bold text-white">회원 유형 비교</h2>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gray-100 bg-gray-50">
-                    <th className="px-6 py-3 text-left font-semibold text-[#01273A]">항목</th>
-                    <th className="px-6 py-3 text-center font-semibold text-[#01273A]">일반회원</th>
-                    <th className="px-6 py-3 text-center font-semibold text-[#E07B2A]">사업자회원</th>
+                    <th className="px-6 py-3 text-left font-semibold text-[#0B2433]">항목</th>
+                    <th className="px-6 py-3 text-center font-semibold text-[#0B2433]">일반회원</th>
+                    <th className="px-6 py-3 text-center font-semibold text-[#14547A]">사업자회원</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -168,7 +168,7 @@ export default function UsageGuidePage() {
                     <tr key={label} className="hover:bg-gray-50">
                       <td className="px-6 py-3.5 text-[#555555]">{label}</td>
                       <td className="px-6 py-3.5 text-center text-[#333333]">{general}</td>
-                      <td className="px-6 py-3.5 text-center font-semibold text-[#E07B2A]">{business}</td>
+                      <td className="px-6 py-3.5 text-center font-semibold text-[#14547A]">{business}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -178,10 +178,10 @@ export default function UsageGuidePage() {
 
           {/* 안내 */}
           <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="mb-3 text-base font-bold text-[#01273A]">이용 관련 문의</h2>
+            <h2 className="mb-3 text-base font-bold text-[#0B2433]">이용 관련 문의</h2>
             <p className="text-sm leading-relaxed text-[#555555]">
               회원 유형 변경 또는 이용한도 관련 문의는{' '}
-              <a href="/inquiry" className="font-semibold text-[#01273A] underline underline-offset-2 hover:brightness-75">1:1 문의</a>
+              <a href="/inquiry" className="font-semibold text-[#0B2433] underline underline-offset-2 hover:brightness-75">1:1 문의</a>
               를 통해 연락해주세요.
             </p>
           </div>

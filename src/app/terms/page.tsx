@@ -9,18 +9,18 @@ export default function TermsPage() {
       <main className="flex-1 px-6 py-16">
         <div className="mx-auto max-w-3xl">
           <div className="border border-gray-200 bg-white p-10 shadow-sm">
-            <h1 className="mb-2 text-3xl font-bold text-[#01273A]">이용약관</h1>
+            <h1 className="mb-2 text-3xl font-bold text-[#0B2433]">이용약관</h1>
             <p className="mb-10 text-sm text-[#999]">시행일: 2026년 6월 15일</p>
 
             <div className="space-y-10 text-[15px] leading-relaxed text-[#444]">
 
               <section>
-                <h2 className="mb-3 text-lg font-bold text-[#01273A]">제1조 (목적)</h2>
+                <h2 className="mb-3 text-lg font-bold text-[#0B2433]">제1조 (목적)</h2>
                 <p>이 약관은 길몽상점(이하 "회사")이 운영하는 길몽상점 서비스(이하 "서비스")의 이용과 관련하여 회사와 이용자의 권리·의무 및 책임사항을 규정함을 목적으로 합니다.</p>
               </section>
 
               <section>
-                <h2 className="mb-3 text-lg font-bold text-[#01273A]">제2조 (정의)</h2>
+                <h2 className="mb-3 text-lg font-bold text-[#0B2433]">제2조 (정의)</h2>
                 <ul className="list-disc space-y-2 pl-6">
                   <li>"서비스"란 회사가 제공하는 꿈 감정·거래 플랫폼 및 이와 관련된 제반 서비스를 의미합니다.</li>
                   <li>"이용자"란 이 약관에 따라 서비스를 이용하는 회원 및 비회원을 말합니다.</li>
@@ -31,14 +31,14 @@ export default function TermsPage() {
               </section>
 
               <section>
-                <h2 className="mb-3 text-lg font-bold text-[#01273A]">제3조 (약관의 효력 및 변경)</h2>
+                <h2 className="mb-3 text-lg font-bold text-[#0B2433]">제3조 (약관의 효력 및 변경)</h2>
                 <p>① 이 약관은 서비스 화면에 게시하거나 기타 방법으로 이용자에게 공지함으로써 효력이 발생합니다.</p>
                 <p className="mt-2">② 회사는 합리적인 사유가 있는 경우 이 약관을 변경할 수 있으며, 변경된 약관은 적용 일자 및 변경 사유를 명시하여 서비스 내 공지합니다.</p>
                 <p className="mt-2">③ 이용자가 변경된 약관에 동의하지 않을 경우 서비스 이용을 중단하고 탈퇴할 수 있습니다.</p>
               </section>
 
               <section>
-                <h2 className="mb-3 text-lg font-bold text-[#01273A]">제4조 (회원 가입)</h2>
+                <h2 className="mb-3 text-lg font-bold text-[#0B2433]">제4조 (회원 가입)</h2>
                 <p>① 이용자는 회사가 정한 가입 양식에 따라 회원 정보를 기입한 후 이 약관에 동의한다는 의사 표시를 함으로써 회원 가입을 신청합니다.</p>
                 <p className="mt-2">② 회사는 다음 각 호에 해당하는 신청에 대하여는 승낙을 하지 않을 수 있습니다.</p>
                 <ul className="mt-2 list-disc space-y-1 pl-6">
@@ -50,7 +50,7 @@ export default function TermsPage() {
               </section>
 
               <section>
-                <h2 className="mb-3 text-lg font-bold text-[#01273A]">제5조 (포인트 정책)</h2>
+                <h2 className="mb-3 text-lg font-bold text-[#0B2433]">제5조 (포인트 정책)</h2>
                 <p>① 포인트는 서비스 내 꿈 구매에 사용됩니다.</p>
                 <p className="mt-2">② 포인트 충전은 회사가 지정한 수단을 통해서만 가능합니다.</p>
                 <p className="mt-2">③ 꿈 판매 시 판매금액의 80%가 판매자에게 포인트로 지급되며, 20%는 서비스 수수료로 공제됩니다.</p>
@@ -60,7 +60,7 @@ export default function TermsPage() {
               </section>
 
               <section>
-                <h2 className="mb-3 text-lg font-bold text-[#01273A]">제6조 (꿈 콘텐츠 정책)</h2>
+                <h2 className="mb-3 text-lg font-bold text-[#0B2433]">제6조 (꿈 콘텐츠 정책)</h2>
                 <p>① 회원은 자신이 직접 꾼 꿈의 내용만 등록할 수 있습니다.</p>
                 <p className="mt-2">② 다음 각 호에 해당하는 콘텐츠는 등록할 수 없습니다.</p>
                 <ul className="mt-2 list-disc space-y-1 pl-6">
@@ -74,7 +74,7 @@ export default function TermsPage() {
               </section>
 
               <section>
-                <h2 className="mb-3 text-lg font-bold text-[#01273A]">제7조 (서비스 이용 제한)</h2>
+                <h2 className="mb-3 text-lg font-bold text-[#0B2433]">제7조 (서비스 이용 제한)</h2>
                 <p>회사는 회원이 다음 각 호에 해당하는 경우 서비스 이용을 제한하거나 계정을 정지·해지할 수 있습니다.</p>
                 <ul className="mt-3 list-disc space-y-1 pl-6">
                   <li>이 약관의 의무를 위반한 경우</li>
@@ -86,27 +86,27 @@ export default function TermsPage() {
               </section>
 
               <section>
-                <h2 className="mb-3 text-lg font-bold text-[#01273A]">제8조 (지식재산권)</h2>
+                <h2 className="mb-3 text-lg font-bold text-[#0B2433]">제8조 (지식재산권)</h2>
                 <p>① 회사가 제작한 서비스의 저작권 및 기타 지식재산권은 회사에 귀속됩니다.</p>
                 <p className="mt-2">② 회원이 서비스에 등록한 꿈 콘텐츠의 저작권은 해당 회원에게 있으며, 회사는 서비스 운영에 필요한 범위 내에서 이를 사용할 수 있습니다.</p>
                 <p className="mt-2">③ 이용자는 서비스를 이용함으로써 얻은 정보를 회사의 사전 승낙 없이 복제, 전송, 출판 등의 방법으로 이용하거나 제3자에게 이용하게 해서는 안 됩니다.</p>
               </section>
 
               <section>
-                <h2 className="mb-3 text-lg font-bold text-[#01273A]">제9조 (면책사항)</h2>
+                <h2 className="mb-3 text-lg font-bold text-[#0B2433]">제9조 (면책사항)</h2>
                 <p>① 회사는 천재지변 또는 이에 준하는 불가항력으로 인하여 서비스를 제공할 수 없는 경우에는 서비스 제공에 관한 책임이 면제됩니다.</p>
                 <p className="mt-2">② 회사는 회원의 귀책사유로 인한 서비스 이용의 장애에 대하여는 책임을 지지 않습니다.</p>
                 <p className="mt-2">③ 꿈 감정 결과(등급, 해몽, 행운 번호 등)는 오락·참고 목적으로만 제공되며, 회사는 해당 결과의 정확성이나 특정 결과에 대해 보증하지 않습니다.</p>
               </section>
 
               <section>
-                <h2 className="mb-3 text-lg font-bold text-[#01273A]">제10조 (분쟁 해결)</h2>
+                <h2 className="mb-3 text-lg font-bold text-[#0B2433]">제10조 (분쟁 해결)</h2>
                 <p>① 서비스 이용과 관련하여 회사와 이용자 간에 분쟁이 발생한 경우 상호 협의를 통해 해결하는 것을 원칙으로 합니다.</p>
                 <p className="mt-2">② 협의가 이루어지지 않을 경우 회사의 본사 소재지를 관할하는 법원을 전속 관할 법원으로 합니다.</p>
               </section>
 
               <section>
-                <h2 className="mb-3 text-lg font-bold text-[#01273A]">부칙</h2>
+                <h2 className="mb-3 text-lg font-bold text-[#0B2433]">부칙</h2>
                 <p>이 약관은 2026년 6월 15일부터 시행됩니다.</p>
               </section>
 

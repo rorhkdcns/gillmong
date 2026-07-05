@@ -42,21 +42,21 @@ export default function InquiryPage() {
         <main className="flex flex-1 items-center justify-center px-6 py-16">
           <div className="w-full max-w-sm text-center">
             <div className="mb-6 flex justify-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#01273A]">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#0B2433]">
                 <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
               </div>
             </div>
-            <h2 className="mb-3 text-2xl font-bold text-[#01273A]">문의가 접수되었습니다</h2>
+            <h2 className="mb-3 text-2xl font-bold text-[#0B2433]">문의가 접수되었습니다</h2>
             <p className="mb-8 text-sm text-[#777777]">영업일 기준 1~2일 내 답변드립니다.<br />마이페이지에서 답변 상태를 확인하실 수 있습니다.</p>
             <div className="flex gap-3">
-              <a href="/mypage" className="flex-1 rounded-xl border border-[#01273A] py-3 text-sm font-semibold text-[#01273A] hover:bg-[#01273A] hover:text-white transition-colors text-center">
+              <a href="/mypage" className="flex-1 rounded-xl border border-[#0B2433] py-3 text-sm font-semibold text-[#0B2433] hover:bg-[#0B2433] hover:text-white transition-colors text-center">
                 마이페이지
               </a>
               <button
                 onClick={() => { setDone(false); setTitle(''); setContent('') }}
-                className="flex-1 rounded-xl bg-[#01273A] py-3 text-sm font-semibold text-white hover:brightness-90 transition-all"
+                className="flex-1 rounded-xl bg-[#0B2433] py-3 text-sm font-semibold text-white hover:brightness-90 transition-all"
               >
                 추가 문의
               </button>
@@ -73,7 +73,7 @@ export default function InquiryPage() {
       <main className="flex-1 px-6 py-16">
         <div className="mx-auto max-w-xl">
           <div className="mb-8 text-center">
-            <h1 className="text-3xl font-black text-[#01273A]">1:1 문의</h1>
+            <h1 className="text-3xl font-black text-[#0B2433]">1:1 문의</h1>
             <p className="mt-2 text-sm text-gray-400">영업일 기준 1~2일 내에 답변드립니다</p>
           </div>
 
@@ -89,7 +89,7 @@ export default function InquiryPage() {
                   onChange={(e) => { setTitle(e.target.value); setError('') }}
                   placeholder="문의 제목을 입력해주세요"
                   maxLength={100}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#333333] outline-none focus:border-[#01273A] placeholder:text-gray-300"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#333333] outline-none focus:border-[#0B2433] placeholder:text-gray-300"
                 />
               </div>
 
@@ -103,7 +103,7 @@ export default function InquiryPage() {
                   placeholder="문의 내용을 자세히 적어주세요"
                   rows={8}
                   maxLength={2000}
-                  className="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#333333] outline-none focus:border-[#01273A] placeholder:text-gray-300"
+                  className="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#333333] outline-none focus:border-[#0B2433] placeholder:text-gray-300"
                 />
                 <p className="mt-1 text-right text-xs text-gray-400">{content.length}/2000</p>
               </div>
@@ -113,7 +113,7 @@ export default function InquiryPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-xl bg-[#01273A] py-4 text-base font-bold text-white transition-all hover:brightness-90 disabled:opacity-60"
+                className="w-full rounded-xl bg-[#0B2433] py-4 text-base font-bold text-white transition-all hover:brightness-90 disabled:opacity-60"
               >
                 {loading ? '제출 중...' : '문의 제출하기'}
               </button>

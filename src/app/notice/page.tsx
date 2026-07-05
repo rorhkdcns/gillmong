@@ -25,7 +25,7 @@ export default async function NoticePage() {
       <main className="flex-1 px-6 py-16">
         <div className="mx-auto max-w-3xl">
           <div className="mb-10 text-center">
-            <h1 className="text-3xl font-black text-[#01273A]">공지사항</h1>
+            <h1 className="text-3xl font-black text-[#0B2433]">공지사항</h1>
             <p className="mt-2 text-sm text-gray-400">Notice</p>
           </div>
 
@@ -42,7 +42,7 @@ export default async function NoticePage() {
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         {n.is_pinned && (
-                          <span className="shrink-0 rounded bg-[#01273A] px-2 py-0.5 text-[10px] font-bold text-white">공지</span>
+                          <span className="shrink-0 rounded bg-[#0B2433] px-2 py-0.5 text-[10px] font-bold text-white">공지</span>
                         )}
                         <span className="truncate text-base text-[#333333]">{n.title}</span>
                       </div>
