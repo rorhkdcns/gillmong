@@ -139,7 +139,7 @@ export default function AdminSidebar() {
       {/* 모바일 햄버거 버튼 */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed left-4 top-4 z-40 flex h-10 w-10 items-center justify-center rounded-lg bg-[#01273A] text-white shadow-md md:hidden"
+        className="fixed left-4 top-4 z-40 flex h-10 w-10 items-center justify-center rounded-lg bg-[#0B2433] text-white shadow-md md:hidden"
         aria-label="메뉴 열기"
       >
         <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -158,7 +158,7 @@ export default function AdminSidebar() {
       {/* 사이드바 */}
       <aside
         className={`
-          flex h-screen w-56 shrink-0 flex-col bg-[#01273A]
+          flex h-screen w-56 shrink-0 flex-col bg-[#0B2433]
           fixed left-0 top-0 z-50 transition-transform duration-300 ease-in-out
           md:static md:z-auto md:translate-x-0
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
@@ -177,7 +177,7 @@ export default function AdminSidebar() {
 
         {/* 로고 */}
         <div className="border-b border-white/10 px-6 py-5">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-[#E07B2A]">Admin</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[#14547A]">Admin</p>
           <p className="mt-0.5 text-base font-bold text-white">길몽상점</p>
         </div>
 

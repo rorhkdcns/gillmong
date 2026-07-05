@@ -46,7 +46,7 @@ export default function AdminWithdrawals() {
   if (tableError) {
     return (
       <div className="p-4 sm:p-8">
-        <h1 className="mb-4 text-2xl font-bold text-[#01273A]">출금 신청 관리</h1>
+        <h1 className="mb-4 text-2xl font-bold text-[#0B2433]">출금 신청 관리</h1>
         <div className="rounded border border-amber-200 bg-amber-50 p-6 text-sm text-amber-700">
           <p className="font-semibold">withdrawals 테이블이 없습니다.</p>
           <p className="mt-1">Supabase에서 아래 SQL을 실행해 테이블을 생성해주세요.</p>
@@ -67,7 +67,7 @@ export default function AdminWithdrawals() {
 
   return (
     <div className="p-4 sm:p-8">
-      <h1 className="mb-4 text-xl font-bold text-[#01273A] sm:mb-6 sm:text-2xl">출금 신청 관리</h1>
+      <h1 className="mb-4 text-xl font-bold text-[#0B2433] sm:mb-6 sm:text-2xl">출금 신청 관리</h1>
 
       <div className="overflow-x-auto rounded border border-gray-200 bg-white">
         <table className="w-full text-sm">
@@ -92,7 +92,7 @@ export default function AdminWithdrawals() {
               return (
                 <tr key={w.id} className="hover:bg-gray-50">
                   <td className="px-6 py-3 text-[#999]">{formatDate(w.created_at)}</td>
-                  <td className="px-6 py-3 font-semibold text-[#E07B2A]">{w.amount.toLocaleString()}원</td>
+                  <td className="px-6 py-3 font-semibold text-[#14547A]">{w.amount.toLocaleString()}원</td>
                   <td className="px-6 py-3 text-[#555]">{w.bank_name ?? '-'}</td>
                   <td className="px-6 py-3 text-[#555]">{w.account_number ?? '-'}</td>
                   <td className="px-6 py-3 text-[#555]">{w.account_holder ?? '-'}</td>

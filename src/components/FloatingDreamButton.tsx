@@ -82,7 +82,7 @@ export default function FloatingDreamButton() {
   const totalChars  = Object.values(answers).reduce((s, v) => s + v.trim().length, 0)
   const fillPercent = Math.min(100, Math.round((totalChars / 80) * 100))
   const fillLabel   = fillPercent >= 100 ? '상세함 ✓' : fillPercent >= 50 ? '보통' : '간략함'
-  const fillColor   = fillPercent >= 100 ? 'bg-emerald-400' : fillPercent >= 50 ? 'bg-[#E07B2A]' : 'bg-gray-300'
+  const fillColor   = fillPercent >= 100 ? 'bg-emerald-400' : fillPercent >= 50 ? 'bg-gradient-to-r from-brand-violet to-brand-pink' : 'bg-gray-300'
 
   return (
     <>

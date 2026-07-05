@@ -108,7 +108,7 @@ export default function AdminReportsPage() {
           <button onClick={() => setDeleteResult(null)} className="ml-3 text-xs opacity-60 hover:opacity-100">✕</button>
         </div>
       )}
-      <h1 className="mb-2 text-xl font-bold text-[#01273A] sm:text-2xl">신고 관리</h1>
+      <h1 className="mb-2 text-xl font-bold text-[#0B2433] sm:text-2xl">신고 관리</h1>
       <p className="mb-6 text-sm text-[#999] sm:mb-8">
         사용자 신고 내역을 확인하고 처리합니다.
       </p>
@@ -123,7 +123,7 @@ export default function AdminReportsPage() {
         <div className="overflow-x-auto rounded border border-gray-200">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-[#01273A] text-left text-white">
+              <tr className="bg-[#0B2433] text-left text-white">
                 <th className="whitespace-nowrap px-4 py-3">신고 일시</th>
                 <th className="px-4 py-3">꿈 제목</th>
                 <th className="px-4 py-3">신고자</th>
@@ -144,7 +144,7 @@ export default function AdminReportsPage() {
                       href={`/dream/${r.dream_id}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[#01273A] hover:underline"
+                      className="text-[#0B2433] hover:underline"
                     >
                       {r.dream_title}
                     </a>
@@ -190,7 +190,7 @@ export default function AdminReportsPage() {
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-2xl">
-            <h3 className="mb-2 text-center text-lg font-black text-[#01273A]">꿈 삭제 확인</h3>
+            <h3 className="mb-2 text-center text-lg font-black text-[#0B2433]">꿈 삭제 확인</h3>
             <p className="mb-1 text-center text-sm text-[#555555]">
               아래 꿈을 삭제하시겠습니까?
             </p>

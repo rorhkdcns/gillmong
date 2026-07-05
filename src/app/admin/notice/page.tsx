@@ -101,10 +101,10 @@ export default function AdminNoticePage() {
   return (
     <div className="p-8">
       <div className="mb-8 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-[#01273A]">공지사항 관리</h1>
+        <h1 className="text-2xl font-bold text-[#0B2433]">공지사항 관리</h1>
         <button
           onClick={showForm ? closeForm : openCreateForm}
-          className="rounded bg-[#01273A] px-4 py-2 text-sm font-semibold text-white hover:brightness-90"
+          className="rounded bg-[#0B2433] px-4 py-2 text-sm font-semibold text-white hover:brightness-90"
         >
           {showForm ? '취소' : '+ 공지 작성'}
         </button>
@@ -112,7 +112,7 @@ export default function AdminNoticePage() {
 
       {showForm && (
         <form onSubmit={handleSubmit} className="mb-8 rounded border border-gray-200 bg-white p-6">
-          <h2 className="mb-4 font-semibold text-[#01273A]">
+          <h2 className="mb-4 font-semibold text-[#0B2433]">
             {formMode === 'edit' ? '공지사항 수정' : '새 공지사항'}
           </h2>
           <div className="mb-3">
@@ -122,7 +122,7 @@ export default function AdminNoticePage() {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="공지 제목"
-              className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#01273A]"
+              className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#0B2433]"
             />
           </div>
           <div className="mb-3">
@@ -132,11 +132,11 @@ export default function AdminNoticePage() {
               onChange={(e) => setContent(e.target.value)}
               rows={6}
               placeholder="공지 내용"
-              className="w-full resize-none rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#01273A]"
+              className="w-full resize-none rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#0B2433]"
             />
           </div>
           <label className="mb-4 flex items-center gap-2 text-sm text-[#555]">
-            <input type="checkbox" checked={isPinned} onChange={(e) => setIsPinned(e.target.checked)} className="accent-[#01273A]" />
+            <input type="checkbox" checked={isPinned} onChange={(e) => setIsPinned(e.target.checked)} className="accent-[#0B2433]" />
             상단 고정 (공지)
           </label>
           {error && <p className="mb-3 text-sm text-red-500">{error}</p>}
@@ -144,7 +144,7 @@ export default function AdminNoticePage() {
             <button
               type="submit"
               disabled={saving}
-              className="rounded bg-[#01273A] px-5 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
+              className="rounded bg-[#0B2433] px-5 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
             >
               {saving ? '저장 중...' : formMode === 'edit' ? '수정 완료' : '공지 등록'}
             </button>
@@ -161,7 +161,7 @@ export default function AdminNoticePage() {
 
       <div className="rounded border border-gray-200 bg-white">
         <div className="border-b border-gray-100 px-6 py-4">
-          <h2 className="font-semibold text-[#01273A]">공지사항 목록</h2>
+          <h2 className="font-semibold text-[#0B2433]">공지사항 목록</h2>
         </div>
         {loading ? (
           <div className="py-12 text-center text-sm text-gray-400">불러오는 중...</div>
@@ -186,7 +186,7 @@ export default function AdminNoticePage() {
                     </a>
                   </td>
                   <td className="px-6 py-3">
-                    {n.is_pinned && <span className="rounded bg-[#01273A] px-2 py-0.5 text-[10px] font-bold text-white">고정</span>}
+                    {n.is_pinned && <span className="rounded bg-[#0B2433] px-2 py-0.5 text-[10px] font-bold text-white">고정</span>}
                   </td>
                   <td className="px-6 py-3 text-[#999]">{formatDate(n.created_at)}</td>
                   <td className="px-6 py-3">
@@ -215,7 +215,7 @@ export default function AdminNoticePage() {
       {deleteTarget !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-2xl">
-            <h3 className="mb-2 text-center text-lg font-black text-[#01273A]">공지사항 삭제</h3>
+            <h3 className="mb-2 text-center text-lg font-black text-[#0B2433]">공지사항 삭제</h3>
             <p className="mb-6 text-center text-sm text-[#555]">이 공지사항을 삭제하시겠습니까?<br />삭제 후 복구할 수 없습니다.</p>
             <div className="flex gap-3">
               <button

@@ -80,7 +80,7 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="p-4 sm:p-8">
-      <h1 className="mb-6 text-xl font-bold text-[#01273A] sm:text-2xl">에스크로 주문 관리</h1>
+      <h1 className="mb-6 text-xl font-bold text-[#0B2433] sm:text-2xl">에스크로 주문 관리</h1>
 
       <div className="mb-6 flex border-b border-gray-200">
         {TABS.map((t) => (
@@ -89,8 +89,8 @@ export default function AdminOrdersPage() {
             onClick={() => setTab(t.key)}
             className={`px-5 py-3 text-sm font-medium transition-colors ${
               tab === t.key
-                ? 'border-b-2 border-[#01273A] font-bold text-[#01273A]'
-                : 'text-gray-500 hover:text-[#01273A]'
+                ? 'border-b-2 border-[#0B2433] font-bold text-[#0B2433]'
+                : 'text-gray-500 hover:text-[#0B2433]'
             }`}
           >
             {t.label}
@@ -134,7 +134,7 @@ export default function AdminOrdersPage() {
                     <p className="text-xs text-[#999]">@{o.seller_profile?.username ?? '-'}</p>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="font-semibold text-[#E07B2A]">₩{o.amount.toLocaleString()}</p>
+                    <p className="font-semibold text-[#14547A]">₩{o.amount.toLocaleString()}</p>
                     <p className="text-xs text-[#999]">판매자 {o.seller_amount.toLocaleString()}원</p>
                   </td>
                   <td className="px-4 py-3">

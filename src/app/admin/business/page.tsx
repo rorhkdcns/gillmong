@@ -80,7 +80,7 @@ export default function AdminBusinessPage() {
   return (
     <div className="p-4 sm:p-8">
       <div className="mb-6 flex items-center gap-3">
-        <h1 className="text-xl font-bold text-[#01273A] sm:text-2xl">사업자회원 승인</h1>
+        <h1 className="text-xl font-bold text-[#0B2433] sm:text-2xl">사업자회원 승인</h1>
         {pendingCount > 0 && (
           <span className="rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-white">
             {pendingCount}

@@ -54,7 +54,7 @@ export default function AdminPartnershipsPage() {
 
   return (
     <div className="p-4 sm:p-8">
-      <h1 className="mb-2 text-xl font-bold text-[#01273A] sm:text-2xl">제휴문의 관리</h1>
+      <h1 className="mb-2 text-xl font-bold text-[#0B2433] sm:text-2xl">제휴문의 관리</h1>
       <p className="mb-6 text-sm text-[#999] sm:mb-8">고객사의 제휴 문의 내역을 확인하고 처리합니다.</p>
 
       {loading ? (
@@ -128,7 +128,7 @@ export default function AdminPartnershipsPage() {
                         onChange={(e) => setNote(e.target.value)}
                         rows={3}
                         placeholder="처리 메모 또는 답변 내용을 입력하세요"
-                        className="w-full resize-none rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#01273A]"
+                        className="w-full resize-none rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#0B2433]"
                       />
                     </div>
 
@@ -136,7 +136,7 @@ export default function AdminPartnershipsPage() {
                       <button
                         onClick={() => handleSave(item.id)}
                         disabled={saving}
-                        className="rounded bg-[#01273A] px-4 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
+                        className="rounded bg-[#0B2433] px-4 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
                       >
                         {saving ? '저장 중...' : '저장'}
                       </button>

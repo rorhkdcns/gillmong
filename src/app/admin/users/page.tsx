@@ -74,7 +74,7 @@ export default function AdminUsers() {
 
   return (
     <div className="p-4 sm:p-8">
-      <h1 className="mb-4 text-xl font-bold text-[#01273A] sm:mb-6 sm:text-2xl">회원 관리</h1>
+      <h1 className="mb-4 text-xl font-bold text-[#0B2433] sm:mb-6 sm:text-2xl">회원 관리</h1>
 
       {/* 검색 */}
       <div className="mb-6 flex flex-wrap gap-3">
@@ -84,11 +84,11 @@ export default function AdminUsers() {
           onChange={(e) => setSearch(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && load(search || undefined)}
           placeholder="닉네임 또는 아이디 검색"
-          className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#01273A] sm:w-64"
+          className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#0B2433] sm:w-64"
         />
         <button
           onClick={() => load(search || undefined)}
-          className="bg-[#01273A] px-4 py-2 text-sm font-semibold text-white hover:brightness-90"
+          className="bg-[#0B2433] px-4 py-2 text-sm font-semibold text-white hover:brightness-90"
         >
           검색
         </button>
@@ -132,12 +132,12 @@ export default function AdminUsers() {
                 <td className="px-4 py-3 text-[#333]">{u.real_name || <span className="text-gray-300">-</span>}</td>
                 <td className="px-4 py-3 text-[#555]">{u.phone || <span className="text-gray-300">-</span>}</td>
                 <td className="px-4 py-3 text-[#555]">{u.email || <span className="text-gray-300">-</span>}</td>
-                <td className="px-4 py-3 text-[#E07B2A]">{u.points.toLocaleString()}원</td>
+                <td className="px-4 py-3 text-[#14547A]">{u.points.toLocaleString()}원</td>
                 <td className="px-4 py-3 text-[#999]">{formatDate(u.created_at)}</td>
                 <td className="px-4 py-3">
                   <div className="flex gap-2">
-                    <button onClick={() => openModal(u, 'points')} className="rounded bg-[#01273A] px-3 py-1 text-xs text-white hover:brightness-90">포인트</button>
-                    <button onClick={() => openModal(u, 'reset')}  className="rounded border border-gray-300 px-3 py-1 text-xs text-[#555] hover:border-[#01273A]">비번 초기화</button>
+                    <button onClick={() => openModal(u, 'points')} className="rounded bg-[#0B2433] px-3 py-1 text-xs text-white hover:brightness-90">포인트</button>
+                    <button onClick={() => openModal(u, 'reset')}  className="rounded border border-gray-300 px-3 py-1 text-xs text-[#555] hover:border-[#0B2433]">비번 초기화</button>
                     <button onClick={() => openModal(u, 'delete')} className="rounded border border-red-200 px-3 py-1 text-xs text-red-500 hover:border-red-400">삭제</button>
                   </div>
                 </td>
@@ -155,33 +155,33 @@ export default function AdminUsers() {
 
             {modal.type === 'points' && (
               <>
-                <h2 className="mb-1 text-lg font-bold text-[#01273A]">포인트 지급/차감</h2>
+                <h2 className="mb-1 text-lg font-bold text-[#0B2433]">포인트 지급/차감</h2>
                 <p className="mb-5 text-sm text-[#777]">{modal.user.nickname} (@{modal.user.username})<br />현재: {modal.user.points.toLocaleString()}원</p>
                 <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)}
                   placeholder="양수=지급, 음수=차감 (예: -5000)"
-                  className="mb-3 w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#01273A]" />
+                  className="mb-3 w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#0B2433]" />
                 <input type="text" value={desc} onChange={(e) => setDesc(e.target.value)}
                   placeholder="사유 (선택)"
-                  className="mb-5 w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#01273A]" />
+                  className="mb-5 w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#0B2433]" />
                 {msg && <p className="mb-3 text-sm text-emerald-600">{msg}</p>}
                 <div className="flex gap-3">
-                  <button onClick={closeModal} className="flex-1 border border-gray-300 py-2 text-sm text-[#555] hover:border-[#01273A]">취소</button>
-                  <button onClick={handlePoints} disabled={working} className="flex-1 bg-[#01273A] py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60">{working ? '처리 중...' : '적용'}</button>
+                  <button onClick={closeModal} className="flex-1 border border-gray-300 py-2 text-sm text-[#555] hover:border-[#0B2433]">취소</button>
+                  <button onClick={handlePoints} disabled={working} className="flex-1 bg-[#0B2433] py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60">{working ? '처리 중...' : '적용'}</button>
                 </div>
               </>
             )}
 
             {modal.type === 'reset' && (
               <>
-                <h2 className="mb-1 text-lg font-bold text-[#01273A]">비밀번호 초기화</h2>
+                <h2 className="mb-1 text-lg font-bold text-[#0B2433]">비밀번호 초기화</h2>
                 <p className="mb-5 text-sm text-[#777]">{modal.user.nickname}님의 비밀번호 재설정 링크를 생성합니다.</p>
                 {msg && <p className="mb-3 text-sm text-emerald-600">{msg}</p>}
                 {resetLink && (
                   <div className="mb-4 break-all rounded bg-gray-50 p-3 text-xs text-[#555]">{resetLink}</div>
                 )}
                 <div className="flex gap-3">
-                  <button onClick={closeModal} className="flex-1 border border-gray-300 py-2 text-sm text-[#555] hover:border-[#01273A]">닫기</button>
-                  {!resetLink && <button onClick={handleReset} disabled={working} className="flex-1 bg-[#01273A] py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60">{working ? '생성 중...' : '링크 생성'}</button>}
+                  <button onClick={closeModal} className="flex-1 border border-gray-300 py-2 text-sm text-[#555] hover:border-[#0B2433]">닫기</button>
+                  {!resetLink && <button onClick={handleReset} disabled={working} className="flex-1 bg-[#0B2433] py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60">{working ? '생성 중...' : '링크 생성'}</button>}
                 </div>
               </>
             )}

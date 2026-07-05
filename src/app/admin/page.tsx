@@ -12,7 +12,7 @@ function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="rounded border border-gray-200 bg-white p-4 sm:p-6">
       <p className="text-sm text-[#777777]">{label}</p>
-      <p className="mt-2 text-2xl font-bold text-[#01273A] sm:text-3xl">
+      <p className="mt-2 text-2xl font-bold text-[#0B2433] sm:text-3xl">
         {typeof value === 'number' ? value.toLocaleString() : value}
       </p>
     </div>
@@ -48,7 +48,7 @@ export default function AdminDashboard() {
 
   return (
     <div className="p-4 sm:p-8">
-      <h1 className="mb-6 text-xl font-bold text-[#01273A] sm:mb-8 sm:text-2xl">대시보드</h1>
+      <h1 className="mb-6 text-xl font-bold text-[#0B2433] sm:mb-8 sm:text-2xl">대시보드</h1>
 
       {/* 통계 카드 */}
       <div className="mb-8 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
@@ -62,7 +62,7 @@ export default function AdminDashboard() {
         {/* 최근 가입 회원 */}
         <div className="rounded border border-gray-200 bg-white">
           <div className="border-b border-gray-100 px-4 py-3 sm:px-6 sm:py-4">
-            <h2 className="font-semibold text-[#01273A]">최근 가입 회원</h2>
+            <h2 className="font-semibold text-[#0B2433]">최근 가입 회원</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
                   <tr key={u.id}>
                     <td className="px-6 py-3 text-[#333]">{u.nickname}</td>
                     <td className="px-6 py-3 text-[#777]">@{u.username}</td>
-                    <td className="px-6 py-3 text-[#E07B2A]">{u.points.toLocaleString()}원</td>
+                    <td className="px-6 py-3 text-[#14547A]">{u.points.toLocaleString()}원</td>
                     <td className="px-6 py-3 text-[#999]">{formatDate(u.created_at)}</td>
                   </tr>
                 ))}
@@ -91,7 +91,7 @@ export default function AdminDashboard() {
         {/* 최근 거래 */}
         <div className="rounded border border-gray-200 bg-white">
           <div className="border-b border-gray-100 px-4 py-3 sm:px-6 sm:py-4">
-            <h2 className="font-semibold text-[#01273A]">최근 거래</h2>
+            <h2 className="font-semibold text-[#0B2433]">최근 거래</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -108,7 +108,7 @@ export default function AdminDashboard() {
                   <tr key={tx.id}>
                     <td className="px-6 py-3 text-[#333]">{tx.profiles?.nickname ?? '-'}</td>
                     <td className="max-w-[160px] truncate px-6 py-3 text-[#777]">{tx.dreams?.title ?? '-'}</td>
-                    <td className="px-6 py-3 text-[#E07B2A]">{tx.price.toLocaleString()}원</td>
+                    <td className="px-6 py-3 text-[#14547A]">{tx.price.toLocaleString()}원</td>
                     <td className="px-6 py-3 text-[#999]">{formatDate(tx.created_at)}</td>
                   </tr>
                 ))}
@@ -122,7 +122,7 @@ export default function AdminDashboard() {
       <div className="mt-6 rounded border border-gray-200 bg-white">
         <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3 sm:px-6 sm:py-4">
           <div className="flex items-center gap-2">
-            <h2 className="font-semibold text-[#01273A]">대기 중인 출금신청</h2>
+            <h2 className="font-semibold text-[#0B2433]">대기 중인 출금신청</h2>
             {!wLoading && withdrawals.length > 0 && (
               <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-amber-500 px-1.5 text-[11px] font-bold text-white">
                 {withdrawals.length}
@@ -131,7 +131,7 @@ export default function AdminDashboard() {
           </div>
           <Link
             href="/admin/withdrawals"
-            className="text-xs text-[#01273A] hover:underline"
+            className="text-xs text-[#0B2433] hover:underline"
           >
             모두 보기 →
           </Link>
@@ -160,7 +160,7 @@ export default function AdminDashboard() {
                       <p className="font-medium text-[#333]">{w.profiles?.nickname ?? '-'}</p>
                       <p className="text-xs text-[#999]">@{w.profiles?.username ?? '-'}</p>
                     </td>
-                    <td className="px-4 py-3 font-semibold text-[#E07B2A] sm:px-6">
+                    <td className="px-4 py-3 font-semibold text-[#14547A] sm:px-6">
                       {w.amount.toLocaleString()}원
                     </td>
                     <td className="px-4 py-3 text-[#555] sm:px-6">
@@ -173,7 +173,7 @@ export default function AdminDashboard() {
                     <td className="px-4 py-3 sm:px-6">
                       <Link
                         href="/admin/withdrawals"
-                        className="rounded bg-[#01273A] px-3 py-1 text-xs text-white hover:brightness-90"
+                        className="rounded bg-[#0B2433] px-3 py-1 text-xs text-white hover:brightness-90"
                       >
                         처리하기
                       </Link>
@@ -190,14 +190,14 @@ export default function AdminDashboard() {
       <div className="mt-6 rounded border border-gray-200 bg-white">
         <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3 sm:px-6 sm:py-4">
           <div className="flex items-center gap-2">
-            <h2 className="font-semibold text-[#01273A]">대기 중인 제휴문의</h2>
+            <h2 className="font-semibold text-[#0B2433]">대기 중인 제휴문의</h2>
             {!pLoading && partnerships.length > 0 && (
               <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-blue-500 px-1.5 text-[11px] font-bold text-white">
                 {partnerships.length}
               </span>
             )}
           </div>
-          <Link href="/admin/partnerships" className="text-xs text-[#01273A] hover:underline">
+          <Link href="/admin/partnerships" className="text-xs text-[#0B2433] hover:underline">
             모두 보기 →
           </Link>
         </div>

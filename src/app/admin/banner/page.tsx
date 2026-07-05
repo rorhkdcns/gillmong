@@ -101,14 +101,14 @@ export default function AdminBannerPage() {
 
   return (
     <div className="p-8">
-      <h1 className="mb-2 text-2xl font-bold text-[#01273A]">슬라이드 배너 관리</h1>
+      <h1 className="mb-2 text-2xl font-bold text-[#0B2433]">슬라이드 배너 관리</h1>
       <p className="mb-8 text-sm text-[#999]">
         메인 페이지 상단 슬라이드 배너를 관리합니다. 활성화된 배너만 순서대로 표시됩니다.
       </p>
 
       {/* ─ 새 배너 추가 폼 ─ */}
       <div className="mb-10 max-w-xl space-y-4 rounded border border-gray-200 bg-white p-6">
-        <h2 className="text-base font-bold text-[#01273A]">새 배너 추가</h2>
+        <h2 className="text-base font-bold text-[#0B2433]">새 배너 추가</h2>
 
         <div>
           <label className="mb-1 block text-sm font-semibold text-[#333]">배너 이미지 *</label>
@@ -117,7 +117,7 @@ export default function AdminBannerPage() {
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="w-full text-sm text-gray-600 file:mr-3 file:border-0 file:bg-[#01273A] file:px-4 file:py-2 file:text-white file:text-sm file:cursor-pointer hover:file:brightness-90"
+            className="w-full text-sm text-gray-600 file:mr-3 file:border-0 file:bg-[#0B2433] file:px-4 file:py-2 file:text-white file:text-sm file:cursor-pointer hover:file:brightness-90"
           />
           {imagePreview && (
             <img src={imagePreview} alt="미리보기" className="mt-3 h-32 w-full rounded object-cover" />
@@ -132,7 +132,7 @@ export default function AdminBannerPage() {
             value={linkUrl}
             onChange={(e) => { setLinkUrl(e.target.value); setMsg(null) }}
             placeholder="/ 또는 https://..."
-            className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#01273A]"
+            className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#0B2433]"
           />
         </div>
 
@@ -143,7 +143,7 @@ export default function AdminBannerPage() {
               type="number"
               value={order}
               onChange={(e) => { setOrder(Number(e.target.value)); setMsg(null) }}
-              className="w-24 border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#01273A]"
+              className="w-24 border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#0B2433]"
             />
             <span className="text-xs text-gray-400">숫자가 작을수록 먼저 표시</span>
           </div>
@@ -158,7 +158,7 @@ export default function AdminBannerPage() {
         <button
           onClick={handleAdd}
           disabled={uploading}
-          className="w-full bg-[#01273A] py-3 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
+          className="w-full bg-[#0B2433] py-3 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
         >
           {uploading ? '업로드 중...' : '배너 추가'}
         </button>
@@ -170,7 +170,7 @@ export default function AdminBannerPage() {
 
       {/* ─ 등록된 배너 목록 ─ */}
       <div className="max-w-3xl">
-        <h2 className="mb-4 text-base font-bold text-[#01273A]">
+        <h2 className="mb-4 text-base font-bold text-[#0B2433]">
           등록된 배너 ({banners.length}개)
         </h2>
 

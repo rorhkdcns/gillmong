@@ -47,7 +47,7 @@ export default function AdminInquiriesPage() {
 
   return (
     <div className="p-4 sm:p-8">
-      <h1 className="mb-6 text-xl font-bold text-[#01273A] sm:mb-8 sm:text-2xl">1:1 문의 관리</h1>
+      <h1 className="mb-6 text-xl font-bold text-[#0B2433] sm:mb-8 sm:text-2xl">1:1 문의 관리</h1>
 
       {loading ? (
         <div className="py-16 text-center text-sm text-gray-400">불러오는 중...</div>
@@ -94,12 +94,12 @@ export default function AdminInquiriesPage() {
                       onChange={(e) => setAnswer(e.target.value)}
                       rows={4}
                       placeholder="답변 내용을 입력하세요"
-                      className="w-full resize-none rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#01273A]"
+                      className="w-full resize-none rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#0B2433]"
                     />
                     <button
                       onClick={() => handleAnswer(inq.id)}
                       disabled={saving || !answer.trim()}
-                      className="mt-2 rounded bg-[#01273A] px-4 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
+                      className="mt-2 rounded bg-[#0B2433] px-4 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
                     >
                       {saving ? '저장 중...' : '답변 등록'}
                     </button>

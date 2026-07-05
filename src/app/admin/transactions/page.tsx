@@ -2,15 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { getAdminTransactions } from '../actions'
+import { GRADE_INFO, type Grade } from '@/lib/dreamDisplay'
 
 type Tx = {
   id: number; price: number; created_at: string
   dreams: { id: number; title: string; grade: string } | null
   profiles: { nickname: string; username: string } | null
-}
-
-const GRADE_COLOR: Record<string, string> = {
-  A: 'bg-emerald-500', B: 'bg-blue-500', C: 'bg-amber-400', D: 'bg-orange-400', E: 'bg-red-400', F: 'bg-gray-400',
 }
 
 function formatDate(iso: string) {
@@ -28,7 +25,7 @@ export default function AdminTransactions() {
 
   return (
     <div className="p-4 sm:p-8">
-      <h1 className="mb-4 text-xl font-bold text-[#01273A] sm:mb-6 sm:text-2xl">거래 내역</h1>
+      <h1 className="mb-4 text-xl font-bold text-[#0B2433] sm:mb-6 sm:text-2xl">거래 내역</h1>
 
       <div className="overflow-x-auto rounded border border-gray-200 bg-white">
         <table className="w-full text-sm">
@@ -63,12 +60,12 @@ export default function AdminTransactions() {
                 </td>
                 <td className="px-6 py-3">
                   {tx.dreams && (
-                    <span className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_COLOR[tx.dreams.grade] ?? 'bg-gray-400'}`}>
+                    <span className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_INFO[tx.dreams.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
                       {tx.dreams.grade}
                     </span>
                   )}
                 </td>
-                <td className="px-6 py-3 font-semibold text-[#E07B2A]">{tx.price.toLocaleString()}원</td>
+                <td className="px-6 py-3 font-semibold text-[#14547A]">{tx.price.toLocaleString()}원</td>
                 <td className="px-6 py-3 text-[#999]">{formatDate(tx.created_at)}</td>
               </tr>
             ))}

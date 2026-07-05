@@ -60,12 +60,12 @@ export default function AdminPointsPage() {
 
   return (
     <div className="p-4 sm:p-8">
-      <h1 className="mb-6 text-xl font-bold text-[#01273A] sm:mb-8 sm:text-2xl">포인트 관리</h1>
+      <h1 className="mb-6 text-xl font-bold text-[#0B2433] sm:mb-8 sm:text-2xl">포인트 관리</h1>
 
       <div className="max-w-md space-y-6">
         {/* 포인트 지급 / 차감 */}
         <div className="rounded border border-gray-200 bg-white p-8">
-          <h2 className="mb-5 font-bold text-[#01273A]">아이디로 직접 조정</h2>
+          <h2 className="mb-5 font-bold text-[#0B2433]">아이디로 직접 조정</h2>
 
           {/* 지급 / 차감 토글 */}
           <div className="mb-5 flex rounded border border-gray-200 overflow-hidden">
@@ -74,7 +74,7 @@ export default function AdminPointsPage() {
               onClick={() => { setMode('give'); setResult(null) }}
               className={`flex-1 py-2.5 text-sm font-semibold transition ${
                 mode === 'give'
-                  ? 'bg-[#01273A] text-white'
+                  ? 'bg-[#0B2433] text-white'
                   : 'bg-white text-[#555] hover:bg-gray-50'
               }`}
             >
@@ -101,7 +101,7 @@ export default function AdminPointsPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="대상자 아이디 입력"
-                className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#01273A]"
+                className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#0B2433]"
               />
             </div>
             <div>
@@ -112,7 +112,7 @@ export default function AdminPointsPage() {
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="예: 10000"
                 min={1}
-                className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#01273A]"
+                className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#0B2433]"
               />
             </div>
             {result && (
@@ -124,7 +124,7 @@ export default function AdminPointsPage() {
               type="submit"
               disabled={loading}
               className={`w-full py-3 text-sm font-semibold text-white transition hover:brightness-90 disabled:opacity-60 ${
-                mode === 'deduct' ? 'bg-red-500' : 'bg-[#01273A]'
+                mode === 'deduct' ? 'bg-red-500' : 'bg-[#0B2433]'
               }`}
             >
               {loading ? '처리 중...' : mode === 'give' ? '포인트 지급하기' : '포인트 차감하기'}
@@ -134,7 +134,7 @@ export default function AdminPointsPage() {
 
         {/* 판매 동기화 */}
         <div className="rounded border border-gray-200 bg-white p-8">
-          <h2 className="mb-2 font-bold text-[#01273A]">판매 포인트 동기화</h2>
+          <h2 className="mb-2 font-bold text-[#0B2433]">판매 포인트 동기화</h2>
           <p className="mb-5 text-sm text-[#777]">purchases 기준으로 누락된 판매자 포인트를 일괄 지급하고 is_sold를 수정합니다.</p>
           {syncResult && (
             <div className={`mb-4 rounded px-4 py-3 text-sm ${syncResult.type === 'success' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'}`}>
@@ -144,7 +144,7 @@ export default function AdminPointsPage() {
           <button
             onClick={handleSync}
             disabled={syncing}
-            className="w-full bg-[#6B96A8] py-3 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
+            className="w-full bg-brand-violet-deep py-3 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
           >
             {syncing ? '동기화 중...' : '판매 포인트 동기화 실행'}
           </button>
