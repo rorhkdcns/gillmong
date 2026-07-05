@@ -2,6 +2,13 @@
 
 import { useEffect, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import {
+  createAdminCategory,
+  updateAdminCategory,
+  toggleAdminCategoryActive,
+  reorderAdminCategories,
+  deleteAdminCategory,
+} from '../actions'
 
 interface Category {
   id: string
@@ -94,17 +101,11 @@ export default function AdminCategoriesPage() {
     if (!finalSlug) { setCreateError('slug을 입력해주세요.'); return }
 
     setCreating(true)
-    const supabase = createClient()
     const nextOrder = categories.length > 0 ? Math.max(...categories.map((c) => c.sort_order)) + 1 : 1
-    const { error } = await supabase.from('categories').insert({
-      name: name.trim(),
-      slug: finalSlug,
-      sort_order: nextOrder,
-      is_active: true,
-    })
+    const { error } = await createAdminCategory(name.trim(), finalSlug, nextOrder)
     setCreating(false)
 
-    if (error) { setCreateError(friendlyError(error.message)); return }
+    if (error) { setCreateError(friendlyError(error)); return }
     setName(''); setSlug(''); setSlugTouched(false)
     load()
   }
@@ -122,21 +123,17 @@ export default function AdminCategoriesPage() {
     if (!editSlug.trim()) { setEditError('slug을 입력해주세요.'); return }
 
     setSaving(true)
-    const supabase = createClient()
-    const { error } = await supabase
-      .from('categories')
-      .update({ name: editName.trim(), slug: editSlug.trim() })
-      .eq('id', cat.id)
+    const { error } = await updateAdminCategory(cat.id, editName.trim(), editSlug.trim())
     setSaving(false)
 
-    if (error) { setEditError(friendlyError(error.message)); return }
+    if (error) { setEditError(friendlyError(error)); return }
     setEditingId(null)
     load()
   }
 
   async function toggleActive(cat: Category) {
-    const supabase = createClient()
-    await supabase.from('categories').update({ is_active: !cat.is_active }).eq('id', cat.id)
+    const { error } = await toggleAdminCategoryActive(cat.id, !cat.is_active)
+    if (error) { setBlockMsg(`활성 상태 변경 실패: ${error}`); return }
     load()
   }
 
@@ -146,11 +143,8 @@ export default function AdminCategoriesPage() {
     if (swapIdx < 0 || swapIdx >= categories.length) return
     const other = categories[swapIdx]
 
-    const supabase = createClient()
-    await Promise.all([
-      supabase.from('categories').update({ sort_order: other.sort_order }).eq('id', cat.id),
-      supabase.from('categories').update({ sort_order: cat.sort_order }).eq('id', other.id),
-    ])
+    const { error } = await reorderAdminCategories(cat.id, other.sort_order, other.id, cat.sort_order)
+    if (error) { setBlockMsg(`순서 변경 실패: ${error}`); return }
     load()
   }
 
@@ -167,10 +161,10 @@ export default function AdminCategoriesPage() {
   async function confirmDelete() {
     if (!deleteTarget) return
     setDeleting(true)
-    const supabase = createClient()
-    await supabase.from('categories').delete().eq('id', deleteTarget.id)
+    const { error } = await deleteAdminCategory(deleteTarget.id)
     setDeleting(false)
     setDeleteTarget(null)
+    if (error) { setBlockMsg(`삭제 실패: ${error}`); return }
     load()
   }
 

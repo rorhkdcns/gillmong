@@ -620,3 +620,53 @@ export async function adminRefundOrder(
 
   return { success: true }
 }
+
+// ── 카테고리 관리 ───────────────────────────────────────────────
+export async function createAdminCategory(
+  name: string, slug: string, sortOrder: number,
+): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const { error } = await admin.from('categories').insert({
+    name, slug, sort_order: sortOrder, is_active: true,
+  })
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function updateAdminCategory(
+  id: string, name: string, slug: string,
+): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const { error } = await admin.from('categories').update({ name, slug }).eq('id', id)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function toggleAdminCategoryActive(
+  id: string, isActive: boolean,
+): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const { error } = await admin.from('categories').update({ is_active: isActive }).eq('id', id)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function reorderAdminCategories(
+  idA: string, sortOrderA: number, idB: string, sortOrderB: number,
+): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const [r1, r2] = await Promise.all([
+    admin.from('categories').update({ sort_order: sortOrderA }).eq('id', idA),
+    admin.from('categories').update({ sort_order: sortOrderB }).eq('id', idB),
+  ])
+  const error = r1.error ?? r2.error
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function deleteAdminCategory(id: string): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const { error } = await admin.from('categories').delete().eq('id', id)
+  if (error) return { error: error.message }
+  return { success: true }
+}
