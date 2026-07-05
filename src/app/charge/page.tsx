@@ -43,13 +43,13 @@ export default function ChargePage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
             </svg>
           </div>
-          <h1 className="mb-3 text-2xl font-bold text-[#01273A]">포인트 충전 서비스 종료</h1>
+          <h1 className="mb-3 text-2xl font-bold text-[#0B2433]">포인트 충전 서비스 종료</h1>
           <p className="mb-2 text-gray-600">포인트 충전 서비스가 종료되었습니다.</p>
           <p className="mb-6 text-gray-600">이제 꿈 게시물을 <strong>건별 직접 결제</strong>로 구매하실 수 있습니다.</p>
           <p className="mb-8 text-sm text-gray-400">보유하신 포인트 잔액은 소멸 시까지 기존 방식으로 사용 가능합니다.</p>
           <a
             href="/mypage"
-            className="inline-block rounded-lg bg-[#01273A] px-8 py-3 font-semibold text-white transition hover:brightness-90"
+            className="inline-block rounded-lg bg-[#0B2433] px-8 py-3 font-semibold text-white transition hover:brightness-90"
           >
             마이페이지로 이동
           </a>
@@ -131,7 +131,7 @@ export default function ChargePage() {
       <SiteHeader />
 
       <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">
-        <h1 className="mb-8 text-3xl font-bold text-[#01273A]">포인트 충전</h1>
+        <h1 className="mb-8 text-3xl font-bold text-[#0B2433]">포인트 충전</h1>
 
         {error && (
           <div className="mb-5 rounded border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -141,7 +141,7 @@ export default function ChargePage() {
 
         {/* 충전 금액 선택 */}
         <section className="mb-6">
-          <h2 className="mb-3 text-xl font-bold text-[#01273A]">충전 금액 선택</h2>
+          <h2 className="mb-3 text-xl font-bold text-[#0B2433]">충전 금액 선택</h2>
           <div className="grid grid-cols-3 gap-2">
             {AMOUNTS.map((v) => (
               <button
@@ -150,11 +150,11 @@ export default function ChargePage() {
                 disabled={loading}
                 className={`rounded-lg border-2 py-4 text-center transition disabled:opacity-50 ${
                   amount === v
-                    ? 'border-[#E07B2A] bg-orange-50'
-                    : 'border-gray-200 hover:border-[#E07B2A] hover:bg-orange-50'
+                    ? 'border-[#14547A] bg-orange-50'
+                    : 'border-gray-200 hover:border-[#14547A] hover:bg-orange-50'
                 }`}
               >
-                <div className="text-lg font-bold text-[#E07B2A]">{v.toLocaleString()}원</div>
+                <div className="text-lg font-bold text-[#14547A]">{v.toLocaleString()}원</div>
                 <div className="text-sm text-gray-500">₩{v.toLocaleString()}</div>
               </button>
             ))}
@@ -162,14 +162,14 @@ export default function ChargePage() {
         </section>
 
         {/* 총 충전액 */}
-        <section className="mb-6 rounded-lg bg-[#01273A] px-5 py-4">
+        <section className="mb-6 rounded-lg bg-[#0B2433] px-5 py-4">
           <div className="flex items-center justify-between">
             <span className="text-base font-bold text-white">총 충전액</span>
             {amount > 0 && (
               <button
                 onClick={() => setAmount(0)}
                 disabled={loading}
-                className="rounded border-2 border-white bg-white px-3 py-1 text-sm font-semibold text-[#01273A] transition hover:bg-[#01273A] hover:text-white disabled:opacity-50"
+                className="rounded border-2 border-white bg-white px-3 py-1 text-sm font-semibold text-[#0B2433] transition hover:bg-[#0B2433] hover:text-white disabled:opacity-50"
               >
                 초기화
               </button>
@@ -182,7 +182,7 @@ export default function ChargePage() {
 
         {/* 결제수단 선택 */}
         <section className="mb-6">
-          <h2 className="mb-3 text-xl font-bold text-[#01273A]">결제수단 선택</h2>
+          <h2 className="mb-3 text-xl font-bold text-[#0B2433]">결제수단 선택</h2>
 
           {/* 일반 결제 */}
           <div className="mb-1">
@@ -220,7 +220,7 @@ export default function ChargePage() {
           className={`mb-6 w-full rounded-lg py-4 text-lg font-bold text-white transition ${
             loading || amount === 0
               ? 'cursor-not-allowed bg-gray-400'
-              : 'bg-[#E07B2A] hover:brightness-90'
+              : 'bg-[#14547A] hover:brightness-90'
           }`}
         >
           {loading ? '결제 진행 중...' : amount === 0 ? '금액을 선택해주세요' : `₩${amount.toLocaleString()} 충전하기`}
@@ -236,7 +236,7 @@ export default function ChargePage() {
         </div>
 
         <div className="text-center">
-          <Link href="/mypage" className="text-base text-[#E07B2A] hover:underline">
+          <Link href="/mypage" className="text-base text-[#14547A] hover:underline">
             마이페이지로 돌아가기
           </Link>
         </div>
@@ -261,18 +261,18 @@ function MethodButton({
       disabled={loading}
       className={`flex items-center gap-3 rounded-lg border-2 px-4 py-3 text-left transition disabled:opacity-50 ${
         selected
-          ? 'border-[#01273A] bg-[#01273A]/5'
+          ? 'border-[#0B2433] bg-[#0B2433]/5'
           : 'border-gray-200 hover:border-gray-300'
       }`}
     >
       <div className="flex-1">
-        <div className={`text-sm font-bold ${selected ? 'text-[#01273A]' : 'text-gray-700'}`}>
+        <div className={`text-sm font-bold ${selected ? 'text-[#0B2433]' : 'text-gray-700'}`}>
           {m.label}
         </div>
         <div className="text-xs text-gray-400">{m.desc}</div>
       </div>
       {selected && (
-        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#01273A]">
+        <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#0B2433]">
           <svg className="h-3 w-3 text-white" fill="none" stroke="currentColor" strokeWidth={3} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
@@ -296,7 +296,7 @@ function SimpleMethodButton({
       disabled={loading}
       className={`rounded-lg border-2 py-3 text-center text-sm font-bold transition disabled:opacity-50 ${
         selected
-          ? 'border-[#01273A] bg-[#01273A] text-white'
+          ? 'border-[#0B2433] bg-[#0B2433] text-white'
           : 'border-gray-200 text-gray-700 hover:border-gray-300'
       }`}
     >
