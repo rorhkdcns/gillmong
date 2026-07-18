@@ -46,6 +46,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
     supabase
       .from('categories')
       .select('id, name, slug')
+      .eq('domain', 'dream')
       .eq('is_active', true)
       .order('sort_order', { ascending: true })
       .then(({ data }: { data: CategoryOption[] | null }) => setCategories(data ?? []))

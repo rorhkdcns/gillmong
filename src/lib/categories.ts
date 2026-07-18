@@ -17,6 +17,7 @@ export const getActiveCategories = unstable_cache(
     const { data } = await admin
       .from('categories')
       .select('id, name, slug, description, sort_order, is_active')
+      .eq('domain', 'dream')
       .eq('is_active', true)
       .order('sort_order', { ascending: true })
     return data ?? []

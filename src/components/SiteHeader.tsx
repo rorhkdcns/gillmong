@@ -73,6 +73,7 @@ export default function SiteHeader() {
     supabase
       .from('categories')
       .select('name, slug')
+      .eq('domain', 'dream')
       .eq('is_active', true)
       .order('sort_order', { ascending: true })
       .then(({ data }: { data: { name: string; slug: string }[] | null }) => {
