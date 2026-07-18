@@ -5,6 +5,26 @@ import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import SiteFooter from '@/components/SiteFooter'
 import { loginAction } from '@/app/actions'
+import { createClient } from '@/lib/supabase/client'
+
+function KakaoIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path
+        d="M10 2C5.03 2 1 5.14 1 9c0 2.52 1.71 4.74 4.28 5.98-.14.5-.9 3.13-.93 3.32 0 0-.02.15.08.21.1.06.21.02.21.02.28-.04 3.24-2.13 3.75-2.48.51.07 1.04.11 1.61.11 4.97 0 9-3.14 9-7 0-3.86-4.03-7-9-7z"
+        fill="black"
+      />
+    </svg>
+  )
+}
+
+function NaverIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M13.5 2v8.5L6.5 2H2v16h4.5V9.5l7 8.5H18V2h-4.5z" fill="white" />
+    </svg>
+  )
+}
 
 function LoginForm() {
   const searchParams = useSearchParams()
@@ -13,6 +33,7 @@ function LoginForm() {
   const [state, formAction, isPending] = useActionState(loginAction, null)
   const [saveId, setSaveId] = useState(false)
   const [username, setUsername] = useState('')
+  const [socialLoading, setSocialLoading] = useState<'kakao' | 'naver' | null>(null)
 
   useEffect(() => {
     const saved = localStorage.getItem('savedUsername')
@@ -28,6 +49,17 @@ function LoginForm() {
     } else {
       localStorage.removeItem('savedUsername')
     }
+  }
+
+  async function handleSocialLogin(provider: 'kakao' | 'naver') {
+    setSocialLoading(provider)
+    const supabase = createClient()
+    await supabase.auth.signInWithOAuth({
+      provider: provider === 'naver' ? 'custom:naver' : 'kakao',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback?next=/mypage`,
+      },
+    })
   }
 
   return (
@@ -88,6 +120,34 @@ function LoginForm() {
           {isPending ? '로그인 중...' : '로그인'}
         </button>
       </form>
+
+      <div className="my-6 flex items-center gap-3">
+        <div className="h-px flex-1 bg-gray-200" />
+        <span className="text-xs text-[#999999]">또는</span>
+        <div className="h-px flex-1 bg-gray-200" />
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <button
+          type="button"
+          onClick={() => handleSocialLogin('kakao')}
+          disabled={socialLoading !== null}
+          className="flex w-full items-center justify-center gap-2 bg-[#FEE500] py-3 text-base font-semibold text-black transition-all hover:brightness-95 disabled:opacity-60"
+        >
+          <KakaoIcon />
+          {socialLoading === 'kakao' ? '이동 중...' : '카카오로 로그인'}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => handleSocialLogin('naver')}
+          disabled={socialLoading !== null}
+          className="flex w-full items-center justify-center gap-2 bg-[#03C75A] py-3 text-base font-semibold text-white transition-all hover:brightness-95 disabled:opacity-60"
+        >
+          <NaverIcon />
+          {socialLoading === 'naver' ? '이동 중...' : '네이버로 로그인'}
+        </button>
+      </div>
 
       <div className="mt-6 text-center">
         <a href="/auth/reset-password" className="text-sm text-[#777777] underline underline-offset-2 hover:text-[#0B2433]">
