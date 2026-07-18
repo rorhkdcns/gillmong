@@ -142,7 +142,7 @@ function LoginForm() {
           type="button"
           onClick={() => handleSocialLogin('naver')}
           disabled={socialLoading !== null}
-          className="flex w-full items-center justify-center gap-2 bg-[#03C75A] py-3 text-base font-semibold text-white transition-all hover:brightness-95 disabled:opacity-60"
+          className="hidden w-full items-center justify-center gap-2 bg-[#03C75A] py-3 text-base font-semibold text-white transition-all hover:brightness-95 disabled:opacity-60"
         >
           <NaverIcon />
           {socialLoading === 'naver' ? '이동 중...' : '네이버로 로그인'}
