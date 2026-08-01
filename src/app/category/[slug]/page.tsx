@@ -40,12 +40,17 @@ export default async function CategorySlugPage({
     nickname: nickMap[d.user_id],
   }))
 
+  const otherCategories = categories
+    .filter((c) => c.slug !== slug)
+    .map((c) => ({ slug: c.slug, name: c.name }))
+
   return (
     <CategoryPage
       title={category.name}
       description={category.description ?? `${category.name}에 관한 꿈들을 탐색해보세요`}
       activePath={`/category/${slug}`}
       cards={cards}
+      otherCategories={otherCategories}
     />
   )
 }

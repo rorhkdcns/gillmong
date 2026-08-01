@@ -78,10 +78,17 @@ export default function SiteHeader({ categories }: Props) {
     })),
   ]
 
+  // '해몽 사전'의 '전체 사전'과 같은 방식으로, 카테고리 목록 앞에 전체 보기를 붙여준다.
+  // categoryItems 자체를 바꾸면 위 dictionaryDropdown 매핑까지 깨지므로 여기서만 합친다.
+  const browseDropdown: DropdownItem[] = [
+    { label: '전체 보기', href: '/category/all' },
+    ...categoryItems,
+  ]
+
   const NAV: NavItem[] = [
     { label: '홈', href: '/' },
     { label: '꿈 감정하기', href: '/#appraisal' },
-    { label: '꿈 구경하기', dropdown: categoryItems },
+    { label: '꿈 구경하기', dropdown: browseDropdown },
     { label: '해몽 사전',  dropdown: dictionaryDropdown },
     { label: '고객지원',   dropdown: SUPPORT_DROPDOWN },
   ]

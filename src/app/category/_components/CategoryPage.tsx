@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import SiteFooter from '@/components/SiteFooter'
 import DreamCard from '@/components/DreamCard'
 
@@ -14,14 +15,20 @@ export interface DreamCard {
   nickname?: string
 }
 
+interface CategoryOption {
+  slug: string
+  name: string
+}
+
 interface Props {
   title: string
   description: string
   activePath: string
   cards: DreamCard[]
+  otherCategories: CategoryOption[]
 }
 
-export default function CategoryPage({ title, description, activePath, cards }: Props) {
+export default function CategoryPage({ title, description, activePath, cards, otherCategories }: Props) {
   const [sort, setSort] = useState<'latest' | 'price' | 'grade'>('latest')
   const [visibleCount, setVisibleCount] = useState(6)
 
@@ -95,6 +102,30 @@ export default function CategoryPage({ title, description, activePath, cards }: 
             </button>
           </div>
         </div>
+
+        {/* 다른 카테고리 둘러보기 */}
+        {otherCategories.length > 0 && (
+          <div className="mx-auto mt-14 max-w-6xl border-t border-brand-line pt-8">
+            <h2 className="mb-3 text-sm font-bold text-brand-muted">다른 카테고리 둘러보기</h2>
+            <div className="flex flex-wrap gap-2">
+              {otherCategories.map((c) => (
+                <Link
+                  key={c.slug}
+                  href={`/category/${c.slug}`}
+                  className="rounded-full border border-brand-line bg-white px-4 py-2 text-sm font-medium text-brand-ink-soft transition-colors hover:border-brand-violet hover:text-brand-violet-deep"
+                >
+                  {c.name}
+                </Link>
+              ))}
+              <Link
+                href="/category/all"
+                className="rounded-full border border-brand-line bg-white px-4 py-2 text-sm font-medium text-brand-ink-soft transition-colors hover:border-brand-violet hover:text-brand-violet-deep"
+              >
+                전체 보기
+              </Link>
+            </div>
+          </div>
+        )}
       </section>
 
       <SiteFooter />
