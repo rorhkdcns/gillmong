@@ -1,11 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
+import { createClient } from '@/lib/supabase/client'
 import {
   createAdminDictionaryEntry,
   deleteAdminDictionaryEntry,
   getAdminDictionaryEntries,
   getAdminDictionaryEntryById,
+  getAdminDictionarySubcategories,
   updateAdminDictionaryEntry,
   type AdminDictionaryFields,
 } from '../actions'
@@ -19,6 +21,8 @@ type Entry = {
   view_count: number
   updated_at: string
 }
+type CategoryOption = { slug: string; name: string }
+type SubcategoryOption = { slug: string; name: string; parent_slug: string }
 type FormMode = 'create' | 'edit'
 
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/
@@ -26,22 +30,30 @@ const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/
 export default function AdminDictionaryPage() {
   const [entries, setEntries] = useState<Entry[]>([])
   const [loading, setLoading] = useState(true)
+  const [categories,    setCategories]    = useState<CategoryOption[]>([])
+  const [subcategories, setSubcategories] = useState<SubcategoryOption[]>([])
 
   const [formMode, setFormMode] = useState<FormMode>('create')
   const [editId,   setEditId]   = useState<string | null>(null)
-  const [slug,          setSlug]          = useState('')
-  const [keyword,       setKeyword]       = useState('')
-  const [summary,       setSummary]       = useState('')
-  const [body,          setBody]          = useState('')
-  const [categorySlug,  setCategorySlug]  = useState('')
-  const [tagsInput,     setTagsInput]     = useState('')
-  const [isPublished,   setIsPublished]   = useState(false)
+  const [slug,             setSlug]             = useState('')
+  const [keyword,          setKeyword]          = useState('')
+  const [summary,          setSummary]          = useState('')
+  const [body,             setBody]             = useState('')
+  const [categorySlug,     setCategorySlug]     = useState('')
+  const [subcategorySlug,  setSubcategorySlug]  = useState('')
+  const [tagsInput,        setTagsInput]        = useState('')
+  const [isPublished,      setIsPublished]      = useState(false)
   const [saving,   setSaving]   = useState(false)
   const [error,    setError]    = useState('')
   const [showForm, setShowForm] = useState(false)
 
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const [deleting,     setDeleting]     = useState(false)
+
+  const filteredSubcategories = useMemo(
+    () => subcategories.filter((s) => s.parent_slug === categorySlug),
+    [subcategories, categorySlug],
+  )
 
   async function load() {
     setLoading(true)
@@ -50,12 +62,33 @@ export default function AdminDictionaryPage() {
     setLoading(false)
   }
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    load()
+
+    const supabase = createClient()
+    supabase
+      .from('categories')
+      .select('slug, name')
+      .eq('domain', 'dream')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true })
+      .then(({ data }: { data: CategoryOption[] | null }) => setCategories(data ?? []))
+
+    getAdminDictionarySubcategories().then(({ data }) => setSubcategories(data as SubcategoryOption[]))
+  }, [])
 
   function resetForm() {
     setSlug(''); setKeyword(''); setSummary(''); setBody('')
-    setCategorySlug(''); setTagsInput(''); setIsPublished(false)
+    setCategorySlug(''); setSubcategorySlug(''); setTagsInput(''); setIsPublished(false)
     setError('')
+  }
+
+  function handleCategoryChange(value: string) {
+    setCategorySlug(value)
+    // 대분류가 바뀌면 기존에 선택된 소분류가 새 대분류 소속이 아닐 수 있으므로 초기화
+    if (!subcategories.some((s) => s.slug === subcategorySlug && s.parent_slug === value)) {
+      setSubcategorySlug('')
+    }
   }
 
   function openCreateForm() {
@@ -73,7 +106,8 @@ export default function AdminDictionaryPage() {
     setKeyword('로딩 중...')
     const entry = await getAdminDictionaryEntryById(id) as {
       slug: string; keyword: string; summary: string; body: string
-      category_slug: string | null; tags: string[] | null; is_published: boolean
+      category_slug: string | null; subcategory_slug: string | null
+      tags: string[] | null; is_published: boolean
     } | null
     if (!entry) { setError('사전 항목을 불러올 수 없습니다.'); return }
     setSlug(entry.slug)
@@ -81,6 +115,7 @@ export default function AdminDictionaryPage() {
     setSummary(entry.summary)
     setBody(entry.body)
     setCategorySlug(entry.category_slug ?? '')
+    setSubcategorySlug(entry.subcategory_slug ?? '')
     setTagsInput((entry.tags ?? []).join(', '))
     setIsPublished(entry.is_published)
   }
@@ -106,6 +141,7 @@ export default function AdminDictionaryPage() {
       summary: summary.trim(),
       body: body.trim(),
       categorySlug: categorySlug.trim() || null,
+      subcategorySlug: subcategorySlug.trim() || null,
       tags: tagsInput.split(',').map((t) => t.trim()).filter(Boolean),
       isPublished,
     }
@@ -193,14 +229,32 @@ export default function AdminDictionaryPage() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm text-[#555]">카테고리 slug (선택, 꿈 카테고리와 매칭)</label>
-            <input
-              type="text"
+            <label className="mb-1 block text-sm text-[#555]">대분류 (선택)</label>
+            <select
               value={categorySlug}
-              onChange={(e) => setCategorySlug(e.target.value)}
-              placeholder="예: animals"
-              className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
-            />
+              onChange={(e) => handleCategoryChange(e.target.value)}
+              className="w-full rounded border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-violet"
+            >
+              <option value="">선택 안 함</option>
+              {categories.map((c) => (
+                <option key={c.slug} value={c.slug}>{c.name}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm text-[#555]">소분류 (선택, 대분류를 먼저 선택해야 표시됩니다)</label>
+            <select
+              value={subcategorySlug}
+              onChange={(e) => setSubcategorySlug(e.target.value)}
+              disabled={!categorySlug}
+              className="w-full rounded border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-violet disabled:bg-gray-50 disabled:text-gray-400"
+            >
+              <option value="">선택 안 함</option>
+              {filteredSubcategories.map((s) => (
+                <option key={s.slug} value={s.slug}>{s.name}</option>
+              ))}
+            </select>
           </div>
 
           <div>

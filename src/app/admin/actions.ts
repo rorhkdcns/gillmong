@@ -716,6 +716,7 @@ export interface AdminDictionaryFields {
   summary: string
   body: string
   categorySlug: string | null
+  subcategorySlug: string | null
   tags: string[]
   isPublished: boolean
 }
@@ -726,6 +727,19 @@ export async function getAdminDictionaryEntries(): Promise<{ data: unknown[]; er
     .from('dictionary_entries')
     .select('id, slug, keyword, category_slug, is_published, view_count, updated_at')
     .order('updated_at', { ascending: false })
+  if (error) return { data: [], error: error.message }
+  return { data: data ?? [] }
+}
+
+// 대분류 필터링용 — has_public_page/발행 글 개수와 무관하게 활성 소분류 전부 반환 (기타 소분류 포함)
+export async function getAdminDictionarySubcategories(): Promise<{ data: unknown[]; error?: string }> {
+  const admin = createAdminClient()
+  const { data, error } = await admin
+    .from('dictionary_subcategories')
+    .select('slug, name, parent_slug, sort_order')
+    .eq('is_active', true)
+    .order('parent_slug', { ascending: true })
+    .order('sort_order', { ascending: true })
   if (error) return { data: [], error: error.message }
   return { data: data ?? [] }
 }
@@ -746,6 +760,7 @@ export async function createAdminDictionaryEntry(
     summary: fields.summary,
     body: fields.body,
     category_slug: fields.categorySlug,
+    subcategory_slug: fields.subcategorySlug,
     tags: fields.tags,
     is_published: fields.isPublished,
     updated_at: new Date().toISOString(),
@@ -764,6 +779,7 @@ export async function updateAdminDictionaryEntry(
     summary: fields.summary,
     body: fields.body,
     category_slug: fields.categorySlug,
+    subcategory_slug: fields.subcategorySlug,
     tags: fields.tags,
     is_published: fields.isPublished,
     updated_at: new Date().toISOString(),

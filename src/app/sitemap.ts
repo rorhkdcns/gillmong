@@ -1,12 +1,13 @@
 import { MetadataRoute } from 'next'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { getVisibleSubcategories } from '@/lib/dictionary'
 
 const SITE_URL = 'https://www.gillmong.com'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const admin = createAdminClient()
 
-  const [{ data: dictEntries }, { data: dreams }, { data: categories }] = await Promise.all([
+  const [{ data: dictEntries }, { data: dreams }, { data: categories }, visibleSubcategories] = await Promise.all([
     admin
       .from('dictionary_entries')
       .select('slug, updated_at')
@@ -20,6 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       .select('slug')
       .eq('domain', 'dream')
       .eq('is_active', true),
+    getVisibleSubcategories(),
   ])
 
   const staticPages: MetadataRoute.Sitemap = [
@@ -77,11 +79,25 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   const dictionaryCategoryPages: MetadataRoute.Sitemap = (categories ?? []).map((category) => ({
-    url: `${SITE_URL}/dictionary/category/${category.slug}`,
+    url: `${SITE_URL}/dictionary/${category.slug}`,
     lastModified: new Date(),
     changeFrequency: 'weekly',
     priority: 0.8,
   }))
 
-  return [...staticPages, ...dictionaryPages, ...dictionaryCategoryPages, ...dreamPages, ...categoryPages]
+  const dictionarySubcategoryPages: MetadataRoute.Sitemap = visibleSubcategories.map((sub) => ({
+    url: `${SITE_URL}/dictionary/${sub.parent_slug}/${sub.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.7,
+  }))
+
+  return [
+    ...staticPages,
+    ...dictionaryPages,
+    ...dictionaryCategoryPages,
+    ...dictionarySubcategoryPages,
+    ...dreamPages,
+    ...categoryPages,
+  ]
 }

@@ -61,7 +61,7 @@ export default function SiteHeader() {
     { label: '전체 사전', href: '/dictionary' },
     ...categoryItems.map((c) => ({
       label: `${c.label} 해몽`,
-      href: `/dictionary/category/${c.href.replace('/category/', '')}`,
+      href: `/dictionary/${c.href.replace('/category/', '')}`,
     })),
   ]
 

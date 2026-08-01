@@ -130,7 +130,7 @@ export default function DictionaryList({ entries, categories }: Props) {
               <div key={categorySlug || UNCATEGORIZED} className="mb-10">
                 {categorySlug ? (
                   <Link
-                    href={`/dictionary/category/${categorySlug}`}
+                    href={`/dictionary/${categorySlug}`}
                     className="mb-4 inline-flex items-center gap-1 text-lg font-bold text-brand-heading hover:text-brand-violet-deep"
                   >
                     {group.name}
