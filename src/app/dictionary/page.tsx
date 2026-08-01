@@ -26,8 +26,10 @@ export default async function DictionaryPage() {
     getActiveCategories(),
   ])
 
-  const categoryNameMap: Record<string, string> = {}
-  for (const c of categories) categoryNameMap[c.slug] = c.name
-
-  return <DictionaryList entries={entries ?? []} categoryNameMap={categoryNameMap} />
+  return (
+    <DictionaryList
+      entries={entries ?? []}
+      categories={categories.map((c) => ({ slug: c.slug, name: c.name }))}
+    />
+  )
 }

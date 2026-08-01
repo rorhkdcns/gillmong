@@ -92,6 +92,17 @@ export default async function DictionaryDetailPage({
         .limit(3)
     : { data: [] }
 
+  const { data: relatedEntries } = entry.category_slug
+    ? await admin
+        .from('dictionary_entries')
+        .select('slug, keyword, summary')
+        .eq('category_slug', entry.category_slug)
+        .eq('is_published', true)
+        .neq('slug', slug)
+        .order('keyword', { ascending: true })
+        .limit(5)
+    : { data: [] }
+
   const bodyParagraphs = entry.body.split(/\n{2,}/).filter((p) => p.trim())
 
   return (
@@ -105,7 +116,13 @@ export default async function DictionaryDetailPage({
           <nav className="mb-5 text-sm text-brand-ink-soft">
             <Link href="/dictionary" className="hover:text-brand-violet-deep">해몽 사전</Link>
             <span className="mx-1.5">›</span>
-            <span>{categoryName}</span>
+            {category ? (
+              <Link href={`/dictionary/category/${category.slug}`} className="hover:text-brand-violet-deep">
+                {categoryName}
+              </Link>
+            ) : (
+              <span>{categoryName}</span>
+            )}
           </nav>
 
           <div className="rounded-2xl border border-brand-line bg-white p-6 md:p-10">
@@ -184,6 +201,25 @@ export default async function DictionaryDetailPage({
                         )}
                       </div>
                       <p className="line-clamp-2 text-sm font-medium text-brand-ink">{d.title}</p>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* 같은 카테고리의 다른 해몽 */}
+            {relatedEntries && relatedEntries.length > 0 && (
+              <section className="mt-8 border-t border-brand-line pt-8">
+                <h2 className="mb-3 text-lg font-bold text-brand-heading">같은 카테고리의 다른 해몽</h2>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {relatedEntries.map((e) => (
+                    <Link
+                      key={e.slug}
+                      href={`/dictionary/${e.slug}`}
+                      className="flex flex-col rounded-xl border border-brand-line bg-white p-4 transition-shadow hover:shadow-[0_14px_28px_rgba(11,36,51,0.1)]"
+                    >
+                      <h3 className="mb-1 text-sm font-bold text-brand-ink">{e.keyword} 해몽</h3>
+                      <p className="line-clamp-2 text-xs leading-relaxed text-brand-ink-soft">{e.summary}</p>
                     </Link>
                   ))}
                 </div>

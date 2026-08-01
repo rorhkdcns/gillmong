@@ -76,5 +76,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  return [...staticPages, ...dictionaryPages, ...dreamPages, ...categoryPages]
+  const dictionaryCategoryPages: MetadataRoute.Sitemap = (categories ?? []).map((category) => ({
+    url: `${SITE_URL}/dictionary/category/${category.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }))
+
+  return [...staticPages, ...dictionaryPages, ...dictionaryCategoryPages, ...dreamPages, ...categoryPages]
 }

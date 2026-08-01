@@ -13,37 +13,55 @@ interface DictEntry {
   tags: string[] | null
 }
 
+interface CategoryOption {
+  slug: string
+  name: string
+}
+
 interface Props {
   entries: DictEntry[]
-  categoryNameMap: Record<string, string>
+  categories: CategoryOption[]
 }
 
 const UNCATEGORIZED = '기타'
+const ALL_FILTER = '__all__'
 
-export default function DictionaryList({ entries, categoryNameMap }: Props) {
+export default function DictionaryList({ entries, categories }: Props) {
   const [query, setQuery] = useState('')
+  const [activeCategory, setActiveCategory] = useState(ALL_FILTER)
+
+  const categoryNameMap = useMemo(() => {
+    const map: Record<string, string> = {}
+    for (const c of categories) map[c.slug] = c.name
+    return map
+  }, [categories])
 
   const filtered = useMemo(() => {
+    let list = entries
+    if (activeCategory !== ALL_FILTER) {
+      list = list.filter((e) => (e.category_slug ?? '') === activeCategory)
+    }
     const q = query.trim().toLowerCase()
-    if (!q) return entries
-    return entries.filter((e) =>
+    if (!q) return list
+    return list.filter((e) =>
       e.keyword.toLowerCase().includes(q) ||
       e.summary.toLowerCase().includes(q) ||
       (e.tags ?? []).some((t) => t.toLowerCase().includes(q))
     )
-  }, [entries, query])
+  }, [entries, query, activeCategory])
 
   const grouped = useMemo(() => {
-    const map = new Map<string, DictEntry[]>()
+    const map = new Map<string, { name: string; items: DictEntry[] }>()
     for (const entry of filtered) {
+      const key = entry.category_slug ?? ''
       const name = (entry.category_slug && categoryNameMap[entry.category_slug]) || UNCATEGORIZED
-      if (!map.has(name)) map.set(name, [])
-      map.get(name)!.push(entry)
+      if (!map.has(key)) map.set(key, { name, items: [] })
+      map.get(key)!.items.push(entry)
     }
-    return [...map.entries()].sort((a, b) => {
-      if (a[0] === UNCATEGORIZED) return 1
-      if (b[0] === UNCATEGORIZED) return -1
-      return a[0].localeCompare(b[0])
+    return [...map.entries()].sort(([, a], [, b]) => {
+      if (a.name === UNCATEGORIZED) return 1
+      if (b.name === UNCATEGORIZED) return -1
+      return a.name.localeCompare(b.name)
     })
   }, [filtered, categoryNameMap])
 
@@ -67,6 +85,37 @@ export default function DictionaryList({ entries, categoryNameMap }: Props) {
           />
         </div>
 
+        {/* 카테고리 필터 칩 */}
+        {categories.length > 0 && (
+          <div className="mx-auto mt-4 flex max-w-3xl flex-wrap items-center justify-center gap-2">
+            <button
+              type="button"
+              onClick={() => setActiveCategory(ALL_FILTER)}
+              className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+                activeCategory === ALL_FILTER
+                  ? 'bg-brand-ink text-white'
+                  : 'border border-brand-line text-brand-ink-soft hover:border-brand-violet hover:text-brand-violet-deep'
+              }`}
+            >
+              전체
+            </button>
+            {categories.map((c) => (
+              <button
+                key={c.slug}
+                type="button"
+                onClick={() => setActiveCategory(c.slug)}
+                className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+                  activeCategory === c.slug
+                    ? 'bg-brand-ink text-white'
+                    : 'border border-brand-line text-brand-ink-soft hover:border-brand-violet hover:text-brand-violet-deep'
+                }`}
+              >
+                {c.name}
+              </button>
+            ))}
+          </div>
+        )}
+
         <div className="mx-auto mt-6 max-w-6xl border-b border-brand-line" />
       </section>
 
@@ -77,11 +126,21 @@ export default function DictionaryList({ entries, categoryNameMap }: Props) {
               {entries.length === 0 ? '아직 등록된 사전 항목이 없습니다.' : '검색 결과가 없습니다.'}
             </p>
           ) : (
-            grouped.map(([categoryName, items]) => (
-              <div key={categoryName} className="mb-10">
-                <h2 className="mb-4 text-lg font-bold text-brand-heading">{categoryName}</h2>
+            grouped.map(([categorySlug, group]) => (
+              <div key={categorySlug || UNCATEGORIZED} className="mb-10">
+                {categorySlug ? (
+                  <Link
+                    href={`/dictionary/category/${categorySlug}`}
+                    className="mb-4 inline-flex items-center gap-1 text-lg font-bold text-brand-heading hover:text-brand-violet-deep"
+                  >
+                    {group.name}
+                    <span aria-hidden className="text-sm">›</span>
+                  </Link>
+                ) : (
+                  <h2 className="mb-4 text-lg font-bold text-brand-heading">{group.name}</h2>
+                )}
                 <div className="grid grid-cols-2 gap-3 md:gap-4 md:grid-cols-3 lg:grid-cols-4">
-                  {items.map((entry) => (
+                  {group.items.map((entry) => (
                     <Link
                       key={entry.slug}
                       href={`/dictionary/${entry.slug}`}
