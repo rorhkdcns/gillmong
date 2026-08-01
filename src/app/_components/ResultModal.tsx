@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { GRADE_INFO, TYPE_STYLE, parseInterpretation, type Grade } from '@/lib/dreamDisplay'
@@ -42,7 +42,13 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
     if (mode === 'original') setEditedOriginal(value)
     else setEditedAi(value)
   }
-  const dreamRows = Math.min(15, Math.max(3, Math.ceil(editedDream.length / 50)))
+  const dreamTextareaRef = useRef<HTMLTextAreaElement>(null)
+  useEffect(() => {
+    const el = dreamTextareaRef.current
+    if (!el) return
+    el.style.height = 'auto'
+    el.style.height = `${el.scrollHeight}px`
+  }, [editedDream])
 
   const [title, setTitle]       = useState(analysis.title)
   const [category, setCategory] = useState('')
@@ -267,10 +273,11 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
             </div>
 
             <textarea
+              ref={dreamTextareaRef}
               value={editedDream}
               onChange={(e) => setEditedDream(e.target.value)}
-              rows={dreamRows}
-              className="w-full resize-none rounded-lg bg-brand-page px-3 py-2 text-sm leading-relaxed text-brand-body outline-none focus:ring-1 focus:ring-brand-violet"
+              rows={3}
+              className="w-full max-h-[60vh] resize-none overflow-y-auto rounded-lg bg-brand-page px-3 py-2 text-sm leading-relaxed text-brand-body outline-none focus:ring-1 focus:ring-brand-violet"
             />
           </section>
 
