@@ -46,6 +46,7 @@ export default function DreamInput() {
   const [loading, setLoading]                       = useState(false)
   const [modal, setModal]                           = useState<AnalysisResult | null>(null)
   const [reconstructedDream, setReconstructedDream] = useState('')
+  const [originalText, setOriginalText]             = useState('')
   const [dailyLimitReached, setDailyLimitReached]   = useState(false)
   const [remaining, setRemaining]                   = useState<number | null>(null)
   const [focusedKey, setFocusedKey]                 = useState<keyof Answers | null>(null)
@@ -95,8 +96,9 @@ export default function DreamInput() {
       if (res.status === 429) { setDailyLimitReached(true); return }
       if (res.status === 503) { setInputError(data.error); setIsRetryable(true); return }
       if (!res.ok || data.error) throw new Error(data.error ?? '분석 실패')
-      const { reconstructedDream: rd, ...analysis } = data
+      const { reconstructedDream: rd, originalText: ot, ...analysis } = data
       setReconstructedDream(rd ?? '')
+      setOriginalText(ot ?? '')
       setModal(analysis as AnalysisResult)
       window.dispatchEvent(new Event('dream-analyzed'))
     } catch (err) {
@@ -252,8 +254,9 @@ export default function DreamInput() {
       {modal && (
         <ResultModal
           dream={reconstructedDream}
+          originalText={originalText}
           analysis={modal}
-          onClose={() => { setModal(null); setReconstructedDream('') }}
+          onClose={() => { setModal(null); setReconstructedDream(''); setOriginalText('') }}
         />
       )}
     </>

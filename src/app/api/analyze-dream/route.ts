@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { hasInappropriateContent } from '@/lib/contentFilter'
+import { filterDreamInput, INTERPRETER_GUIDANCE, SAFETY_SETTINGS, isBlockedResponse, SUPPORT_NOTICE } from '@/lib/contentFilter'
 
 const GEMINI_MODEL = 'gemini-2.5-flash'
 const GEMINI_URL =
@@ -22,6 +22,25 @@ function sanitizeLuckyNumbers(raw: unknown): number[] {
   const nums = [...new Set(raw.map(Number).filter((n) => n >= 1 && n <= 45 && Number.isInteger(n)))]
   if (nums.length < 6) return fallbackLuckyNumbers()
   return nums.slice(0, 6).sort((a, b) => a - b)
+}
+
+function getLengthGuidance(totalLen: number): { reconstruction: string; interpretation: string } {
+  if (totalLen < 200) {
+    return {
+      reconstruction: '3~5문장으로 살을 붙여 자연스럽게 재구성',
+      interpretation: '각 관점(한국 전통/아시아/서양 심리학/종합)을 2~3문장으로 간결하게 작성',
+    }
+  }
+  if (totalLen < 600) {
+    return {
+      reconstruction: '6~10문장으로 재구성. 사용자가 쓴 구체적 묘사는 최대한 살릴 것',
+      interpretation: '각 관점(한국 전통/아시아/서양 심리학/종합)을 4~6문장으로 구체적으로 작성',
+    }
+  }
+  return {
+    reconstruction: '재구성하지 말고 원문의 흐름과 표현을 그대로 유지. 오탈자와 문단 구분만 정리. 요약하거나 축약하지 말 것',
+    interpretation: '각 관점(한국 전통/아시아/서양 심리학/종합)을 6문장 이상으로 풍부하고 상세하게 작성. 사용자가 공들여 쓴 만큼 깊이 있게 다뤄줄 것',
+  }
 }
 
 export async function POST(req: NextRequest) {
@@ -69,20 +88,37 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: '꿈 내용이 없습니다.' }, { status: 400 })
   }
 
-  const who    = answers?.who?.trim()    || '(없음)'
-  const when   = answers?.when?.trim()   || '(없음)'
-  const how    = answers?.how?.trim()    || '(없음)'
-  const memory = answers?.memory?.trim() || '(없음)'
+  const rawWho    = answers?.who?.trim()    || ''
+  const rawWhen   = answers?.when?.trim()   || ''
+  const rawHow    = answers?.how?.trim()    || ''
+  const rawMemory = answers?.memory?.trim() || ''
+
+  const who    = rawWho    || '(없음)'
+  const when   = rawWhen   || '(없음)'
+  const how    = rawHow    || '(없음)'
+  const memory = rawMemory || '(없음)'
+
+  const originalText = [
+    rawWho    && `누가/무엇이: ${rawWho}`,
+    rawWhen   && `언제/어디서: ${rawWhen}`,
+    rawHow    && `어떻게/왜: ${rawHow}`,
+    rawMemory && `강렬한 기억: ${rawMemory}`,
+  ].filter(Boolean).join('\n\n')
+
+  const totalInputLength = rawWho.length + rawWhen.length + rawHow.length + rawMemory.length
+  const lengthGuidance = getLengthGuidance(totalInputLength)
 
   // 일반 사용자만 필터링 적용
+  let isAdult = false
+  let needsSupport = false
   if (!isAdmin) {
     const combined = [who, when, how, memory].join(' ')
-    if (hasInappropriateContent(combined)) {
-      return NextResponse.json(
-        { error: '부적절한 표현이 포함되어 있습니다. 내용을 수정한 후 다시 시도해주세요.' },
-        { status: 400 },
-      )
+    const check = await filterDreamInput(combined, 'interpret')
+    if (!check.passed) {
+      return NextResponse.json({ error: check.message }, { status: 400 })
     }
+    isAdult = check.isAdult
+    needsSupport = check.needsSupport
   }
 
   const prompt = `너는 한국 전통 해몽, 동양(중국/일본) 철학적 해몽, 서양 융/프로이트 심리학적 꿈 해석을 모두 통달한 30년 경력의 전문 해몽가야.
@@ -103,9 +139,11 @@ export async function POST(req: NextRequest) {
 절대 모든 꿈을 긍정적으로만 해석하지 마. 꿈의 맥락, 감정, 분위기에 따라 정직하게 길몽/흉몽/중립을 판정해.
 흉몽이나 경고성 꿈은 솔직하게 흉몽으로 판정하되, 대처 방법을 함께 제시해.
 
+해몽(interpretation) 분량 지침: ${lengthGuidance.interpretation}
+
 아래 JSON 형식으로만 응답해. 다른 설명 없이 JSON만:
 {
-  "reconstructedDream": "4가지 단서를 바탕으로 재구성한 자연스러운 꿈 이야기 (3~5문장, 1인칭 서술)",
+  "reconstructedDream": "4가지 단서를 바탕으로 재구성한 자연스러운 꿈 이야기 (1인칭 서술). ${lengthGuidance.reconstruction}",
   "alphabet": "A",
   "type": "길몽",
   "title": "꿈을 한 줄로 표현한 제목 (20자 이내)",
@@ -116,7 +154,9 @@ export async function POST(req: NextRequest) {
 }
 
 alphabet: 반드시 A, B, C, D, E 중 하나만 사용. 다른 알파벳은 절대 사용 금지. — A=최고의 길몽(풍요·성공·행운), B=좋은 길몽(축복·성장·희망), C=평범한 꿈(중립·변화·일상), D=주의가 필요한 꿈(경고·부담·위험 암시), E=흉몽(두려움·상실·불안)
-type: "길몽" | "흉몽" | "중립" 중 하나`
+type: "길몽" | "흉몽" | "중립" 중 하나
+
+${INTERPRETER_GUIDANCE}`
 
   // 버튼 누른 시점에 횟수 차감 (Gemini 성공 여부와 무관)
   await admin.from('analysis_logs').insert({ user_id: user.id })
@@ -124,6 +164,7 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
   const reqBody = JSON.stringify({
     contents: [{ parts: [{ text: prompt }] }],
     generationConfig: { temperature: 0.75, responseMimeType: 'application/json' },
+    safetySettings: SAFETY_SETTINGS,
   })
 
   let res: Response | null = null
@@ -154,6 +195,15 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
   }
 
   const geminiData = await res.json()
+
+  if (isBlockedResponse(geminiData)) {
+    console.error('[Gemini safety block]', JSON.stringify(geminiData.promptFeedback ?? geminiData.candidates?.[0]?.finishReason))
+    return NextResponse.json(
+      { error: '해몽을 생성하지 못했습니다. 표현을 조금 순화해서 다시 입력해주세요.' },
+      { status: 400 },
+    )
+  }
+
   const rawText: string = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
 
   let parsed: Record<string, unknown>
@@ -177,6 +227,9 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
     interpretation: String(parsed.interpretation ?? ''),
     advice:         String(parsed.advice ?? ''),
     lucky_numbers:  sanitizeLuckyNumbers(parsed.lucky_numbers),
+    isAdult,
+    supportNotice:  needsSupport ? SUPPORT_NOTICE : null,
+    originalText,
   }
 
   return NextResponse.json(result)
