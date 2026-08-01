@@ -61,6 +61,7 @@ export default function SiteHeader() {
     { label: '홈', href: '/' },
     { label: '꿈 감정하기', href: '/#appraisal' },
     { label: '꿈 구경하기', dropdown: categoryItems },
+    { label: '해몽 사전',  href: '/dictionary' },
     { label: '고객지원',   dropdown: SUPPORT_DROPDOWN },
   ]
 

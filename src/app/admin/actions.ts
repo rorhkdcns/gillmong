@@ -708,3 +708,141 @@ export async function deleteAdminCategory(id: string): Promise<{ success?: boole
   if (error) return { error: error.message }
   return { success: true }
 }
+
+// ── 해몽 사전 ──────────────────────────────────────────────────
+export interface AdminDictionaryFields {
+  slug: string
+  keyword: string
+  summary: string
+  body: string
+  categorySlug: string | null
+  tags: string[]
+  isPublished: boolean
+}
+
+export async function getAdminDictionaryEntries(): Promise<{ data: unknown[]; error?: string }> {
+  const admin = createAdminClient()
+  const { data, error } = await admin
+    .from('dictionary_entries')
+    .select('id, slug, keyword, category_slug, is_published, view_count, updated_at')
+    .order('updated_at', { ascending: false })
+  if (error) return { data: [], error: error.message }
+  return { data: data ?? [] }
+}
+
+export async function getAdminDictionaryEntryById(id: string): Promise<unknown | null> {
+  const admin = createAdminClient()
+  const { data } = await admin.from('dictionary_entries').select('*').eq('id', id).single()
+  return data ?? null
+}
+
+export async function createAdminDictionaryEntry(
+  fields: AdminDictionaryFields,
+): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const { error } = await admin.from('dictionary_entries').insert({
+    slug: fields.slug,
+    keyword: fields.keyword,
+    summary: fields.summary,
+    body: fields.body,
+    category_slug: fields.categorySlug,
+    tags: fields.tags,
+    is_published: fields.isPublished,
+    updated_at: new Date().toISOString(),
+  })
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function updateAdminDictionaryEntry(
+  id: string, fields: AdminDictionaryFields,
+): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const { error } = await admin.from('dictionary_entries').update({
+    slug: fields.slug,
+    keyword: fields.keyword,
+    summary: fields.summary,
+    body: fields.body,
+    category_slug: fields.categorySlug,
+    tags: fields.tags,
+    is_published: fields.isPublished,
+    updated_at: new Date().toISOString(),
+  }).eq('id', id)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function deleteAdminDictionaryEntry(id: string): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const { error } = await admin.from('dictionary_entries').delete().eq('id', id)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+// ── 제휴 상품 ──────────────────────────────────────────────────
+export interface AdminAffiliateFields {
+  title: string
+  priceText: string | null
+  imageUrl: string | null
+  linkUrl: string
+  tags: string[]
+  sortOrder: number
+  isActive: boolean
+}
+
+export async function getAdminAffiliateProducts(): Promise<{ data: unknown[]; error?: string }> {
+  const admin = createAdminClient()
+  const { data, error } = await admin
+    .from('affiliate_products')
+    .select('id, title, price_text, tags, sort_order, is_active, click_count')
+    .order('sort_order', { ascending: true })
+  if (error) return { data: [], error: error.message }
+  return { data: data ?? [] }
+}
+
+export async function getAdminAffiliateProductById(id: string): Promise<unknown | null> {
+  const admin = createAdminClient()
+  const { data } = await admin.from('affiliate_products').select('*').eq('id', id).single()
+  return data ?? null
+}
+
+export async function createAdminAffiliateProduct(
+  fields: AdminAffiliateFields,
+): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const { error } = await admin.from('affiliate_products').insert({
+    title: fields.title,
+    price_text: fields.priceText,
+    image_url: fields.imageUrl,
+    link_url: fields.linkUrl,
+    tags: fields.tags,
+    sort_order: fields.sortOrder,
+    is_active: fields.isActive,
+  })
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function updateAdminAffiliateProduct(
+  id: string, fields: AdminAffiliateFields,
+): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const { error } = await admin.from('affiliate_products').update({
+    title: fields.title,
+    price_text: fields.priceText,
+    image_url: fields.imageUrl,
+    link_url: fields.linkUrl,
+    tags: fields.tags,
+    sort_order: fields.sortOrder,
+    is_active: fields.isActive,
+  }).eq('id', id)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function deleteAdminAffiliateProduct(id: string): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const { error } = await admin.from('affiliate_products').delete().eq('id', id)
+  if (error) return { error: error.message }
+  return { success: true }
+}
