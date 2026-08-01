@@ -289,7 +289,7 @@ export default function AdminDictionaryPage() {
               value={body}
               onChange={(e) => setBody(e.target.value)}
               rows={10}
-              placeholder="문단 사이는 빈 줄로 구분해주세요."
+              placeholder={'## 소제목\n문단 내용\n\n- 항목명 — 설명\n\n##! 주의 섹션 제목\n문단 내용'}
               className="w-full resize-none rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
             />
           </div>

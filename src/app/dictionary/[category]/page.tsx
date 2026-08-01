@@ -5,6 +5,8 @@ import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getActiveCategories, type Category } from '@/lib/categories'
 import { getVisibleSubcategories, type Subcategory } from '@/lib/dictionary'
+import { parseDictionaryBody, type DictionaryBodyBlock } from '@/lib/dictionaryBody'
+import { getCategoryColor, type CategoryColorSet } from '@/lib/categoryColor'
 import { GRADE_INFO, type Grade } from '@/lib/dreamDisplay'
 import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
@@ -14,6 +16,9 @@ import AffiliateProducts from '@/components/AffiliateProducts'
 // 함께 처리한다 (Next.js는 같은 레벨에 서로 다른 동적 세그먼트 이름을 허용하지 않기 때문에
 // /dictionary/[category] 와 /dictionary/[slug] 를 별도 폴더로 분리할 수 없음).
 // 먼저 대분류 slug인지 확인하고, 아니면 사전 항목 slug로 취급한다.
+
+// 사전 상세 페이지 전용 블록 스타일 (전역 --color-brand-page는 건드리지 않음)
+const BLOCK_SHAPE = 'rounded-[14px] shadow-[0_1px_3px_rgba(11,36,51,0.06)] p-[20px_18px] md:p-[26px_24px]'
 
 interface DictEntry {
   slug: string
@@ -256,6 +261,74 @@ async function CategoryView({
   )
 }
 
+function ChevronRightIcon() {
+  return (
+    <svg className="h-4 w-4 shrink-0 text-[#8CA0AC]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+    </svg>
+  )
+}
+
+function DictionaryBodyBlocks({
+  blocks,
+  colors,
+}: {
+  blocks: DictionaryBodyBlock[]
+  colors: CategoryColorSet
+}) {
+  return (
+    <>
+      {blocks.map((block, i) => {
+        const isWarning = block.variant === 'warning'
+        return (
+          <div
+            key={i}
+            className={`${BLOCK_SHAPE} ${isWarning ? '' : 'bg-white'}`}
+            style={isWarning ? { backgroundColor: '#FDF6E8' } : undefined}
+          >
+            {block.title && (
+              <h2 className="mb-4 text-[24px] font-medium" style={{ color: isWarning ? '#5A3D10' : '#0B2433' }}>
+                {block.title}
+              </h2>
+            )}
+            <div className="flex flex-col gap-4">
+              {block.children.map((child, j) =>
+                child.type === 'paragraph' ? (
+                  <p
+                    key={j}
+                    className="whitespace-pre-line text-[17px] leading-[1.95]"
+                    style={{ color: isWarning ? '#5A3D10' : '#16303F' }}
+                  >
+                    {child.text}
+                  </p>
+                ) : (
+                  <div key={j} className="flex flex-col gap-[12px]">
+                    {child.items.map((item, k) => (
+                      <div key={k} className="overflow-hidden rounded-[10px] border border-[#DCE5EB]">
+                        <div
+                          className="p-[13px_18px] text-[17px] font-medium"
+                          style={{ backgroundColor: colors.badgeBg, color: colors.badgeText }}
+                        >
+                          {item.label}
+                        </div>
+                        {item.description && (
+                          <div className="bg-white p-[16px_18px] text-[17px] leading-[1.85] text-[#16303F]">
+                            {item.description}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )
+              )}
+            </div>
+          </div>
+        )
+      })}
+    </>
+  )
+}
+
 async function EntryView({
   entry,
   categories,
@@ -281,6 +354,7 @@ async function EntryView({
 
   const category = entry.category_slug ? categories.find((c) => c.slug === entry.category_slug) : null
   const categoryName = category?.name ?? '기타'
+  const colors = getCategoryColor(entry.category_slug)
 
   let subcategory: Subcategory | null = null
   if (entry.subcategory_slug) {
@@ -306,142 +380,126 @@ async function EntryView({
     : { data: [] }
 
   const relatedEntries = await getRelatedEntries(admin, entry, subcategory)
-
-  const bodyParagraphs = entry.body.split(/\n{2,}/).filter((p) => p.trim())
+  const bodyBlocks = parseDictionaryBody(entry.body)
 
   return (
-    <div className="flex min-h-screen flex-col bg-brand-page">
+    <div className="flex min-h-screen flex-col">
       <SiteHeader />
 
-      <main className="flex-1 px-4 py-10 md:px-6 md:py-14">
-        <div className="mx-auto max-w-3xl">
+      <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#DDE6EC' }}>
+        <div className="mx-auto flex max-w-[600px] flex-col gap-[14px]">
 
-          {/* 브레드크럼 */}
-          <nav className="mb-5 text-sm text-brand-ink-soft">
-            <Link href="/dictionary" className="hover:text-brand-violet-deep">해몽 사전</Link>
-            <span className="mx-1.5">›</span>
-            {category ? (
-              <Link href={`/dictionary/${category.slug}`} className="hover:text-brand-violet-deep">
-                {categoryName}
-              </Link>
-            ) : (
-              <span>{categoryName}</span>
-            )}
-            {subcategory && (
-              <>
-                <span className="mx-1.5">›</span>
-                {subcategoryIsLinkable && category ? (
-                  <Link href={`/dictionary/${category.slug}/${subcategory.slug}`} className="hover:text-brand-violet-deep">
-                    {subcategory.name}
-                  </Link>
-                ) : (
-                  <span>{subcategory.name}</span>
-                )}
-              </>
-            )}
-          </nav>
+          {/* 1) 헤더 블록 */}
+          <div className="overflow-hidden rounded-[14px] bg-white shadow-[0_1px_3px_rgba(11,36,51,0.06)]">
+            <div
+              className="flex flex-wrap items-center gap-1.5 px-[18px] py-2.5 text-[15px] text-white md:px-6"
+              style={{ backgroundColor: colors.main }}
+            >
+              {category ? (
+                <Link href={`/dictionary/${category.slug}`} className="hover:underline">{categoryName}</Link>
+              ) : (
+                <span>{categoryName}</span>
+              )}
+              {subcategory && (
+                <>
+                  <span aria-hidden>›</span>
+                  {subcategoryIsLinkable && category ? (
+                    <Link href={`/dictionary/${category.slug}/${subcategory.slug}`} className="hover:underline">
+                      {subcategory.name}
+                    </Link>
+                  ) : (
+                    <span>{subcategory.name}</span>
+                  )}
+                </>
+              )}
+            </div>
 
-          <div className="rounded-2xl border border-brand-line bg-white p-6 md:p-10">
+            <div className="p-[20px_18px] md:p-[26px_24px]">
+              <h1 className="mb-3 text-[26px] font-medium text-[#0B2433] md:text-[32px]">
+                {entry.keyword} 해몽
+              </h1>
+              <p className="text-[18px] leading-[1.85] text-[#1C3547]">
+                {entry.summary}
+              </p>
+              {entry.tags && entry.tags.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {entry.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-[8px] bg-brand-primary-light px-3 py-1 text-[14px] font-semibold text-brand-primary-hover"
+                    >
+                      #{tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
 
-            {/* h1 */}
-            <h1 className="mb-4 text-2xl font-black text-brand-heading md:text-3xl">
-              {entry.keyword} 해몽
-            </h1>
+          {/* 2)~4) 본문/항목 카드/주의 섹션 */}
+          <DictionaryBodyBlocks blocks={bodyBlocks} colors={colors} />
 
-            {/* summary */}
-            <p className="mb-5 text-base leading-relaxed text-brand-ink-soft">
-              {entry.summary}
+          {/* 5) AI 해몽 CTA */}
+          <div className={`${BLOCK_SHAPE} text-center`} style={{ backgroundColor: '#0B2433' }}>
+            <p className="text-[20px] font-semibold text-white">내 꿈은 어떤 의미일까요?</p>
+            <p className="mt-1.5 text-[16px]" style={{ color: '#A8BECC' }}>
+              AI가 당신의 꿈을 직접 분석해드립니다. 지금 바로 무료로 감정받아보세요.
             </p>
+            <Link
+              href="/#appraisal"
+              className="mt-4 inline-block w-full rounded-[10px] bg-[#2E7DD1] px-[30px] py-[14px] text-[17px] font-semibold text-white transition-transform hover:scale-[1.02] md:w-auto"
+            >
+              AI 해몽 받으러 가기
+            </Link>
+          </div>
 
-            {/* 태그 */}
-            {entry.tags && entry.tags.length > 0 && (
-              <div className="mb-6 flex flex-wrap gap-2">
-                {entry.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full bg-brand-primary-light px-3 py-1 text-xs font-semibold text-brand-primary-hover"
+          {/* 제휴상품 */}
+          <AffiliateProducts tags={entry.tags ?? []} />
+
+          {/* 관련 거래중인 꿈 */}
+          {relatedDreams && relatedDreams.length > 0 && (
+            <div className={`${BLOCK_SHAPE} bg-white`}>
+              <h2 className="mb-4 text-[24px] font-medium text-[#0B2433]">관련 거래중인 꿈</h2>
+              <div className="flex flex-col gap-[10px]">
+                {relatedDreams.map((d) => (
+                  <Link
+                    key={d.id}
+                    href={`/dream/${d.id}`}
+                    className="flex items-center justify-between gap-3 rounded-[10px] bg-[#EDF3F7] px-5 py-4 text-[17px] text-[#16303F] transition-colors hover:bg-[#E4ECF1]"
                   >
-                    #{tag}
-                  </span>
+                    <span className="flex min-w-0 items-center gap-2">
+                      <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_INFO[d.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
+                        {d.grade}
+                      </span>
+                      <span className="truncate">{d.title}</span>
+                    </span>
+                    <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${d.is_sold ? 'bg-gray-400 text-white' : 'bg-emerald-50 text-emerald-600'}`}>
+                      {d.is_sold ? '판매완료' : '구매가능'}
+                    </span>
+                  </Link>
                 ))}
               </div>
-            )}
-
-            <hr className="mb-6 border-brand-border" />
-
-            {/* 본문 */}
-            <div className="mb-8 space-y-4">
-              {bodyParagraphs.map((p, i) => (
-                <p key={i} className="whitespace-pre-line text-base leading-relaxed text-brand-body">
-                  {p}
-                </p>
-              ))}
             </div>
+          )}
 
-            {/* AI 해몽 CTA */}
-            <div className="mb-8 rounded-2xl bg-gradient-to-r from-brand-violet to-brand-pink p-6 text-center text-white md:p-8">
-              <p className="text-lg font-bold md:text-xl">내 꿈은 어떤 의미일까요?</p>
-              <p className="mt-1.5 text-sm text-white/90">
-                AI가 당신의 꿈을 직접 분석해드립니다. 지금 바로 무료로 감정받아보세요.
-              </p>
-              <Link
-                href="/#appraisal"
-                className="mt-4 inline-block rounded-full bg-white px-8 py-3 text-sm font-bold text-brand-violet-deep transition-transform hover:scale-105"
-              >
-                AI 해몽 받으러 가기
-              </Link>
+          {/* 6) 관련 해몽 */}
+          {relatedEntries.length > 0 && (
+            <div className={`${BLOCK_SHAPE} bg-white`}>
+              <h2 className="mb-4 text-[24px] font-medium text-[#0B2433]">같은 카테고리의 다른 해몽</h2>
+              <div className="flex flex-col gap-[10px]">
+                {relatedEntries.map((e) => (
+                  <Link
+                    key={e.slug}
+                    href={`/dictionary/${e.slug}`}
+                    className="flex items-center justify-between gap-3 rounded-[10px] bg-[#EDF3F7] px-5 py-4 text-[17px] text-[#16303F] transition-colors hover:bg-[#E4ECF1]"
+                  >
+                    <span className="truncate">{e.keyword} 해몽</span>
+                    <ChevronRightIcon />
+                  </Link>
+                ))}
+              </div>
             </div>
-
-            {/* 제휴상품 */}
-            <AffiliateProducts tags={entry.tags ?? []} />
-
-            {/* 관련 거래중인 꿈 */}
-            {relatedDreams && relatedDreams.length > 0 && (
-              <section>
-                <h2 className="mb-3 text-lg font-bold text-brand-heading">관련 거래중인 꿈</h2>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  {relatedDreams.map((d) => (
-                    <Link
-                      key={d.id}
-                      href={`/dream/${d.id}`}
-                      className="flex flex-col gap-2 rounded-xl border border-brand-line bg-white p-4 transition-shadow hover:shadow-[0_14px_28px_rgba(11,36,51,0.1)]"
-                    >
-                      <div className="flex items-center gap-2">
-                        <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_INFO[d.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
-                          {d.grade}
-                        </span>
-                        {d.is_sold ? (
-                          <span className="rounded-full bg-gray-400 px-2 py-0.5 text-xs font-bold text-white">판매완료</span>
-                        ) : (
-                          <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-600">구매가능</span>
-                        )}
-                      </div>
-                      <p className="line-clamp-2 text-sm font-medium text-brand-ink">{d.title}</p>
-                    </Link>
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {/* 같은 카테고리의 다른 해몽 */}
-            {relatedEntries.length > 0 && (
-              <section className="mt-8 border-t border-brand-line pt-8">
-                <h2 className="mb-3 text-lg font-bold text-brand-heading">같은 카테고리의 다른 해몽</h2>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  {relatedEntries.map((e) => (
-                    <Link
-                      key={e.slug}
-                      href={`/dictionary/${e.slug}`}
-                      className="flex flex-col rounded-xl border border-brand-line bg-white p-4 transition-shadow hover:shadow-[0_14px_28px_rgba(11,36,51,0.1)]"
-                    >
-                      <h3 className="mb-1 text-sm font-bold text-brand-ink">{e.keyword} 해몽</h3>
-                      <p className="line-clamp-2 text-xs leading-relaxed text-brand-ink-soft">{e.summary}</p>
-                    </Link>
-                  ))}
-                </div>
-              </section>
-            )}
-          </div>
+          )}
         </div>
       </main>
 
