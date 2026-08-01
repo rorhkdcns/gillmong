@@ -19,6 +19,8 @@ export interface AnalysisResult {
   interpretation: string
   advice: string
   lucky_numbers: number[]
+  isAdult?: boolean
+  supportNotice?: string | null
 }
 
 interface ResultModalProps {
@@ -154,6 +156,7 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
         category_id:    selectedCategory?.id ?? null,
         price:          Number(price),
         lucky_numbers:  analysis.lucky_numbers,
+        is_adult:       analysis.isAdult ?? false,
       })
       .select('id')
       .single()

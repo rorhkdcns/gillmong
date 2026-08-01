@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { hasInappropriateContent } from '@/lib/contentFilter'
+import { filterDreamInput, INTERPRETER_GUIDANCE, SAFETY_SETTINGS, isBlockedResponse, SUPPORT_NOTICE } from '@/lib/contentFilter'
 
 const GEMINI_MODEL = 'gemini-2.5-flash'
 const GEMINI_URL =
@@ -75,14 +75,16 @@ export async function POST(req: NextRequest) {
   const memory = answers?.memory?.trim() || '(없음)'
 
   // 일반 사용자만 필터링 적용
+  let isAdult = false
+  let needsSupport = false
   if (!isAdmin) {
     const combined = [who, when, how, memory].join(' ')
-    if (hasInappropriateContent(combined)) {
-      return NextResponse.json(
-        { error: '부적절한 표현이 포함되어 있습니다. 내용을 수정한 후 다시 시도해주세요.' },
-        { status: 400 },
-      )
+    const check = await filterDreamInput(combined, 'interpret')
+    if (!check.passed) {
+      return NextResponse.json({ error: check.message }, { status: 400 })
     }
+    isAdult = check.isAdult
+    needsSupport = check.needsSupport
   }
 
   const prompt = `너는 한국 전통 해몽, 동양(중국/일본) 철학적 해몽, 서양 융/프로이트 심리학적 꿈 해석을 모두 통달한 30년 경력의 전문 해몽가야.
@@ -116,7 +118,9 @@ export async function POST(req: NextRequest) {
 }
 
 alphabet: 반드시 A, B, C, D, E 중 하나만 사용. 다른 알파벳은 절대 사용 금지. — A=최고의 길몽(풍요·성공·행운), B=좋은 길몽(축복·성장·희망), C=평범한 꿈(중립·변화·일상), D=주의가 필요한 꿈(경고·부담·위험 암시), E=흉몽(두려움·상실·불안)
-type: "길몽" | "흉몽" | "중립" 중 하나`
+type: "길몽" | "흉몽" | "중립" 중 하나
+
+${INTERPRETER_GUIDANCE}`
 
   // 버튼 누른 시점에 횟수 차감 (Gemini 성공 여부와 무관)
   await admin.from('analysis_logs').insert({ user_id: user.id })
@@ -124,6 +128,7 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
   const reqBody = JSON.stringify({
     contents: [{ parts: [{ text: prompt }] }],
     generationConfig: { temperature: 0.75, responseMimeType: 'application/json' },
+    safetySettings: SAFETY_SETTINGS,
   })
 
   let res: Response | null = null
@@ -154,6 +159,15 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
   }
 
   const geminiData = await res.json()
+
+  if (isBlockedResponse(geminiData)) {
+    console.error('[Gemini safety block]', JSON.stringify(geminiData.promptFeedback ?? geminiData.candidates?.[0]?.finishReason))
+    return NextResponse.json(
+      { error: '해몽을 생성하지 못했습니다. 표현을 조금 순화해서 다시 입력해주세요.' },
+      { status: 400 },
+    )
+  }
+
   const rawText: string = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
 
   let parsed: Record<string, unknown>
@@ -177,6 +191,8 @@ type: "길몽" | "흉몽" | "중립" 중 하나`
     interpretation: String(parsed.interpretation ?? ''),
     advice:         String(parsed.advice ?? ''),
     lucky_numbers:  sanitizeLuckyNumbers(parsed.lucky_numbers),
+    isAdult,
+    supportNotice:  needsSupport ? SUPPORT_NOTICE : null,
   }
 
   return NextResponse.json(result)
