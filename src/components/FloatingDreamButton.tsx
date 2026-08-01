@@ -20,6 +20,7 @@ export default function FloatingDreamButton() {
   const [loading, setLoading]                       = useState(false)
   const [result, setResult]                         = useState<AnalysisResult | null>(null)
   const [reconstructedDream, setReconstructedDream] = useState('')
+  const [originalText, setOriginalText]             = useState('')
   const [dailyLimitReached, setDailyLimitReached]   = useState(false)
   const [focusedKey, setFocusedKey]                 = useState<keyof Answers | null>(null)
 
@@ -39,6 +40,7 @@ export default function FloatingDreamButton() {
     setIsRetryable(false)
     setResult(null)
     setReconstructedDream('')
+    setOriginalText('')
     setLoading(false)
     setDailyLimitReached(false)
     setFocusedKey(null)
@@ -67,8 +69,9 @@ export default function FloatingDreamButton() {
       if (res.status === 429) { setDailyLimitReached(true); setLoading(false); return }
       if (res.status === 503) { setInputError(data.error); setIsRetryable(true); setLoading(false); return }
       if (!res.ok || data.error) throw new Error(data.error ?? '분석 실패')
-      const { reconstructedDream: rd, ...analysis } = data
+      const { reconstructedDream: rd, originalText: ot, ...analysis } = data
       setReconstructedDream(rd ?? '')
+      setOriginalText(ot ?? '')
       setResult(analysis as AnalysisResult)
       window.dispatchEvent(new Event('dream-analyzed'))
     } catch (err) {
@@ -266,6 +269,7 @@ export default function FloatingDreamButton() {
       {result && (
         <ResultModal
           dream={reconstructedDream}
+          originalText={originalText}
           analysis={result}
           onClose={handleClose}
         />

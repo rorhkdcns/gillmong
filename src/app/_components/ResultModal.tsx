@@ -25,15 +25,25 @@ export interface AnalysisResult {
 
 interface ResultModalProps {
   dream: string
+  originalText: string
   analysis: AnalysisResult
   onClose: () => void
 }
 
-export default function ResultModal({ dream, analysis, onClose }: ResultModalProps) {
+export default function ResultModal({ dream, originalText, analysis, onClose }: ResultModalProps) {
   const router = useRouter()
   const alphaBg = GRADE_INFO[analysis.alphabet as Grade]?.badgeBg ?? 'bg-gray-400'
 
-  const [editedDream, setEditedDream] = useState(dream)
+  const [mode, setMode] = useState<'original' | 'ai'>(originalText.length >= 600 ? 'original' : 'ai')
+  const [editedAi, setEditedAi]             = useState(dream)
+  const [editedOriginal, setEditedOriginal] = useState(originalText)
+  const editedDream = mode === 'original' ? editedOriginal : editedAi
+  function setEditedDream(value: string) {
+    if (mode === 'original') setEditedOriginal(value)
+    else setEditedAi(value)
+  }
+  const dreamRows = Math.min(15, Math.max(3, Math.ceil(editedDream.length / 50)))
+
   const [title, setTitle]       = useState(analysis.title)
   const [category, setCategory] = useState('')
   const [categories, setCategories] = useState<CategoryOption[]>([])
@@ -100,12 +110,15 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
         user_id:        user.id,
         title:          title.trim(),
         content:        editedDream.trim(),
+        original_text:  originalText,
+        content_mode:   mode,
         summary:        analysis.summary || editedDream.trim().slice(0, 100),
         grade:          analysis.alphabet,
         type:           analysis.type,
         interpretation: analysis.interpretation,
         advice:         analysis.advice,
         lucky_numbers:  analysis.lucky_numbers,
+        is_adult:       analysis.isAdult ?? false,
       })
 
     if (error) { setSavingPrivate(false); setSaveError(`저장 오류: ${error.message}`); return }
@@ -147,6 +160,8 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
         user_id:        user.id,
         title:          title.trim(),
         content:        editedDream.trim(),
+        original_text:  originalText,
+        content_mode:   mode,
         summary:        analysis.summary || editedDream.trim().slice(0, 100),
         grade:          analysis.alphabet,
         dream_type:     analysis.type,
@@ -223,10 +238,38 @@ export default function ResultModal({ dream, analysis, onClose }: ResultModalPro
               나의 꿈 기록
               <span className="ml-1.5 text-xs font-normal text-gray-400">직접 수정 가능</span>
             </h3>
+
+            <div className="mb-2 flex gap-2">
+              <button
+                type="button"
+                onClick={() => setMode('original')}
+                className={`flex-1 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${
+                  mode === 'original'
+                    ? 'border-brand-violet bg-brand-violet text-white'
+                    : 'border-[#CCCCCC] bg-white text-brand-muted hover:border-brand-violet'
+                }`}
+              >
+                내가 쓴 그대로
+                <span className="ml-1 font-normal opacity-80">{editedOriginal.length.toLocaleString()}자</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode('ai')}
+                className={`flex-1 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${
+                  mode === 'ai'
+                    ? 'border-brand-violet bg-brand-violet text-white'
+                    : 'border-[#CCCCCC] bg-white text-brand-muted hover:border-brand-violet'
+                }`}
+              >
+                AI가 다듬은 글
+                <span className="ml-1 font-normal opacity-80">{editedAi.length.toLocaleString()}자</span>
+              </button>
+            </div>
+
             <textarea
               value={editedDream}
               onChange={(e) => setEditedDream(e.target.value)}
-              rows={3}
+              rows={dreamRows}
               className="w-full resize-none rounded-lg bg-brand-page px-3 py-2 text-sm leading-relaxed text-brand-body outline-none focus:ring-1 focus:ring-brand-violet"
             />
           </section>

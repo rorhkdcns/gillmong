@@ -24,6 +24,25 @@ function sanitizeLuckyNumbers(raw: unknown): number[] {
   return nums.slice(0, 6).sort((a, b) => a - b)
 }
 
+function getLengthGuidance(totalLen: number): { reconstruction: string; interpretation: string } {
+  if (totalLen < 200) {
+    return {
+      reconstruction: '3~5문장으로 살을 붙여 자연스럽게 재구성',
+      interpretation: '각 관점(한국 전통/아시아/서양 심리학/종합)을 2~3문장으로 간결하게 작성',
+    }
+  }
+  if (totalLen < 600) {
+    return {
+      reconstruction: '6~10문장으로 재구성. 사용자가 쓴 구체적 묘사는 최대한 살릴 것',
+      interpretation: '각 관점(한국 전통/아시아/서양 심리학/종합)을 4~6문장으로 구체적으로 작성',
+    }
+  }
+  return {
+    reconstruction: '재구성하지 말고 원문의 흐름과 표현을 그대로 유지. 오탈자와 문단 구분만 정리. 요약하거나 축약하지 말 것',
+    interpretation: '각 관점(한국 전통/아시아/서양 심리학/종합)을 6문장 이상으로 풍부하고 상세하게 작성. 사용자가 공들여 쓴 만큼 깊이 있게 다뤄줄 것',
+  }
+}
+
 export async function POST(req: NextRequest) {
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY
   if (!GEMINI_API_KEY) {
@@ -69,10 +88,25 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: '꿈 내용이 없습니다.' }, { status: 400 })
   }
 
-  const who    = answers?.who?.trim()    || '(없음)'
-  const when   = answers?.when?.trim()   || '(없음)'
-  const how    = answers?.how?.trim()    || '(없음)'
-  const memory = answers?.memory?.trim() || '(없음)'
+  const rawWho    = answers?.who?.trim()    || ''
+  const rawWhen   = answers?.when?.trim()   || ''
+  const rawHow    = answers?.how?.trim()    || ''
+  const rawMemory = answers?.memory?.trim() || ''
+
+  const who    = rawWho    || '(없음)'
+  const when   = rawWhen   || '(없음)'
+  const how    = rawHow    || '(없음)'
+  const memory = rawMemory || '(없음)'
+
+  const originalText = [
+    rawWho    && `누가/무엇이: ${rawWho}`,
+    rawWhen   && `언제/어디서: ${rawWhen}`,
+    rawHow    && `어떻게/왜: ${rawHow}`,
+    rawMemory && `강렬한 기억: ${rawMemory}`,
+  ].filter(Boolean).join('\n\n')
+
+  const totalInputLength = rawWho.length + rawWhen.length + rawHow.length + rawMemory.length
+  const lengthGuidance = getLengthGuidance(totalInputLength)
 
   // 일반 사용자만 필터링 적용
   let isAdult = false
@@ -105,9 +139,11 @@ export async function POST(req: NextRequest) {
 절대 모든 꿈을 긍정적으로만 해석하지 마. 꿈의 맥락, 감정, 분위기에 따라 정직하게 길몽/흉몽/중립을 판정해.
 흉몽이나 경고성 꿈은 솔직하게 흉몽으로 판정하되, 대처 방법을 함께 제시해.
 
+해몽(interpretation) 분량 지침: ${lengthGuidance.interpretation}
+
 아래 JSON 형식으로만 응답해. 다른 설명 없이 JSON만:
 {
-  "reconstructedDream": "4가지 단서를 바탕으로 재구성한 자연스러운 꿈 이야기 (3~5문장, 1인칭 서술)",
+  "reconstructedDream": "4가지 단서를 바탕으로 재구성한 자연스러운 꿈 이야기 (1인칭 서술). ${lengthGuidance.reconstruction}",
   "alphabet": "A",
   "type": "길몽",
   "title": "꿈을 한 줄로 표현한 제목 (20자 이내)",
@@ -193,6 +229,7 @@ ${INTERPRETER_GUIDANCE}`
     lucky_numbers:  sanitizeLuckyNumbers(parsed.lucky_numbers),
     isAdult,
     supportNotice:  needsSupport ? SUPPORT_NOTICE : null,
+    originalText,
   }
 
   return NextResponse.json(result)
