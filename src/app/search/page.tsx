@@ -3,7 +3,6 @@
 import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import { createClient } from '@/lib/supabase/client'
 import { GRADE_INFO, type Grade } from '@/lib/dreamDisplay'
@@ -145,7 +144,6 @@ function SearchResults() {
 export default function SearchPage() {
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
-      <SiteHeader />
 
       <Suspense fallback={
         <main className="flex flex-1 items-center justify-center">

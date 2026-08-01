@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Script from 'next/script'
-import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 
 const AMOUNTS = [5000, 10000, 30000, 50000, 100000, 200000]
@@ -36,7 +35,6 @@ export default function ChargePage() {
   if (CHARGE_DISABLED) {
     return (
       <>
-        <SiteHeader />
         <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-16 text-center">
           <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gray-100">
             <svg className="h-8 w-8 text-gray-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -128,7 +126,6 @@ export default function ChargePage() {
   return (
     <>
       <Script src="https://pay.nicepay.co.kr/v1/js/" strategy="lazyOnload" />
-      <SiteHeader />
 
       <div className="mx-auto w-full max-w-2xl flex-1 px-4 py-8">
         <h1 className="mb-8 text-3xl font-bold text-[#0B2433]">포인트 충전</h1>

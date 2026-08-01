@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { DbDream } from '@/lib/supabase/types'
 import { CATEGORY_PATH, CATEGORY_LABEL } from '@/lib/supabase/types'
-import SiteHeader from '@/components/SiteHeader'
 import { updateDream } from '../../actions'
 
 interface Props {
@@ -59,7 +58,6 @@ export default function DreamEditForm({ dream }: Props) {
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
-      <SiteHeader />
 
       <div className="border-b border-gray-100 bg-white px-6 py-3">
         <div className="mx-auto max-w-2xl">

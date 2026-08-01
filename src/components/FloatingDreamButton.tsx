@@ -5,13 +5,16 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import ResultModal, { type AnalysisResult } from '@/app/_components/ResultModal'
 import { DREAM_FIELDS } from '@/app/_components/DreamInput'
-import { useRemainingCount } from '@/hooks/useRemainingCount'
 
 type Answers = { who: string; when: string; how: string; memory: string }
 
-export default function FloatingDreamButton() {
+interface Props {
+  remaining: number | null
+  fetchRemaining: () => Promise<number | null>
+}
+
+export default function FloatingDreamButton({ remaining, fetchRemaining }: Props) {
   const router = useRouter()
-  const { remaining, fetchRemaining } = useRemainingCount()
 
   const [open, setOpen]                             = useState(false)
   const [answers, setAnswers]                       = useState<Answers>({ who: '', when: '', how: '', memory: '' })

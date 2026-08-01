@@ -1,6 +1,5 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import DreamInput from './_components/DreamInput'
-import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import BannerSlider from '@/components/BannerSlider'
 import HeroSlider from '@/components/HeroSlider'
@@ -8,7 +7,7 @@ import CategoryCarousel from '@/components/CategoryCarousel'
 import { getActiveCategories } from '@/lib/categories'
 import Link from 'next/link'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 export default async function Home() {
   const supabase = createAdminClient()
@@ -56,7 +55,6 @@ export default async function Home() {
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-page">
-      <SiteHeader />
 
       {/* ① 배너 (관리자 등록 이미지 배너) */}
       <BannerSlider banners={activeBanners ?? []} />

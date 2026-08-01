@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import { submitPartnershipInquiry } from './actions'
 
@@ -38,7 +37,6 @@ export default function PartnershipsPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
-      <SiteHeader />
 
       <section className="flex-1 px-6 py-16">
         <div className="mx-auto max-w-xl">

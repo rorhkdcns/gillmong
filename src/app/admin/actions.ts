@@ -1,7 +1,30 @@
 'use server'
 
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { createClient } from '@/lib/supabase/server'
+
+// 카테고리는 여러 페이지(메인/카테고리/사전)가 getActiveCategories() 캐시를 공유해서 쓰므로
+// 태그 무효화 + 그 캐시를 쓰는 ISR 페이지들의 경로 무효화를 함께 해줘야 즉시 반영된다.
+function revalidateCategoryPages() {
+  revalidateTag('categories', 'max')
+  revalidatePath('/')
+  revalidatePath('/category/[slug]', 'page')
+  revalidatePath('/dictionary')
+  revalidatePath('/dictionary/[category]', 'page')
+  revalidatePath('/dictionary/[category]/[sub]', 'page')
+}
+
+function revalidateDictionaryPages() {
+  revalidatePath('/dictionary')
+  revalidatePath('/dictionary/[category]', 'page')
+  revalidatePath('/dictionary/[category]/[sub]', 'page')
+}
+
+function revalidateNoticePages() {
+  revalidatePath('/notice')
+  revalidatePath('/notice/[id]', 'page')
+}
 
 export async function syncSalePoints(): Promise<{
   success?: boolean
@@ -402,6 +425,7 @@ export async function createAdminNotice(
   const admin = createAdminClient()
   const { error } = await admin.from('notices').insert({ title, content, is_pinned: isPinned })
   if (error) return { error: error.message }
+  revalidateNoticePages()
   return { success: true }
 }
 
@@ -409,6 +433,7 @@ export async function deleteAdminNotice(id: number): Promise<{ success?: boolean
   const admin = createAdminClient()
   const { error } = await admin.from('notices').delete().eq('id', id)
   if (error) return { error: error.message }
+  revalidateNoticePages()
   return { success: true }
 }
 
@@ -424,6 +449,7 @@ export async function updateAdminNotice(
   const admin = createAdminClient()
   const { error } = await admin.from('notices').update({ title, content, is_pinned: isPinned }).eq('id', id)
   if (error) return { error: error.message }
+  revalidateNoticePages()
   return { success: true }
 }
 
@@ -644,6 +670,7 @@ export async function createAdminCategory(
     is_active: true,
   })
   if (error) return { error: error.message }
+  revalidateCategoryPages()
   return { success: true }
 }
 
@@ -658,6 +685,7 @@ export async function updateAdminCategory(
     image_url: fields.imageUrl,
   }).eq('id', id)
   if (error) return { error: error.message }
+  revalidateCategoryPages()
   return { success: true }
 }
 
@@ -686,6 +714,7 @@ export async function toggleAdminCategoryActive(
   const admin = createAdminClient()
   const { error } = await admin.from('categories').update({ is_active: isActive }).eq('id', id)
   if (error) return { error: error.message }
+  revalidateCategoryPages()
   return { success: true }
 }
 
@@ -699,6 +728,7 @@ export async function reorderAdminCategories(
   ])
   const error = r1.error ?? r2.error
   if (error) return { error: error.message }
+  revalidateCategoryPages()
   return { success: true }
 }
 
@@ -706,6 +736,7 @@ export async function deleteAdminCategory(id: string): Promise<{ success?: boole
   const admin = createAdminClient()
   const { error } = await admin.from('categories').delete().eq('id', id)
   if (error) return { error: error.message }
+  revalidateCategoryPages()
   return { success: true }
 }
 
@@ -776,6 +807,7 @@ export async function createAdminDictionaryEntry(
     updated_at: new Date().toISOString(),
   })
   if (error) return { error: error.message }
+  revalidateDictionaryPages()
   return { success: true }
 }
 
@@ -795,6 +827,7 @@ export async function updateAdminDictionaryEntry(
     updated_at: new Date().toISOString(),
   }).eq('id', id)
   if (error) return { error: error.message }
+  revalidateDictionaryPages()
   return { success: true }
 }
 
@@ -802,6 +835,7 @@ export async function deleteAdminDictionaryEntry(id: string): Promise<{ success?
   const admin = createAdminClient()
   const { error } = await admin.from('dictionary_entries').delete().eq('id', id)
   if (error) return { error: error.message }
+  revalidateDictionaryPages()
   return { success: true }
 }
 

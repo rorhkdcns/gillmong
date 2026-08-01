@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { DbDream } from '@/lib/supabase/types'
 import { CATEGORY_PATH } from '@/lib/supabase/types'
-import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import Script from 'next/script'
 import { purchaseDream, deleteDream } from '../actions'
@@ -141,7 +140,6 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
       <Script src="https://pay.nicepay.co.kr/v1/js/" strategy="lazyOnload" />
-      <SiteHeader />
 
       {/* 뒤로가기 */}
       <div className="border-b border-gray-100 bg-white px-6 py-3">

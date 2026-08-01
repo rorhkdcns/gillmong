@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import DreamCard from '@/components/DreamCard'
 
@@ -22,7 +21,6 @@ interface Props {
   cards: DreamCard[]
 }
 
-
 export default function CategoryPage({ title, description, activePath, cards }: Props) {
   const [sort, setSort] = useState<'latest' | 'price' | 'grade'>('latest')
   const [visibleCount, setVisibleCount] = useState(6)
@@ -38,8 +36,6 @@ export default function CategoryPage({ title, description, activePath, cards }: 
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-page">
-
-      <SiteHeader />
 
       {/* ───── 히어로 ───── */}
       <section className="bg-white px-6 pb-6 pt-14 text-center">

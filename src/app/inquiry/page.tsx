@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import { submitInquiry } from './actions'
 
@@ -38,7 +37,6 @@ export default function InquiryPage() {
   if (done) {
     return (
       <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
-        <SiteHeader />
         <main className="flex flex-1 items-center justify-center px-6 py-16">
           <div className="w-full max-w-sm text-center">
             <div className="mb-6 flex justify-center">
@@ -69,7 +67,6 @@ export default function InquiryPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
-      <SiteHeader />
       <main className="flex-1 px-6 py-16">
         <div className="mx-auto max-w-xl">
           <div className="mb-8 text-center">

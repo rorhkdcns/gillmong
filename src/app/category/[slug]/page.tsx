@@ -3,7 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { getActiveCategories } from '@/lib/categories'
 import CategoryPage from '../_components/CategoryPage'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 export default async function CategorySlugPage({
   params,

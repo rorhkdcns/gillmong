@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getActiveCategories } from '@/lib/categories'
 import { getVisibleSubcategories } from '@/lib/dictionary'
-import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import DictionaryFilterList, { type DictionaryFilterEntry } from '../../_components/DictionaryFilterList'
 
@@ -38,7 +37,7 @@ export async function generateMetadata({
   return { title, description, openGraph: { title, description } }
 }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 
 export default async function DictionarySubcategoryPage({
   params,
@@ -47,11 +46,13 @@ export default async function DictionarySubcategoryPage({
 }) {
   const { category, sub } = await params
 
-  const categories = await getActiveCategories()
+  const [categories, visibleSubs] = await Promise.all([
+    getActiveCategories(),
+    getVisibleSubcategories(),
+  ])
   const parentCategory = categories.find((c) => c.slug === category)
   if (!parentCategory) notFound()
 
-  const visibleSubs = await getVisibleSubcategories()
   const subcategory = visibleSubs.find((s) => s.slug === sub && s.parent_slug === category)
   if (!subcategory) notFound()
 
@@ -60,7 +61,6 @@ export default async function DictionarySubcategoryPage({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <SiteHeader />
 
       <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#DDE6EC' }}>
         <div className="mx-auto flex max-w-[600px] flex-col gap-[14px]">

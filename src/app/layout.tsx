@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
+import SiteHeaderGate from "@/components/SiteHeaderGate";
+import { getActiveCategories } from "@/lib/categories";
 import "./globals.css";
 
 const pretendard = localFont({
@@ -51,17 +53,24 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // 카테고리는 거의 안 바뀌는 데이터라 여기서 한 번(60초 캐시)만 조회해 헤더에 props로 내려준다.
+  // (예전엔 SiteHeader가 페이지마다 클라이언트에서 직접 Supabase를 호출했음)
+  const categories = await getActiveCategories();
+
   return (
     <html
       lang="ko"
       className={`${pretendard.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <SiteHeaderGate categories={categories.map((c) => ({ name: c.name, slug: c.slug }))} />
+        {children}
+      </body>
       <Script
         src="https://pg-web.nicepay.co.kr/js/nicepay-pgweb.js"
         strategy="lazyOnload"

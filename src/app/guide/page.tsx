@@ -1,5 +1,4 @@
 import { Fragment } from 'react'
-import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import {
   Sparkles,
@@ -52,8 +51,6 @@ const paymentPolicies = [
 export default function GuidePage() {
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
-
-      <SiteHeader />
 
       {/* ───── 1. 꿈의 가치를 거래합니다 ───── */}
       <section className="bg-[#0B2433] px-5 py-14 text-white md:px-8 md:py-32">

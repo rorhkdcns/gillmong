@@ -1,4 +1,5 @@
 import { cache } from 'react'
+import { after } from 'next/server'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -8,7 +9,6 @@ import { getVisibleSubcategories, type Subcategory } from '@/lib/dictionary'
 import { parseDictionaryBody, type DictionaryBodyBlock } from '@/lib/dictionaryBody'
 import { getCategoryColor, type CategoryColorSet } from '@/lib/categoryColor'
 import { GRADE_INFO, type Grade } from '@/lib/dreamDisplay'
-import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import AffiliateProducts from '@/components/AffiliateProducts'
 import DictionaryFilterList, { type DictionaryFilterEntry } from '../_components/DictionaryFilterList'
@@ -137,7 +137,7 @@ export async function generateMetadata({
   }
 }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 
 export default async function DictionaryCategoryOrEntryPage({
   params,
@@ -173,7 +173,6 @@ async function CategoryView({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <SiteHeader />
 
       <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#DDE6EC' }}>
         <div className="mx-auto flex max-w-[600px] flex-col gap-[14px]">
@@ -321,52 +320,43 @@ async function EntryView({
   const admin = createAdminClient()
   const slug = entry.slug
 
-  // 조회수 증가
-  const { data: viewRow } = await admin
-    .from('dictionary_entries')
-    .select('view_count')
-    .eq('slug', slug)
-    .single()
-  if (viewRow) {
-    await admin
-      .from('dictionary_entries')
-      .update({ view_count: (viewRow.view_count ?? 0) + 1 })
-      .eq('slug', slug)
-  }
+  // 조회수 증가 — RPC로 원자적 증가, await 하지 않아 렌더링을 막지 않는다.
+  // after()로 응답 전송 후에 실행해 서버리스 함수가 일찍 종료돼도 유실되지 않게 한다.
+  after(() => admin.rpc('increment_dictionary_view', { entry_slug: slug }))
 
   const category = entry.category_slug ? categories.find((c) => c.slug === entry.category_slug) : null
   const categoryName = category?.name ?? '기타'
   const colors = getCategoryColor(entry.category_slug)
 
-  let subcategory: Subcategory | null = null
-  if (entry.subcategory_slug) {
-    const { data } = await admin
-      .from('dictionary_subcategories')
-      .select('slug, name, parent_slug, description, sort_order, has_public_page, is_active')
-      .eq('slug', entry.subcategory_slug)
-      .single()
-    subcategory = data ?? null
-  }
-
-  const visibleSubs = await getVisibleSubcategories()
+  // 서로 의존하지 않는 조회 3개는 병렬로 실행 (관련 해몽만 subcategory 결과가 필요해 뒤에 따로 이어감)
+  const [subcategory, visibleSubs, relatedDreamsResult] = await Promise.all([
+    entry.subcategory_slug
+      ? admin
+          .from('dictionary_subcategories')
+          .select('slug, name, parent_slug, description, sort_order, has_public_page, is_active')
+          .eq('slug', entry.subcategory_slug)
+          .single()
+          .then((r) => r.data ?? null)
+      : Promise.resolve(null as Subcategory | null),
+    getVisibleSubcategories(),
+    entry.category_slug
+      ? admin
+          .from('dreams')
+          .select('id, title, grade, is_sold')
+          .eq('category', entry.category_slug)
+          .eq('is_adult', false)
+          .order('created_at', { ascending: false })
+          .limit(3)
+      : Promise.resolve({ data: [] as { id: number; title: string; grade: string; is_sold: boolean }[] }),
+  ])
+  const relatedDreams = relatedDreamsResult.data
   const subcategoryIsLinkable = !!subcategory && visibleSubs.some((s) => s.slug === subcategory!.slug)
-
-  const { data: relatedDreams } = entry.category_slug
-    ? await admin
-        .from('dreams')
-        .select('id, title, grade, is_sold')
-        .eq('category', entry.category_slug)
-        .eq('is_adult', false)
-        .order('created_at', { ascending: false })
-        .limit(3)
-    : { data: [] }
 
   const relatedEntries = await getRelatedEntries(admin, entry, subcategory)
   const bodyBlocks = parseDictionaryBody(entry.body)
 
   return (
     <div className="flex min-h-screen flex-col">
-      <SiteHeader />
 
       <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#DDE6EC' }}>
         <div className="mx-auto flex max-w-[600px] flex-col gap-[14px]">

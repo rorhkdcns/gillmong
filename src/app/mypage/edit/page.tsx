@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Session } from '@supabase/supabase-js'
-import SiteHeader from '@/components/SiteHeader'
 
 export default function MyPageEdit() {
   const router = useRouter()
@@ -67,7 +66,6 @@ export default function MyPageEdit() {
   if (!initDone) {
     return (
       <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
-        <SiteHeader />
         <main className="flex flex-1 items-center justify-center">
           <p className="text-sm text-gray-400">불러오는 중...</p>
         </main>
@@ -77,7 +75,6 @@ export default function MyPageEdit() {
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
-      <SiteHeader />
       <main className="flex-1 px-6 py-12">
         <div className="mx-auto max-w-md">
           <div className="mb-6 flex items-center gap-3">

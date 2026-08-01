@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import LogoutButton from './_components/LogoutButton'
 import PointTabs from './_components/PointTabs'
@@ -101,8 +100,6 @@ export default async function MyPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
-
-      <SiteHeader />
 
       {/* ───── 본문 ───── */}
       <main className="flex-1 px-4 py-8 md:px-6 md:py-12">

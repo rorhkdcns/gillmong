@@ -1,11 +1,9 @@
 import Link from 'next/link'
-import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 
 export default function ChargeCancelPage() {
   return (
     <>
-      <SiteHeader />
 
       <main className="flex min-h-[70vh] flex-col items-center justify-center px-4 py-12 text-center">
         <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-100">

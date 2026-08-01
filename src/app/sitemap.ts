@@ -4,6 +4,8 @@ import { getVisibleSubcategories } from '@/lib/dictionary'
 
 const SITE_URL = 'https://www.gillmong.com'
 
+export const revalidate = 3600
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const admin = createAdminClient()
 
@@ -15,7 +17,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     admin
       .from('dreams')
       .select('id, created_at')
-      .eq('is_adult', false),
+      .eq('is_adult', false)
+      .order('created_at', { ascending: false })
+      .limit(500),
     admin
       .from('categories')
       .select('slug')

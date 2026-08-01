@@ -1,4 +1,3 @@
-import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 
 export const metadata = {
@@ -29,7 +28,6 @@ function Row({ label, value, highlight }: { label: string; value: string; highli
 export default function UsageGuidePage() {
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
-      <SiteHeader />
       <main className="flex-1 px-6 py-16">
         <div className="mx-auto max-w-3xl">
 

@@ -1,9 +1,8 @@
 import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
-import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 600
 
 function formatDate(iso: string) {
   const d = new Date(iso)
@@ -27,7 +26,6 @@ export default async function NoticeDetailPage({
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
-      <SiteHeader />
       <main className="flex-1 px-6 py-12">
         <div className="mx-auto max-w-3xl">
           <div className="mb-4">

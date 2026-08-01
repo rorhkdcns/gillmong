@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 
 export default async function PurchaseSuccessPage({
@@ -21,7 +20,6 @@ export default async function PurchaseSuccessPage({
 
   return (
     <>
-      <SiteHeader />
 
       <main className="flex min-h-[70vh] flex-col items-center justify-center px-4 py-12 text-center">
 

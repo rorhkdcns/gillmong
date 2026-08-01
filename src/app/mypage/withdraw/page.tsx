@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import WithdrawConfirm from './_components/WithdrawConfirm'
 
@@ -14,7 +13,6 @@ export default async function WithdrawPage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
-      <SiteHeader />
       <main className="flex-1 px-4 py-8 md:px-6 md:py-12">
         <div className="mx-auto w-full max-w-lg space-y-6">
 

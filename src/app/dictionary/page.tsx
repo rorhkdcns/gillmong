@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { createAdminClient } from '@/lib/supabase/admin'
-import SiteHeader from '@/components/SiteHeader'
 import SiteFooter from '@/components/SiteFooter'
 import DictionaryFilterList from './_components/DictionaryFilterList'
 
@@ -13,7 +12,7 @@ export const metadata: Metadata = {
   },
 }
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 300
 
 export default async function DictionaryPage() {
   const admin = createAdminClient()
@@ -25,7 +24,6 @@ export default async function DictionaryPage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <SiteHeader />
 
       <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#DDE6EC' }}>
         <div className="mx-auto flex max-w-[600px] flex-col gap-[14px]">

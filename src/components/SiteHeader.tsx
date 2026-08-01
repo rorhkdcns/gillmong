@@ -14,7 +14,7 @@ type NavItem =
   | { label: string; href: string; dropdown?: never }
   | { label: string; href?: never; dropdown: DropdownItem[] }
 
-// 카테고리 목록을 불러오기 전 잠깐 보여줄 폴백 (깜빡임 방지용, DB 응답 오면 즉시 교체됨)
+// 카테고리 조회가 어떤 이유로든 비어 오는 경우를 대비한 최종 폴백
 const FALLBACK_CATEGORIES: DropdownItem[] = [
   { label: '인물·신체', href: '/category/people' },
   { label: '동물·식물', href: '/category/animals' },
@@ -22,6 +22,11 @@ const FALLBACK_CATEGORIES: DropdownItem[] = [
   { label: '행동·상황', href: '/category/action' },
   { label: '기타',     href: '/category/etc' },
 ]
+
+export interface SiteHeaderCategory {
+  name: string
+  slug: string
+}
 
 const SUPPORT_DROPDOWN: DropdownItem[] = [
   { label: '길몽상점소개', href: '/guide'       },
@@ -41,7 +46,11 @@ function ChevronDown({ className }: { className?: string }) {
   )
 }
 
-export default function SiteHeader() {
+interface Props {
+  categories: SiteHeaderCategory[]
+}
+
+export default function SiteHeader({ categories }: Props) {
   const router   = useRouter()
   const pathname = usePathname()
   const { remaining, fetchRemaining } = useRemainingCount()
@@ -54,8 +63,12 @@ export default function SiteHeader() {
   const [nickname, setNickname]     = useState('')
   // 모바일 아코디언: 드롭다운 label로 관리
   const [mobileOpen, setMobileOpen] = useState<string | null>(null)
-  const [categoryItems, setCategoryItems] = useState<DropdownItem[]>(FALLBACK_CATEGORIES)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // 카테고리는 layout.tsx(서버 컴포넌트)에서 캐시된 값을 props로 받는다 — 페이지마다 클라이언트에서 다시 조회하지 않음.
+  const categoryItems: DropdownItem[] = categories.length > 0
+    ? categories.map((c) => ({ label: c.name, href: `/category/${c.slug}` }))
+    : FALLBACK_CATEGORIES
 
   const dictionaryDropdown: DropdownItem[] = [
     { label: '전체 사전', href: '/dictionary' },
@@ -76,21 +89,6 @@ export default function SiteHeader() {
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : 'unset'
   }, [menuOpen])
-
-  useEffect(() => {
-    const supabase = createClient()
-    supabase
-      .from('categories')
-      .select('name, slug')
-      .eq('domain', 'dream')
-      .eq('is_active', true)
-      .order('sort_order', { ascending: true })
-      .then(({ data }: { data: { name: string; slug: string }[] | null }) => {
-        if (data && data.length > 0) {
-          setCategoryItems(data.map((c) => ({ label: c.name, href: `/category/${c.slug}` })))
-        }
-      })
-  }, [])
 
   useEffect(() => {
     if (searchOpen) inputRef.current?.focus()
@@ -154,7 +152,7 @@ export default function SiteHeader() {
 
   return (
     <>
-      <FloatingDreamButton />
+      <FloatingDreamButton remaining={remaining} fetchRemaining={fetchRemaining} />
       <div className="sticky top-0 z-50">
         <header className="border-b border-brand-line bg-white/85 backdrop-blur-lg">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
