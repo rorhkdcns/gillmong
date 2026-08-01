@@ -731,6 +731,16 @@ export async function getAdminDictionaryEntries(): Promise<{ data: unknown[]; er
   return { data: data ?? [] }
 }
 
+export async function checkAdminDictionarySlugExists(
+  slug: string, excludeId?: string,
+): Promise<boolean> {
+  const admin = createAdminClient()
+  let q = admin.from('dictionary_entries').select('id').eq('slug', slug).limit(1)
+  if (excludeId) q = q.neq('id', excludeId)
+  const { data } = await q
+  return (data?.length ?? 0) > 0
+}
+
 // 대분류 필터링용 — has_public_page/발행 글 개수와 무관하게 활성 소분류 전부 반환 (기타 소분류 포함)
 export async function getAdminDictionarySubcategories(): Promise<{ data: unknown[]; error?: string }> {
   const admin = createAdminClient()

@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { keywordToSlug } from '@/lib/slugify'
 import {
+  checkAdminDictionarySlugExists,
   createAdminDictionaryEntry,
   deleteAdminDictionaryEntry,
   getAdminDictionaryEntries,
@@ -27,6 +29,17 @@ type FormMode = 'create' | 'edit'
 
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/
 
+/** base가 이미 쓰이고 있으면 -2, -3 ... 을 붙여서 비어있는 slug를 찾는다. */
+async function generateUniqueSlug(base: string, excludeId?: string): Promise<string> {
+  let candidate = base
+  let n = 2
+  while (await checkAdminDictionarySlugExists(candidate, excludeId)) {
+    candidate = `${base}-${n}`
+    n++
+  }
+  return candidate
+}
+
 export default function AdminDictionaryPage() {
   const [entries, setEntries] = useState<Entry[]>([])
   const [loading, setLoading] = useState(true)
@@ -36,6 +49,9 @@ export default function AdminDictionaryPage() {
   const [formMode, setFormMode] = useState<FormMode>('create')
   const [editId,   setEditId]   = useState<string | null>(null)
   const [slug,             setSlug]             = useState('')
+  const [slugTouched,      setSlugTouched]      = useState(false)
+  const [slugWarning,      setSlugWarning]      = useState(false)
+  const [slugDuplicate,    setSlugDuplicate]    = useState(false)
   const [keyword,          setKeyword]          = useState('')
   const [summary,          setSummary]          = useState('')
   const [body,             setBody]             = useState('')
@@ -77,10 +93,41 @@ export default function AdminDictionaryPage() {
     getAdminDictionarySubcategories().then(({ data }) => setSubcategories(data as SubcategoryOption[]))
   }, [])
 
+  // slug 중복 검사 (입력이 멈추면 잠깐 뒤에 확인)
+  useEffect(() => {
+    const trimmed = slug.trim()
+    const timer = setTimeout(async () => {
+      if (!trimmed || !SLUG_PATTERN.test(trimmed)) { setSlugDuplicate(false); return }
+      const exists = await checkAdminDictionarySlugExists(trimmed, formMode === 'edit' ? editId ?? undefined : undefined)
+      setSlugDuplicate(exists)
+    }, 400)
+    return () => clearTimeout(timer)
+  }, [slug, formMode, editId])
+
   function resetForm() {
-    setSlug(''); setKeyword(''); setSummary(''); setBody('')
+    setSlug(''); setSlugTouched(false); setSlugWarning(false); setSlugDuplicate(false)
+    setKeyword(''); setSummary(''); setBody('')
     setCategorySlug(''); setSubcategorySlug(''); setTagsInput(''); setIsPublished(false)
     setError('')
+  }
+
+  function handleSlugChange(value: string) {
+    setSlug(value)
+    setSlugTouched(true)
+    setSlugWarning(false)
+  }
+
+  async function autoGenerateSlug() {
+    const result = keywordToSlug(keyword)
+    setSlugWarning(result.hasUnmatched)
+    if (!result.slug) { setSlug(''); return }
+    const unique = await generateUniqueSlug(result.slug, formMode === 'edit' ? editId ?? undefined : undefined)
+    setSlug(unique)
+  }
+
+  function handleKeywordBlur() {
+    // slug를 사용자가 직접 건드린 적이 없을 때만 자동 채움 — 이미 손댄 값은 덮어쓰지 않는다.
+    if (!slugTouched) autoGenerateSlug()
   }
 
   function handleCategoryChange(value: string) {
@@ -111,6 +158,8 @@ export default function AdminDictionaryPage() {
     } | null
     if (!entry) { setError('사전 항목을 불러올 수 없습니다.'); return }
     setSlug(entry.slug)
+    setSlugTouched(true) // 이미 저장된 slug이므로 키워드 수정 시 자동으로 덮어쓰지 않음
+    setSlugWarning(false)
     setKeyword(entry.keyword)
     setSummary(entry.summary)
     setBody(entry.body)
@@ -131,6 +180,7 @@ export default function AdminDictionaryPage() {
     const finalSlug = slug.trim()
     if (!finalSlug) { setError('slug을 입력해주세요.'); return }
     if (!SLUG_PATTERN.test(finalSlug)) { setError('slug은 영문 소문자, 숫자, 하이픈(-)만 사용할 수 있습니다.'); return }
+    if (slugDuplicate) { setError('이미 사용 중인 slug입니다. 다른 slug를 입력해주세요.'); return }
     if (!keyword.trim()) { setError('키워드를 입력해주세요.'); return }
     if (!summary.trim()) { setError('요약을 입력해주세요.'); return }
     if (!body.trim())    { setError('본문을 입력해주세요.'); return }
@@ -187,13 +237,28 @@ export default function AdminDictionaryPage() {
 
           <div>
             <label className="mb-1 block text-sm text-[#555]">slug (URL용, 영문 소문자+하이픈만)</label>
-            <input
-              type="text"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              placeholder="예: pig-dream"
-              className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
-            />
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={slug}
+                onChange={(e) => handleSlugChange(e.target.value)}
+                placeholder="예: pig-dream"
+                className="flex-1 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+              />
+              <button
+                type="button"
+                onClick={autoGenerateSlug}
+                className="shrink-0 rounded border border-gray-300 px-3 py-2 text-xs font-semibold text-[#555] hover:bg-gray-50"
+              >
+                자동 생성
+              </button>
+            </div>
+            {slugWarning && (
+              <p className="mt-1 text-xs text-amber-600">일부 단어를 찾지 못했습니다. 확인해주세요.</p>
+            )}
+            {slugDuplicate && (
+              <p className="mt-1 text-xs text-red-500">이미 사용 중인 slug입니다.</p>
+            )}
           </div>
 
           <div>
@@ -202,6 +267,7 @@ export default function AdminDictionaryPage() {
               type="text"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
+              onBlur={handleKeywordBlur}
               placeholder="예: 돼지꿈"
               className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
             />
