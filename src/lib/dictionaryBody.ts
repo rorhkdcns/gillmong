@@ -4,6 +4,8 @@
 //   "[[제목]]"    → 일반 섹션 시작
 //   "[[!제목]]"   → 주의 섹션 시작 (앰버 톤)
 //   ">라벨 | 설명" 연속 줄 → 항목 카드 묶음 ("|" 없으면 전체를 라벨로 처리)
+//   "라벨 | 설명" (">" 없이) → "|" 앞뒤가 모두 비어있지 않고 라벨이 40자 이내면 항목으로 인식
+//     (Gemini가 ">" 도 마크다운 인용 기호로 오인해 삼켜버리는 문제 대응)
 //   빈 줄          → 문단/항목 묶음 구분자
 //   그 외          → 현재 섹션의 문단
 // 첫 섹션 이전 텍스트는 리드 블록(title 없음)으로 취급.
@@ -105,6 +107,21 @@ export function parseDictionaryBody(body: string): DictionaryBodyBlock[] {
         itemBuffer.push({ label: itemText, description: '' })
       }
       continue
+    }
+    // 신규: ">" 없이 "라벨 | 설명"만 와도 항목으로 인식.
+    // Gemini가 ">" 도 마크다운 인용 기호로 오인해 삼켜버리는 문제 대응.
+    // 문단 속 우연한 "|"를 항목으로 오판하지 않도록 라벨이 40자 이내일 때만 인정한다.
+    {
+      const pipeIdx = trimmed.indexOf('|')
+      if (pipeIdx > 0) {
+        const label = trimmed.slice(0, pipeIdx).trim()
+        const description = trimmed.slice(pipeIdx + 1).trim()
+        if (label && description && label.length <= 40) {
+          flushPara()
+          itemBuffer.push({ label, description })
+          continue
+        }
+      }
     }
     if (trimmed === '') {
       flushAll()
