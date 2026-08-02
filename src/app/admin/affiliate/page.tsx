@@ -21,6 +21,16 @@ type Product = {
 }
 type FormMode = 'create' | 'edit'
 
+interface CoupangProduct {
+  productId: number
+  productName: string
+  productPrice: number
+  productImage: string
+  productUrl: string
+  isRocket: boolean
+  isFreeShipping: boolean
+}
+
 export default function AdminAffiliatePage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
@@ -40,6 +50,87 @@ export default function AdminAffiliatePage() {
 
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const [deleting,     setDeleting]     = useState(false)
+
+  // ── 쿠팡에서 가져오기 ──────────────────────────────
+  const [coupangKeyword,   setCoupangKeyword]   = useState('')
+  const [coupangResults,   setCoupangResults]   = useState<CoupangProduct[]>([])
+  const [coupangSearching, setCoupangSearching] = useState(false)
+  const [coupangError,     setCoupangError]     = useState('')
+  const [coupangSaveMsg,   setCoupangSaveMsg]   = useState('')
+  const [selectedIds,      setSelectedIds]      = useState<Set<number>>(new Set())
+  const [coupangTags,      setCoupangTags]      = useState<Record<number, string>>({})
+  const [coupangSaving,    setCoupangSaving]    = useState(false)
+
+  async function handleCoupangSearch(e: React.FormEvent) {
+    e.preventDefault()
+    if (!coupangKeyword.trim()) { setCoupangError('검색어를 입력해주세요.'); return }
+
+    setCoupangSearching(true)
+    setCoupangError('')
+    setCoupangSaveMsg('')
+    try {
+      const res = await fetch('/api/admin/coupang/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ keyword: coupangKeyword.trim(), limit: 20 }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? '검색에 실패했습니다.')
+      setCoupangResults(data.products ?? [])
+      setSelectedIds(new Set())
+      setCoupangTags({})
+    } catch (err) {
+      setCoupangError(err instanceof Error ? err.message : '검색 중 오류가 발생했습니다.')
+      setCoupangResults([])
+    } finally {
+      setCoupangSearching(false)
+    }
+  }
+
+  function toggleCoupangSelect(productId: number) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(productId)) next.delete(productId)
+      else next.add(productId)
+      return next
+    })
+  }
+
+  async function handleCoupangSave() {
+    const items = coupangResults
+      .filter((p) => selectedIds.has(p.productId))
+      .map((p) => ({
+        productId: p.productId,
+        productName: p.productName,
+        productPrice: p.productPrice,
+        productImage: p.productImage,
+        productUrl: p.productUrl,
+        tags: (coupangTags[p.productId] ?? '').split(',').map((t) => t.trim()).filter(Boolean),
+      }))
+    if (items.length === 0) { setCoupangError('저장할 상품을 선택해주세요.'); return }
+
+    setCoupangSaving(true)
+    setCoupangError('')
+    setCoupangSaveMsg('')
+    try {
+      const res = await fetch('/api/admin/coupang/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? '저장에 실패했습니다.')
+      setCoupangSaveMsg(`${data.saved}개 상품을 저장했습니다.`)
+      setCoupangResults([])
+      setSelectedIds(new Set())
+      setCoupangTags({})
+      load()
+    } catch (err) {
+      setCoupangError(err instanceof Error ? err.message : '저장 중 오류가 발생했습니다.')
+    } finally {
+      setCoupangSaving(false)
+    }
+  }
 
   async function load() {
     setLoading(true)
@@ -135,6 +226,68 @@ export default function AdminAffiliatePage() {
         >
           {showForm ? '취소' : '+ 새 상품'}
         </button>
+      </div>
+
+      <div className="mb-8 max-w-2xl rounded border border-gray-200 bg-white p-6">
+        <h2 className="mb-4 font-semibold text-brand-ink">쿠팡에서 가져오기</h2>
+
+        <form onSubmit={handleCoupangSearch} className="flex gap-2">
+          <input
+            type="text"
+            value={coupangKeyword}
+            onChange={(e) => setCoupangKeyword(e.target.value)}
+            placeholder="검색어 입력 (예: 돼지 저금통)"
+            className="flex-1 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+          />
+          <button
+            type="submit"
+            disabled={coupangSearching}
+            className="rounded bg-brand-ink px-4 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
+          >
+            {coupangSearching ? '검색 중...' : '검색'}
+          </button>
+        </form>
+
+        {coupangError && <p className="mt-3 text-sm text-red-500">{coupangError}</p>}
+        {coupangSaveMsg && <p className="mt-3 text-sm text-emerald-600">{coupangSaveMsg}</p>}
+
+        {coupangResults.length > 0 && (
+          <div className="mt-4">
+            <div className="max-h-96 space-y-2 overflow-y-auto">
+              {coupangResults.map((p) => (
+                <div key={p.productId} className="flex items-center gap-3 rounded border border-gray-100 p-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.has(p.productId)}
+                    onChange={() => toggleCoupangSelect(p.productId)}
+                    className="accent-brand-ink"
+                  />
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={p.productImage} alt={p.productName} className="h-14 w-14 shrink-0 rounded object-cover" />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-[#333]">{p.productName}</p>
+                    <p className="text-xs text-[#777]">{p.productPrice.toLocaleString()}원</p>
+                  </div>
+                  <input
+                    type="text"
+                    value={coupangTags[p.productId] ?? ''}
+                    onChange={(e) => setCoupangTags((prev) => ({ ...prev, [p.productId]: e.target.value }))}
+                    placeholder="태그 (쉼표 구분)"
+                    className="w-40 shrink-0 rounded border border-gray-200 px-2 py-1 text-xs outline-none focus:border-brand-violet"
+                  />
+                </div>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={handleCoupangSave}
+              disabled={coupangSaving || selectedIds.size === 0}
+              className="mt-3 rounded bg-brand-ink px-4 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
+            >
+              {coupangSaving ? '저장 중...' : `선택 항목 저장 (${selectedIds.size}개)`}
+            </button>
+          </div>
+        )}
       </div>
 
       {showForm && (
