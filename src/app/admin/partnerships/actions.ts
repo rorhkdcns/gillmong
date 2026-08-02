@@ -1,8 +1,12 @@
 'use server'
 
 import { createAdminClient } from '@/lib/supabase/admin'
+import { requireAdminAction } from '@/lib/supabase/adminAuth'
 
 export async function getPartnershipInquiries() {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return []
+
   const admin = createAdminClient()
   const { data, error } = await admin
     .from('partnership_inquiries')
@@ -18,6 +22,9 @@ export async function updatePartnershipStatus(
   status: 'new' | 'reviewing' | 'done',
   admin_note: string,
 ) {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { error } = await admin
     .from('partnership_inquiries')

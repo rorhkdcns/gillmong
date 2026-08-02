@@ -2,7 +2,7 @@
 
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { createClient } from '@/lib/supabase/server'
+import { requireAdminAction } from '@/lib/supabase/adminAuth'
 
 // 카테고리는 여러 페이지(메인/카테고리/사전)가 getActiveCategories() 캐시를 공유해서 쓰므로
 // 태그 무효화 + 그 캐시를 쓰는 ISR 페이지들의 경로 무효화를 함께 해줘야 즉시 반영된다.
@@ -32,9 +32,8 @@ export async function syncSalePoints(): Promise<{
   soldFixed?: number
   error?: string
 }> {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: '로그인이 필요합니다' }
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
 
   const admin = createAdminClient()
 
@@ -105,9 +104,8 @@ export async function syncSalePoints(): Promise<{
 }
 
 export async function resetAllData(): Promise<{ success?: boolean; error?: string }> {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) return { error: '로그인이 필요합니다' }
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
 
   const admin = createAdminClient()
 
@@ -128,6 +126,14 @@ export async function resetAllData(): Promise<{ success?: boolean; error?: strin
 
 // ── 대시보드 통계 ─────────────────────────────────────────────
 export async function getAdminStats() {
+  const auth = await requireAdminAction()
+  if (!auth.ok) {
+    return {
+      totalUsers: 0, totalDreams: 0, totalTransactions: 0, totalPoints: 0,
+      recentUsers: [] as unknown[], recentTx: [] as unknown[],
+    }
+  }
+
   const admin = createAdminClient()
   const [profilesRes, dreamsRes, purchasesRes, pointsRes, recentUsersRes, recentTxRes] =
     await Promise.all([
@@ -151,6 +157,9 @@ export async function getAdminStats() {
 
 // ── 회원 관리 ──────────────────────────────────────────────────
 export async function getAdminUsers(search?: string): Promise<{ data: unknown[]; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { data: [], error: auth.error }
+
   const admin = createAdminClient()
   let q = admin.from('profiles').select('*').order('created_at', { ascending: false })
   if (search) q = q.or(`nickname.ilike.%${search}%,username.ilike.%${search}%`)
@@ -165,6 +174,9 @@ export async function getAdminUsers(search?: string): Promise<{ data: unknown[];
 export async function adminAdjustPoints(
   userId: string, amount: number, description: string,
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { data: profile } = await admin.from('profiles').select('points').eq('id', userId).single()
   if (!profile) return { error: '회원을 찾을 수 없습니다' }
@@ -183,6 +195,9 @@ export async function adminAdjustPoints(
 export async function adminAdjustPointsByUsername(
   username: string, amount: number,
 ): Promise<{ success?: boolean; new_points?: number; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { data: profile } = await admin.from('profiles').select('id, points').eq('username', username).single()
   if (!profile) return { error: '존재하지 않는 아이디입니다.' }
@@ -201,6 +216,9 @@ export async function adminAdjustPointsByUsername(
 export async function adminSendPasswordReset(
   userId: string,
 ): Promise<{ success?: boolean; link?: string; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { data: authUser, error } = await admin.auth.admin.getUserById(userId)
   if (error || !authUser.user?.email) return { error: '사용자 이메일을 찾을 수 없습니다' }
@@ -215,6 +233,9 @@ export async function adminSendPasswordReset(
 export async function adminDeleteUser(
   userId: string,
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
 
   // 1. 보조 테이블 삭제 (테이블 미존재 등 에러가 나도 계속 진행)
@@ -262,6 +283,9 @@ export async function adminDeleteUser(
 export async function getBusinessApplications(
   status?: string,
 ): Promise<{ data: unknown[]; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { data: [], error: auth.error }
+
   const admin = createAdminClient()
   let q = admin
     .from('profiles')
@@ -278,6 +302,9 @@ export async function adminHandleBusinessApproval(
   userId: string,
   action: 'approve' | 'reject',
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const patch: Record<string, unknown> = {
     verification_status: action === 'approve' ? 'approved' : 'rejected',
@@ -290,6 +317,9 @@ export async function adminHandleBusinessApproval(
 
 // ── 꿈 관리 ───────────────────────────────────────────────────
 export async function getAdminDreams(category?: string, isSold?: string): Promise<{ data: unknown[]; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { data: [], error: auth.error }
+
   const admin = createAdminClient()
   let q = admin.from('dreams')
     .select('id, title, grade, category, price, is_sold, created_at, user_id')
@@ -341,6 +371,9 @@ export async function getAdminDreams(category?: string, isSold?: string): Promis
 }
 
 export async function getAdminDreamDetail(dreamId: number): Promise<{ data?: unknown; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
 
   const { data: dream, error } = await admin
@@ -390,6 +423,9 @@ export async function getAdminDreamDetail(dreamId: number): Promise<{ data?: unk
 export async function adminDeleteDreamById(
   dreamId: number,
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   await admin.from('point_logs').delete().like('description', `%${dreamId}%`)
   await admin.from('purchases').delete().eq('dream_id', dreamId)
@@ -400,6 +436,9 @@ export async function adminDeleteDreamById(
 
 // ── 거래 내역 ──────────────────────────────────────────────────
 export async function getAdminTransactions(): Promise<unknown[]> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return []
+
   const admin = createAdminClient()
   const { data } = await admin
     .from('purchases')
@@ -410,6 +449,9 @@ export async function getAdminTransactions(): Promise<unknown[]> {
 
 // ── 공지사항 ───────────────────────────────────────────────────
 export async function getAdminNotices() {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return []
+
   const admin = createAdminClient()
   const { data } = await admin
     .from('notices')
@@ -422,6 +464,9 @@ export async function getAdminNotices() {
 export async function createAdminNotice(
   title: string, content: string, isPinned: boolean,
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { error } = await admin.from('notices').insert({ title, content, is_pinned: isPinned })
   if (error) return { error: error.message }
@@ -430,6 +475,9 @@ export async function createAdminNotice(
 }
 
 export async function deleteAdminNotice(id: number): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { error } = await admin.from('notices').delete().eq('id', id)
   if (error) return { error: error.message }
@@ -438,6 +486,9 @@ export async function deleteAdminNotice(id: number): Promise<{ success?: boolean
 }
 
 export async function getAdminNoticeById(id: number): Promise<{ id: number; title: string; content: string; is_pinned: boolean } | null> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return null
+
   const admin = createAdminClient()
   const { data } = await admin.from('notices').select('id, title, content, is_pinned').eq('id', id).single()
   return data ?? null
@@ -446,6 +497,9 @@ export async function getAdminNoticeById(id: number): Promise<{ id: number; titl
 export async function updateAdminNotice(
   id: number, title: string, content: string, isPinned: boolean,
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { error } = await admin.from('notices').update({ title, content, is_pinned: isPinned }).eq('id', id)
   if (error) return { error: error.message }
@@ -455,6 +509,9 @@ export async function updateAdminNotice(
 
 // ── 1:1 문의 ───────────────────────────────────────────────────
 export async function getAdminInquiries() {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return []
+
   const admin = createAdminClient()
   const { data: inquiries } = await admin
     .from('inquiries')
@@ -474,6 +531,9 @@ export async function getAdminInquiries() {
 export async function adminAnswerInquiry(
   id: number, answer: string,
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { error } = await admin.from('inquiries').update({
     answer,
@@ -486,6 +546,9 @@ export async function adminAnswerInquiry(
 
 // ── 대시보드용 대기 중 출금신청 ───────────────────────────────────
 export async function getPendingWithdrawals() {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return []
+
   const admin = createAdminClient()
   const { data: withdrawals, error } = await admin
     .from('withdrawal_requests')
@@ -510,6 +573,9 @@ export async function getPendingWithdrawals() {
 
 // ── 대시보드용 대기 중 제휴문의 ───────────────────────────────────
 export async function getPendingPartnerships() {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return []
+
   const admin = createAdminClient()
   const { data, error } = await admin
     .from('partnership_inquiries')
@@ -523,6 +589,9 @@ export async function getPendingPartnerships() {
 
 // ── 출금 신청 ──────────────────────────────────────────────────
 export async function getAdminWithdrawals() {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error, data: [] }
+
   const admin = createAdminClient()
   const { data, error } = await admin
     .from('withdrawal_requests')
@@ -535,6 +604,9 @@ export async function getAdminWithdrawals() {
 export async function adminHandleWithdrawal(
   id: number, action: 'approve' | 'reject',
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { error } = await admin
     .from('withdrawal_requests')
@@ -546,6 +618,9 @@ export async function adminHandleWithdrawal(
 
 // ── 에스크로 주문 관리 ─────────────────────────────────────────
 export async function getAdminOrders(status: string): Promise<unknown[]> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return []
+
   const admin = createAdminClient()
   const { data: orders } = await admin
     .from('orders')
@@ -582,6 +657,9 @@ export async function getAdminOrders(status: string): Promise<unknown[]> {
 export async function adminSettleOrder(
   orderId: string,
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { data: order } = await admin
     .from('orders')
@@ -624,6 +702,9 @@ export async function adminSettleOrder(
 export async function adminRefundOrder(
   orderId: string,
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { data: order } = await admin
     .from('orders')
@@ -659,6 +740,9 @@ export interface AdminCategoryFields {
 export async function createAdminCategory(
   fields: AdminCategoryFields, sortOrder: number,
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { error } = await admin.from('categories').insert({
     name: fields.name,
@@ -677,6 +761,9 @@ export async function createAdminCategory(
 export async function updateAdminCategory(
   id: string, fields: Omit<AdminCategoryFields, 'domain'>,
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { error } = await admin.from('categories').update({
     name: fields.name,
@@ -692,6 +779,9 @@ export async function updateAdminCategory(
 export async function uploadAdminCategoryImage(
   formData: FormData,
 ): Promise<{ url?: string; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const file = formData.get('file')
   if (!(file instanceof File)) return { error: '파일이 없습니다.' }
 
@@ -711,6 +801,9 @@ export async function uploadAdminCategoryImage(
 export async function toggleAdminCategoryActive(
   id: string, isActive: boolean,
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { error } = await admin.from('categories').update({ is_active: isActive }).eq('id', id)
   if (error) return { error: error.message }
@@ -721,6 +814,9 @@ export async function toggleAdminCategoryActive(
 export async function reorderAdminCategories(
   idA: string, sortOrderA: number, idB: string, sortOrderB: number,
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const [r1, r2] = await Promise.all([
     admin.from('categories').update({ sort_order: sortOrderA }).eq('id', idA),
@@ -733,6 +829,9 @@ export async function reorderAdminCategories(
 }
 
 export async function deleteAdminCategory(id: string): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { error } = await admin.from('categories').delete().eq('id', id)
   if (error) return { error: error.message }
@@ -753,6 +852,9 @@ export interface AdminDictionaryFields {
 }
 
 export async function getAdminDictionaryEntries(): Promise<{ data: unknown[]; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { data: [], error: auth.error }
+
   const admin = createAdminClient()
   const { data, error } = await admin
     .from('dictionary_entries')
@@ -765,6 +867,9 @@ export async function getAdminDictionaryEntries(): Promise<{ data: unknown[]; er
 export async function checkAdminDictionarySlugExists(
   slug: string, excludeId?: string,
 ): Promise<boolean> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return false
+
   const admin = createAdminClient()
   let q = admin.from('dictionary_entries').select('id').eq('slug', slug).limit(1)
   if (excludeId) q = q.neq('id', excludeId)
@@ -774,6 +879,9 @@ export async function checkAdminDictionarySlugExists(
 
 // 대분류 필터링용 — has_public_page/발행 글 개수와 무관하게 활성 소분류 전부 반환 (기타 소분류 포함)
 export async function getAdminDictionarySubcategories(): Promise<{ data: unknown[]; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { data: [], error: auth.error }
+
   const admin = createAdminClient()
   const { data, error } = await admin
     .from('dictionary_subcategories')
@@ -786,6 +894,9 @@ export async function getAdminDictionarySubcategories(): Promise<{ data: unknown
 }
 
 export async function getAdminDictionaryEntryById(id: string): Promise<unknown | null> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return null
+
   const admin = createAdminClient()
   const { data } = await admin.from('dictionary_entries').select('*').eq('id', id).single()
   return data ?? null
@@ -794,6 +905,9 @@ export async function getAdminDictionaryEntryById(id: string): Promise<unknown |
 export async function createAdminDictionaryEntry(
   fields: AdminDictionaryFields,
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { error } = await admin.from('dictionary_entries').insert({
     slug: fields.slug,
@@ -814,6 +928,9 @@ export async function createAdminDictionaryEntry(
 export async function updateAdminDictionaryEntry(
   id: string, fields: AdminDictionaryFields,
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { error } = await admin.from('dictionary_entries').update({
     slug: fields.slug,
@@ -832,6 +949,9 @@ export async function updateAdminDictionaryEntry(
 }
 
 export async function deleteAdminDictionaryEntry(id: string): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { error } = await admin.from('dictionary_entries').delete().eq('id', id)
   if (error) return { error: error.message }
@@ -851,6 +971,9 @@ export interface AdminAffiliateFields {
 }
 
 export async function getAdminAffiliateProducts(): Promise<{ data: unknown[]; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { data: [], error: auth.error }
+
   const admin = createAdminClient()
   const { data, error } = await admin
     .from('affiliate_products')
@@ -861,6 +984,9 @@ export async function getAdminAffiliateProducts(): Promise<{ data: unknown[]; er
 }
 
 export async function getAdminAffiliateProductById(id: string): Promise<unknown | null> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return null
+
   const admin = createAdminClient()
   const { data } = await admin.from('affiliate_products').select('*').eq('id', id).single()
   return data ?? null
@@ -869,6 +995,9 @@ export async function getAdminAffiliateProductById(id: string): Promise<unknown 
 export async function createAdminAffiliateProduct(
   fields: AdminAffiliateFields,
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { error } = await admin.from('affiliate_products').insert({
     title: fields.title,
@@ -886,6 +1015,9 @@ export async function createAdminAffiliateProduct(
 export async function updateAdminAffiliateProduct(
   id: string, fields: AdminAffiliateFields,
 ): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { error } = await admin.from('affiliate_products').update({
     title: fields.title,
@@ -901,6 +1033,9 @@ export async function updateAdminAffiliateProduct(
 }
 
 export async function deleteAdminAffiliateProduct(id: string): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { error } = await admin.from('affiliate_products').delete().eq('id', id)
   if (error) return { error: error.message }
@@ -908,6 +1043,9 @@ export async function deleteAdminAffiliateProduct(id: string): Promise<{ success
 }
 
 export async function reactivateAdminAffiliateProduct(id: string): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
   const admin = createAdminClient()
   const { error } = await admin.from('affiliate_products').update({
     is_active: true,
