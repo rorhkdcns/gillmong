@@ -3,6 +3,7 @@ import DreamInput from './_components/DreamInput'
 import SiteFooter from '@/components/SiteFooter'
 import BannerSlider from '@/components/BannerSlider'
 import HeroSlider from '@/components/HeroSlider'
+import MobileQuickMenu from '@/components/MobileQuickMenu'
 import CategoryCarousel from '@/components/CategoryCarousel'
 import { getActiveCategories } from '@/lib/categories'
 import Link from 'next/link'
@@ -61,6 +62,9 @@ export default async function Home() {
 
       {/* ① 히어로 슬라이더 */}
       <HeroSlider />
+
+      {/* ①-1 모바일 퀵메뉴 */}
+      <MobileQuickMenu />
 
       {/* ② 꿈 감정소 */}
       <section id="appraisal" className="px-6 pb-20 pt-16">
