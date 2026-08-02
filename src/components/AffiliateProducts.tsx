@@ -13,10 +13,24 @@ interface Props {
   tags: string[]
 }
 
+const CANDIDATE_POOL_SIZE = 8
+const EXPOSURE_COUNT = 3
+
+/** Fisher-Yates로 n개를 무작위 추출. n개 이하면 원본을 그대로 반환. */
+function pickRandom<T>(arr: T[], n: number): T[] {
+  if (arr.length <= n) return arr
+  const copy = [...arr]
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[copy[i], copy[j]] = [copy[j], copy[i]]
+  }
+  return copy.slice(0, n)
+}
+
 export default async function AffiliateProducts({ tags }: Props) {
   const admin = createAdminClient()
 
-  let products: Product[] = []
+  let candidates: Product[] = []
 
   if (tags.length > 0) {
     const { data } = await admin
@@ -25,25 +39,32 @@ export default async function AffiliateProducts({ tags }: Props) {
       .eq('is_active', true)
       .overlaps('tags', tags)
       .order('sort_order', { ascending: true })
-      .limit(3)
-    products = data ?? []
+      .limit(CANDIDATE_POOL_SIZE)
+    candidates = data ?? []
   }
 
-  if (products.length < 3) {
-    const excludeIds = products.map((p) => p.id)
-    const needed = 3 - products.length
-    let query = admin
+  if (candidates.length === 0) {
+    const { data } = await admin
       .from('affiliate_products')
       .select('id, title, price_text, image_url, link_url')
       .eq('is_active', true)
       .order('sort_order', { ascending: true })
-      .limit(needed + excludeIds.length)
-    if (excludeIds.length > 0) query = query.not('id', 'in', `(${excludeIds.join(',')})`)
-    const { data } = await query
-    products = [...products, ...(data ?? []).slice(0, needed)]
+      .limit(CANDIDATE_POOL_SIZE)
+    candidates = data ?? []
   }
 
+  if (candidates.length === 0) return null
+
+  // ★ revalidate=300 ISR 페이지에서 렌더링될 때마다(=캐시 재생성 시점마다) 다시 뽑힌다.
+  //   요청마다가 아니라 5분 주기 로테이션 효과 — 의도된 동작이니 그대로 둘 것.
+  const products = pickRandom(candidates, EXPOSURE_COUNT)
+
   if (products.length === 0) return null
+
+  // 노출 집계 — 렌더링을 막지 않도록 절대 await 하지 않는다.
+  Promise.resolve(
+    admin.rpc('increment_affiliate_impressions', { ids: products.map((p) => p.id) })
+  ).catch(() => {})
 
   return (
     <section className="rounded-[14px] bg-white p-[20px_18px] shadow-[0_1px_3px_rgba(11,36,51,0.06)] md:p-[26px_24px]">

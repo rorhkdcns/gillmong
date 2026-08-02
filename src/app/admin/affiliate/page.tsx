@@ -19,6 +19,7 @@ type Product = {
   sort_order: number
   is_active: boolean
   click_count: number
+  impression_count: number
   last_checked_at: string | null
   deactivated_reason: string | null
   deactivated_at: string | null
@@ -31,6 +32,17 @@ function isStale(lastCheckedAt: string | null): boolean {
   if (!lastCheckedAt) return true
   const diffDays = (Date.now() - new Date(lastCheckedAt).getTime()) / (1000 * 60 * 60 * 24)
   return diffDays >= STALE_DAYS
+}
+
+const NO_PERFORMANCE_MIN_IMPRESSIONS = 20
+
+function ctrLabel(clickCount: number, impressionCount: number): string {
+  if (!impressionCount) return '-'
+  return `${((clickCount / impressionCount) * 100).toFixed(1)}%`
+}
+
+function hasNoPerformance(p: Pick<Product, 'click_count' | 'impression_count'>): boolean {
+  return p.impression_count >= NO_PERFORMANCE_MIN_IMPRESSIONS && p.click_count === 0
 }
 type FormMode = 'create' | 'edit'
 
@@ -485,14 +497,16 @@ export default function AdminAffiliatePage() {
                 <th className="px-6 py-3">가격</th>
                 <th className="px-6 py-3">태그</th>
                 <th className="px-6 py-3">활성여부</th>
+                <th className="px-6 py-3">노출수</th>
                 <th className="px-6 py-3">클릭수</th>
+                <th className="px-6 py-3">클릭률</th>
                 <th className="px-6 py-3">마지막 확인</th>
                 <th className="px-6 py-3">관리</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {products.map((p) => (
-                <tr key={p.id}>
+                <tr key={p.id} className={hasNoPerformance(p) ? 'bg-gray-100' : undefined}>
                   <td className="px-6 py-3 font-medium text-[#333]">{p.title}</td>
                   <td className="px-6 py-3 text-[#777]">{p.price_text ?? '-'}</td>
                   <td className="px-6 py-3 text-[#777]">{(p.tags ?? []).join(', ') || '-'}</td>
@@ -501,7 +515,9 @@ export default function AdminAffiliatePage() {
                       {p.is_active ? '활성' : '비활성'}
                     </span>
                   </td>
+                  <td className="px-6 py-3 text-[#777]">{p.impression_count.toLocaleString()}</td>
                   <td className="px-6 py-3 text-[#777]">{p.click_count.toLocaleString()}</td>
+                  <td className="px-6 py-3 text-[#777]">{ctrLabel(p.click_count, p.impression_count)}</td>
                   <td className={`px-6 py-3 ${isStale(p.last_checked_at) ? 'bg-amber-50 text-amber-700' : 'text-[#777]'}`}>
                     {p.last_checked_at ? new Date(p.last_checked_at).toLocaleDateString('ko-KR') : '미확인'}
                   </td>
