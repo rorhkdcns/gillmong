@@ -60,6 +60,7 @@ interface CoupangProduct {
 export default function AdminAffiliatePage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState('')
 
   const [formMode, setFormMode] = useState<FormMode>('create')
   const [editId,   setEditId]   = useState<string | null>(null)
@@ -89,6 +90,7 @@ export default function AdminAffiliatePage() {
   const [selectedIds,      setSelectedIds]      = useState<Set<number>>(new Set())
   const [coupangTags,      setCoupangTags]      = useState<Record<number, string>>({})
   const [coupangSaving,    setCoupangSaving]    = useState(false)
+  const [bulkTagInput,     setBulkTagInput]     = useState('')
 
   async function handleCoupangSearch(e: React.FormEvent) {
     e.preventDefault()
@@ -108,6 +110,7 @@ export default function AdminAffiliatePage() {
       setCoupangResults(data.products ?? [])
       setSelectedIds(new Set())
       setCoupangTags({})
+      setBulkTagInput('')
     } catch (err) {
       setCoupangError(err instanceof Error ? err.message : '검색 중 오류가 발생했습니다.')
       setCoupangResults([])
@@ -121,6 +124,21 @@ export default function AdminAffiliatePage() {
       const next = new Set(prev)
       if (next.has(productId)) next.delete(productId)
       else next.add(productId)
+      return next
+    })
+  }
+
+  const allCoupangSelected = coupangResults.length > 0 && selectedIds.size === coupangResults.length
+
+  function toggleSelectAllCoupang() {
+    setSelectedIds(allCoupangSelected ? new Set() : new Set(coupangResults.map((p) => p.productId)))
+  }
+
+  function handleBulkTagChange(value: string) {
+    setBulkTagInput(value)
+    setCoupangTags((prev) => {
+      const next = { ...prev }
+      for (const id of selectedIds) next[id] = value
       return next
     })
   }
@@ -154,6 +172,7 @@ export default function AdminAffiliatePage() {
       setCoupangResults([])
       setSelectedIds(new Set())
       setCoupangTags({})
+      setBulkTagInput('')
       load()
     } catch (err) {
       setCoupangError(err instanceof Error ? err.message : '저장 중 오류가 발생했습니다.')
@@ -183,7 +202,9 @@ export default function AdminAffiliatePage() {
 
   async function load() {
     setLoading(true)
-    const { data } = await getAdminAffiliateProducts()
+    setLoadError('')
+    const { data, error } = await getAdminAffiliateProducts()
+    if (error) setLoadError(error)
     setProducts(data as Product[])
     setLoading(false)
   }
@@ -347,13 +368,16 @@ export default function AdminAffiliatePage() {
 
       <div className="mb-8 max-w-2xl rounded border border-gray-200 bg-white p-6">
         <h2 className="mb-4 font-semibold text-brand-ink">쿠팡에서 가져오기</h2>
+        <p className="mb-3 text-xs text-[#888]">
+          검색어를 쉼표로 여러 개 입력하면 순차 검색해 결과를 합쳐줍니다. 예: 돼지저금통, 복돼지, 황금돼지
+        </p>
 
         <form onSubmit={handleCoupangSearch} className="flex gap-2">
           <input
             type="text"
             value={coupangKeyword}
             onChange={(e) => setCoupangKeyword(e.target.value)}
-            placeholder="검색어 입력 (예: 돼지 저금통)"
+            placeholder="검색어 입력, 쉼표로 여러 개 가능 (예: 돼지저금통, 복돼지)"
             className="flex-1 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
           />
           <button
@@ -370,6 +394,25 @@ export default function AdminAffiliatePage() {
 
         {coupangResults.length > 0 && (
           <div className="mt-4">
+            <div className="mb-2 flex items-center gap-3 rounded border border-gray-100 bg-gray-50 p-2">
+              <label className="flex shrink-0 items-center gap-1.5 text-xs font-semibold text-[#555]">
+                <input
+                  type="checkbox"
+                  checked={allCoupangSelected}
+                  onChange={toggleSelectAllCoupang}
+                  className="accent-brand-ink"
+                />
+                {allCoupangSelected ? '전체 해제' : '전체 선택'}
+              </label>
+              <input
+                type="text"
+                value={bulkTagInput}
+                onChange={(e) => handleBulkTagChange(e.target.value)}
+                disabled={selectedIds.size === 0}
+                placeholder="선택 항목에 태그 일괄 입력 (쉼표 구분)"
+                className="flex-1 rounded border border-gray-200 px-2 py-1 text-xs outline-none focus:border-brand-violet disabled:bg-gray-100 disabled:text-gray-400"
+              />
+            </div>
             <div className="max-h-96 space-y-2 overflow-y-auto">
               {coupangResults.map((p) => (
                 <div key={p.productId} className="flex items-center gap-3 rounded border border-gray-100 p-2">
@@ -508,12 +551,15 @@ export default function AdminAffiliatePage() {
       <div className="overflow-x-auto rounded border border-gray-200 bg-white">
         <div className="border-b border-gray-100 px-6 py-4">
           <h2 className="font-semibold text-brand-ink">등록된 상품 ({products.length}개)</h2>
+          {loadError && <p className="mt-1 text-sm text-red-500">목록을 불러오지 못했습니다: {loadError}</p>}
           {retryError && <p className="mt-1 text-sm text-red-500">{retryError}</p>}
         </div>
         {loading ? (
           <div className="py-12 text-center text-sm text-gray-400">불러오는 중...</div>
         ) : products.length === 0 ? (
-          <div className="py-12 text-center text-sm text-gray-400">등록된 제휴 상품이 없습니다.</div>
+          <div className="py-12 text-center text-sm text-gray-400">
+            {loadError ? '오류로 목록을 표시할 수 없습니다.' : '등록된 제휴 상품이 없습니다.'}
+          </div>
         ) : (
           <table className="w-full text-sm">
             <thead>

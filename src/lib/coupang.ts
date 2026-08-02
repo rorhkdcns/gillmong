@@ -156,7 +156,11 @@ export async function searchProducts(keyword: string, limit = SEARCH_LIMIT_DEFAU
   return { ok: true, data: result.data?.productData ?? [] }
 }
 
-export async function createDeeplink(urls: string[]): Promise<CoupangResult<CoupangDeeplink[]>> {
+/**
+ * 반환 배열은 입력 urls와 같은 길이 · 같은 순서로 정렬된다.
+ * 변환에 실패한(또는 매칭 안 된) 위치는 null.
+ */
+export async function createDeeplink(urls: string[]): Promise<CoupangResult<(CoupangDeeplink | null)[]>> {
   if (urls.length === 0) return { ok: false, error: '변환할 URL이 없습니다.' }
 
   // subId는 현재 서비스에서 쓰지 않지만, 커뮤니티 SDK 구현체가 빈 문자열이라도
@@ -168,15 +172,25 @@ export async function createDeeplink(urls: string[]): Promise<CoupangResult<Coup
   if (!result.ok) return result
 
   const data = result.data ?? []
-  if (data.length < urls.length) {
-    // rCode는 정상(0)이지만 일부 URL만 변환된 부분 실패 — 어느 URL이 빠졌는지 로그로 남김.
-    const converted = new Set(data.map((d) => d.originalUrl))
-    console.error('[coupang] 딥링크 부분 실패', {
-      requested: urls,
-      convertedCount: data.length,
-      missing: urls.filter((u) => !converted.has(u)),
+
+  // ★ 실제 배포 데이터로 확인됨: 쿠팡 응답의 originalUrl은 요청한 URL과 바이트 단위로
+  //   일치하지 않는 경우가 있어(추정: traceid/requestid 등 검색 결과에 붙는 휘발성
+  //   파라미터를 쿠팡이 정규화) originalUrl로 매칭하면 변환이 실제로는 성공했는데도
+  //   전부 실패로 잘못 표시되는 사고가 있었다(2026-08-02, 저장된 10건 전부 deeplink_failed
+  //   오탐). 요청 개수와 응답 개수가 같으면(=전체 성공) 쿠팡이 입력 순서를 그대로
+  //   유지한다고 보고 위치로 매칭한다. 개수가 다를 때만(=부분 실패) 어떤 URL이 빠졌는지
+  //   알 수 없으므로 originalUrl 매칭을 최선으로 시도한다.
+  let aligned: (CoupangDeeplink | null)[]
+  if (data.length === urls.length) {
+    aligned = data
+  } else {
+    console.error('[coupang] 딥링크 부분 실패 — 응답 개수가 요청과 다름', {
+      requestedCount: urls.length,
+      respondedCount: data.length,
     })
+    const byOriginal = new Map(data.map((d) => [d.originalUrl, d]))
+    aligned = urls.map((u) => byOriginal.get(u) ?? null)
   }
 
-  return { ok: true, data }
+  return { ok: true, data: aligned }
 }
