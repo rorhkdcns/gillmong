@@ -18,6 +18,21 @@ const BASE_URL = 'https://api-gateway.coupang.com'
 const SEARCH_PATH = '/v2/providers/affiliate_open_api/apis/openapi/products/search'
 const DEEPLINK_PATH = '/v2/providers/affiliate_open_api/apis/openapi/v1/deeplink'
 
+// 쿠팡파트너스 상품검색 API의 limit 허용 범위.
+// ★ 공식 문서(제휴마케팅 Open API)는 파트너스 로그인 뒤에만 열람 가능해 크롤링/WebFetch로 확인 불가.
+//   실제로 limit=20을 보내면 쿠팡이 "limit is out of range"를 반환하는 것으로 실증됐고,
+//   커뮤니티 SDK(PCoupangAPI, coupang-partners-sdk-standalone)와 실사용 후기가 공통적으로
+//   1~10 범위(기본값 10)를 사용/명시하고 있어 이 값을 기준으로 삼음.
+//   범위가 실제와 다르면 coupangRequest()가 남기는 에러 로그의 rMessage로 정확한 허용치를 바로 확인할 수 있음.
+export const SEARCH_LIMIT_MIN = 1
+export const SEARCH_LIMIT_MAX = 10
+export const SEARCH_LIMIT_DEFAULT = 10
+
+function clampSearchLimit(limit: number): number {
+  if (!Number.isFinite(limit)) return SEARCH_LIMIT_DEFAULT
+  return Math.min(SEARCH_LIMIT_MAX, Math.max(SEARCH_LIMIT_MIN, Math.trunc(limit)))
+}
+
 export interface CoupangProduct {
   productId: number
   productName: string
@@ -101,6 +116,7 @@ async function coupangRequest<T>(
     const text = await res.text()
 
     if (!res.ok) {
+      console.error('[coupang] API 오류', { method, pathWithQuery, status: res.status, body: text.slice(0, 1000) })
       return { ok: false, error: `쿠팡 API 오류 (HTTP ${res.status}): ${text.slice(0, 300)}` }
     }
 
@@ -108,24 +124,27 @@ async function coupangRequest<T>(
     try {
       json = JSON.parse(text)
     } catch {
+      console.error('[coupang] 응답 파싱 실패', { method, pathWithQuery, status: res.status, body: text.slice(0, 1000) })
       return { ok: false, error: '쿠팡 API 응답을 파싱하지 못했습니다.' }
     }
 
     if (json.rCode && json.rCode !== '0') {
+      console.error('[coupang] rCode 오류', { method, pathWithQuery, rCode: json.rCode, rMessage: json.rMessage })
       return { ok: false, error: json.rMessage || `쿠팡 API 오류 (rCode: ${json.rCode})` }
     }
 
     return { ok: true, data: json.data as T }
   } catch (err) {
+    console.error('[coupang] 요청 예외', { method, path, query: options.query, err })
     return { ok: false, error: err instanceof Error ? err.message : '쿠팡 API 요청 중 알 수 없는 오류가 발생했습니다.' }
   }
 }
 
-export async function searchProducts(keyword: string, limit = 20): Promise<CoupangResult<CoupangProduct[]>> {
+export async function searchProducts(keyword: string, limit = SEARCH_LIMIT_DEFAULT): Promise<CoupangResult<CoupangProduct[]>> {
   if (!keyword.trim()) return { ok: false, error: '검색어를 입력해주세요.' }
 
   const result = await coupangRequest<{ landingUrl: string; productData: CoupangProduct[] }>('GET', SEARCH_PATH, {
-    query: { keyword: keyword.trim(), limit, imageSize: '230x230' },
+    query: { keyword: keyword.trim(), limit: clampSearchLimit(limit), imageSize: '230x230' },
   })
   if (!result.ok) return result
   return { ok: true, data: result.data?.productData ?? [] }

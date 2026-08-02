@@ -85,7 +85,7 @@ export default function AdminAffiliatePage() {
       const res = await fetch('/api/admin/coupang/search', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ keyword: coupangKeyword.trim(), limit: 20 }),
+        body: JSON.stringify({ keyword: coupangKeyword.trim() }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? '검색에 실패했습니다.')
