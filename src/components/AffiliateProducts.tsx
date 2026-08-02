@@ -1,5 +1,6 @@
 import { createAdminClient } from '@/lib/supabase/admin'
 import AffiliateProductLink from './AffiliateProductLink'
+import ImageThumbnail from './ImageThumbnail'
 
 interface Product {
   id: string
@@ -78,10 +79,7 @@ export default async function AffiliateProducts({ tags }: Props) {
             className="flex flex-col overflow-hidden rounded-[10px] border border-[#DCE5EB] transition-shadow hover:shadow-[0_6px_16px_rgba(11,36,51,0.08)]"
           >
             <div className="aspect-square w-full bg-[#EDF3F7]">
-              {p.image_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={p.image_url} alt={p.title} className="h-full w-full object-cover" />
-              ) : null}
+              <ImageThumbnail src={p.image_url} alt={p.title} className="h-full w-full object-cover" />
             </div>
             <div className="flex flex-1 flex-col gap-1 p-3">
               <p className="line-clamp-2 text-sm font-medium text-[#16303F]">{p.title}</p>

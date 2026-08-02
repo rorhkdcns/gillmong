@@ -10,11 +10,13 @@ import {
   reactivateAdminAffiliateProduct,
   type AdminAffiliateFields,
 } from '../actions'
+import ImageThumbnail from '@/components/ImageThumbnail'
 
 type Product = {
   id: string
   title: string
   price_text: string | null
+  image_url: string | null
   tags: string[] | null
   sort_order: number
   is_active: boolean
@@ -61,6 +63,11 @@ export default function AdminAffiliatePage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
+  const [brokenImageIds, setBrokenImageIds] = useState<Set<string>>(new Set())
+
+  function markImageBroken(id: string) {
+    setBrokenImageIds((prev) => (prev.has(id) ? prev : new Set(prev).add(id)))
+  }
 
   const [formMode, setFormMode] = useState<FormMode>('create')
   const [editId,   setEditId]   = useState<string | null>(null)
@@ -422,8 +429,7 @@ export default function AdminAffiliatePage() {
                     onChange={() => toggleCoupangSelect(p.productId)}
                     className="accent-brand-ink"
                   />
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={p.productImage} alt={p.productName} className="h-14 w-14 shrink-0 rounded object-cover" />
+                  <ImageThumbnail src={p.productImage} alt={p.productName} className="h-16 w-16 shrink-0 rounded object-cover" />
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium text-[#333]">{p.productName}</p>
                     <p className="text-xs text-[#777]">{p.productPrice.toLocaleString()}원</p>
@@ -479,13 +485,21 @@ export default function AdminAffiliatePage() {
 
           <div>
             <label className="mb-1 block text-sm text-[#555]">이미지 URL (선택)</label>
-            <input
-              type="text"
-              value={imageUrl}
-              onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="https://..."
-              className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
-            />
+            <div className="flex items-center gap-3">
+              <input
+                type="text"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                placeholder="https://..."
+                className="flex-1 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+              />
+              <ImageThumbnail
+                key={imageUrl}
+                src={imageUrl.trim() || null}
+                alt="미리보기"
+                className="h-14 w-14 shrink-0 rounded object-cover"
+              />
+            </div>
           </div>
 
           <div>
@@ -548,7 +562,7 @@ export default function AdminAffiliatePage() {
         </form>
       )}
 
-      <div className="overflow-x-auto rounded border border-gray-200 bg-white">
+      <div className="rounded border border-gray-200 bg-white">
         <div className="border-b border-gray-100 px-6 py-4">
           <h2 className="font-semibold text-brand-ink">등록된 상품 ({products.length}개)</h2>
           {loadError && <p className="mt-1 text-sm text-red-500">목록을 불러오지 못했습니다: {loadError}</p>}
@@ -561,63 +575,145 @@ export default function AdminAffiliatePage() {
             {loadError ? '오류로 목록을 표시할 수 없습니다.' : '등록된 제휴 상품이 없습니다.'}
           </div>
         ) : (
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
-                <th className="px-6 py-3">상품명</th>
-                <th className="px-6 py-3">가격</th>
-                <th className="px-6 py-3">태그</th>
-                <th className="px-6 py-3">활성여부</th>
-                <th className="px-6 py-3">노출수</th>
-                <th className="px-6 py-3">클릭수</th>
-                <th className="px-6 py-3">클릭률</th>
-                <th className="px-6 py-3">마지막 확인</th>
-                <th className="px-6 py-3">관리</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {products.map((p) => (
-                <tr key={p.id} className={hasNoPerformance(p) ? 'bg-gray-100' : undefined}>
-                  <td className="px-6 py-3 font-medium text-[#333]">
-                    {p.title}
-                    {p.deeplink_failed && (
-                      <span className="ml-2 rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-500">
-                        추적링크 아님
-                      </span>
+          <>
+            {/* PC 테이블 */}
+            <div className="hidden overflow-x-auto md:block">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+                    <th className="px-6 py-3">썸네일</th>
+                    <th className="px-6 py-3">상품명</th>
+                    <th className="px-6 py-3">가격</th>
+                    <th className="px-6 py-3">태그</th>
+                    <th className="px-6 py-3">활성여부</th>
+                    <th className="px-6 py-3">노출수</th>
+                    <th className="px-6 py-3">클릭수</th>
+                    <th className="px-6 py-3">클릭률</th>
+                    <th className="px-6 py-3">마지막 확인</th>
+                    <th className="px-6 py-3">관리</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {products.map((p) => {
+                    const imageBroken = !p.image_url || brokenImageIds.has(p.id)
+                    return (
+                      <tr key={p.id} className={hasNoPerformance(p) ? 'bg-gray-100' : undefined}>
+                        <td className="px-6 py-3">
+                          {imageBroken ? (
+                            <ImageThumbnail src={null} alt={p.title} className="h-14 w-14 rounded" />
+                          ) : (
+                            <a href={p.image_url!} target="_blank" rel="noopener noreferrer">
+                              <ImageThumbnail
+                                src={p.image_url}
+                                alt={p.title}
+                                className="h-14 w-14 rounded object-cover"
+                                onError={() => markImageBroken(p.id)}
+                              />
+                            </a>
+                          )}
+                        </td>
+                        <td className="px-6 py-3 font-medium text-[#333]">
+                          {p.title}
+                          {p.deeplink_failed && (
+                            <span className="ml-2 rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-500">
+                              추적링크 아님
+                            </span>
+                          )}
+                          {imageBroken && (
+                            <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500">
+                              이미지 없음
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-6 py-3 text-[#777]">{p.price_text ?? '-'}</td>
+                        <td className="px-6 py-3 text-[#777]">{(p.tags ?? []).join(', ') || '-'}</td>
+                        <td className="px-6 py-3">
+                          <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${p.is_active ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500'}`}>
+                            {p.is_active ? '활성' : '비활성'}
+                          </span>
+                        </td>
+                        <td className="px-6 py-3 text-[#777]">{p.impression_count.toLocaleString()}</td>
+                        <td className="px-6 py-3 text-[#777]">{p.click_count.toLocaleString()}</td>
+                        <td className="px-6 py-3 text-[#777]">{ctrLabel(p.click_count, p.impression_count)}</td>
+                        <td className={`px-6 py-3 ${isStale(p.last_checked_at) ? 'bg-amber-50 text-amber-700' : 'text-[#777]'}`}>
+                          {p.last_checked_at ? new Date(p.last_checked_at).toLocaleDateString('ko-KR') : '미확인'}
+                        </td>
+                        <td className="px-6 py-3">
+                          <div className="flex items-center gap-3">
+                            {p.deeplink_failed && (
+                              <button
+                                onClick={() => handleRetryDeeplink(p.id)}
+                                disabled={retryingId === p.id}
+                                className="text-xs text-amber-600 hover:text-amber-800 disabled:opacity-50"
+                              >
+                                {retryingId === p.id ? '재변환 중...' : '딥링크 재변환'}
+                              </button>
+                            )}
+                            <button onClick={() => openEditForm(p.id)} className="text-xs text-blue-500 hover:text-blue-700">수정</button>
+                            <button onClick={() => setDeleteTarget(p.id)} className="text-xs text-red-400 hover:text-red-600">삭제</button>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* 모바일 카드 */}
+            <div className="divide-y divide-gray-100 md:hidden">
+              {products.map((p) => {
+                const imageBroken = !p.image_url || brokenImageIds.has(p.id)
+                return (
+                  <div key={p.id} className={`flex gap-3 p-4 ${hasNoPerformance(p) ? 'bg-gray-100' : ''}`}>
+                    {imageBroken ? (
+                      <ImageThumbnail src={null} alt={p.title} className="h-[72px] w-[72px] shrink-0 rounded-lg" />
+                    ) : (
+                      <a href={p.image_url!} target="_blank" rel="noopener noreferrer" className="shrink-0">
+                        <ImageThumbnail
+                          src={p.image_url}
+                          alt={p.title}
+                          className="h-[72px] w-[72px] rounded-lg object-cover"
+                          onError={() => markImageBroken(p.id)}
+                        />
+                      </a>
                     )}
-                  </td>
-                  <td className="px-6 py-3 text-[#777]">{p.price_text ?? '-'}</td>
-                  <td className="px-6 py-3 text-[#777]">{(p.tags ?? []).join(', ') || '-'}</td>
-                  <td className="px-6 py-3">
-                    <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${p.is_active ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500'}`}>
-                      {p.is_active ? '활성' : '비활성'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-3 text-[#777]">{p.impression_count.toLocaleString()}</td>
-                  <td className="px-6 py-3 text-[#777]">{p.click_count.toLocaleString()}</td>
-                  <td className="px-6 py-3 text-[#777]">{ctrLabel(p.click_count, p.impression_count)}</td>
-                  <td className={`px-6 py-3 ${isStale(p.last_checked_at) ? 'bg-amber-50 text-amber-700' : 'text-[#777]'}`}>
-                    {p.last_checked_at ? new Date(p.last_checked_at).toLocaleDateString('ko-KR') : '미확인'}
-                  </td>
-                  <td className="px-6 py-3">
-                    <div className="flex items-center gap-3">
-                      {p.deeplink_failed && (
-                        <button
-                          onClick={() => handleRetryDeeplink(p.id)}
-                          disabled={retryingId === p.id}
-                          className="text-xs text-amber-600 hover:text-amber-800 disabled:opacity-50"
-                        >
-                          {retryingId === p.id ? '재변환 중...' : '딥링크 재변환'}
-                        </button>
-                      )}
-                      <button onClick={() => openEditForm(p.id)} className="text-xs text-blue-500 hover:text-blue-700">수정</button>
-                      <button onClick={() => setDeleteTarget(p.id)} className="text-xs text-red-400 hover:text-red-600">삭제</button>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium text-[#333]">{p.title}</p>
+                      <div className="mt-1 flex flex-wrap gap-1">
+                        {p.deeplink_failed && (
+                          <span className="rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-500">추적링크 아님</span>
+                        )}
+                        {imageBroken && (
+                          <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500">이미지 없음</span>
+                        )}
+                        <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${p.is_active ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500'}`}>
+                          {p.is_active ? '활성' : '비활성'}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-xs text-[#777]">{p.price_text ?? '-'} · {(p.tags ?? []).join(', ') || '태그 없음'}</p>
+                      <p className="mt-0.5 text-xs text-[#777]">
+                        노출 {p.impression_count.toLocaleString()} · 클릭 {p.click_count.toLocaleString()} · CTR {ctrLabel(p.click_count, p.impression_count)}
+                      </p>
+                      <div className="mt-2 flex items-center gap-3">
+                        {p.deeplink_failed && (
+                          <button
+                            onClick={() => handleRetryDeeplink(p.id)}
+                            disabled={retryingId === p.id}
+                            className="text-xs text-amber-600 hover:text-amber-800 disabled:opacity-50"
+                          >
+                            {retryingId === p.id ? '재변환 중...' : '딥링크 재변환'}
+                          </button>
+                        )}
+                        <button onClick={() => openEditForm(p.id)} className="text-xs text-blue-500 hover:text-blue-700">수정</button>
+                        <button onClick={() => setDeleteTarget(p.id)} className="text-xs text-red-400 hover:text-red-600">삭제</button>
+                      </div>
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
+                )
+              })}
+            </div>
+          </>
         )}
       </div>
 
