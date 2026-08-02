@@ -29,14 +29,18 @@ export default async function AffiliateProducts({ tags }: Props) {
     products = data ?? []
   }
 
-  if (products.length === 0) {
-    const { data } = await admin
+  if (products.length < 3) {
+    const excludeIds = products.map((p) => p.id)
+    const needed = 3 - products.length
+    let query = admin
       .from('affiliate_products')
       .select('id, title, price_text, image_url, link_url')
       .eq('is_active', true)
       .order('sort_order', { ascending: true })
-      .limit(3)
-    products = data ?? []
+      .limit(needed + excludeIds.length)
+    if (excludeIds.length > 0) query = query.not('id', 'in', `(${excludeIds.join(',')})`)
+    const { data } = await query
+    products = [...products, ...(data ?? []).slice(0, needed)]
   }
 
   if (products.length === 0) return null

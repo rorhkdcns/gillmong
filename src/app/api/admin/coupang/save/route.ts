@@ -63,6 +63,8 @@ export async function POST(req: NextRequest) {
     sort_order: nextSortOrder++,
     is_active: true,
     coupang_product_id: String(item.productId),
+    product_id: String(item.productId),
+    last_checked_at: new Date().toISOString(),
   }))
 
   const { error } = await admin.from('affiliate_products').insert(rows)

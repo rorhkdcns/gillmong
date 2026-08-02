@@ -854,7 +854,7 @@ export async function getAdminAffiliateProducts(): Promise<{ data: unknown[]; er
   const admin = createAdminClient()
   const { data, error } = await admin
     .from('affiliate_products')
-    .select('id, title, price_text, tags, sort_order, is_active, click_count')
+    .select('id, title, price_text, tags, sort_order, is_active, click_count, last_checked_at, deactivated_reason, deactivated_at')
     .order('sort_order', { ascending: true })
   if (error) return { data: [], error: error.message }
   return { data: data ?? [] }
@@ -903,6 +903,17 @@ export async function updateAdminAffiliateProduct(
 export async function deleteAdminAffiliateProduct(id: string): Promise<{ success?: boolean; error?: string }> {
   const admin = createAdminClient()
   const { error } = await admin.from('affiliate_products').delete().eq('id', id)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function reactivateAdminAffiliateProduct(id: string): Promise<{ success?: boolean; error?: string }> {
+  const admin = createAdminClient()
+  const { error } = await admin.from('affiliate_products').update({
+    is_active: true,
+    deactivated_reason: null,
+    deactivated_at: null,
+  }).eq('id', id)
   if (error) return { error: error.message }
   return { success: true }
 }

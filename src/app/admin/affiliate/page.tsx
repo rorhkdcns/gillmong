@@ -7,6 +7,7 @@ import {
   getAdminAffiliateProducts,
   getAdminAffiliateProductById,
   updateAdminAffiliateProduct,
+  reactivateAdminAffiliateProduct,
   type AdminAffiliateFields,
 } from '../actions'
 
@@ -18,6 +19,18 @@ type Product = {
   sort_order: number
   is_active: boolean
   click_count: number
+  last_checked_at: string | null
+  deactivated_reason: string | null
+  deactivated_at: string | null
+}
+
+const STALE_DAYS = 30
+const MIN_TAG_COUNT = 3
+
+function isStale(lastCheckedAt: string | null): boolean {
+  if (!lastCheckedAt) return true
+  const diffDays = (Date.now() - new Date(lastCheckedAt).getTime()) / (1000 * 60 * 60 * 24)
+  return diffDays >= STALE_DAYS
 }
 type FormMode = 'create' | 'edit'
 
@@ -216,6 +229,22 @@ export default function AdminAffiliatePage() {
     load()
   }
 
+  async function handleReactivate(id: string) {
+    await reactivateAdminAffiliateProduct(id)
+    load()
+  }
+
+  const needsAttention = products.filter((p) => !p.is_active && p.deactivated_reason)
+
+  const allTags = new Set<string>()
+  for (const p of products) for (const t of p.tags ?? []) allTags.add(t)
+  const tagActiveCounts = Array.from(allTags)
+    .map((tag) => ({
+      tag,
+      count: products.filter((p) => p.is_active && (p.tags ?? []).includes(tag)).length,
+    }))
+    .sort((a, b) => a.count - b.count)
+
   return (
     <div className="p-4 sm:p-8">
       <div className="mb-6 flex items-center justify-between sm:mb-8">
@@ -227,6 +256,58 @@ export default function AdminAffiliatePage() {
           {showForm ? '취소' : '+ 새 상품'}
         </button>
       </div>
+
+      {needsAttention.length > 0 && (
+        <div className="mb-8 rounded border border-amber-300 bg-amber-50 p-6">
+          <h2 className="mb-1 font-semibold text-amber-800">확인 필요 ({needsAttention.length}개)</h2>
+          <p className="mb-3 text-xs text-amber-700">자동 점검에서 품절/판매중지로 추정되어 비활성화된 상품입니다.</p>
+          <div className="space-y-2">
+            {needsAttention.map((p) => (
+              <div key={p.id} className="flex items-center justify-between gap-3 rounded border border-amber-200 bg-white p-3">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium text-[#333]">{p.title}</p>
+                  <p className="text-xs text-amber-700">
+                    {p.deactivated_reason}
+                    {p.deactivated_at ? ` · ${new Date(p.deactivated_at).toLocaleDateString('ko-KR')}` : ''}
+                  </p>
+                </div>
+                <div className="flex shrink-0 gap-2">
+                  <button
+                    onClick={() => handleReactivate(p.id)}
+                    className="rounded border border-emerald-300 px-3 py-1.5 text-xs font-semibold text-emerald-600 hover:bg-emerald-50"
+                  >
+                    재활성화
+                  </button>
+                  <button
+                    onClick={() => setDeleteTarget(p.id)}
+                    className="rounded border border-red-300 px-3 py-1.5 text-xs font-semibold text-red-500 hover:bg-red-50"
+                  >
+                    삭제
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {tagActiveCounts.length > 0 && (
+        <div className="mb-8 rounded border border-gray-200 bg-white p-6">
+          <h2 className="mb-3 font-semibold text-brand-ink">태그별 활성 상품 개수</h2>
+          <div className="flex flex-wrap gap-2">
+            {tagActiveCounts.map(({ tag, count }) => (
+              <span
+                key={tag}
+                className={`rounded-full px-3 py-1 text-xs font-semibold ${
+                  count < MIN_TAG_COUNT ? 'bg-red-50 text-red-600' : 'bg-gray-100 text-[#555]'
+                }`}
+              >
+                {tag} {count}개
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="mb-8 max-w-2xl rounded border border-gray-200 bg-white p-6">
         <h2 className="mb-4 font-semibold text-brand-ink">쿠팡에서 가져오기</h2>
@@ -405,6 +486,7 @@ export default function AdminAffiliatePage() {
                 <th className="px-6 py-3">태그</th>
                 <th className="px-6 py-3">활성여부</th>
                 <th className="px-6 py-3">클릭수</th>
+                <th className="px-6 py-3">마지막 확인</th>
                 <th className="px-6 py-3">관리</th>
               </tr>
             </thead>
@@ -420,6 +502,9 @@ export default function AdminAffiliatePage() {
                     </span>
                   </td>
                   <td className="px-6 py-3 text-[#777]">{p.click_count.toLocaleString()}</td>
+                  <td className={`px-6 py-3 ${isStale(p.last_checked_at) ? 'bg-amber-50 text-amber-700' : 'text-[#777]'}`}>
+                    {p.last_checked_at ? new Date(p.last_checked_at).toLocaleDateString('ko-KR') : '미확인'}
+                  </td>
                   <td className="px-6 py-3">
                     <div className="flex items-center gap-3">
                       <button onClick={() => openEditForm(p.id)} className="text-xs text-blue-500 hover:text-blue-700">수정</button>
