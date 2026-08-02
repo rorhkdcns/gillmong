@@ -20,6 +20,7 @@ type Product = {
   is_active: boolean
   click_count: number
   impression_count: number
+  deeplink_failed: boolean
   last_checked_at: string | null
   deactivated_reason: string | null
   deactivated_at: string | null
@@ -75,6 +76,9 @@ export default function AdminAffiliatePage() {
 
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const [deleting,     setDeleting]     = useState(false)
+
+  const [retryingId, setRetryingId] = useState<string | null>(null)
+  const [retryError, setRetryError] = useState('')
 
   // ── 쿠팡에서 가져오기 ──────────────────────────────
   const [coupangKeyword,   setCoupangKeyword]   = useState('')
@@ -145,7 +149,8 @@ export default function AdminAffiliatePage() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? '저장에 실패했습니다.')
-      setCoupangSaveMsg(`${data.saved}개 상품을 저장했습니다.`)
+      const failNote = data.deeplinkFailedCount > 0 ? ` (딥링크 변환 실패 ${data.deeplinkFailedCount}개 — 추적링크 아님)` : ''
+      setCoupangSaveMsg(`${data.saved}개 상품을 저장했습니다.${failNote}`)
       setCoupangResults([])
       setSelectedIds(new Set())
       setCoupangTags({})
@@ -154,6 +159,25 @@ export default function AdminAffiliatePage() {
       setCoupangError(err instanceof Error ? err.message : '저장 중 오류가 발생했습니다.')
     } finally {
       setCoupangSaving(false)
+    }
+  }
+
+  async function handleRetryDeeplink(id: string) {
+    setRetryingId(id)
+    setRetryError('')
+    try {
+      const res = await fetch('/api/admin/coupang/retry-deeplink', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? '딥링크 재변환에 실패했습니다.')
+      await load()
+    } catch (err) {
+      setRetryError(err instanceof Error ? err.message : '딥링크 재변환 중 오류가 발생했습니다.')
+    } finally {
+      setRetryingId(null)
     }
   }
 
@@ -484,6 +508,7 @@ export default function AdminAffiliatePage() {
       <div className="overflow-x-auto rounded border border-gray-200 bg-white">
         <div className="border-b border-gray-100 px-6 py-4">
           <h2 className="font-semibold text-brand-ink">등록된 상품 ({products.length}개)</h2>
+          {retryError && <p className="mt-1 text-sm text-red-500">{retryError}</p>}
         </div>
         {loading ? (
           <div className="py-12 text-center text-sm text-gray-400">불러오는 중...</div>
@@ -507,7 +532,14 @@ export default function AdminAffiliatePage() {
             <tbody className="divide-y divide-gray-100">
               {products.map((p) => (
                 <tr key={p.id} className={hasNoPerformance(p) ? 'bg-gray-100' : undefined}>
-                  <td className="px-6 py-3 font-medium text-[#333]">{p.title}</td>
+                  <td className="px-6 py-3 font-medium text-[#333]">
+                    {p.title}
+                    {p.deeplink_failed && (
+                      <span className="ml-2 rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-500">
+                        추적링크 아님
+                      </span>
+                    )}
+                  </td>
                   <td className="px-6 py-3 text-[#777]">{p.price_text ?? '-'}</td>
                   <td className="px-6 py-3 text-[#777]">{(p.tags ?? []).join(', ') || '-'}</td>
                   <td className="px-6 py-3">
@@ -523,6 +555,15 @@ export default function AdminAffiliatePage() {
                   </td>
                   <td className="px-6 py-3">
                     <div className="flex items-center gap-3">
+                      {p.deeplink_failed && (
+                        <button
+                          onClick={() => handleRetryDeeplink(p.id)}
+                          disabled={retryingId === p.id}
+                          className="text-xs text-amber-600 hover:text-amber-800 disabled:opacity-50"
+                        >
+                          {retryingId === p.id ? '재변환 중...' : '딥링크 재변환'}
+                        </button>
+                      )}
                       <button onClick={() => openEditForm(p.id)} className="text-xs text-blue-500 hover:text-blue-700">수정</button>
                       <button onClick={() => setDeleteTarget(p.id)} className="text-xs text-red-400 hover:text-red-600">삭제</button>
                     </div>

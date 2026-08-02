@@ -104,19 +104,25 @@ async function coupangRequest<T>(
     const pathWithQuery = url.pathname + url.search
     const authorization = buildAuthorizationHeader(method, pathWithQuery, creds.accessKey, creds.secretKey)
 
+    // ★ Content-Type은 반드시 charset 파라미터 없이 정확히 'application/json'이어야 한다.
+    //   실제 동작하는 커뮤니티 SDK(coupang-partners-sdk-standalone)와 대조해 확인함 —
+    //   'application/json;charset=UTF-8'로 보내면 GET(바디 없음)은 영향이 없어 검색은 정상 동작하지만,
+    //   POST(딥링크 등 바디가 있는 요청)는 쿠팡 게이트웨이가 바디 파싱에 실패해 "url convert failed"류의
+    //   일반적인 오류로 이어질 수 있다. 임의로 charset을 추가하지 말 것.
+    const requestBody = options.body ? JSON.stringify(options.body) : undefined
     const res = await fetch(url.toString(), {
       method,
       headers: {
         Authorization: authorization,
-        'Content-Type': 'application/json;charset=UTF-8',
+        'Content-Type': 'application/json',
       },
-      body: options.body ? JSON.stringify(options.body) : undefined,
+      body: requestBody,
     })
 
     const text = await res.text()
 
     if (!res.ok) {
-      console.error('[coupang] API 오류', { method, pathWithQuery, status: res.status, body: text.slice(0, 1000) })
+      console.error('[coupang] API 오류', { method, pathWithQuery, requestBody, status: res.status, responseBody: text.slice(0, 1000) })
       return { ok: false, error: `쿠팡 API 오류 (HTTP ${res.status}): ${text.slice(0, 300)}` }
     }
 
@@ -124,18 +130,18 @@ async function coupangRequest<T>(
     try {
       json = JSON.parse(text)
     } catch {
-      console.error('[coupang] 응답 파싱 실패', { method, pathWithQuery, status: res.status, body: text.slice(0, 1000) })
+      console.error('[coupang] 응답 파싱 실패', { method, pathWithQuery, requestBody, status: res.status, responseBody: text.slice(0, 1000) })
       return { ok: false, error: '쿠팡 API 응답을 파싱하지 못했습니다.' }
     }
 
     if (json.rCode && json.rCode !== '0') {
-      console.error('[coupang] rCode 오류', { method, pathWithQuery, rCode: json.rCode, rMessage: json.rMessage })
+      console.error('[coupang] rCode 오류', { method, pathWithQuery, requestBody, rCode: json.rCode, rMessage: json.rMessage })
       return { ok: false, error: json.rMessage || `쿠팡 API 오류 (rCode: ${json.rCode})` }
     }
 
     return { ok: true, data: json.data as T }
   } catch (err) {
-    console.error('[coupang] 요청 예외', { method, path, query: options.query, err })
+    console.error('[coupang] 요청 예외', { method, path, query: options.query, body: options.body, err })
     return { ok: false, error: err instanceof Error ? err.message : '쿠팡 API 요청 중 알 수 없는 오류가 발생했습니다.' }
   }
 }
@@ -153,9 +159,24 @@ export async function searchProducts(keyword: string, limit = SEARCH_LIMIT_DEFAU
 export async function createDeeplink(urls: string[]): Promise<CoupangResult<CoupangDeeplink[]>> {
   if (urls.length === 0) return { ok: false, error: '변환할 URL이 없습니다.' }
 
+  // subId는 현재 서비스에서 쓰지 않지만, 커뮤니티 SDK 구현체가 빈 문자열이라도
+  // 항상 이 필드를 포함해서 보내는 것으로 확인돼 동일하게 맞춤(누락 시 바디 형식이
+  // 쿠팡 쪽 검증을 통과하지 못할 가능성을 배제하기 위함).
   const result = await coupangRequest<CoupangDeeplink[]>('POST', DEEPLINK_PATH, {
-    body: { coupangUrls: urls },
+    body: { coupangUrls: urls, subId: '' },
   })
   if (!result.ok) return result
-  return { ok: true, data: result.data ?? [] }
+
+  const data = result.data ?? []
+  if (data.length < urls.length) {
+    // rCode는 정상(0)이지만 일부 URL만 변환된 부분 실패 — 어느 URL이 빠졌는지 로그로 남김.
+    const converted = new Set(data.map((d) => d.originalUrl))
+    console.error('[coupang] 딥링크 부분 실패', {
+      requested: urls,
+      convertedCount: data.length,
+      missing: urls.filter((u) => !converted.has(u)),
+    })
+  }
+
+  return { ok: true, data }
 }
