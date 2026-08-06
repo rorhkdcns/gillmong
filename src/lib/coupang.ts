@@ -10,13 +10,20 @@
 //   - signedDate 포맷: yyMMddTHHmmssZ (UTC, "Z"는 리터럴 문자)
 //   - Authorization: "CEA algorithm=HmacSHA256, access-key={accessKey}, signed-date={signedDate}, signature={signature}"
 //   - 상품검색: GET /v2/providers/affiliate_open_api/apis/openapi/products/search (v1 세그먼트 없음)
-//   - 딥링크 변환: POST /v2/providers/affiliate_open_api/apis/openapi/v1/deeplink (v1 세그먼트 있음)
+//
+// ★ 딥링크 변환(POST .../v1/deeplink) API는 이 파일에서 의도적으로 쓰지 않는다.
+//   상품검색 API가 이 계정의 access/secret key로 인증되는 순간 productUrl은 이미
+//   link.coupang.com/re/AFFSDP?...(lptag=이 계정 태그, traceid/token 등 포함)인
+//   완성된 파트너스 추적 링크로 내려온다 — 실제 리다이렉트로 확인함
+//   (2026-08-07, www.coupang.com/vp/products/... 로 정상 랜딩, lptag 유지).
+//   이걸 다시 딥링크 변환 API에 넣으면 "url convert failed"로 자주 실패한다
+//   (변환용 API가 기대하는 입력은 일반 상품 URL이지 이미 변환된 링크가 아님).
+//   즉 productUrl을 그대로 저장하면 되고, 추가 변환은 불필요 + 실패의 원인이었다.
 
 import crypto from 'crypto'
 
 const BASE_URL = 'https://api-gateway.coupang.com'
 const SEARCH_PATH = '/v2/providers/affiliate_open_api/apis/openapi/products/search'
-const DEEPLINK_PATH = '/v2/providers/affiliate_open_api/apis/openapi/v1/deeplink'
 
 // 쿠팡파트너스 상품검색 API의 limit 허용 범위.
 // ★ 공식 문서(제휴마케팅 Open API)는 파트너스 로그인 뒤에만 열람 가능해 크롤링/WebFetch로 확인 불가.
@@ -41,12 +48,6 @@ export interface CoupangProduct {
   productUrl: string
   isRocket: boolean
   isFreeShipping: boolean
-}
-
-export interface CoupangDeeplink {
-  originalUrl: string
-  shortenUrl: string
-  landingUrl: string
 }
 
 export type CoupangResult<T> =
@@ -154,43 +155,4 @@ export async function searchProducts(keyword: string, limit = SEARCH_LIMIT_DEFAU
   })
   if (!result.ok) return result
   return { ok: true, data: result.data?.productData ?? [] }
-}
-
-/**
- * 반환 배열은 입력 urls와 같은 길이 · 같은 순서로 정렬된다.
- * 변환에 실패한(또는 매칭 안 된) 위치는 null.
- */
-export async function createDeeplink(urls: string[]): Promise<CoupangResult<(CoupangDeeplink | null)[]>> {
-  if (urls.length === 0) return { ok: false, error: '변환할 URL이 없습니다.' }
-
-  // subId는 현재 서비스에서 쓰지 않지만, 커뮤니티 SDK 구현체가 빈 문자열이라도
-  // 항상 이 필드를 포함해서 보내는 것으로 확인돼 동일하게 맞춤(누락 시 바디 형식이
-  // 쿠팡 쪽 검증을 통과하지 못할 가능성을 배제하기 위함).
-  const result = await coupangRequest<CoupangDeeplink[]>('POST', DEEPLINK_PATH, {
-    body: { coupangUrls: urls, subId: '' },
-  })
-  if (!result.ok) return result
-
-  const data = result.data ?? []
-
-  // ★ 실제 배포 데이터로 확인됨: 쿠팡 응답의 originalUrl은 요청한 URL과 바이트 단위로
-  //   일치하지 않는 경우가 있어(추정: traceid/requestid 등 검색 결과에 붙는 휘발성
-  //   파라미터를 쿠팡이 정규화) originalUrl로 매칭하면 변환이 실제로는 성공했는데도
-  //   전부 실패로 잘못 표시되는 사고가 있었다(2026-08-02, 저장된 10건 전부 deeplink_failed
-  //   오탐). 요청 개수와 응답 개수가 같으면(=전체 성공) 쿠팡이 입력 순서를 그대로
-  //   유지한다고 보고 위치로 매칭한다. 개수가 다를 때만(=부분 실패) 어떤 URL이 빠졌는지
-  //   알 수 없으므로 originalUrl 매칭을 최선으로 시도한다.
-  let aligned: (CoupangDeeplink | null)[]
-  if (data.length === urls.length) {
-    aligned = data
-  } else {
-    console.error('[coupang] 딥링크 부분 실패 — 응답 개수가 요청과 다름', {
-      requestedCount: urls.length,
-      respondedCount: data.length,
-    })
-    const byOriginal = new Map(data.map((d) => [d.originalUrl, d]))
-    aligned = urls.map((u) => byOriginal.get(u) ?? null)
-  }
-
-  return { ok: true, data: aligned }
 }

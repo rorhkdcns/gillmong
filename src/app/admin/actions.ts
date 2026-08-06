@@ -977,7 +977,7 @@ export async function getAdminAffiliateProducts(): Promise<{ data: unknown[]; er
   const admin = createAdminClient()
   const { data, error } = await admin
     .from('affiliate_products')
-    .select('id, title, price_text, image_url, tags, sort_order, is_active, click_count, impression_count, deeplink_failed, last_checked_at, deactivated_reason, deactivated_at')
+    .select('id, title, price_text, image_url, tags, sort_order, is_active, click_count, impression_count, last_checked_at, deactivated_reason, deactivated_at')
     .order('sort_order', { ascending: true })
   if (error) return { data: [], error: error.message }
   return { data: data ?? [] }

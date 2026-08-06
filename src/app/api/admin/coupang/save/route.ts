@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireAdmin } from '@/lib/supabase/adminAuth'
-import { createDeeplink } from '@/lib/coupang'
 
 interface SaveItem {
   productId: number
@@ -21,19 +20,32 @@ export async function POST(req: NextRequest) {
   if (items.length === 0) {
     return NextResponse.json({ error: '선택된 상품이 없습니다.' }, { status: 400 })
   }
-
-  // 딥링크 변환 (선택한 상품 URL을 한 번에 변환)
-  // ★ 변환이 전체 실패하거나 일부 URL만 실패해도 저장 자체는 막지 않는다 —
-  //   실패한 상품은 원본 URL(추적 안 되는 링크)로 저장하고 deeplink_failed로 표시,
-  //   나중에 어드민에서 개별 재변환할 수 있게 한다.
-  // createDeeplink()는 입력과 같은 순서·길이의 배열을 반환하므로 인덱스로 그대로 매칭한다.
-  const deeplinkResult = await createDeeplink(items.map((item) => item.productUrl))
-  if (!deeplinkResult.ok) {
-    console.error('[coupang] 딥링크 변환 전체 실패, 원본 URL로 폴백', { error: deeplinkResult.error })
+  if (items.some((item) => (item.tags ?? []).length === 0)) {
+    return NextResponse.json({ error: '태그가 없는 상품이 있습니다. 모든 상품에 태그를 입력해주세요.' }, { status: 400 })
   }
-  const deeplinks = deeplinkResult.ok ? deeplinkResult.data : []
 
-  // 기존 sort_order 뒤에 이어 붙임 (기존 순서를 밀어내지 않도록)
+  // 이미 등록된 product_id는 건너뛴다 (같은 상품 중복 저장 방지).
+  const requestedIds = items.map((item) => String(item.productId))
+  const { data: existingRows, error: existingErr } = await admin
+    .from('affiliate_products')
+    .select('product_id')
+    .in('product_id', requestedIds)
+  if (existingErr) {
+    return NextResponse.json({ error: existingErr.message }, { status: 500 })
+  }
+  const existingIds = new Set((existingRows ?? []).map((r) => r.product_id))
+  const newItems = items.filter((item) => !existingIds.has(String(item.productId)))
+  const skipped = items.length - newItems.length
+
+  if (newItems.length === 0) {
+    return NextResponse.json({ success: true, saved: 0, skipped })
+  }
+
+  // ★ 쿠팡 상품검색 API는 productUrl을 이미 파트너스 추적 링크(link.coupang.com/re/AFFSDP?...)로
+  //   반환한다 — 검색 자체가 이 계정의 access/secret key로 인증되기 때문. 여기에 딥링크 변환
+  //   API(/v1/deeplink)를 한 번 더 태우면 "url convert failed"로 실패하는 경우가 잦고(원래
+  //   변환용이 아닌, 이미 변환된 링크를 다시 넣는 것이라 발생), 실패해도 실제로는 productUrl
+  //   자체가 이미 정상 추적 링크라 재변환이 아무 의미가 없었다. 그래서 productUrl을 그대로 저장한다.
   const { data: maxRow } = await admin
     .from('affiliate_products')
     .select('sort_order')
@@ -42,28 +54,23 @@ export async function POST(req: NextRequest) {
     .single()
   let nextSortOrder = (maxRow?.sort_order ?? 0) + 1
 
-  const rows = items.map((item, i) => {
-    const converted = deeplinks[i]
-    return {
-      title: item.productName,
-      price_text: Number.isFinite(item.productPrice) ? `${item.productPrice.toLocaleString()}원` : null,
-      image_url: item.productImage || null,
-      link_url: converted?.shortenUrl ?? item.productUrl,
-      deeplink_failed: !converted,
-      tags: item.tags ?? [],
-      sort_order: nextSortOrder++,
-      is_active: true,
-      coupang_product_id: String(item.productId),
-      product_id: String(item.productId),
-      last_checked_at: new Date().toISOString(),
-    }
-  })
+  const rows = newItems.map((item) => ({
+    title: item.productName,
+    price_text: Number.isFinite(item.productPrice) ? `${item.productPrice.toLocaleString()}원` : null,
+    image_url: item.productImage || null,
+    link_url: item.productUrl,
+    tags: item.tags,
+    sort_order: nextSortOrder++,
+    is_active: true,
+    coupang_product_id: String(item.productId),
+    product_id: String(item.productId),
+    last_checked_at: new Date().toISOString(),
+  }))
 
   const { error } = await admin.from('affiliate_products').insert(rows)
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  const deeplinkFailedCount = rows.filter((r) => r.deeplink_failed).length
-  return NextResponse.json({ success: true, saved: rows.length, deeplinkFailedCount })
+  return NextResponse.json({ success: true, saved: rows.length, skipped })
 }
