@@ -29,6 +29,15 @@ type Entry = {
 type CategoryOption = { slug: string; name: string }
 type SubcategoryOption = { slug: string; name: string; parent_slug: string }
 type FormMode = 'create' | 'edit'
+type StatusFilter = 'all' | 'published' | 'unpublished'
+
+const ALL_CATEGORY = 'all'
+
+function matchesStatus(entry: Entry, statusFilter: StatusFilter): boolean {
+  if (statusFilter === 'published') return entry.is_published
+  if (statusFilter === 'unpublished') return !entry.is_published
+  return true
+}
 
 const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/
 
@@ -70,6 +79,10 @@ export default function AdminDictionaryPage() {
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const [deleting,     setDeleting]     = useState(false)
 
+  const [categoryFilter, setCategoryFilter] = useState<string>(ALL_CATEGORY)
+  const [statusFilter,   setStatusFilter]   = useState<StatusFilter>('all')
+  const [listQuery,      setListQuery]      = useState('')
+
   const filteredSubcategories = useMemo(
     () => subcategories.filter((s) => s.parent_slug === categorySlug),
     [subcategories, categorySlug],
@@ -82,6 +95,51 @@ export default function AdminDictionaryPage() {
     [tagsInput],
   )
   const previewCategoryName = categories.find((c) => c.slug === categorySlug)?.name ?? '기타'
+
+  // 목록 필터: 검색어 → (카테고리 탭 개수용 / 발행상태 탭 개수용) → 최종 목록
+  // 순서대로 좁혀가되, 각 축의 버튼 개수는 "그 축만 빼고 나머지 필터가 적용된" 목록 기준으로 계산해서
+  // 다른 탭을 눌렀을 때 몇 건이 나올지 미리 보이게 한다.
+  const listSearchFiltered = useMemo(() => {
+    const q = listQuery.trim().toLowerCase()
+    if (!q) return entries
+    return entries.filter((e) => e.keyword.toLowerCase().includes(q))
+  }, [entries, listQuery])
+
+  const byStatusOnly = useMemo(
+    () => listSearchFiltered.filter((e) => matchesStatus(e, statusFilter)),
+    [listSearchFiltered, statusFilter],
+  )
+  const categoryCounts = useMemo(() => {
+    const map = new Map<string, number>()
+    for (const e of byStatusOnly) {
+      if (!e.category_slug) continue
+      map.set(e.category_slug, (map.get(e.category_slug) ?? 0) + 1)
+    }
+    return map
+  }, [byStatusOnly])
+
+  const byCategoryOnly = useMemo(() => {
+    if (categoryFilter === ALL_CATEGORY) return listSearchFiltered
+    return listSearchFiltered.filter((e) => e.category_slug === categoryFilter)
+  }, [listSearchFiltered, categoryFilter])
+  const statusCounts = useMemo(() => ({
+    all: byCategoryOnly.length,
+    published: byCategoryOnly.filter((e) => e.is_published).length,
+    unpublished: byCategoryOnly.filter((e) => !e.is_published).length,
+  }), [byCategoryOnly])
+
+  const filteredEntries = useMemo(
+    () => byCategoryOnly.filter((e) => matchesStatus(e, statusFilter)),
+    [byCategoryOnly, statusFilter],
+  )
+
+  const hasListFilter = categoryFilter !== ALL_CATEGORY || statusFilter !== 'all' || listQuery.trim() !== ''
+
+  function resetListFilters() {
+    setCategoryFilter(ALL_CATEGORY)
+    setStatusFilter('all')
+    setListQuery('')
+  }
 
   async function load() {
     setLoading(true)
@@ -429,12 +487,100 @@ export default function AdminDictionaryPage() {
 
       <div className="overflow-x-auto rounded border border-gray-200 bg-white">
         <div className="border-b border-gray-100 px-6 py-4">
-          <h2 className="font-semibold text-brand-ink">등록된 항목 ({entries.length}개)</h2>
+          <h2 className="font-semibold text-brand-ink">
+            등록된 항목 ({hasListFilter ? `${filteredEntries.length}개 / 전체 ${entries.length}개` : `${entries.length}개`})
+          </h2>
+
+          {/* 카테고리 탭 */}
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              onClick={() => setCategoryFilter(ALL_CATEGORY)}
+              className={`rounded px-3 py-1.5 text-xs font-semibold transition-colors ${
+                categoryFilter === ALL_CATEGORY
+                  ? 'bg-brand-ink text-white'
+                  : 'border border-gray-200 text-[#555] hover:border-brand-violet hover:text-brand-violet'
+              }`}
+            >
+              전체 ({byStatusOnly.length})
+            </button>
+            {categories.map((c) => (
+              <button
+                key={c.slug}
+                type="button"
+                onClick={() => setCategoryFilter(c.slug)}
+                className={`rounded px-3 py-1.5 text-xs font-semibold transition-colors ${
+                  categoryFilter === c.slug
+                    ? 'bg-brand-ink text-white'
+                    : 'border border-gray-200 text-[#555] hover:border-brand-violet hover:text-brand-violet'
+                }`}
+              >
+                {c.name} ({categoryCounts.get(c.slug) ?? 0})
+              </button>
+            ))}
+          </div>
+
+          {/* 발행상태 필터 */}
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setStatusFilter('all')}
+              className={`rounded px-3 py-1.5 text-xs font-semibold transition-colors ${
+                statusFilter === 'all'
+                  ? 'bg-brand-ink text-white'
+                  : 'border border-gray-200 text-[#555] hover:border-brand-violet hover:text-brand-violet'
+              }`}
+            >
+              전체 ({statusCounts.all})
+            </button>
+            <button
+              type="button"
+              onClick={() => setStatusFilter('unpublished')}
+              className={`rounded px-3 py-1.5 text-xs font-semibold transition-colors ${
+                statusFilter === 'unpublished'
+                  ? 'bg-amber-500 text-white'
+                  : 'border border-amber-300 bg-amber-50 text-amber-700 hover:border-amber-500'
+              }`}
+            >
+              비공개 ({statusCounts.unpublished})
+            </button>
+            <button
+              type="button"
+              onClick={() => setStatusFilter('published')}
+              className={`rounded px-3 py-1.5 text-xs font-semibold transition-colors ${
+                statusFilter === 'published'
+                  ? 'bg-brand-ink text-white'
+                  : 'border border-gray-200 text-[#555] hover:border-brand-violet hover:text-brand-violet'
+              }`}
+            >
+              발행됨 ({statusCounts.published})
+            </button>
+
+            <input
+              type="text"
+              value={listQuery}
+              onChange={(e) => setListQuery(e.target.value)}
+              placeholder="키워드로 검색"
+              className="ml-auto w-48 rounded border border-gray-200 px-3 py-1.5 text-xs outline-none focus:border-brand-violet"
+            />
+          </div>
         </div>
+
         {loading ? (
           <div className="py-12 text-center text-sm text-gray-400">불러오는 중...</div>
         ) : entries.length === 0 ? (
           <div className="py-12 text-center text-sm text-gray-400">등록된 사전 항목이 없습니다.</div>
+        ) : filteredEntries.length === 0 ? (
+          <div className="flex flex-col items-center gap-3 py-12 text-center">
+            <p className="text-sm text-gray-400">조건에 맞는 항목이 없습니다.</p>
+            <button
+              type="button"
+              onClick={resetListFilters}
+              className="rounded border border-gray-300 px-4 py-1.5 text-xs font-semibold text-[#555] hover:bg-gray-50"
+            >
+              필터 초기화
+            </button>
+          </div>
         ) : (
           <table className="w-full text-sm">
             <thead>
@@ -447,7 +593,7 @@ export default function AdminDictionaryPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {entries.map((e) => (
+              {filteredEntries.map((e) => (
                 <tr key={e.id}>
                   <td className="px-6 py-3 font-medium text-[#333]">{e.keyword}</td>
                   <td className="px-6 py-3 text-[#777]">{e.category_slug ?? '-'}</td>

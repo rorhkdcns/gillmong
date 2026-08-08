@@ -15,25 +15,7 @@ interface Props {
   entries: DictionaryFilterEntry[]
 }
 
-type LuckFilter = 'all' | '길몽' | '흉몽'
-
 const ALL_CHO = 'all'
-
-function luckOf(entry: DictionaryFilterEntry): '길몽' | '흉몽' | null {
-  const first = entry.tags?.[0]
-  return first === '길몽' || first === '흉몽' ? first : null
-}
-
-function LuckBadge({ value }: { value: '길몽' | '흉몽' }) {
-  const style = value === '길몽'
-    ? { backgroundColor: '#FBEFD6', color: '#6B4810' }
-    : { backgroundColor: '#ECEFF2', color: '#46606F' }
-  return (
-    <span className="shrink-0 rounded-[6px] px-2 py-0.5 text-xs font-semibold" style={style}>
-      {value}
-    </span>
-  )
-}
 
 function ChevronRightIcon() {
   return (
@@ -46,35 +28,32 @@ function ChevronRightIcon() {
 export default function DictionaryFilterList({ entries }: Props) {
   const [query, setQuery] = useState('')
   const [cho, setCho] = useState<string>(ALL_CHO)
-  const [luck, setLuck] = useState<LuckFilter>('all')
 
-  // 초성 필터를 제외한 나머지(검색 + 길흉) 조건까지만 적용한 목록.
+  // 초성 필터를 제외한 나머지(검색) 조건까지만 적용한 목록.
   // 초성 버튼의 활성/비활성 판정에 쓰기 위함 (다른 필터가 좁혀지면 초성 버튼도 그에 맞게 갱신됨).
-  const bySearchAndLuck = useMemo(() => {
+  const bySearch = useMemo(() => {
     const q = query.trim().toLowerCase()
     return entries.filter((e) => {
-      if (luck !== 'all' && luckOf(e) !== luck) return false
       if (q && !(e.keyword.toLowerCase().includes(q) || e.summary.toLowerCase().includes(q))) return false
       return true
     })
-  }, [entries, query, luck])
+  }, [entries, query])
 
   const availableCho = useMemo(
-    () => new Set(bySearchAndLuck.map((e) => getChoseongGroup(e.keyword))),
-    [bySearchAndLuck],
+    () => new Set(bySearch.map((e) => getChoseongGroup(e.keyword))),
+    [bySearch],
   )
 
   const filtered = useMemo(() => {
-    if (cho === ALL_CHO) return bySearchAndLuck
-    return bySearchAndLuck.filter((e) => getChoseongGroup(e.keyword) === cho)
-  }, [bySearchAndLuck, cho])
+    if (cho === ALL_CHO) return bySearch
+    return bySearch.filter((e) => getChoseongGroup(e.keyword) === cho)
+  }, [bySearch, cho])
 
-  const hasActiveFilter = query.trim() !== '' || cho !== ALL_CHO || luck !== 'all'
+  const hasActiveFilter = query.trim() !== '' || cho !== ALL_CHO
 
   function resetFilters() {
     setQuery('')
     setCho(ALL_CHO)
-    setLuck('all')
   }
 
   return (
@@ -125,24 +104,6 @@ export default function DictionaryFilterList({ entries }: Props) {
         })}
       </div>
 
-      {/* 길몽/흉몽 필터 */}
-      <div className="mt-3 flex gap-2">
-        {(['all', '길몽', '흉몽'] as const).map((v) => (
-          <button
-            key={v}
-            type="button"
-            onClick={() => setLuck(v)}
-            className={`rounded-[8px] px-4 py-1.5 text-sm font-semibold transition-colors ${
-              luck === v
-                ? 'bg-[#0B2433] text-white'
-                : 'border border-[#DCE5EB] text-[#5C6E7C] hover:border-[#2E7DD1] hover:text-[#2E7DD1]'
-            }`}
-          >
-            {v === 'all' ? '전체' : v}
-          </button>
-        ))}
-      </div>
-
       {/* 목록 */}
       <div className="mt-4">
         {filtered.length === 0 ? (
@@ -162,24 +123,20 @@ export default function DictionaryFilterList({ entries }: Props) {
           </div>
         ) : (
           <div>
-            {filtered.map((e, i) => {
-              const luckValue = luckOf(e)
-              return (
-                <Link
-                  key={e.slug}
-                  href={`/dictionary/${e.slug}`}
-                  className={`flex min-h-[52px] items-center justify-between gap-3 bg-white px-1 py-3 transition-colors hover:bg-[#F7FAFC] ${
-                    i > 0 ? 'border-t border-[#E2E9EE]' : ''
-                  }`}
-                >
-                  <span className="flex min-w-0 items-center gap-2">
-                    <span className="truncate text-[17px] text-[#16303F]">{e.keyword}</span>
-                    {luckValue && <LuckBadge value={luckValue} />}
-                  </span>
-                  <ChevronRightIcon />
-                </Link>
-              )
-            })}
+            {filtered.map((e, i) => (
+              <Link
+                key={e.slug}
+                href={`/dictionary/${e.slug}`}
+                className={`flex min-h-[52px] items-center justify-between gap-3 bg-white px-1 py-3 transition-colors hover:bg-[#F7FAFC] ${
+                  i > 0 ? 'border-t border-[#E2E9EE]' : ''
+                }`}
+              >
+                <span className="flex min-w-0 items-center gap-2">
+                  <span className="truncate text-[17px] text-[#16303F]">{e.keyword}</span>
+                </span>
+                <ChevronRightIcon />
+              </Link>
+            ))}
           </div>
         )}
       </div>
