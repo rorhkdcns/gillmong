@@ -151,12 +151,12 @@ export default function DreamInput() {
                   <label className="block text-lg font-bold text-brand-ink">
                     {field.label}
                   </label>
-                  <p className="text-sm font-medium text-brand-ink-soft">{field.desc}</p>
+                  <p className="text-sm font-medium text-gray-600">{field.desc}</p>
                 </div>
               </div>
 
               {/* 심리학 팁 */}
-              <p className="mb-2 flex items-center gap-1 pl-11 text-sm text-[#6B96A8]">
+              <p className="mb-2 flex items-center gap-1 pl-11 text-sm text-gray-500">
                 <svg className="h-3.5 w-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                 </svg>
@@ -171,7 +171,7 @@ export default function DreamInput() {
                   onBlur={() => setFocusedKey(null)}
                   placeholder={field.placeholder}
                   rows={isFocused ? 3 : 2}
-                  className="w-full resize-none rounded-xl border border-brand-line bg-white px-4 py-3 pb-6 text-base text-brand-ink placeholder:text-[#BBBBBB] outline-none transition-all focus:border-brand-violet focus:shadow-[0_0_0_3px_rgba(46,125,209,0.14)]"
+                  className="w-full resize-none rounded-xl border border-gray-400 bg-white px-4 py-3 pb-6 text-base text-brand-ink placeholder:text-[#BBBBBB] outline-none transition-all focus:border-brand-violet focus:shadow-[0_0_0_3px_rgba(46,125,209,0.14)]"
                 />
                 {/* 글자 수 */}
                 <span className={`absolute bottom-2 right-3 text-xs transition-colors ${

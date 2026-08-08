@@ -10,6 +10,9 @@ interface Slide {
   ctaHref: string
   ctaStyle: 'dark' | 'light'
   bg: string
+  /** 배경이 어두운 톤인지 — 제목/본문 글자색(흰색 vs 잉크색)과 도트 인디케이터 판별에 씀.
+   *  배경 순서가 바뀌거나 슬라이드가 추가돼도 안전하도록 인덱스가 아니라 이 값으로 판단한다. */
+  dark: boolean
 }
 
 const SLIDES: Slide[] = [
@@ -23,6 +26,7 @@ const SLIDES: Slide[] = [
     ctaHref: '#appraisal',
     ctaStyle: 'dark',
     bg: 'bg-[linear-gradient(160deg,#E6F1F8_0%,#F0F7FA_55%,#FDF4E4_100%)]',
+    dark: false,
   },
   {
     title: (
@@ -33,16 +37,19 @@ const SLIDES: Slide[] = [
     ctaHref: '#categories',
     ctaStyle: 'light',
     bg: 'bg-[linear-gradient(150deg,#092636_0%,#14547A_100%)]',
+    dark: true,
   },
   {
+    eyebrow: '실시간 업데이트되는 꿈 사전',
     title: (
-      <>내 꿈이 <span className="text-brand-gold">누군가에겐</span><br />간절한 행운</>
+      <>어젯밤 꾼 그 꿈,<br /><span className="bg-gradient-to-r from-[#7FE3C9] to-brand-gold bg-clip-text text-transparent">무슨 뜻</span>일까요?</>
     ),
-    desc: '감정받은 꿈을 판매 등록하면 판매금액의 80%를 정산해드려요.',
-    ctaLabel: '판매 시작하기',
-    ctaHref: '#appraisal',
+    desc: '돼지꿈, 이빨 빠지는 꿈부터 흔한 악몽까지 — 궁금한 꿈을 검색해서 바로 확인해보세요.',
+    ctaLabel: '해몽사전 보러가기',
+    ctaHref: '/dictionary',
     ctaStyle: 'light',
-    bg: 'bg-[linear-gradient(150deg,#14547A_0%,#2E7DD1_120%)]',
+    bg: 'bg-[linear-gradient(150deg,#0B2433_0%,#2FB68E_120%)]',
+    dark: true,
   },
 ]
 
@@ -65,7 +72,7 @@ export default function HeroSlider() {
     return () => { if (timerRef.current) clearInterval(timerRef.current) }
   }, [autoplay])
 
-  const isDark = SLIDES[current].bg.includes('092636') || SLIDES[current].bg.includes('14547A')
+  const isDark = SLIDES[current].dark
 
   return (
     <section className="relative overflow-hidden">
@@ -87,10 +94,10 @@ export default function HeroSlider() {
                   {slide.eyebrow}
                 </span>
               )}
-              <h1 className={`mb-4 text-3xl font-black leading-snug tracking-tight md:text-5xl ${i === 0 ? 'text-brand-ink' : 'text-white'}`}>
+              <h1 className={`mb-4 text-3xl font-black leading-snug tracking-tight md:text-5xl ${slide.dark ? 'text-white' : 'text-brand-ink'}`}>
                 {slide.title}
               </h1>
-              <p className={`mb-7 max-w-lg text-base leading-relaxed md:text-lg ${i === 0 ? 'text-brand-ink-soft' : 'text-white/85'}`}>
+              <p className={`mb-7 max-w-lg text-base leading-relaxed md:text-lg ${slide.dark ? 'text-white/85' : 'text-brand-ink-soft'}`}>
                 {slide.desc}
               </p>
               <a
