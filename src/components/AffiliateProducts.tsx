@@ -15,7 +15,7 @@ interface Props {
 }
 
 const CANDIDATE_POOL_SIZE = 8
-const EXPOSURE_COUNT = 3
+const EXPOSURE_COUNT = 4
 
 /** Fisher-Yates로 n개를 무작위 추출. n개 이하면 원본을 그대로 반환. */
 function pickRandom<T>(arr: T[], n: number): T[] {
@@ -45,12 +45,16 @@ export default async function AffiliateProducts({ tags }: Props) {
   }
 
   if (candidates.length === 0) {
+    // ★ 태그 매칭 0건일 때의 폴백 — 대부분의 제휴상품이 아직 태그가 비어있어서
+    //   사실상 이 경로가 기본값이나 다름없다. CANDIDATE_POOL_SIZE(8)로 제한하면
+    //   sort_order 상위 8개(초반에 등록한 특정 카테고리)만 계속 뽑혀서 사전 글
+    //   주제와 무관하게 같은 상품군만 반복 노출되므로, 여기서는 활성 상품 전체를
+    //   후보로 가져와 무작위 추출 풀을 넓힌다.
     const { data } = await admin
       .from('affiliate_products')
       .select('id, title, price_text, image_url, link_url')
       .eq('is_active', true)
       .order('sort_order', { ascending: true })
-      .limit(CANDIDATE_POOL_SIZE)
     candidates = data ?? []
   }
 
@@ -70,7 +74,7 @@ export default async function AffiliateProducts({ tags }: Props) {
   return (
     <section className="rounded-[14px] bg-white p-[20px_18px] shadow-[0_1px_3px_rgba(11,36,51,0.06)] md:p-[26px_24px]">
       <h2 className="mb-4 text-[24px] font-medium text-[#0B2433]">이런 상품은 어떠세요?</h2>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {products.map((p) => (
           <AffiliateProductLink
             key={p.id}
