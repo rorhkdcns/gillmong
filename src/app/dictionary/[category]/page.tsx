@@ -6,20 +6,18 @@ import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { getActiveCategories, type Category } from '@/lib/categories'
 import { getVisibleSubcategories, type Subcategory } from '@/lib/dictionary'
-import { parseDictionaryBody, type DictionaryBodyBlock } from '@/lib/dictionaryBody'
-import { getCategoryColor, type CategoryColorSet } from '@/lib/categoryColor'
+import { parseDictionaryBody } from '@/lib/dictionaryBody'
+import { getCategoryColor } from '@/lib/categoryColor'
 import { GRADE_INFO, type Grade } from '@/lib/dreamDisplay'
 import SiteFooter from '@/components/SiteFooter'
 import AffiliateProducts from '@/components/AffiliateProducts'
+import DictionaryBodyBlocks, { BLOCK_SHAPE } from '@/components/DictionaryBodyBlocks'
 import DictionaryFilterList, { type DictionaryFilterEntry } from '../_components/DictionaryFilterList'
 
 // 이 라우트는 /dictionary/[category] 아래에서 "대분류 슬러그"와 "사전 항목 슬러그"를
 // 함께 처리한다 (Next.js는 같은 레벨에 서로 다른 동적 세그먼트 이름을 허용하지 않기 때문에
 // /dictionary/[category] 와 /dictionary/[slug] 를 별도 폴더로 분리할 수 없음).
 // 먼저 대분류 slug인지 확인하고, 아니면 사전 항목 slug로 취급한다.
-
-// 해몽 사전 페이지(대분류/상세) 공용 블록 스타일 (전역 --color-brand-page는 건드리지 않음)
-const BLOCK_SHAPE = 'rounded-[14px] shadow-[0_1px_3px_rgba(11,36,51,0.06)] p-[20px_18px] md:p-[26px_24px]'
 
 interface DictEntry {
   slug: string
@@ -247,66 +245,6 @@ function ChevronRightIcon() {
     <svg className="h-4 w-4 shrink-0 text-[#8CA0AC]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
     </svg>
-  )
-}
-
-function DictionaryBodyBlocks({
-  blocks,
-  colors,
-}: {
-  blocks: DictionaryBodyBlock[]
-  colors: CategoryColorSet
-}) {
-  return (
-    <>
-      {blocks.map((block, i) => {
-        const isWarning = block.variant === 'warning'
-        return (
-          <div
-            key={i}
-            className={`${BLOCK_SHAPE} ${isWarning ? '' : 'bg-white'}`}
-            style={isWarning ? { backgroundColor: '#FDF6E8' } : undefined}
-          >
-            {block.title && (
-              <h2 className="mb-4 text-[24px] font-medium" style={{ color: isWarning ? '#5A3D10' : '#0B2433' }}>
-                {block.title}
-              </h2>
-            )}
-            <div className="flex flex-col gap-4">
-              {block.children.map((child, j) =>
-                child.type === 'paragraph' ? (
-                  <p
-                    key={j}
-                    className="whitespace-pre-line text-[17px] leading-[1.95]"
-                    style={{ color: isWarning ? '#5A3D10' : '#16303F' }}
-                  >
-                    {child.text}
-                  </p>
-                ) : (
-                  <div key={j} className="flex flex-col gap-[12px]">
-                    {child.items.map((item, k) => (
-                      <div key={k} className="overflow-hidden rounded-[10px] border border-[#DCE5EB]">
-                        <div
-                          className="p-[13px_18px] text-[17px] font-medium"
-                          style={{ backgroundColor: colors.badgeBg, color: colors.badgeText }}
-                        >
-                          {item.label}
-                        </div>
-                        {item.description && (
-                          <div className="bg-white p-[16px_18px] text-[17px] leading-[1.85] text-[#16303F]">
-                            {item.description}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )
-              )}
-            </div>
-          </div>
-        )
-      })}
-    </>
   )
 }
 

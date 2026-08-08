@@ -3,6 +3,9 @@
 import { useState, useEffect, useMemo } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { keywordToSlug } from '@/lib/slugify'
+import { parseDictionaryBody } from '@/lib/dictionaryBody'
+import { getCategoryColor } from '@/lib/categoryColor'
+import DictionaryBodyBlocks, { BLOCK_SHAPE } from '@/components/DictionaryBodyBlocks'
 import {
   checkAdminDictionarySlugExists,
   createAdminDictionaryEntry,
@@ -62,6 +65,7 @@ export default function AdminDictionaryPage() {
   const [saving,   setSaving]   = useState(false)
   const [error,    setError]    = useState('')
   const [showForm, setShowForm] = useState(false)
+  const [showPreview, setShowPreview] = useState(false)
 
   const [deleteTarget, setDeleteTarget] = useState<string | null>(null)
   const [deleting,     setDeleting]     = useState(false)
@@ -70,6 +74,14 @@ export default function AdminDictionaryPage() {
     () => subcategories.filter((s) => s.parent_slug === categorySlug),
     [subcategories, categorySlug],
   )
+
+  const previewBlocks = useMemo(() => parseDictionaryBody(body), [body])
+  const previewColors = useMemo(() => getCategoryColor(categorySlug || null), [categorySlug])
+  const previewTags = useMemo(
+    () => tagsInput.split(',').map((t) => t.trim()).filter(Boolean),
+    [tagsInput],
+  )
+  const previewCategoryName = categories.find((c) => c.slug === categorySlug)?.name ?? '기타'
 
   async function load() {
     setLoading(true)
@@ -109,6 +121,7 @@ export default function AdminDictionaryPage() {
     setKeyword(''); setSummary(''); setBody('')
     setCategorySlug(''); setSubcategorySlug(''); setTagsInput(''); setIsPublished(false)
     setError('')
+    setShowPreview(false)
   }
 
   function handleSlugChange(value: string) {
@@ -230,6 +243,7 @@ export default function AdminDictionaryPage() {
       </div>
 
       {showForm && (
+        <>
         <form onSubmit={handleSubmit} className="mb-8 max-w-2xl space-y-4 rounded border border-gray-200 bg-white p-6">
           <h2 className="font-semibold text-brand-ink">
             {formMode === 'edit' ? '사전 항목 수정' : '새 사전 항목'}
@@ -356,8 +370,61 @@ export default function AdminDictionaryPage() {
             >
               취소
             </button>
+            <button
+              type="button"
+              onClick={() => setShowPreview((v) => !v)}
+              className="rounded border border-gray-300 px-5 py-2 text-sm font-semibold text-[#555] hover:bg-gray-50"
+            >
+              {showPreview ? '미리보기 숨기기' : '미리보기 보기'}
+            </button>
           </div>
         </form>
+
+        {showPreview && (
+          <div className="mb-8 max-w-[600px] rounded-[14px] p-4" style={{ backgroundColor: '#DDE6EC' }}>
+            <div className="flex flex-col gap-[14px]">
+              {/* 헤더 블록 */}
+              <div className="overflow-hidden rounded-[14px] bg-white shadow-[0_1px_3px_rgba(11,36,51,0.06)]">
+                <div
+                  className="flex flex-wrap items-center gap-1.5 px-[18px] py-2.5 text-[15px] text-white md:px-6"
+                  style={{ backgroundColor: previewColors.main }}
+                >
+                  <span>{previewCategoryName}</span>
+                </div>
+                <div className="p-[20px_18px] md:p-[26px_24px]">
+                  <h1 className="mb-3 text-[26px] font-medium text-[#0B2433] md:text-[32px]">
+                    {keyword.trim() || '(키워드 없음)'} 해몽
+                  </h1>
+                  <p className="text-[18px] leading-[1.85] text-[#1C3547]">
+                    {summary.trim() || '(요약 없음)'}
+                  </p>
+                  {previewTags.length > 0 && (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {previewTags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-[8px] bg-brand-primary-light px-3 py-1 text-[14px] font-semibold text-brand-primary-hover"
+                        >
+                          #{tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* 본문 블록 */}
+              {previewBlocks.length > 0 ? (
+                <DictionaryBodyBlocks blocks={previewBlocks} colors={previewColors} />
+              ) : (
+                <div className={`${BLOCK_SHAPE} bg-white text-sm text-gray-400`}>
+                  본문을 입력하면 여기에 미리보기가 표시됩니다.
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+        </>
       )}
 
       <div className="overflow-x-auto rounded border border-gray-200 bg-white">
