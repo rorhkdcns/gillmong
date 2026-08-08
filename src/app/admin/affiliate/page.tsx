@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import {
   createAdminAffiliateProduct,
   deleteAdminAffiliateProduct,
@@ -29,6 +29,7 @@ type Product = {
 
 const STALE_DAYS = 30
 const MIN_TAG_COUNT = 3
+const PAGE_SIZE = 20
 
 function isStale(lastCheckedAt: string | null): boolean {
   if (!lastCheckedAt) return true
@@ -46,7 +47,18 @@ function ctrLabel(clickCount: number, impressionCount: number): string {
 function hasNoPerformance(p: Pick<Product, 'click_count' | 'impression_count'>): boolean {
   return p.impression_count >= NO_PERFORMANCE_MIN_IMPRESSIONS && p.click_count === 0
 }
+
+/** "10,900원" 같은 텍스트에서 숫자만 뽑아낸다. 파싱 실패(빈 값·숫자 없음) 시 null. */
+function parsePriceNumber(priceText: string | null): number | null {
+  if (!priceText) return null
+  const digits = priceText.replace(/[^0-9]/g, '')
+  if (!digits) return null
+  const n = parseInt(digits, 10)
+  return Number.isNaN(n) ? null : n
+}
+
 type FormMode = 'create' | 'edit'
+type ActiveFilter = 'all' | 'active' | 'inactive'
 
 interface CoupangProduct {
   productId: number
@@ -66,6 +78,22 @@ export default function AdminAffiliatePage() {
 
   function markImageBroken(id: string) {
     setBrokenImageIds((prev) => (prev.has(id) ? prev : new Set(prev).add(id)))
+  }
+
+  // ── 목록 검색/필터/페이지네이션 ──────────────────────
+  const [listQuery,     setListQuery]     = useState('')
+  const [minPrice,      setMinPrice]      = useState('')
+  const [maxPrice,      setMaxPrice]      = useState('')
+  const [activeFilter,  setActiveFilter]  = useState<ActiveFilter>('all')
+  const [page,          setPage]          = useState(1)
+
+  function handleListQueryChange(value: string) { setListQuery(value); setPage(1) }
+  function handleMinPriceChange(value: string) { setMinPrice(value); setPage(1) }
+  function handleMaxPriceChange(value: string) { setMaxPrice(value); setPage(1) }
+  function handleActiveFilterChange(value: ActiveFilter) { setActiveFilter(value); setPage(1) }
+
+  function resetListFilters() {
+    setListQuery(''); setMinPrice(''); setMaxPrice(''); setActiveFilter('all'); setPage(1)
   }
 
   const [formMode, setFormMode] = useState<FormMode>('create')
@@ -278,6 +306,39 @@ export default function AdminAffiliatePage() {
     await reactivateAdminAffiliateProduct(id)
     load()
   }
+
+  const filteredProducts = useMemo(() => {
+    const q = listQuery.trim().toLowerCase()
+    const min = minPrice.trim() !== '' ? Number(minPrice) : null
+    const max = maxPrice.trim() !== '' ? Number(maxPrice) : null
+    const hasPriceFilter = min !== null || max !== null
+
+    return products.filter((p) => {
+      if (activeFilter === 'active' && !p.is_active) return false
+      if (activeFilter === 'inactive' && p.is_active) return false
+
+      if (q) {
+        const inTitle = p.title.toLowerCase().includes(q)
+        const inTags = (p.tags ?? []).some((t) => t.toLowerCase().includes(q))
+        if (!inTitle && !inTags) return false
+      }
+
+      if (hasPriceFilter) {
+        const price = parsePriceNumber(p.price_text)
+        if (price === null) return false
+        if (min !== null && price < min) return false
+        if (max !== null && price > max) return false
+      }
+
+      return true
+    })
+  }, [products, listQuery, minPrice, maxPrice, activeFilter])
+
+  const hasListFilter = listQuery.trim() !== '' || minPrice.trim() !== '' || maxPrice.trim() !== '' || activeFilter !== 'all'
+
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE))
+  const currentPage = Math.min(page, totalPages)
+  const pagedProducts = filteredProducts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
 
   const needsAttention = products.filter((p) => !p.is_active && p.deactivated_reason)
 
@@ -545,14 +606,71 @@ export default function AdminAffiliatePage() {
 
       <div className="rounded border border-gray-200 bg-white">
         <div className="border-b border-gray-100 px-6 py-4">
-          <h2 className="font-semibold text-brand-ink">등록된 상품 ({products.length}개)</h2>
+          <h2 className="font-semibold text-brand-ink">
+            등록된 상품 ({hasListFilter ? `${filteredProducts.length}개 / 전체 ${products.length}개` : `${products.length}개`})
+          </h2>
           {loadError && <p className="mt-1 text-sm text-red-500">목록을 불러오지 못했습니다: {loadError}</p>}
+
+          {products.length > 0 && (
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <input
+                type="text"
+                value={listQuery}
+                onChange={(e) => handleListQueryChange(e.target.value)}
+                placeholder="상품명 · 태그 검색"
+                className="w-48 rounded border border-gray-200 px-3 py-1.5 text-xs outline-none focus:border-brand-violet"
+              />
+              <input
+                type="number"
+                value={minPrice}
+                onChange={(e) => handleMinPriceChange(e.target.value)}
+                placeholder="최소 금액"
+                className="w-28 rounded border border-gray-200 px-3 py-1.5 text-xs outline-none focus:border-brand-violet"
+              />
+              <span className="text-xs text-gray-400">~</span>
+              <input
+                type="number"
+                value={maxPrice}
+                onChange={(e) => handleMaxPriceChange(e.target.value)}
+                placeholder="최대 금액"
+                className="w-28 rounded border border-gray-200 px-3 py-1.5 text-xs outline-none focus:border-brand-violet"
+              />
+
+              <div className="ml-auto flex gap-1.5">
+                {(['all', 'active', 'inactive'] as const).map((v) => (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => handleActiveFilterChange(v)}
+                    className={`rounded px-3 py-1.5 text-xs font-semibold transition-colors ${
+                      activeFilter === v
+                        ? 'bg-brand-ink text-white'
+                        : 'border border-gray-200 text-[#555] hover:border-brand-violet hover:text-brand-violet'
+                    }`}
+                  >
+                    {v === 'all' ? '전체' : v === 'active' ? '활성' : '비활성'}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
         {loading ? (
           <div className="py-12 text-center text-sm text-gray-400">불러오는 중...</div>
         ) : products.length === 0 ? (
           <div className="py-12 text-center text-sm text-gray-400">
             {loadError ? '오류로 목록을 표시할 수 없습니다.' : '등록된 제휴 상품이 없습니다.'}
+          </div>
+        ) : filteredProducts.length === 0 ? (
+          <div className="flex flex-col items-center gap-3 py-12 text-center">
+            <p className="text-sm text-gray-400">조건에 맞는 상품이 없습니다.</p>
+            <button
+              type="button"
+              onClick={resetListFilters}
+              className="rounded border border-gray-300 px-4 py-1.5 text-xs font-semibold text-[#555] hover:bg-gray-50"
+            >
+              필터 초기화
+            </button>
           </div>
         ) : (
           <>
@@ -574,7 +692,7 @@ export default function AdminAffiliatePage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {products.map((p) => {
+                  {pagedProducts.map((p) => {
                     const imageBroken = !p.image_url || brokenImageIds.has(p.id)
                     return (
                       <tr key={p.id} className={hasNoPerformance(p) ? 'bg-gray-100' : undefined}>
@@ -628,7 +746,7 @@ export default function AdminAffiliatePage() {
 
             {/* 모바일 카드 */}
             <div className="divide-y divide-gray-100 md:hidden">
-              {products.map((p) => {
+              {pagedProducts.map((p) => {
                 const imageBroken = !p.image_url || brokenImageIds.has(p.id)
                 return (
                   <div key={p.id} className={`flex gap-3 p-4 ${hasNoPerformance(p) ? 'bg-gray-100' : ''}`}>
@@ -667,6 +785,29 @@ export default function AdminAffiliatePage() {
                 )
               })}
             </div>
+
+            {/* 페이지네이션 */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-3 border-t border-gray-100 px-6 py-4">
+                <button
+                  type="button"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage <= 1}
+                  className="rounded border border-gray-300 px-3 py-1.5 text-xs font-semibold text-[#555] hover:bg-gray-50 disabled:opacity-40"
+                >
+                  이전
+                </button>
+                <span className="text-xs text-[#777]">{currentPage} / {totalPages}</span>
+                <button
+                  type="button"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage >= totalPages}
+                  className="rounded border border-gray-300 px-3 py-1.5 text-xs font-semibold text-[#555] hover:bg-gray-50 disabled:opacity-40"
+                >
+                  다음
+                </button>
+              </div>
+            )}
           </>
         )}
       </div>
