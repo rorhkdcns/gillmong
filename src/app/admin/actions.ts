@@ -968,6 +968,15 @@ export interface AdminAffiliateFields {
   tags: string[]
   sortOrder: number
   isActive: boolean
+  // ★ 상품관리(/admin/shop-products) 화면에서만 쓰는 필드 — 선택적으로 둔 이유:
+  //   /admin/affiliate의 기존 등록/수정 폼은 이 필드를 아예 넘기지 않는데(undefined),
+  //   그때 update가 shop_category_id/shop_subcategory_id를 매번 null로 덮어써버리면
+  //   상품관리 화면에서 지정해둔 카테고리가 /admin/affiliate에서 수정할 때마다
+  //   조용히 날아가는 사고가 난다. 그래서 아래 update 로직에서 undefined일 땐 아예
+  //   업데이트 대상에서 빼서 기존 값을 그대로 보존한다 (명시적으로 null을 넘기면 그건
+  //   "미분류로 바꾼다"는 의도로 보고 실제로 null 처리한다).
+  shopCategoryId?: string | null
+  shopSubcategoryId?: string | null
 }
 
 export async function getAdminAffiliateProducts(): Promise<{ data: unknown[]; error?: string }> {
@@ -1007,6 +1016,8 @@ export async function createAdminAffiliateProduct(
     tags: fields.tags,
     sort_order: fields.sortOrder,
     is_active: fields.isActive,
+    shop_category_id: fields.shopCategoryId ?? null,
+    shop_subcategory_id: fields.shopSubcategoryId ?? null,
   })
   if (error) return { error: error.message }
   return { success: true }
@@ -1019,7 +1030,7 @@ export async function updateAdminAffiliateProduct(
   if (!auth.ok) return { error: auth.error }
 
   const admin = createAdminClient()
-  const { error } = await admin.from('affiliate_products').update({
+  const updatePayload: Record<string, unknown> = {
     title: fields.title,
     price_text: fields.priceText,
     image_url: fields.imageUrl,
@@ -1027,7 +1038,12 @@ export async function updateAdminAffiliateProduct(
     tags: fields.tags,
     sort_order: fields.sortOrder,
     is_active: fields.isActive,
-  }).eq('id', id)
+  }
+  // undefined면 이 호출자가 카테고리 필드를 아예 모른다는 뜻이므로 건드리지 않는다(기존 값 보존).
+  if (fields.shopCategoryId !== undefined) updatePayload.shop_category_id = fields.shopCategoryId
+  if (fields.shopSubcategoryId !== undefined) updatePayload.shop_subcategory_id = fields.shopSubcategoryId
+
+  const { error } = await admin.from('affiliate_products').update(updatePayload).eq('id', id)
   if (error) return { error: error.message }
   return { success: true }
 }
@@ -1054,4 +1070,149 @@ export async function reactivateAdminAffiliateProduct(id: string): Promise<{ suc
   }).eq('id', id)
   if (error) return { error: error.message }
   return { success: true }
+}
+
+// ── 상품관리(샵 카테고리) ──────────────────────────────────────────
+// affiliate_products 테이블을 공유해서 쓰되(위 제휴 상품 CRUD 그대로 재사용),
+// shop_categories/shop_subcategories로 대분류·소분류 체계만 별도로 관리한다.
+// /admin/affiliate(제휴 상품) 화면과는 완전히 별개의 화면.
+export interface AdminShopCategoryFields {
+  name: string
+  slug: string
+  sortOrder: number
+}
+
+export async function getAdminShopCategories(): Promise<{ data: unknown[]; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { data: [], error: auth.error }
+
+  const admin = createAdminClient()
+  const { data, error } = await admin
+    .from('shop_categories')
+    .select('id, name, slug, sort_order, is_active')
+    .order('sort_order', { ascending: true })
+  if (error) return { data: [], error: error.message }
+  return { data: data ?? [] }
+}
+
+export async function createAdminShopCategory(
+  fields: AdminShopCategoryFields,
+): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
+  const admin = createAdminClient()
+  const { error } = await admin.from('shop_categories').insert({
+    name: fields.name,
+    slug: fields.slug,
+    sort_order: fields.sortOrder,
+  })
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function updateAdminShopCategory(
+  id: string, fields: AdminShopCategoryFields,
+): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
+  const admin = createAdminClient()
+  const { error } = await admin.from('shop_categories').update({
+    name: fields.name,
+    slug: fields.slug,
+    sort_order: fields.sortOrder,
+  }).eq('id', id)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function deleteAdminShopCategory(id: string): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
+  const admin = createAdminClient()
+  const { error } = await admin.from('shop_categories').delete().eq('id', id)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export interface AdminShopSubcategoryFields {
+  categoryId: string
+  name: string
+  slug: string
+  sortOrder: number
+}
+
+export async function getAdminShopSubcategories(categoryId?: string): Promise<{ data: unknown[]; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { data: [], error: auth.error }
+
+  const admin = createAdminClient()
+  let q = admin
+    .from('shop_subcategories')
+    .select('id, category_id, name, slug, sort_order, is_active')
+    .order('sort_order', { ascending: true })
+  if (categoryId) q = q.eq('category_id', categoryId)
+  const { data, error } = await q
+  if (error) return { data: [], error: error.message }
+  return { data: data ?? [] }
+}
+
+export async function createAdminShopSubcategory(
+  fields: AdminShopSubcategoryFields,
+): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
+  const admin = createAdminClient()
+  const { error } = await admin.from('shop_subcategories').insert({
+    category_id: fields.categoryId,
+    name: fields.name,
+    slug: fields.slug,
+    sort_order: fields.sortOrder,
+  })
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function updateAdminShopSubcategory(
+  id: string, fields: AdminShopSubcategoryFields,
+): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
+  const admin = createAdminClient()
+  const { error } = await admin.from('shop_subcategories').update({
+    category_id: fields.categoryId,
+    name: fields.name,
+    slug: fields.slug,
+    sort_order: fields.sortOrder,
+  }).eq('id', id)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function deleteAdminShopSubcategory(id: string): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
+  const admin = createAdminClient()
+  const { error } = await admin.from('shop_subcategories').delete().eq('id', id)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+// 상품 목록 — affiliate_products를 샵 카테고리 배정 기준으로 조회 (미분류 포함 전체)
+export async function getAdminShopProducts(): Promise<{ data: unknown[]; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { data: [], error: auth.error }
+
+  const admin = createAdminClient()
+  const { data, error } = await admin
+    .from('affiliate_products')
+    .select('id, title, price_text, image_url, link_url, tags, sort_order, is_active, shop_category_id, shop_subcategory_id')
+    .order('sort_order', { ascending: true })
+  if (error) return { data: [], error: error.message }
+  return { data: data ?? [] }
 }

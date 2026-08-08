@@ -70,6 +70,15 @@ const navItems = [
     ),
   },
   {
+    label: '상품관리',
+    href: '/admin/shop-products',
+    icon: (
+      <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+      </svg>
+    ),
+  },
+  {
     label: '거래 내역',
     href: '/admin/transactions',
     icon: (
