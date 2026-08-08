@@ -401,16 +401,25 @@ export default function AdminAffiliatePage() {
         <div className="mb-8 rounded border border-gray-200 bg-white p-6">
           <h2 className="mb-3 font-semibold text-brand-ink">태그별 활성 상품 개수</h2>
           <div className="flex flex-wrap gap-2">
-            {tagActiveCounts.map(({ tag, count }) => (
-              <span
-                key={tag}
-                className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                  count < MIN_TAG_COUNT ? 'bg-red-50 text-red-600' : 'bg-gray-100 text-[#555]'
-                }`}
-              >
-                {tag} {count}개
-              </span>
-            ))}
+            {tagActiveCounts.map(({ tag, count }) => {
+              const isSelected = listQuery.trim() === tag
+              return (
+                <button
+                  key={tag}
+                  type="button"
+                  onClick={() => handleListQueryChange(tag)}
+                  className={`cursor-pointer rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                    isSelected
+                      ? 'bg-brand-ink text-white'
+                      : count < MIN_TAG_COUNT
+                        ? 'bg-red-50 text-red-600 hover:bg-red-100'
+                        : 'bg-gray-100 text-[#555] hover:bg-gray-200'
+                  }`}
+                >
+                  {tag} {count}개
+                </button>
+              )
+            })}
           </div>
         </div>
       )}
