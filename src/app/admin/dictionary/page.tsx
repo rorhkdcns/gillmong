@@ -217,7 +217,11 @@ export default function AdminDictionaryPage() {
   }
 
   async function openEditForm(id: string) {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    // ★ /admin 레이아웃(src/app/admin/layout.tsx)은 <div className="h-screen overflow-hidden">
+    //   안에 <main className="overflow-y-auto">가 실제 스크롤 컨테이너다 — window가 아니라
+    //   이 main이 스크롤되는 구조라 window.scrollTo()는 효과가 없었다. 어드민 트리 전체에
+    //   main 요소가 이거 하나뿐이라 querySelector('main')으로 확실하게 타겟팅된다.
+    document.querySelector('main')?.scrollTo({ top: 0, behavior: 'smooth' })
     setError('')
     setShowForm(true)
     setFormMode('edit')
