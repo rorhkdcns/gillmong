@@ -217,6 +217,7 @@ export default function AdminDictionaryPage() {
   }
 
   async function openEditForm(id: string) {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
     setError('')
     setShowForm(true)
     setFormMode('edit')
