@@ -15,8 +15,16 @@ export async function POST(req: NextRequest) {
   if (!auth.ok) return auth.response
   const { admin } = auth
 
-  const body = await req.json().catch(() => null) as { items?: SaveItem[] } | null
+  const body = await req.json().catch(() => null) as {
+    items?: SaveItem[]
+    shopCategoryId?: string | null
+    shopSubcategoryId?: string | null
+  } | null
   const items = body?.items ?? []
+  // 상품관리 화면에서 카테고리/하위카테고리를 펼쳐놓은 채로 쿠팡 검색을 사용하면
+  // 검색된 전체 배치에 그 컨텍스트를 그대로 적용한다(항목별 개별 지정 UI는 없음).
+  const shopCategoryId = body?.shopCategoryId ?? null
+  const shopSubcategoryId = body?.shopSubcategoryId ?? null
   if (items.length === 0) {
     return NextResponse.json({ error: '선택된 상품이 없습니다.' }, { status: 400 })
   }
@@ -65,6 +73,8 @@ export async function POST(req: NextRequest) {
     coupang_product_id: String(item.productId),
     product_id: String(item.productId),
     last_checked_at: new Date().toISOString(),
+    shop_category_id: shopCategoryId,
+    shop_subcategory_id: shopSubcategoryId,
   }))
 
   const { error } = await admin.from('affiliate_products').insert(rows)

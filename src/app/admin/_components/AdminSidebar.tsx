@@ -61,15 +61,6 @@ const navItems = [
     ),
   },
   {
-    label: '제휴 상품',
-    href: '/admin/affiliate',
-    icon: (
-      <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 6a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM12 12v9m0-9c-2.25 0-4.5.5-6 2.5v-2.5m6 0c2.25 0 4.5.5 6 2.5v-2.5" />
-      </svg>
-    ),
-  },
-  {
     label: '상품관리',
     href: '/admin/shop-products',
     icon: (

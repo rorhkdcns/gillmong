@@ -968,28 +968,15 @@ export interface AdminAffiliateFields {
   tags: string[]
   sortOrder: number
   isActive: boolean
-  // ★ 상품관리(/admin/shop-products) 화면에서만 쓰는 필드 — 선택적으로 둔 이유:
-  //   /admin/affiliate의 기존 등록/수정 폼은 이 필드를 아예 넘기지 않는데(undefined),
-  //   그때 update가 shop_category_id/shop_subcategory_id를 매번 null로 덮어써버리면
-  //   상품관리 화면에서 지정해둔 카테고리가 /admin/affiliate에서 수정할 때마다
-  //   조용히 날아가는 사고가 난다. 그래서 아래 update 로직에서 undefined일 땐 아예
+  // ★ 상품관리(/admin/shop-products) 화면 전용 필드 — 선택적으로 둔 이유:
+  //   과거 별도였던 제휴상품 등록/수정 폼(현재는 상품관리로 통합됨)이 이 필드를 아예
+  //   넘기지 않는 경로가 남아있을 수 있는데, 그때 update가 shop_category_id/
+  //   shop_subcategory_id를 매번 null로 덮어써버리면 지정해둔 카테고리가 조용히
+  //   날아가는 사고가 난다. 그래서 아래 update 로직에서 undefined일 땐 아예
   //   업데이트 대상에서 빼서 기존 값을 그대로 보존한다 (명시적으로 null을 넘기면 그건
   //   "미분류로 바꾼다"는 의도로 보고 실제로 null 처리한다).
   shopCategoryId?: string | null
   shopSubcategoryId?: string | null
-}
-
-export async function getAdminAffiliateProducts(): Promise<{ data: unknown[]; error?: string }> {
-  const auth = await requireAdminAction()
-  if (!auth.ok) return { data: [], error: auth.error }
-
-  const admin = createAdminClient()
-  const { data, error } = await admin
-    .from('affiliate_products')
-    .select('id, title, price_text, image_url, tags, sort_order, is_active, click_count, impression_count, last_checked_at, deactivated_reason, deactivated_at')
-    .order('sort_order', { ascending: true })
-  if (error) return { data: [], error: error.message }
-  return { data: data ?? [] }
 }
 
 export async function getAdminAffiliateProductById(id: string): Promise<unknown | null> {
@@ -1075,7 +1062,7 @@ export async function reactivateAdminAffiliateProduct(id: string): Promise<{ suc
 // ── 상품관리(샵 카테고리) ──────────────────────────────────────────
 // affiliate_products 테이블을 공유해서 쓰되(위 제휴 상품 CRUD 그대로 재사용),
 // shop_categories/shop_subcategories로 대분류·소분류 체계만 별도로 관리한다.
-// /admin/affiliate(제휴 상품) 화면과는 완전히 별개의 화면.
+// (과거엔 /admin/affiliate가 별도 화면이었으나 /admin/shop-products 하나로 통합됨)
 export interface AdminShopCategoryFields {
   name: string
   slug: string
@@ -1203,7 +1190,9 @@ export async function deleteAdminShopSubcategory(id: string): Promise<{ success?
   return { success: true }
 }
 
-// 상품 목록 — affiliate_products를 샵 카테고리 배정 기준으로 조회 (미분류 포함 전체)
+// 상품 목록 — affiliate_products를 샵 카테고리 배정 기준으로 조회 (미분류 포함 전체).
+// click_count/impression_count/last_checked_at/deactivated_* 는 과거 /admin/affiliate
+// 화면의 "확인 필요"·클릭률 표시 등에 쓰이던 필드로, 상품관리 통합 후에도 그대로 노출한다.
 export async function getAdminShopProducts(): Promise<{ data: unknown[]; error?: string }> {
   const auth = await requireAdminAction()
   if (!auth.ok) return { data: [], error: auth.error }
@@ -1211,8 +1200,77 @@ export async function getAdminShopProducts(): Promise<{ data: unknown[]; error?:
   const admin = createAdminClient()
   const { data, error } = await admin
     .from('affiliate_products')
-    .select('id, title, price_text, image_url, link_url, tags, sort_order, is_active, shop_category_id, shop_subcategory_id')
+    .select(
+      'id, title, price_text, image_url, link_url, tags, sort_order, is_active, shop_category_id, shop_subcategory_id, ' +
+      'click_count, impression_count, last_checked_at, deactivated_reason, deactivated_at'
+    )
     .order('sort_order', { ascending: true })
   if (error) return { data: [], error: error.message }
   return { data: data ?? [] }
+}
+
+// ── 상품 일괄 작업(체크박스 선택 후 카테고리/발행상태/태그/삭제) ──────────────────
+export async function bulkUpdateAdminProductCategory(
+  ids: string[], shopCategoryId: string | null, shopSubcategoryId: string | null,
+): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+  if (ids.length === 0) return { error: '선택된 상품이 없습니다.' }
+
+  const admin = createAdminClient()
+  const { error } = await admin
+    .from('affiliate_products')
+    .update({ shop_category_id: shopCategoryId, shop_subcategory_id: shopSubcategoryId })
+    .in('id', ids)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function bulkUpdateAdminProductActive(
+  ids: string[], isActive: boolean,
+): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+  if (ids.length === 0) return { error: '선택된 상품이 없습니다.' }
+
+  const admin = createAdminClient()
+  const { error } = await admin.from('affiliate_products').update({ is_active: isActive }).in('id', ids)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
+export async function bulkAddAdminProductTags(
+  ids: string[], tagsToAdd: string[],
+): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+  if (ids.length === 0) return { error: '선택된 상품이 없습니다.' }
+  if (tagsToAdd.length === 0) return { error: '추가할 태그를 입력해주세요.' }
+
+  const admin = createAdminClient()
+  const { data, error: fetchError } = await admin.from('affiliate_products').select('id, tags').in('id', ids)
+  if (fetchError) return { error: fetchError.message }
+
+  // 기존 태그를 덮어쓰지 않고 합집합으로 추가한다.
+  const results = await Promise.all(
+    (data ?? []).map((row) => {
+      const merged = new Set<string>((row.tags as string[] | null) ?? [])
+      for (const t of tagsToAdd) merged.add(t)
+      return admin.from('affiliate_products').update({ tags: Array.from(merged) }).eq('id', row.id as string)
+    })
+  )
+  const failed = results.find((r) => r.error)
+  if (failed?.error) return { error: failed.error.message }
+  return { success: true }
+}
+
+export async function bulkDeleteAdminProducts(ids: string[]): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+  if (ids.length === 0) return { error: '선택된 상품이 없습니다.' }
+
+  const admin = createAdminClient()
+  const { error } = await admin.from('affiliate_products').delete().in('id', ids)
+  if (error) return { error: error.message }
+  return { success: true }
 }
