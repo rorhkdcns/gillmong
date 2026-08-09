@@ -90,6 +90,7 @@ export default function SiteHeader({ categories }: Props) {
     { label: '꿈 감정하기', href: '/#appraisal' },
     { label: '꿈 구경하기', dropdown: browseDropdown },
     { label: '해몽 사전',  dropdown: dictionaryDropdown },
+    { label: '샵',        href: '/shop' },
     { label: '고객지원',   dropdown: SUPPORT_DROPDOWN },
   ]
 
