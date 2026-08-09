@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { keywordToSlug } from '@/lib/slugify'
 import { parseDictionaryBody } from '@/lib/dictionaryBody'
 import { getCategoryColor } from '@/lib/categoryColor'
+import { CHOSEONG_GROUPS, getChoseongGroup } from '@/lib/hangul'
 import DictionaryBodyBlocks, { BLOCK_SHAPE } from '@/components/DictionaryBodyBlocks'
 import {
   checkAdminDictionarySlugExists,
@@ -34,6 +35,7 @@ type FormMode = 'create' | 'edit'
 type StatusFilter = 'all' | 'published' | 'unpublished'
 
 const ALL_CATEGORY = 'all'
+const ALL_CHO = 'all'
 
 function matchesStatus(entry: Entry, statusFilter: StatusFilter): boolean {
   if (statusFilter === 'published') return entry.is_published
@@ -84,6 +86,7 @@ export default function AdminDictionaryPage() {
   const [categoryFilter, setCategoryFilter] = useState<string>(ALL_CATEGORY)
   const [statusFilter,   setStatusFilter]   = useState<StatusFilter>('all')
   const [listQuery,      setListQuery]      = useState('')
+  const [choFilter,      setChoFilter]      = useState<string>(ALL_CHO)
 
   const filteredSubcategories = useMemo(
     () => subcategories.filter((s) => s.parent_slug === categorySlug),
@@ -98,8 +101,8 @@ export default function AdminDictionaryPage() {
   )
   const previewCategoryName = categories.find((c) => c.slug === categorySlug)?.name ?? '기타'
 
-  // 목록 필터: 검색어 → (카테고리 탭 개수용 / 발행상태 탭 개수용) → 최종 목록
-  // 순서대로 좁혀가되, 각 축의 버튼 개수는 "그 축만 빼고 나머지 필터가 적용된" 목록 기준으로 계산해서
+  // 목록 필터: 검색어 → (카테고리/발행상태/초성 탭 개수용) → 최종 목록(가나다순 정렬)
+  // 각 축의 버튼 개수는 "그 축만 빼고 나머지 필터가 전부 적용된" 목록 기준으로 계산해서
   // 다른 탭을 눌렀을 때 몇 건이 나올지 미리 보이게 한다.
   const listSearchFiltered = useMemo(() => {
     const q = listQuery.trim().toLowerCase()
@@ -107,40 +110,65 @@ export default function AdminDictionaryPage() {
     return entries.filter((e) => e.keyword.toLowerCase().includes(q))
   }, [entries, listQuery])
 
-  const byStatusOnly = useMemo(
-    () => listSearchFiltered.filter((e) => matchesStatus(e, statusFilter)),
-    [listSearchFiltered, statusFilter],
+  function matchesCategory(entry: Entry): boolean {
+    return categoryFilter === ALL_CATEGORY || entry.category_slug === categoryFilter
+  }
+  function matchesCho(entry: Entry): boolean {
+    return choFilter === ALL_CHO || getChoseongGroup(entry.keyword) === choFilter
+  }
+
+  const byStatusAndCho = useMemo(
+    () => listSearchFiltered.filter((e) => matchesStatus(e, statusFilter) && matchesCho(e)),
+    [listSearchFiltered, statusFilter, choFilter],
   )
   const categoryCounts = useMemo(() => {
     const map = new Map<string, number>()
-    for (const e of byStatusOnly) {
+    for (const e of byStatusAndCho) {
       if (!e.category_slug) continue
       map.set(e.category_slug, (map.get(e.category_slug) ?? 0) + 1)
     }
     return map
-  }, [byStatusOnly])
+  }, [byStatusAndCho])
 
-  const byCategoryOnly = useMemo(() => {
-    if (categoryFilter === ALL_CATEGORY) return listSearchFiltered
-    return listSearchFiltered.filter((e) => e.category_slug === categoryFilter)
-  }, [listSearchFiltered, categoryFilter])
+  const byCategoryAndCho = useMemo(
+    () => listSearchFiltered.filter((e) => matchesCategory(e) && matchesCho(e)),
+    [listSearchFiltered, categoryFilter, choFilter],
+  )
   const statusCounts = useMemo(() => ({
-    all: byCategoryOnly.length,
-    published: byCategoryOnly.filter((e) => e.is_published).length,
-    unpublished: byCategoryOnly.filter((e) => !e.is_published).length,
-  }), [byCategoryOnly])
+    all: byCategoryAndCho.length,
+    published: byCategoryAndCho.filter((e) => e.is_published).length,
+    unpublished: byCategoryAndCho.filter((e) => !e.is_published).length,
+  }), [byCategoryAndCho])
+
+  const byCategoryAndStatus = useMemo(
+    () => listSearchFiltered.filter((e) => matchesCategory(e) && matchesStatus(e, statusFilter)),
+    [listSearchFiltered, categoryFilter, statusFilter],
+  )
+  const choCounts = useMemo(() => {
+    const map = new Map<string, number>()
+    for (const e of byCategoryAndStatus) {
+      const group = getChoseongGroup(e.keyword)
+      map.set(group, (map.get(group) ?? 0) + 1)
+    }
+    return map
+  }, [byCategoryAndStatus])
 
   const filteredEntries = useMemo(
-    () => byCategoryOnly.filter((e) => matchesStatus(e, statusFilter)),
-    [byCategoryOnly, statusFilter],
+    () => byCategoryAndStatus
+      .filter((e) => matchesCho(e))
+      .slice()
+      .sort((a, b) => a.keyword.localeCompare(b.keyword, 'ko')),
+    [byCategoryAndStatus, choFilter],
   )
 
-  const hasListFilter = categoryFilter !== ALL_CATEGORY || statusFilter !== 'all' || listQuery.trim() !== ''
+  const hasListFilter =
+    categoryFilter !== ALL_CATEGORY || statusFilter !== 'all' || listQuery.trim() !== '' || choFilter !== ALL_CHO
 
   function resetListFilters() {
     setCategoryFilter(ALL_CATEGORY)
     setStatusFilter('all')
     setListQuery('')
+    setChoFilter(ALL_CHO)
   }
 
   async function load() {
@@ -528,7 +556,7 @@ export default function AdminDictionaryPage() {
                   : 'border border-gray-200 text-[#555] hover:border-brand-violet hover:text-brand-violet'
               }`}
             >
-              전체 ({byStatusOnly.length})
+              전체 ({byStatusAndCho.length})
             </button>
             {categories.map((c) => (
               <button
@@ -629,6 +657,35 @@ export default function AdminDictionaryPage() {
               placeholder="키워드로 검색"
               className="ml-auto w-48 rounded border border-gray-200 px-3 py-1.5 text-xs outline-none focus:border-brand-violet"
             />
+          </div>
+
+          {/* 초성 필터 */}
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              onClick={() => setChoFilter(ALL_CHO)}
+              className={`rounded px-3 py-1.5 text-xs font-semibold transition-colors ${
+                choFilter === ALL_CHO
+                  ? 'bg-brand-ink text-white'
+                  : 'border border-gray-200 text-[#555] hover:border-brand-violet hover:text-brand-violet'
+              }`}
+            >
+              전체
+            </button>
+            {CHOSEONG_GROUPS.map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => setChoFilter(c)}
+                className={`rounded px-3 py-1.5 text-xs font-semibold transition-colors ${
+                  choFilter === c
+                    ? 'bg-brand-ink text-white'
+                    : 'border border-gray-200 text-[#555] hover:border-brand-violet hover:text-brand-violet'
+                }`}
+              >
+                {c} ({choCounts.get(c) ?? 0})
+              </button>
+            ))}
           </div>
         </div>
 
