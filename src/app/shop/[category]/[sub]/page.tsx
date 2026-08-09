@@ -3,7 +3,6 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
-import SiteFooter from '@/components/SiteFooter'
 import ShopProductGrid from '@/components/ShopProductGrid'
 
 interface ShopCategory {
@@ -78,29 +77,21 @@ export default async function ShopSubcategoryPage({
     .order('sort_order', { ascending: true })
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <>
+      {/* 작은 히어로 */}
+      <div className="rounded-[14px] bg-[linear-gradient(150deg,#14547A_0%,#2E7DD1_120%)] px-6 py-6 md:px-8 md:py-7">
+        <nav className="mb-1.5 text-xs text-white/70">
+          <Link href="/shop" className="hover:text-white">샵</Link>
+          <span className="mx-1.5">›</span>
+          <Link href={`/shop/${cat.slug}`} className="hover:text-white">{cat.name}</Link>
+          <span className="mx-1.5">›</span>
+          <span>{subcat.name}</span>
+        </nav>
+        <h1 className="text-2xl font-bold text-white md:text-[28px]">{subcat.name}</h1>
+      </div>
 
-      <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#DDE6EC' }}>
-        <div className="mx-auto flex max-w-[600px] flex-col gap-[14px]">
-
-          {/* 작은 히어로 */}
-          <div className="rounded-[14px] bg-[linear-gradient(150deg,#14547A_0%,#2E7DD1_120%)] px-6 py-6 md:px-8 md:py-7">
-            <nav className="mb-1.5 text-xs text-white/70">
-              <Link href="/shop" className="hover:text-white">샵</Link>
-              <span className="mx-1.5">›</span>
-              <Link href={`/shop/${cat.slug}`} className="hover:text-white">{cat.name}</Link>
-              <span className="mx-1.5">›</span>
-              <span>{subcat.name}</span>
-            </nav>
-            <h1 className="text-2xl font-bold text-white md:text-[28px]">{subcat.name}</h1>
-          </div>
-
-          {/* 상품 그리드 */}
-          <ShopProductGrid products={products ?? []} />
-        </div>
-      </main>
-
-      <SiteFooter />
-    </div>
+      {/* 상품 그리드 */}
+      <ShopProductGrid products={products ?? []} />
+    </>
   )
 }

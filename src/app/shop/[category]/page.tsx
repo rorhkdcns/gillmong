@@ -3,10 +3,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
-import SiteFooter from '@/components/SiteFooter'
 import ShopProductGrid from '@/components/ShopProductGrid'
-
-const BLOCK_SHAPE = 'rounded-[14px] shadow-[0_1px_3px_rgba(11,36,51,0.06)] p-[20px_18px] md:p-[26px_24px]'
 
 interface ShopCategory {
   id: string
@@ -51,60 +48,27 @@ export default async function ShopCategoryPage({
   if (!cat) notFound()
 
   const admin = createAdminClient()
-  const [{ data: subcategories }, { data: products }] = await Promise.all([
-    admin
-      .from('shop_subcategories')
-      .select('id, name, slug')
-      .eq('category_id', cat.id)
-      .eq('is_active', true)
-      .order('sort_order', { ascending: true }),
-    admin
-      .from('affiliate_products')
-      .select('id, title, price_text, image_url, link_url')
-      .eq('shop_category_id', cat.id)
-      .eq('is_active', true)
-      .order('sort_order', { ascending: true }),
-  ])
+  const { data: products } = await admin
+    .from('affiliate_products')
+    .select('id, title, price_text, image_url, link_url')
+    .eq('shop_category_id', cat.id)
+    .eq('is_active', true)
+    .order('sort_order', { ascending: true })
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <>
+      {/* 작은 히어로 */}
+      <div className="rounded-[14px] bg-[linear-gradient(150deg,#14547A_0%,#2E7DD1_120%)] px-6 py-6 md:px-8 md:py-7">
+        <nav className="mb-1.5 text-xs text-white/70">
+          <Link href="/shop" className="hover:text-white">샵</Link>
+          <span className="mx-1.5">›</span>
+          <span>{cat.name}</span>
+        </nav>
+        <h1 className="text-2xl font-bold text-white md:text-[28px]">{cat.name}</h1>
+      </div>
 
-      <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#DDE6EC' }}>
-        <div className="mx-auto flex max-w-[600px] flex-col gap-[14px]">
-
-          {/* 작은 히어로 */}
-          <div className="rounded-[14px] bg-[linear-gradient(150deg,#14547A_0%,#2E7DD1_120%)] px-6 py-6 md:px-8 md:py-7">
-            <nav className="mb-1.5 text-xs text-white/70">
-              <Link href="/shop" className="hover:text-white">샵</Link>
-              <span className="mx-1.5">›</span>
-              <span>{cat.name}</span>
-            </nav>
-            <h1 className="text-2xl font-bold text-white md:text-[28px]">{cat.name}</h1>
-          </div>
-
-          {/* 하위카테고리 칩 */}
-          {subcategories && subcategories.length > 0 && (
-            <div className={`${BLOCK_SHAPE} bg-white`}>
-              <div className="flex flex-wrap gap-2">
-                {subcategories.map((s) => (
-                  <Link
-                    key={s.id}
-                    href={`/shop/${cat.slug}/${s.slug}`}
-                    className="rounded-full border border-[#DCE5EB] bg-white px-4 py-2 text-sm font-medium text-[#5C6E7C] transition-colors hover:border-[#2E7DD1] hover:text-[#2E7DD1]"
-                  >
-                    {s.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* 상품 그리드 (하위카테고리 무관 이 카테고리 전체) */}
-          <ShopProductGrid products={products ?? []} />
-        </div>
-      </main>
-
-      <SiteFooter />
-    </div>
+      {/* 상품 그리드 (하위카테고리 무관 이 카테고리 전체) */}
+      <ShopProductGrid products={products ?? []} />
+    </>
   )
 }
