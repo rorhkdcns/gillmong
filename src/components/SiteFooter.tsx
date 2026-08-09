@@ -1,6 +1,6 @@
 export default function SiteFooter() {
   return (
-    <footer className="border-t border-brand-line bg-white px-6 py-10 text-center text-[13px]">
+    <footer className="border-t border-brand-line bg-white px-6 py-10 text-center text-sm">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-4">
 
         {/* 고객센터 */}

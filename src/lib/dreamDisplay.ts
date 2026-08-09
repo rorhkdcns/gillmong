@@ -40,7 +40,7 @@ export const TYPE_STYLE: Record<string, string> = {
 export const INTERPRETATION_SECTIONS = [
   { pattern: /한국\s*전통\s*해몽\s*관점\s*:/, color: '#0B2433' },
   { pattern: /아시아\s*관점[^:]*:/,            color: '#14547A' },
-  { pattern: /서양\s*심리학적\s*관점\s*:/,     color: '#6B96A8' },
+  { pattern: /서양\s*심리학적\s*관점\s*:/,     color: 'var(--color-brand-slate)' },
   { pattern: /종합\s*해석\s*:/,                color: '#0B2433' },
 ]
 

@@ -73,7 +73,7 @@ export default function AdminPartnershipsPage() {
                 className="flex w-full items-center justify-between px-5 py-4 text-left hover:bg-gray-50"
               >
                 <div className="flex min-w-0 flex-1 items-center gap-3">
-                  <span className={`shrink-0 rounded px-2 py-0.5 text-[10px] font-bold ${STATUS_COLOR[item.status] ?? 'bg-gray-100 text-gray-500'}`}>
+                  <span className={`shrink-0 rounded px-2 py-0.5 text-xs font-bold ${STATUS_COLOR[item.status] ?? 'bg-gray-100 text-gray-500'}`}>
                     {STATUS_LABEL[item.status] ?? item.status}
                   </span>
                   <span className="truncate text-sm font-medium text-[#333]">{item.title}</span>

@@ -642,7 +642,7 @@ export default function AdminCategoriesPage() {
                             <span className="inline-block w-5 shrink-0" />
                           )}
                           <span className="font-medium text-[#333]">{node.name}</span>
-                          <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] text-gray-500">
+                          <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-500">
                             {LEVEL_LABEL[node.depth]}
                           </span>
                           {node.depth === 2 && node.path.length > 0 && (

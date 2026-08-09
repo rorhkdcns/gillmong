@@ -41,3 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# impeccable (local-only hook state/cache; config.json and design.json are shared)
+.impeccable/config.local.json
+.impeccable/hook.cache.json

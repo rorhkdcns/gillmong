@@ -186,7 +186,7 @@ export default function AdminNoticePage() {
                     </a>
                   </td>
                   <td className="px-6 py-3">
-                    {n.is_pinned && <span className="rounded bg-[#0B2433] px-2 py-0.5 text-[10px] font-bold text-white">고정</span>}
+                    {n.is_pinned && <span className="rounded bg-[#0B2433] px-2 py-0.5 text-xs font-bold text-white">고정</span>}
                   </td>
                   <td className="px-6 py-3 text-[#999]">{formatDate(n.created_at)}</td>
                   <td className="px-6 py-3">

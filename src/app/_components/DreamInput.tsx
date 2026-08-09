@@ -130,7 +130,7 @@ export default function DreamInput() {
       <div className="flex flex-col gap-6">
 
         {/* 정확도 안내 배너 */}
-        <div className="rounded-xl border-l-4 border-brand-violet bg-brand-primary-light px-4 py-3.5">
+        <div className="rounded-xl border border-brand-primary-border bg-brand-primary-light px-4 py-3.5">
           <p className="text-base font-bold text-brand-ink">더 상세하게 적을수록 해몽이 정확해집니다</p>
           <p className="mt-1 text-sm leading-relaxed text-brand-ink-soft">
             색상·냄새·온도·감정까지 떠오르는 대로 적어보세요. 단어 하나가 해몽의 방향을 바꿉니다.

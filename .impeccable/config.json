@@ -1,0 +1,53 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "gray-on-color",
+        "value": "*",
+        "files": [
+          "src/app/admin/categories/page.tsx"
+        ],
+        "createdAt": "2026-08-09T09:38:29.401Z",
+        "reason": "False positive: gray-500/emerald-50 are mutually exclusive Tailwind classes in a ternary (is_active ? emerald : gray), never rendered together"
+      },
+      {
+        "rule": "gray-on-color",
+        "value": "*",
+        "files": [
+          "src/app/admin/dictionary/page.tsx"
+        ],
+        "createdAt": "2026-08-09T09:38:31.365Z",
+        "reason": "False positive: gray-500/emerald-50 are mutually exclusive Tailwind classes in a ternary (is_published ? emerald : gray), never rendered together"
+      },
+      {
+        "rule": "gray-on-color",
+        "value": "*",
+        "files": [
+          "src/app/admin/dreams/page.tsx"
+        ],
+        "createdAt": "2026-08-09T09:38:33.313Z",
+        "reason": "False positive: gray-500 pairs only with gray-100 and red-600 only with red-100 in mutually exclusive ternary branches; detector flags cross-branch string co-occurrence"
+      },
+      {
+        "rule": "gray-on-color",
+        "value": "*",
+        "files": [
+          "src/app/admin/dreams/[id]/page.tsx"
+        ],
+        "createdAt": "2026-08-09T09:38:35.206Z",
+        "reason": "False positive: REPORT_COLOR record entries and ternary branches pair gray-500 only with gray-100/gray-500; colors never co-render"
+      },
+      {
+        "rule": "gray-on-color",
+        "value": "*",
+        "files": [
+          "src/app/admin/shop-products/page.tsx"
+        ],
+        "createdAt": "2026-08-09T09:38:37.100Z",
+        "reason": "False positive: gray-500/emerald-50 are mutually exclusive Tailwind classes in a ternary (is_active ? emerald : gray), never rendered together"
+      }
+    ]
+  }
+}

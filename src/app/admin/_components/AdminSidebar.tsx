@@ -204,7 +204,7 @@ export default function AdminSidebar() {
 
         {/* 로고 */}
         <div className="border-b border-white/10 px-6 py-5">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-[#14547A]">Admin</p>
+          <p className="text-xs font-bold uppercase tracking-widest text-[#14547A]">Admin</p>
           <p className="mt-0.5 text-base font-bold text-white">길몽상점</p>
         </div>
 

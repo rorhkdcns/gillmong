@@ -177,7 +177,7 @@ export default function SiteHeader({ categories }: Props) {
                   /* 드롭다운 메뉴 */
                   <div key={item.label} className="group relative">
                     <button
-                      className="flex items-center gap-1 rounded-full px-3 py-2 text-[0.95rem] font-semibold text-brand-ink-soft transition-colors hover:text-brand-ink"
+                      className="flex items-center gap-1 rounded-full px-3 py-2 text-base font-semibold text-brand-ink-soft transition-colors hover:text-brand-ink"
                     >
                       {item.label}
                       <ChevronDown className="h-2.5 w-2.5 opacity-60 transition-transform duration-200 group-hover:rotate-180" />
@@ -206,7 +206,7 @@ export default function SiteHeader({ categories }: Props) {
                   <Link
                     key={item.label}
                     href={item.href!}
-                    className="rounded-full px-3 py-2 text-[0.95rem] font-semibold text-brand-ink-soft transition-colors hover:text-brand-ink"
+                    className="rounded-full px-3 py-2 text-base font-semibold text-brand-ink-soft transition-colors hover:text-brand-ink"
                   >
                     {item.label}
                   </Link>
@@ -254,7 +254,7 @@ export default function SiteHeader({ categories }: Props) {
                 <Link href="/mypage" className="flex flex-col items-end leading-tight md:hidden">
                   <span className="text-xs font-semibold text-brand-ink">{nickname}님</span>
                   {remaining !== null && (
-                    <span className={`text-[10px] ${remaining === 0 ? 'text-red-400' : 'text-brand-primary'}`}>
+                    <span className={`text-xs ${remaining === 0 ? 'text-red-400' : 'text-brand-primary'}`}>
                       해몽 {remaining}회 남음
                     </span>
                   )}

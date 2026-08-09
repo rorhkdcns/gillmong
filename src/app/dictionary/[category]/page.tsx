@@ -182,8 +182,8 @@ async function CategoryView({
               <span className="mx-1.5">›</span>
               <span>{category.name}</span>
             </nav>
-            <h1 className="mb-2 text-[26px] font-medium text-[#0B2433] md:text-[32px]">{category.name} 꿈 해몽</h1>
-            <p className="text-[15px] text-[#5C6E7C]">
+            <h1 className="mb-2 text-2xl font-medium text-[#0B2433] md:text-3xl">{category.name} 꿈 해몽</h1>
+            <p className="text-sm text-[#5C6E7C]">
               {category.description ?? `${category.name}에 관한 꿈 키워드를 모아봤습니다.`}
             </p>
           </div>
@@ -302,7 +302,7 @@ async function EntryView({
           {/* 1) 헤더 블록 */}
           <div className="overflow-hidden rounded-[14px] bg-white shadow-[0_1px_3px_rgba(11,36,51,0.06)]">
             <div
-              className="flex flex-wrap items-center gap-1.5 px-[18px] py-2.5 text-[15px] text-white md:px-6"
+              className="flex flex-wrap items-center gap-1.5 px-[18px] py-2.5 text-sm text-white md:px-6"
               style={{ backgroundColor: colors.main }}
             >
               {category ? (
@@ -325,7 +325,7 @@ async function EntryView({
             </div>
 
             <div className="p-[20px_18px] md:p-[26px_24px]">
-              <h1 className="mb-3 text-[26px] font-medium text-[#0B2433] md:text-[32px]">
+              <h1 className="mb-3 text-2xl font-medium text-[#0B2433] md:text-3xl">
                 {entry.keyword} 해몽
               </h1>
               <p className="text-[18px] leading-[1.85] text-[#1C3547]">
@@ -352,12 +352,12 @@ async function EntryView({
           {/* 5) AI 해몽 CTA */}
           <div className={`${BLOCK_SHAPE} text-center`} style={{ backgroundColor: '#0B2433' }}>
             <p className="text-[20px] font-semibold text-white">내 꿈은 어떤 의미일까요?</p>
-            <p className="mt-1.5 text-[16px]" style={{ color: '#A8BECC' }}>
+            <p className="mt-1.5 text-base text-white/70">
               AI가 당신의 꿈을 직접 분석해드립니다. 지금 바로 무료로 감정받아보세요.
             </p>
             <Link
               href="/#appraisal"
-              className="mt-4 inline-block w-full rounded-[10px] bg-[#2E7DD1] px-[30px] py-[14px] text-[17px] font-semibold text-white transition-transform hover:scale-[1.02] md:w-auto"
+              className="mt-4 inline-block w-full rounded-[10px] bg-[#2E7DD1] px-[30px] py-[14px] text-lg font-semibold text-white transition-transform hover:scale-[1.02] md:w-auto"
             >
               AI 해몽 받으러 가기
             </Link>
@@ -369,13 +369,13 @@ async function EntryView({
           {/* 관련 거래중인 꿈 */}
           {relatedDreams && relatedDreams.length > 0 && (
             <div className={`${BLOCK_SHAPE} bg-white`}>
-              <h2 className="mb-4 text-[24px] font-medium text-[#0B2433]">관련 거래중인 꿈</h2>
+              <h2 className="mb-4 text-2xl font-medium text-[#0B2433]">관련 거래중인 꿈</h2>
               <div className="flex flex-col gap-[10px]">
                 {relatedDreams.map((d) => (
                   <Link
                     key={d.id}
                     href={`/dream/${d.id}`}
-                    className="flex items-center justify-between gap-3 rounded-[10px] bg-[#EDF3F7] px-5 py-4 text-[17px] text-[#16303F] transition-colors hover:bg-[#E4ECF1]"
+                    className="flex items-center justify-between gap-3 rounded-[10px] bg-[#EDF3F7] px-5 py-4 text-base text-[#16303F] transition-colors hover:bg-[#E4ECF1]"
                   >
                     <span className="flex min-w-0 items-center gap-2">
                       <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_INFO[d.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
@@ -395,13 +395,13 @@ async function EntryView({
           {/* 6) 관련 해몽 */}
           {relatedEntries.length > 0 && (
             <div className={`${BLOCK_SHAPE} bg-white`}>
-              <h2 className="mb-4 text-[24px] font-medium text-[#0B2433]">같은 카테고리의 다른 해몽</h2>
+              <h2 className="mb-4 text-2xl font-medium text-[#0B2433]">같은 카테고리의 다른 해몽</h2>
               <div className="flex flex-col gap-[10px]">
                 {relatedEntries.map((e) => (
                   <Link
                     key={e.slug}
                     href={`/dictionary/${e.slug}`}
-                    className="flex items-center justify-between gap-3 rounded-[10px] bg-[#EDF3F7] px-5 py-4 text-[17px] text-[#16303F] transition-colors hover:bg-[#E4ECF1]"
+                    className="flex items-center justify-between gap-3 rounded-[10px] bg-[#EDF3F7] px-5 py-4 text-base text-[#16303F] transition-colors hover:bg-[#E4ECF1]"
                   >
                     <span className="truncate">{e.keyword} 해몽</span>
                     <ChevronRightIcon />

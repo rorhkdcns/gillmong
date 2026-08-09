@@ -19,7 +19,7 @@ const SLIDES: Slide[] = [
   {
     eyebrow: '세상에 없던 꿈 거래소',
     title: (
-      <>꿈은 누구에게나<br /><span className="bg-gradient-to-r from-brand-violet to-brand-pink bg-clip-text text-transparent">기회와 아이디어</span>가 될 수 있어요</>
+      <>꿈은 누구에게나<br /><span className="text-brand-primary">기회와 아이디어</span>가 될 수 있어요</>
     ),
     desc: '길몽상점은 꿈을 통해 나를 이해하고, 일상의 아이디어를 발견하는 공간입니다.',
     ctaLabel: '나의 꿈 감정하기',
@@ -30,7 +30,7 @@ const SLIDES: Slide[] = [
   },
   {
     title: (
-      <>좋은 꿈은<br /><span className="bg-gradient-to-r from-[#7FD4F0] to-[#F2CE7E] bg-clip-text text-transparent">사고팔 수</span> 있습니다</>
+      <>좋은 꿈은<br /><span className="text-brand-primary">사고팔 수</span> 있습니다</>
     ),
     desc: 'A등급 길몽부터 재미있는 꿈까지, 마켓에서 만나보세요.',
     ctaLabel: '꿈 구경하기',
@@ -42,7 +42,7 @@ const SLIDES: Slide[] = [
   {
     eyebrow: '실시간 업데이트되는 꿈 사전',
     title: (
-      <>어젯밤 꾼 그 꿈,<br /><span className="bg-gradient-to-r from-[#7FE3C9] to-brand-gold bg-clip-text text-transparent">무슨 뜻</span>일까요?</>
+      <>어젯밤 꾼 그 꿈,<br /><span className="text-brand-primary">무슨 뜻</span>일까요?</>
     ),
     desc: '돼지꿈, 이빨 빠지는 꿈부터 흔한 악몽까지 — 궁금한 꿈을 검색해서 바로 확인해보세요.',
     ctaLabel: '해몽사전 보러가기',

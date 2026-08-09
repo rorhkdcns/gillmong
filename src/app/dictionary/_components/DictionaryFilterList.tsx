@@ -154,7 +154,7 @@ export default function DictionaryFilterList({ entries }: Props) {
                       }`}
                     >
                       <span className="flex min-w-0 items-center gap-2">
-                        <span className="truncate text-[17px] text-[#16303F]">{e.keyword}</span>
+                        <span className="truncate text-base text-[#16303F]">{e.keyword}</span>
                       </span>
                       <ChevronRightIcon />
                     </Link>
@@ -174,7 +174,7 @@ export default function DictionaryFilterList({ entries }: Props) {
                 }`}
               >
                 <span className="flex min-w-0 items-center gap-2">
-                  <span className="truncate text-[17px] text-[#16303F]">{e.keyword}</span>
+                  <span className="truncate text-base text-[#16303F]">{e.keyword}</span>
                 </span>
                 <ChevronRightIcon />
               </Link>

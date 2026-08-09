@@ -10,7 +10,7 @@ export default function PrivacyPage() {
             <h1 className="mb-2 text-3xl font-bold text-[#0B2433]">개인정보처리방침</h1>
             <p className="mb-10 text-sm text-[#999]">시행일: 2026년 6월 15일</p>
 
-            <div className="space-y-10 text-[15px] leading-relaxed text-[#444]">
+            <div className="space-y-10 text-sm leading-relaxed text-[#444]">
 
               <section>
                 <h2 className="mb-3 text-lg font-bold text-[#0B2433]">제1조 (개인정보의 처리 목적)</h2>

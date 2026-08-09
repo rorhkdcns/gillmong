@@ -124,7 +124,7 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-2">
             <h2 className="font-semibold text-[#0B2433]">대기 중인 출금신청</h2>
             {!wLoading && withdrawals.length > 0 && (
-              <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-amber-500 px-1.5 text-[11px] font-bold text-white">
+              <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-amber-500 px-1.5 text-xs font-bold text-white">
                 {withdrawals.length}
               </span>
             )}
@@ -192,7 +192,7 @@ export default function AdminDashboard() {
           <div className="flex items-center gap-2">
             <h2 className="font-semibold text-[#0B2433]">대기 중인 제휴문의</h2>
             {!pLoading && partnerships.length > 0 && (
-              <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-blue-500 px-1.5 text-[11px] font-bold text-white">
+              <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-blue-500 px-1.5 text-xs font-bold text-white">
                 {partnerships.length}
               </span>
             )}

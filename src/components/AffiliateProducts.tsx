@@ -73,7 +73,7 @@ export default async function AffiliateProducts({ tags }: Props) {
 
   return (
     <section className="rounded-[14px] bg-white p-[20px_18px] shadow-[0_1px_3px_rgba(11,36,51,0.06)] md:p-[26px_24px]">
-      <h2 className="mb-4 text-[24px] font-medium text-[#0B2433]">이런 상품은 어떠세요?</h2>
+      <h2 className="mb-4 text-2xl font-medium text-[#0B2433]">이런 상품은 어떠세요?</h2>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {products.map((p) => (
           <AffiliateProductLink

@@ -34,12 +34,12 @@ export default async function NoticeDetailPage({
           <article className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
             <div className="mb-6 border-b border-gray-100 pb-6">
               {notice.is_pinned && (
-                <span className="mb-2 inline-block rounded bg-[#0B2433] px-2 py-0.5 text-[10px] font-bold text-white">공지</span>
+                <span className="mb-2 inline-block rounded bg-[#0B2433] px-2 py-0.5 text-xs font-bold text-white">공지</span>
               )}
               <h1 className="text-2xl font-black text-[#0B2433]">{notice.title}</h1>
               <p className="mt-2 text-sm text-gray-400">{formatDate(notice.created_at)}</p>
             </div>
-            <div className="prose max-w-none text-[15px] leading-relaxed text-[#444444] whitespace-pre-line">
+            <div className="prose max-w-none text-sm leading-relaxed text-[#444444] whitespace-pre-line">
               {notice.content}
             </div>
           </article>

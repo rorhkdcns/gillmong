@@ -22,7 +22,7 @@ export default function DictionaryBodyBlocks({
             style={isWarning ? { backgroundColor: '#FDF6E8' } : undefined}
           >
             {block.title && (
-              <h2 className="mb-4 text-[24px] font-medium" style={{ color: isWarning ? '#5A3D10' : '#0B2433' }}>
+              <h2 className={`mb-4 text-2xl font-medium ${isWarning ? 'text-brand-warning-text' : 'text-brand-ink'}`}>
                 {block.title}
               </h2>
             )}
@@ -31,8 +31,7 @@ export default function DictionaryBodyBlocks({
                 child.type === 'paragraph' ? (
                   <p
                     key={j}
-                    className="whitespace-pre-line text-[17px] leading-[1.95]"
-                    style={{ color: isWarning ? '#5A3D10' : '#16303F' }}
+                    className={`whitespace-pre-line text-lg leading-[1.95] ${isWarning ? 'text-brand-warning-text' : 'text-brand-ink'}`}
                   >
                     {child.text}
                   </p>
@@ -41,13 +40,13 @@ export default function DictionaryBodyBlocks({
                     {child.items.map((item, k) => (
                       <div key={k} className="overflow-hidden rounded-[10px] border border-[#DCE5EB]">
                         <div
-                          className="p-[13px_18px] text-[17px] font-medium"
+                          className="p-[13px_18px] text-lg font-medium"
                           style={{ backgroundColor: colors.badgeBg, color: colors.badgeText }}
                         >
                           {item.label}
                         </div>
                         {item.description && (
-                          <div className="bg-white p-[16px_18px] text-[17px] leading-[1.85] text-[#16303F]">
+                          <div className="bg-white p-[16px_18px] text-lg leading-[1.85] text-brand-ink">
                             {item.description}
                           </div>
                         )}

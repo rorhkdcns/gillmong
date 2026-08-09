@@ -76,8 +76,8 @@ export default async function DictionarySubcategoryPage({
               <span className="mx-1.5">›</span>
               <span>{subcategory.name}</span>
             </nav>
-            <h1 className="mb-2 text-[26px] font-medium text-[#0B2433] md:text-[32px]">{subcategory.name} 꿈 해몽</h1>
-            <p className="text-[15px] text-[#5C6E7C]">
+            <h1 className="mb-2 text-2xl font-medium text-[#0B2433] md:text-3xl">{subcategory.name} 꿈 해몽</h1>
+            <p className="text-sm text-[#5C6E7C]">
               {subcategory.description ?? `${subcategory.name}에 관한 꿈 키워드를 모아봤습니다.`}
             </p>
           </div>

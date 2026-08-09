@@ -40,7 +40,7 @@ export default async function NoticePage() {
                     >
                       <div className="flex items-center gap-3 min-w-0">
                         {n.is_pinned && (
-                          <span className="shrink-0 rounded bg-[#0B2433] px-2 py-0.5 text-[10px] font-bold text-white">공지</span>
+                          <span className="shrink-0 rounded bg-[#0B2433] px-2 py-0.5 text-xs font-bold text-white">공지</span>
                         )}
                         <span className="truncate text-base text-[#333333]">{n.title}</span>
                       </div>

@@ -1,0 +1,146 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-09T01:00:00.000Z",
+  "title": "Design System: 길몽상점",
+  "extensions": {
+    "colorMeta": {
+      "brand-primary": { "role": "primary", "displayName": "Trust Blue", "canonical": "#2E7DD1", "tonalRamp": ["#0e253f", "#1a4675", "#2564a7", "#3682d3", "#69a1de", "#9bc1e9", "#cde0f4", "#eaf2fa"] },
+      "brand-primary-hover": { "role": "primary", "displayName": "Trust Blue Hover", "canonical": "#14547A", "tonalRamp": ["#0b2d42", "#14547b", "#1d79af", "#2d9bdd", "#61b4e5", "#96cdee", "#cae6f6", "#e9f5fb"] },
+      "brand-primary-light": { "role": "primary", "displayName": "Trust Blue Light", "canonical": "#E8F2FA" },
+      "brand-primary-border": { "role": "primary", "displayName": "Trust Blue Border", "canonical": "#CFE3F5" },
+      "brand-ink": { "role": "neutral", "displayName": "Deep Ink", "canonical": "#0B2433", "tonalRamp": ["#0e2c3f", "#195375", "#2476a8", "#3698d4", "#68b2de", "#9acce9", "#cde5f4", "#eaf4fa"] },
+      "brand-ink-soft": { "role": "neutral", "displayName": "Ink Soft", "canonical": "#5C6E7C", "tonalRamp": ["#21272c", "#3d4952", "#576875", "#728797", "#96a5b1", "#b9c3cb", "#dce1e5", "#f0f2f4"] },
+      "brand-page": { "role": "neutral", "displayName": "Page", "canonical": "#F4F7F9", "tonalRamp": ["#1b2931", "#324c5c", "#486c84", "#618ca9", "#88a9be", "#b0c5d4", "#d7e2e9", "#eff3f6"] },
+      "brand-surface": { "role": "neutral", "displayName": "Surface", "canonical": "#FFFFFF" },
+      "brand-line": { "role": "neutral", "displayName": "Line", "canonical": "#E2E9EE", "tonalRamp": ["#1c2830", "#354b5a", "#4b6a81", "#658aa5", "#8ba7bb", "#b2c4d2", "#d8e2e8", "#eff3f6"] },
+      "brand-violet": { "role": "tertiary", "displayName": "Dream Violet", "canonical": "#2E7DD1", "tonalRamp": ["#0e253f", "#1a4675", "#2564a7", "#3682d3", "#69a1de", "#9bc1e9", "#cde0f4", "#eaf2fa"] },
+      "brand-pink": { "role": "tertiary", "displayName": "Dream Pink", "canonical": "#54D0E0", "tonalRamp": ["#0c3b41", "#166e79", "#1f9dad", "#30c6d9", "#64d4e3", "#97e3ec", "#cbf1f6", "#e9f9fb"] },
+      "brand-gold": { "role": "tertiary", "displayName": "Dream Gold", "canonical": "#F2B33D", "tonalRamp": ["#483005", "#865a09", "#bf810d", "#f0a51a", "#f3bc53", "#f7d28c", "#fbe9c6", "#fdf6e7"] },
+      "brand-mint": { "role": "tertiary", "displayName": "Dream Mint", "canonical": "#2FB68E", "tonalRamp": ["#103d2f", "#1d7159", "#2aa27e", "#3ccda2", "#6dd9b9", "#9ee6d0", "#cef2e8", "#ebfaf5"] },
+      "brand-warning-text": { "role": "semantic", "displayName": "Warning Umber", "canonical": "#5A3D10", "tonalRamp": ["#412c0c", "#795216", "#ad751f", "#da972f", "#e3b163", "#edcb97", "#f6e5cb", "#fbf4e9"] },
+      "brand-slate": { "role": "semantic", "displayName": "Interpretation Slate", "canonical": "#6B96A8", "tonalRamp": ["#1c2a30", "#354f5a", "#4c7180", "#6592a4", "#8badbb", "#b2c8d2", "#d8e4e8", "#eff4f6"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "히어로 슬라이드 제목, 섹션 랜딩 타이틀. 항상 font-black(900)." },
+      "headline": { "displayName": "Headline", "purpose": "모달 타이틀, 카테고리 섹션 제목. 항상 font-black(900)." },
+      "title": { "displayName": "Title", "purpose": "카드 제목, 입력 필드 라벨." },
+      "body": { "displayName": "Body", "purpose": "본문 설명, 카드 요약문." },
+      "label": { "displayName": "Label", "purpose": "배지, 캡션, 메타 정보." }
+    },
+    "shadows": [
+      { "name": "hover-lift", "value": "0 20px 34px rgba(11,36,51,0.12)", "purpose": "카드 hover 시 등장하는 부드러운 잉크색 확산 그림자." },
+      { "name": "floating-action", "value": "0 12px 30px rgba(11,36,51,0.35)", "purpose": "화면 위에 항상 떠 있는 플로팅 버튼의 상시 그림자 — 유일한 정지-상태 그림자 예외." },
+      { "name": "modal", "value": "0 25px 50px -12px rgba(0,0,0,0.25)", "purpose": "모달·사이드 패널 등 오버레이 레이어." },
+      { "name": "subtle-surface", "value": "0 1px 3px rgba(11,36,51,0.06)", "purpose": "굿즈샵 카드/사이드바의 약한 상시 그림자 — 예외 패턴, 새 컴포넌트에서 기본으로 쓰지 않음." }
+    ],
+    "motion": [
+      { "name": "duration-standard", "value": "200ms", "purpose": "색상·투명도 전환(transition-colors)의 기본 지속시간." },
+      { "name": "duration-panel", "value": "300ms", "purpose": "슬라이드/아코디언 패널 열림-닫힘." },
+      { "name": "ease-standard", "value": "ease-in-out", "purpose": "슬라이더·패널 전환의 기본 easing." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "다크 잉크 배경의 기본 CTA. 검색 제출, 히어로 다크 CTA.",
+      "html": "<button class=\"ds-btn-primary\">검색</button>",
+      "css": ".ds-btn-primary { background: #0B2433; color: #fff; padding: 14px 32px; border-radius: 9999px; font-weight: 700; font-size: 0.95rem; border: none; transition: background 200ms; } .ds-btn-primary:hover { background: #14547A; } .ds-btn-primary:focus-visible { outline: 3px solid rgba(46,125,209,0.4); outline-offset: 2px; }"
+    },
+    {
+      "name": "Accent Button",
+      "kind": "button",
+      "refersTo": "button-accent",
+      "description": "Trust Blue 배경의 확정 액션 버튼.",
+      "html": "<button class=\"ds-btn-accent\">확인</button>",
+      "css": ".ds-btn-accent { background: #2E7DD1; color: #fff; padding: 10px 20px; border-radius: 9999px; font-weight: 700; font-size: 0.875rem; border: none; transition: background 200ms; } .ds-btn-accent:hover { background: #14547A; } .ds-btn-accent:focus-visible { outline: 3px solid rgba(46,125,209,0.4); outline-offset: 2px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "약한 강조에서 hover 시 확실한 강조로 반전되는 버튼. DreamCard '자세히 보기'.",
+      "html": "<button class=\"ds-btn-ghost\">자세히 보기</button>",
+      "css": ".ds-btn-ghost { background: #E8F2FA; color: #14547A; padding: 8px 20px; border-radius: 9999px; font-weight: 700; font-size: 0.875rem; border: none; transition: background 200ms, color 200ms; } .ds-btn-ghost:hover { background: #2E7DD1; color: #fff; }"
+    },
+    {
+      "name": "Dream Gradient Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "시그니처 그라디언트 CTA — 'AI가 꿈을 해석하는 순간'에만 쓰는 예외적 강조.",
+      "html": "<button class=\"ds-btn-gradient\">나의 꿈 감정하기</button>",
+      "css": ".ds-btn-gradient { background: linear-gradient(90deg, #2E7DD1, #54D0E0); color: #fff; padding: 16px 32px; border-radius: 12px; font-weight: 900; font-size: 1.125rem; border: none; transition: filter 200ms; } .ds-btn-gradient:hover { filter: brightness(0.95); }"
+    },
+    {
+      "name": "Dream Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "마켓 목록의 기본 카드 — 정지 시 무그림자, hover 시 확산 그림자로 뜬다.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-badge\">A</div><h3 class=\"ds-card-title\">거대한 파도를 넘는 꿈</h3><p class=\"ds-card-body\">거대한 파도가 밀려오지만 두렵지 않고 오히려 시원했다...</p><div class=\"ds-card-footer\"><span class=\"ds-card-price\">12,000원</span><button class=\"ds-btn-ghost\">자세히 보기</button></div></article>",
+      "css": ".ds-card { display: flex; flex-direction: column; border-radius: 16px; border: 1px solid #E2E9EE; background: #fff; padding: 24px; box-shadow: none; transition: box-shadow 200ms; } .ds-card:hover { box-shadow: 0 20px 34px rgba(11,36,51,0.12); } .ds-card-badge { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 9999px; background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px; } .ds-card-title { font-size: 1.125rem; font-weight: 600; color: #0B2433; margin-bottom: 12px; } .ds-card-body { font-size: 0.875rem; color: #5C6E7C; line-height: 1.6; flex: 1; } .ds-card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; padding-top: 16px; border-top: 1px solid #E2E9EE; } .ds-card-price { font-size: 1rem; font-weight: 700; color: #0B2433; } .ds-btn-ghost { background: #E8F2FA; color: #14547A; padding: 8px 20px; border-radius: 9999px; font-weight: 700; font-size: 0.875rem; border: none; transition: background 200ms, color 200ms; } .ds-btn-ghost:hover { background: #2E7DD1; color: #fff; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "글로우 포커스 링을 쓰는 기본 텍스트/텍스트에어리어 입력.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"꿈 제목 또는 내용으로 검색\" />",
+      "css": ".ds-input { width: 100%; border: 1px solid #E2E9EE; background: #fff; border-radius: 12px; padding: 10px 16px; font-size: 0.875rem; color: #0B2433; outline: none; transition: border-color 200ms, box-shadow 200ms; } .ds-input::placeholder { color: #BBBBBB; } .ds-input:focus { border-color: #2E7DD1; box-shadow: 0 0 0 3px rgba(46,125,209,0.14); }"
+    },
+    {
+      "name": "Grade Badge",
+      "kind": "chip",
+      "refersTo": null,
+      "description": "A~F 등급을 신호등 스펙트럼 + 원형 배지로 표현하는 시그니처 컴포넌트. brand 팔레트가 아닌 Tailwind 표준색을 의도적으로 쓰는 유일한 예외.",
+      "html": "<span class=\"ds-grade-badge\">A</span>",
+      "css": ".ds-grade-badge { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 9999px; background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; }"
+    },
+    {
+      "name": "Nav Dropdown Panel",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "데스크탑 헤더의 hover 드롭다운 패널.",
+      "html": "<ul class=\"ds-dropdown\"><li><a class=\"ds-dropdown-item ds-dropdown-item--active\" href=\"#\">전체 사전</a></li><li><a class=\"ds-dropdown-item\" href=\"#\">인물·신체 해몽</a></li></ul>",
+      "css": ".ds-dropdown { min-width: 150px; overflow: hidden; border-radius: 16px; border: 1px solid #E2E9EE; background: #fff; padding: 6px; box-shadow: 0 14px 34px rgba(11,36,51,0.12); list-style: none; margin: 0; } .ds-dropdown-item { display: block; border-radius: 8px; padding: 10px 16px; font-size: 0.875rem; color: #5C6E7C; text-decoration: none; transition: background 200ms, color 200ms; } .ds-dropdown-item:hover { background: #E8F2FA; color: #14547A; } .ds-dropdown-item--active { font-weight: 600; color: #2E7DD1; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Lucid Market (선명한 꿈 거래소)",
+    "overview": "길몽상점은 몽환적 소재(꿈)를 다루지만, 몽환적으로 디자인하지 않는다. 화면의 대부분은 딥 잉크(#0B2433)와 차분한 페이지 배경(#F4F7F9) 위에 트러스트 블루(#2E7DD1) 포인트를 절제해서 쓰는, 명료하고 신뢰할 수 있는 거래소의 톤이다. 신비로움은 색을 흐리는 방식이 아니라 국소적인 그라디언트(바이올렛→핑크→민트→골드)로만 등장한다 — \"꿈 감정하기\" CTA 버튼, 안내 배지처럼 이 제품에서 실제로 마법 같은 순간(AI가 꿈을 해석하는 순간)에만 그라디언트가 나타나고, 헤드라인 텍스트를 포함한 상품 목록·표·네비게이션·히어로 타이틀 같은 \"거래/정보\" 화면은 끝까지 평면적이고 절제된 블루/잉크 단색 팔레트를 유지한다. 그라디언트 텍스트(bg-clip-text)는 쓰지 않는다 — 장식적 강조는 항상 배경이나 버튼에만 준다.\n\n밀도는 낮은 편이다. 카드는 넉넉한 내부 패딩(16–24px)을 쓰고, 섹션 사이는 border-brand-line의 얇은 구분선으로만 나뉜다. 배경색 블록이나 굵은 섀도우로 섹션을 가르지 않는다. 형태 언어는 둥긂 쪽으로 확실히 기울어 있다 — 버튼과 배지는 완전한 pill(rounded-full), 카드와 모달은 부드러운 12–16px 라운드다. 각진 사각형이나 0 라운드는 이 시스템에 존재하지 않는다.",
+    "keyCharacteristics": [
+      "잉크(#0B2433) + 트러스트 블루(#2E7DD1)가 기본 어휘, 그라디언트는 \"AI가 꿈을 해석하는 마법의 순간\"에 배경/버튼으로만 등장하는 예외적 강조 — 텍스트에는 항상 단색을 쓴다.",
+      "완전한 pill 버튼·배지, 부드럽게 둥근 카드 — 각진 형태 없음.",
+      "평소엔 평면(테두리만), 상호작용 시에만 그림자가 뜨는 \"Lift-on-Interaction\" 입체감.",
+      "낮은 밀도, 넉넉한 여백, 얇은 구분선으로 나뉘는 섹션 리듬."
+    ],
+    "rules": [
+      { "name": "The One Blue Rule", "body": "상시 상호작용 색은 Trust Blue 하나뿐이다. 새 강조색을 추가하고 싶을 때 먼저 Trust Blue의 밝기/투명도 변형(light/hover)으로 해결되는지 확인한다.", "section": "colors" },
+      { "name": "The Gradient-Means-Magic Rule", "body": "바이올렛→핑크/골드/민트 그라디언트는 \"AI가 지금 꿈을 해석하고 있다\" 또는 \"이 순간은 특별하다\"는 신호로만 쓴다. 목록·표·일반 버튼에 장식으로 쓰지 않고, 텍스트(bg-clip-text)에도 쓰지 않는다 — 항상 배경/버튼 채움에만 쓴다.", "section": "colors" },
+      { "name": "The Token-Not-Hex Rule", "body": "모든 새 UI는 bg-brand-primary 같은 --color-brand-* 토큰으로 색을 지정한다. ShopProductGrid/ShopSidebar 등 일부 굿즈샵 컴포넌트가 같은 색을 원시 hex로 하드코딩하고 있는데, 이는 표준이 아니라 기술 부채다.", "section": "colors" },
+      { "name": "The No-Regular-Headline Rule", "body": "Display와 Headline 레벨은 항상 font-black(900)이다. font-semibold나 font-bold로 낮추면 이 시스템의 위계가 무너진다.", "section": "typography" },
+      { "name": "The Flat-Then-Lift Rule", "body": "이 시스템은 평소엔 완전히 평면적이다. 카드·사이드바·헤더는 정지 상태에서 border-brand-line 테두리만으로 구분되고 그림자가 없다. 그림자는 오직 상호작용(hover)이나 일시적 레이어(모달, 드롭다운 패널, 플로팅 버튼)에만 등장한다.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do 상시 상호작용 강조색은 Trust Blue(brand-primary) 하나로 통일한다.",
+      "Do 버튼·배지·pill류는 rounded-full로, 카드·모달·입력창은 12–16px 라운드로 통일한다.",
+      "Do 카드·리스트는 정지 시 무그림자(테두리만), hover·모달 등 일시적 레이어에서만 그림자를 준다.",
+      "Do display/headline 레벨 타이포그래피는 항상 font-black(900)을 쓴다.",
+      "Do 새 색상은 bg-brand-* / text-brand-* 토큰으로 지정한다.",
+      "Do 바이올렛→핑크/골드/민트 그라디언트는 \"AI가 꿈을 해석하는 순간\"에만 예외적으로 쓴다."
+    ],
+    "donts": [
+      "Don't 그라디언트를 일반 버튼·표·목록의 장식으로 남용하지 않는다 — 의미(AI 해석 중)를 잃는다.",
+      "Don't bg-clip-text로 텍스트에 그라디언트를 입히지 않는다 — 그라디언트는 배경/버튼 채움 전용이다.",
+      "Don't 새 컴포넌트에 원시 hex 색상(#2E7DD1 등)을 하드코딩하지 않는다. 굿즈샵 일부 컴포넌트의 하드코딩은 기술 부채이지 패턴이 아니다.",
+      "Don't 각진 모서리(rounded-none)나 순검정 텍스트를 쓰지 않는다 — 텍스트는 항상 brand-ink.",
+      "Don't 정지 상태의 카드/리스트에 상시 그림자를 기본값으로 넣지 않는다.",
+      "Don't 등급 배지 색(A~F)을 brand 팔레트로 교체하지 않는다 — 신호등 스펙트럼이 의도된 예외다."
+    ]
+  }
+}

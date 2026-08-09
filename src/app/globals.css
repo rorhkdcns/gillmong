@@ -59,4 +59,8 @@ body {
   --color-brand-pink:        #54D0E0;
   --color-brand-gold:        #F2B33D;
   --color-brand-mint:        #2FB68E;
+
+  /* 시맨틱 확장 (해몽 사전/해석 화면 전용) */
+  --color-brand-warning-text: #5A3D10;  /* 주의 섹션(경고형 콘텐츠) 텍스트 — #FDF6E8 배경과 짝 */
+  --color-brand-slate:        #6B96A8;  /* 해몽 관점 3색 코드 중 "서양 심리학적 관점" 전용 색 */
 }

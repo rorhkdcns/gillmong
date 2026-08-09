@@ -86,7 +86,7 @@ export default function MobileQuickMenu() {
           <span className={`flex h-[48px] w-[48px] items-center justify-center rounded-[12px] text-white ${item.bg}`}>
             <item.Icon />
           </span>
-          <span className="text-[11px] font-medium text-brand-ink-soft">{item.label}</span>
+          <span className="text-xs font-medium text-brand-ink-soft">{item.label}</span>
         </Link>
       ))}
     </div>

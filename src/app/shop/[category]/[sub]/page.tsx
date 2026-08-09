@@ -87,7 +87,7 @@ export default async function ShopSubcategoryPage({
           <span className="mx-1.5">›</span>
           <span>{subcat.name}</span>
         </nav>
-        <h1 className="text-2xl font-bold text-white md:text-[28px]">{subcat.name}</h1>
+        <h1 className="text-2xl font-bold text-white md:text-3xl">{subcat.name}</h1>
       </div>
 
       {/* 상품 그리드 */}
