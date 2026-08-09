@@ -141,9 +141,11 @@ export default function DictionaryFilterList({ entries }: Props) {
           <div>
             {groupedByChoseong.map(({ group, items }, gi) => (
               <div key={group}>
-                <h3 className={`px-1 text-lg font-bold text-[#0B2433] ${gi === 0 ? 'mb-2' : 'mb-2 mt-7'}`}>
-                  {group}
-                </h3>
+                <div className={`px-1 ${gi === 0 ? 'mb-2' : 'mb-2 mt-7'}`}>
+                  <span className="inline-flex h-8 min-w-8 items-center justify-center rounded-[10px] bg-brand-primary-light px-1.5 text-sm font-bold text-brand-primary-hover">
+                    {group}
+                  </span>
+                </div>
                 <div>
                   {items.map((e, i) => (
                     <Link
