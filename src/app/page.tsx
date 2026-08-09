@@ -84,18 +84,19 @@ export default async function Home() {
         {categories.map(({ slug, name }, idx) => (
           <section
             key={slug}
-            className={`px-6 py-12 ${idx !== 0 ? 'border-t border-brand-line' : ''}`}
+            className={`px-6 py-14 ${idx !== 0 ? 'border-t border-brand-line' : ''}`}
           >
             <div className="mx-auto max-w-6xl">
               {/* 섹션 헤더 */}
-              <div className="mb-6 text-center">
+              <div className="mb-10 text-center">
                 <Link
                   href={`/category/${slug}`}
-                  className="group inline-flex items-center"
+                  className="group inline-flex flex-col items-center gap-3"
                 >
-                  <h2 className="text-xl font-black text-brand-ink transition group-hover:text-brand-violet sm:text-2xl">
+                  <h2 className="text-xl font-black text-brand-ink transition group-hover:text-brand-primary-hover sm:text-2xl">
                     {name}
                   </h2>
+                  <span className="h-1 w-10 rounded-full bg-brand-primary transition group-hover:w-14" />
                 </Link>
               </div>
 

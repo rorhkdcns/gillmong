@@ -118,7 +118,7 @@ export default function InquiryPage() {
           </div>
 
           <div className="mt-6 rounded-xl bg-amber-50 border border-amber-100 px-5 py-4 text-sm text-amber-700">
-            <p className="font-semibold">📌 안내사항</p>
+            <p className="font-semibold">안내사항</p>
             <ul className="mt-2 space-y-1 text-xs text-amber-600">
               <li>• 답변은 마이페이지 → 1:1 문의 내역에서 확인하실 수 있습니다.</li>
               <li>• 운영시간: 평일 10:00 ~ 18:00 (주말·공휴일 제외)</li>

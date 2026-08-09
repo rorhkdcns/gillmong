@@ -233,7 +233,7 @@ export default function DreamInput() {
           disabled={loading}
           className="w-full rounded-xl bg-gradient-to-r from-brand-violet to-brand-pink py-5 text-xl font-black text-white shadow-[0_10px_26px_rgba(11,36,51,0.28)] transition-all hover:brightness-95 active:scale-[0.98] disabled:opacity-60"
         >
-          ✨ 나의 꿈 감정하기
+          나의 꿈 감정하기
         </button>
       </div>
 
