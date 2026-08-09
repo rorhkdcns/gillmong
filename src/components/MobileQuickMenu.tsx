@@ -54,6 +54,15 @@ function UserIcon() {
   )
 }
 
+function TagIcon() {
+  return (
+    <svg {...ICON_PROPS}>
+      <path d="M12.586 2.586a2 2 0 0 0 -2.828 0l-8.172 8.172a2 2 0 0 0 0 2.828l6.586 6.586a2 2 0 0 0 2.828 0l8.172 -8.172a2 2 0 0 0 0 -2.828z" />
+      <path d="M16 8h.01" />
+    </svg>
+  )
+}
+
 export default function MobileQuickMenu() {
   const [loggedIn, setLoggedIn] = useState(false)
 
@@ -69,21 +78,22 @@ export default function MobileQuickMenu() {
   }, [])
 
   const items = [
-    { label: '꿈 감정하기', href: '/#appraisal', bg: 'bg-[#534AB7]', Icon: MoonStarsIcon },
-    { label: '해몽 사전', href: '/dictionary', bg: 'bg-[#0F6E56]', Icon: BookIcon },
-    { label: '꿈 구경하기', href: '/category/all', bg: 'bg-[#185FA5]', Icon: ShoppingBagIcon },
-    { label: '마이페이지', href: loggedIn ? '/mypage' : '/auth/login', bg: 'bg-[#5F5E5A]', Icon: UserIcon },
+    { label: '꿈감정', href: '/#appraisal', gradient: 'from-[#534AB7] to-[#6F63D6]', Icon: MoonStarsIcon },
+    { label: '꿈구경', href: '/category/all', gradient: 'from-[#185FA5] to-[#2E7DD1]', Icon: ShoppingBagIcon },
+    { label: '해몽사전', href: '/dictionary', gradient: 'from-[#0F6E56] to-[#1D9E75]', Icon: BookIcon },
+    { label: '굿즈샵', href: '/shop', gradient: 'from-[#B5502A] to-[#D46B3E]', Icon: TagIcon },
+    { label: '마이', href: loggedIn ? '/mypage' : '/auth/login', gradient: 'from-[#5F5E5A] to-[#7A7975]', Icon: UserIcon },
   ]
 
   return (
-    <div className="grid grid-cols-4 gap-1 px-4 py-5 md:hidden">
+    <div className="grid grid-cols-5 gap-0.5 px-2 py-5 md:hidden">
       {items.map((item) => (
         <Link
           key={item.label}
           href={item.href}
           className="flex flex-col items-center gap-1.5 py-1"
         >
-          <span className={`flex h-[48px] w-[48px] items-center justify-center rounded-[12px] text-white ${item.bg}`}>
+          <span className={`flex h-[48px] w-[48px] items-center justify-center rounded-[12px] bg-gradient-to-br text-white ${item.gradient}`}>
             <item.Icon />
           </span>
           <span className="text-xs font-medium text-brand-ink-soft">{item.label}</span>
