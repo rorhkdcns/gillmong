@@ -20,6 +20,7 @@ import {
   bulkUpdateAdminProductActive,
   bulkAddAdminProductTags,
   bulkDeleteAdminProducts,
+  generateShopProducts,
   type AdminAffiliateFields,
 } from '../actions'
 import ImageThumbnail from '@/components/ImageThumbnail'
@@ -160,6 +161,27 @@ export default function AdminShopProductsPage() {
 
   async function handleReactivate(id: string) {
     await reactivateAdminAffiliateProduct(id)
+    load()
+  }
+
+  // ── 카테고리/하위카테고리 행의 "상품생성" 버튼 (구 collect_shop_products.py 대체) ──
+  const [generatingKey, setGeneratingKey] = useState<string | null>(null)
+  const [generateResult, setGenerateResult] = useState<Record<string, { ok: boolean; text: string }>>({})
+
+  async function handleGenerateProducts(categoryId: string, subcategoryId: string | undefined, rowKey: string) {
+    setGeneratingKey(rowKey)
+    setGenerateResult((prev) => {
+      if (!(rowKey in prev)) return prev
+      const next = { ...prev }; delete next[rowKey]; return next
+    })
+    const result = await generateShopProducts(categoryId, subcategoryId)
+    setGeneratingKey(null)
+    if (result.error) {
+      setGenerateResult((prev) => ({ ...prev, [rowKey]: { ok: false, text: result.error! } }))
+      return
+    }
+    const skipNote = result.skipCount ? ` (중복 ${result.skipCount}개 건너뜀)` : ''
+    setGenerateResult((prev) => ({ ...prev, [rowKey]: { ok: true, text: `신규 ${result.newCount ?? 0}개 저장됨${skipNote}` } }))
     load()
   }
 
@@ -933,14 +955,26 @@ export default function AdminShopProductsPage() {
                         <td className="px-4 py-3 text-[#777]">{catProducts.length}</td>
                         <td className="px-4 py-3 text-[#777]">{catProducts.filter((p) => p.is_active).length}</td>
                         <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
-                          <div className="flex items-center gap-3">
+                          <div className="flex flex-wrap items-center gap-3">
                             <button onClick={() => openEditCat(c)} className="text-xs text-blue-500 hover:text-blue-700">수정</button>
+                            <button
+                              onClick={() => handleGenerateProducts(c.id, undefined, `cat:${c.id}`)}
+                              disabled={generatingKey === `cat:${c.id}`}
+                              className="text-xs text-brand-primary hover:text-brand-primary-hover disabled:opacity-50"
+                            >
+                              {generatingKey === `cat:${c.id}` ? '생성 중...' : '상품생성'}
+                            </button>
                             <button
                               onClick={() => setDeleteTarget({ type: 'category', id: c.id, label: c.name })}
                               className="text-xs text-red-400 hover:text-red-600"
                             >
                               삭제
                             </button>
+                            {generateResult[`cat:${c.id}`] && (
+                              <span className={`text-xs ${generateResult[`cat:${c.id}`].ok ? 'text-emerald-600' : 'text-red-500'}`}>
+                                {generateResult[`cat:${c.id}`].text}
+                              </span>
+                            )}
                           </div>
                         </td>
                       </tr>
@@ -982,14 +1016,26 @@ export default function AdminShopProductsPage() {
                                             <td className="px-4 py-2 font-medium text-[#333]">{s.name}</td>
                                             <td className="px-4 py-2 text-[#777]">{productsOfSubcategory(s.id).length}개</td>
                                             <td className="px-4 py-2" onClick={(e) => e.stopPropagation()}>
-                                              <div className="flex items-center gap-2.5">
+                                              <div className="flex flex-wrap items-center gap-2.5">
                                                 <button onClick={() => openEditSub(s)} className="text-blue-500 hover:text-blue-700">수정</button>
+                                                <button
+                                                  onClick={() => handleGenerateProducts(s.category_id, s.id, `sub:${s.id}`)}
+                                                  disabled={generatingKey === `sub:${s.id}`}
+                                                  className="text-brand-primary hover:text-brand-primary-hover disabled:opacity-50"
+                                                >
+                                                  {generatingKey === `sub:${s.id}` ? '생성 중...' : '상품생성'}
+                                                </button>
                                                 <button
                                                   onClick={() => setDeleteTarget({ type: 'subcategory', id: s.id, label: s.name })}
                                                   className="text-red-400 hover:text-red-600"
                                                 >
                                                   삭제
                                                 </button>
+                                                {generateResult[`sub:${s.id}`] && (
+                                                  <span className={generateResult[`sub:${s.id}`].ok ? 'text-emerald-600' : 'text-red-500'}>
+                                                    {generateResult[`sub:${s.id}`].text}
+                                                  </span>
+                                                )}
                                               </div>
                                             </td>
                                           </tr>

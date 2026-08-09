@@ -3,6 +3,7 @@
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { requireAdminAction } from '@/lib/supabase/adminAuth'
+import { searchProducts } from '@/lib/coupang'
 
 // 카테고리는 여러 페이지(메인/카테고리/사전)가 getActiveCategories() 캐시를 공유해서 쓰므로
 // 태그 무효화 + 그 캐시를 쓰는 ISR 페이지들의 경로 무효화를 함께 해줘야 즉시 반영된다.
@@ -1207,6 +1208,99 @@ export async function getAdminShopProducts(): Promise<{ data: unknown[]; error?:
     .order('sort_order', { ascending: true })
   if (error) return { data: [], error: error.message }
   return { data: data ?? [] }
+}
+
+// ── 상품 자동 생성(카테고리/하위카테고리 단위) ──────────────────────────
+// 로컬 파이썬 스크립트(collect_shop_products.py)로 하던 "쿠팡 검색 → 신규 상품 저장"을
+// 관리자 화면의 카테고리/하위카테고리 행 버튼으로 대체한다. 쿠팡 검색/저장 로직 자체는
+// /api/admin/coupang/search, /api/admin/coupang/save 라우트와 같은 방식을 따르되,
+// 중복 판별만 이 함수는 link_url 기준으로 한다(그 라우트들은 product_id 기준).
+// product_id/coupang_product_id/last_checked_at도 함께 채워서 /api/cron/affiliate-health
+// (product_id가 있는 상품만 자동 점검 대상으로 삼음)가 이후 정상적으로 점검할 수 있게 한다.
+export async function generateShopProducts(
+  categoryId: string, subcategoryId?: string,
+): Promise<{ newCount?: number; skipCount?: number; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
+  const admin = createAdminClient()
+
+  const { data: category, error: catErr } = await admin
+    .from('shop_categories')
+    .select('id, name, search_keyword')
+    .eq('id', categoryId)
+    .single()
+  if (catErr || !category) return { error: catErr?.message ?? '카테고리를 찾을 수 없습니다.' }
+
+  let subcategory: { name: string; search_keyword: string | null } | null = null
+  if (subcategoryId) {
+    const { data, error: subErr } = await admin
+      .from('shop_subcategories')
+      .select('name, search_keyword')
+      .eq('id', subcategoryId)
+      .single()
+    if (subErr || !data) return { error: subErr?.message ?? '하위카테고리를 찾을 수 없습니다.' }
+    subcategory = data
+  }
+
+  const keyword = subcategory
+    ? (subcategory.search_keyword || subcategory.name)
+    : (category.search_keyword || category.name)
+
+  const result = await searchProducts(keyword, 10)
+  if (!result.ok) return { error: result.error }
+
+  const linkUrls = result.data.map((p) => p.productUrl)
+  const existingLinks = new Set<string>()
+  if (linkUrls.length > 0) {
+    const { data: existingRows, error: existingErr } = await admin
+      .from('affiliate_products')
+      .select('link_url')
+      .in('link_url', linkUrls)
+    if (existingErr) return { error: existingErr.message }
+    for (const row of existingRows ?? []) existingLinks.add(row.link_url)
+  }
+
+  const newProducts = result.data.filter((p) => !existingLinks.has(p.productUrl))
+  const skipCount = result.data.length - newProducts.length
+
+  if (newProducts.length > 0) {
+    const { data: maxRow } = await admin
+      .from('affiliate_products')
+      .select('sort_order')
+      .order('sort_order', { ascending: false })
+      .limit(1)
+      .single()
+    let nextSortOrder = (maxRow?.sort_order ?? 0) + 1
+
+    const now = new Date().toISOString()
+    const rows = newProducts.map((p) => ({
+      title: p.productName,
+      price_text: Number.isFinite(p.productPrice) ? `${p.productPrice.toLocaleString()}원` : null,
+      image_url: p.productImage || null,
+      link_url: p.productUrl,
+      tags: [],
+      sort_order: nextSortOrder++,
+      is_active: false,
+      coupang_product_id: String(p.productId),
+      product_id: String(p.productId),
+      last_checked_at: now,
+      shop_category_id: categoryId,
+      shop_subcategory_id: subcategoryId ?? null,
+    }))
+
+    const { error: insertErr } = await admin.from('affiliate_products').insert(rows)
+    if (insertErr) return { error: insertErr.message }
+  }
+
+  const nowIso = new Date().toISOString()
+  if (subcategoryId) {
+    await admin.from('shop_subcategories').update({ last_collected_at: nowIso }).eq('id', subcategoryId)
+  } else {
+    await admin.from('shop_categories').update({ last_collected_at: nowIso }).eq('id', categoryId)
+  }
+
+  return { newCount: newProducts.length, skipCount }
 }
 
 // ── 상품 일괄 작업(체크박스 선택 후 카테고리/발행상태/태그/삭제) ──────────────────
