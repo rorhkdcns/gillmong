@@ -1101,7 +1101,7 @@ export async function generateDictionaryDraft(
     .select('keyword, search_volume')
     .eq('headword_id', target.id)
     .order('search_volume', { ascending: false })
-  if (longtailErr) return { error: longtailErr.message }
+  if (longtailErr) return { headword: target.headword, error: longtailErr.message }
   const longtails = longtailRows ?? []
 
   // ── 2. keyword / slug 생성 ──
@@ -1134,13 +1134,13 @@ export async function generateDictionaryDraft(
   if (!res || !res.ok) {
     const errText = await res?.text()
     console.error('[generateDictionaryDraft] Gemini API 오류', { status: res?.status, errText })
-    return { error: `Gemini API 오류 (${res?.status ?? '알 수 없음'})` }
+    return { headword: target.headword, error: `Gemini API 오류 (${res?.status ?? '알 수 없음'})` }
   }
 
   const geminiData = await res.json()
   if (isBlockedResponse(geminiData)) {
     console.error('[generateDictionaryDraft] Gemini 안전 차단', target.headword)
-    return { error: '콘텐츠 생성이 차단되었습니다. (안전 필터)' }
+    return { headword: target.headword, error: '콘텐츠 생성이 차단되었습니다. (안전 필터)' }
   }
 
   const rawText: string = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
@@ -1163,7 +1163,7 @@ export async function generateDictionaryDraft(
   }
   body = autoFixLabelDescPairs(body)
 
-  if (!summary || !body) return { error: 'Gemini 응답을 파싱하지 못했습니다.' }
+  if (!summary || !body) return { headword: target.headword, error: 'Gemini 응답을 파싱하지 못했습니다.' }
 
   // ── 5. 저장 ──
   const tags = longtails.slice(0, 5).map((l) => l.keyword)
@@ -1179,11 +1179,70 @@ export async function generateDictionaryDraft(
     is_published: false,
     updated_at: new Date().toISOString(),
   })
-  if (insertErr) return { error: insertErr.message }
+  if (insertErr) return { headword: target.headword, error: insertErr.message }
 
   await admin.from('dictionary_headwords').update({ status: '초안생성' }).eq('id', target.id)
 
   return { headword: target.headword, slug: finalSlug, bodyLength: body.length }
+}
+
+// ── 사전 초안 여러 개 순차 생성 ──────────────────────────────────────
+// generateDictionaryDraft()를 표제어 하나가 남아있지 않을 때까지(또는 count에 도달할
+// 때까지) 순차 반복 호출한다. 매번 "다음 우선순위 미작성 표제어"를 새로 조회해야 하므로
+// 병렬화하지 않고, Gemini API 요청 제한을 피하려고 회차 사이에 짧은 딜레이를 둔다.
+export interface DictionaryDraftBatchItem {
+  headword: string
+  slug?: string
+  status: 'ok' | 'error'
+  message?: string
+}
+
+export interface DictionaryDraftBatchResult {
+  requested: number
+  succeeded: number
+  failed: number
+  results: DictionaryDraftBatchItem[]
+  stoppedReason?: string
+}
+
+const DRAFT_BATCH_MAX_COUNT = 20
+const DRAFT_BATCH_DELAY_MS = 1500
+const NO_HEADWORD_LEFT_MESSAGE = '생성할 표제어가 없습니다.'
+
+export async function generateDictionaryDrafts(
+  categorySlug?: string, count: number = 1,
+): Promise<DictionaryDraftBatchResult> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { requested: 0, succeeded: 0, failed: 0, results: [], stoppedReason: auth.error }
+
+  const clampedCount = Math.min(DRAFT_BATCH_MAX_COUNT, Math.max(1, Math.trunc(count) || 1))
+  const results: DictionaryDraftBatchItem[] = []
+  let stoppedReason: string | undefined
+
+  for (let i = 0; i < clampedCount; i++) {
+    if (i > 0) await new Promise((r) => setTimeout(r, DRAFT_BATCH_DELAY_MS))
+
+    const result = await generateDictionaryDraft(categorySlug)
+
+    if (result.error) {
+      if (!result.headword && result.error === NO_HEADWORD_LEFT_MESSAGE) {
+        stoppedReason = result.error
+        break
+      }
+      results.push({ headword: result.headword ?? '(알 수 없음)', status: 'error', message: result.error })
+      continue
+    }
+
+    results.push({ headword: result.headword!, slug: result.slug, status: 'ok' })
+  }
+
+  return {
+    requested: clampedCount,
+    succeeded: results.filter((r) => r.status === 'ok').length,
+    failed: results.filter((r) => r.status === 'error').length,
+    results,
+    stoppedReason,
+  }
 }
 
 // ── 제휴 상품 ──────────────────────────────────────────────────

@@ -10,12 +10,13 @@ import {
   checkAdminDictionarySlugExists,
   createAdminDictionaryEntry,
   deleteAdminDictionaryEntry,
-  generateDictionaryDraft,
+  generateDictionaryDrafts,
   getAdminDictionaryEntries,
   getAdminDictionaryEntryById,
   getAdminDictionarySubcategories,
   updateAdminDictionaryEntry,
   type AdminDictionaryFields,
+  type DictionaryDraftBatchResult,
 } from '../actions'
 
 type Entry = {
@@ -295,20 +296,22 @@ export default function AdminDictionaryPage() {
   }
 
   // ── 글생성 (구 generate_drafts.py 대체) ──────────────────────────────
+  const [draftCount, setDraftCount] = useState(1)
   const [generatingDraft, setGeneratingDraft] = useState(false)
-  const [draftResult, setDraftResult] = useState<{ ok: boolean; text: string } | null>(null)
+  const [draftResult, setDraftResult] = useState<DictionaryDraftBatchResult | null>(null)
+
+  function handleDraftCountChange(value: string) {
+    const n = parseInt(value, 10)
+    setDraftCount(Number.isNaN(n) ? 1 : Math.min(20, Math.max(1, n)))
+  }
 
   async function handleGenerateDraft() {
     setGeneratingDraft(true)
     setDraftResult(null)
-    const result = await generateDictionaryDraft(categoryFilter === ALL_CATEGORY ? undefined : categoryFilter)
+    const result = await generateDictionaryDrafts(categoryFilter === ALL_CATEGORY ? undefined : categoryFilter, draftCount)
     setGeneratingDraft(false)
-    if (result.error) {
-      setDraftResult({ ok: false, text: result.error })
-      return
-    }
-    setDraftResult({ ok: true, text: `"${result.headword}" 표제어로 글 저장됨 (본문 ${result.bodyLength}자)` })
-    load()
+    setDraftResult(result)
+    if (result.succeeded > 0) load()
   }
 
   return (
@@ -541,19 +544,46 @@ export default function AdminDictionaryPage() {
                 {c.name} ({categoryCounts.get(c.slug) ?? 0})
               </button>
             ))}
-            <button
-              type="button"
-              onClick={handleGenerateDraft}
-              disabled={generatingDraft}
-              className="ml-auto shrink-0 rounded bg-brand-primary px-3 py-1.5 text-xs font-semibold text-white hover:brightness-95 disabled:opacity-60"
-            >
-              {generatingDraft ? '생성 중...' : '글생성'}
-            </button>
+            <div className="ml-auto flex shrink-0 items-center gap-1.5">
+              <input
+                type="number"
+                min={1}
+                max={20}
+                value={draftCount}
+                onChange={(e) => handleDraftCountChange(e.target.value)}
+                disabled={generatingDraft}
+                className="w-14 rounded border border-gray-200 px-2 py-1.5 text-xs outline-none focus:border-brand-violet disabled:bg-gray-100 disabled:text-gray-400"
+              />
+              <button
+                type="button"
+                onClick={handleGenerateDraft}
+                disabled={generatingDraft}
+                className="rounded bg-brand-primary px-3 py-1.5 text-xs font-semibold text-white hover:brightness-95 disabled:opacity-60"
+              >
+                {generatingDraft ? '생성 중...' : `${draftCount}개 글생성`}
+              </button>
+            </div>
           </div>
           {draftResult && (
-            <p className={`mt-2 text-xs ${draftResult.ok ? 'text-emerald-600' : 'text-red-500'}`}>
-              {draftResult.text}
-            </p>
+            <div className="mt-2 text-xs">
+              {draftResult.requested === 0 ? (
+                <p className="text-red-500">{draftResult.stoppedReason}</p>
+              ) : draftResult.succeeded === 0 && draftResult.failed === 0 ? (
+                <p className="text-gray-500">{draftResult.stoppedReason ?? '생성할 표제어가 없습니다.'}</p>
+              ) : (
+                <p className={draftResult.failed > 0 ? 'text-amber-600' : 'text-emerald-600'}>
+                  {draftResult.succeeded}개 생성 완료{draftResult.failed > 0 ? ` (실패 ${draftResult.failed}개)` : ''}
+                  {draftResult.stoppedReason ? ` — ${draftResult.stoppedReason}` : ''}
+                </p>
+              )}
+              {draftResult.results.some((r) => r.status === 'error') && (
+                <ul className="mt-1 list-disc space-y-0.5 pl-4 text-red-500">
+                  {draftResult.results.filter((r) => r.status === 'error').map((r, i) => (
+                    <li key={i}>{r.headword}: {r.message}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
           )}
 
           {/* 발행상태 필터 */}
