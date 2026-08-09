@@ -764,7 +764,7 @@ export default function AdminShopProductsPage() {
                         <input type="checkbox" checked={selectedProductIds.has(p.id)} onChange={() => toggleProductSelect(p.id)} className="accent-brand-ink" />
                       </td>
                       <td className="px-4 py-2">
-                        <ImageThumbnail src={p.image_url} alt={p.title} className="h-12 w-12 rounded object-cover" />
+                        <ImageThumbnail src={p.image_url} alt={p.title} className="h-12 w-12 rounded bg-gray-50 object-contain" />
                       </td>
                       <td className="max-w-xs px-4 py-2 font-medium text-[#333]">
                         <span className="line-clamp-2">{p.title}</span>
@@ -1190,20 +1190,20 @@ export default function AdminShopProductsPage() {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
-                    <th className="w-10 px-6 py-3">
+                    <th className="w-10 whitespace-nowrap px-6 py-3">
                       <input type="checkbox" checked={allVisibleSelected} onChange={toggleSelectAllInAllList} className="accent-brand-ink" />
                     </th>
-                    <th className="px-6 py-3">썸네일</th>
-                    <th className="px-6 py-3">상품명</th>
-                    <th className="px-6 py-3">카테고리</th>
-                    <th className="px-6 py-3">가격</th>
-                    <th className="px-6 py-3">태그</th>
-                    <th className="px-6 py-3">활성여부</th>
-                    <th className="px-6 py-3">노출수</th>
-                    <th className="px-6 py-3">클릭수</th>
-                    <th className="px-6 py-3">클릭률</th>
-                    <th className="px-6 py-3">마지막 확인</th>
-                    <th className="px-6 py-3">관리</th>
+                    <th className="whitespace-nowrap px-6 py-3">썸네일</th>
+                    <th className="whitespace-nowrap px-6 py-3">상품명</th>
+                    <th className="whitespace-nowrap px-6 py-3">카테고리</th>
+                    <th className="whitespace-nowrap px-6 py-3">가격</th>
+                    <th className="whitespace-nowrap px-6 py-3">태그</th>
+                    <th className="whitespace-nowrap px-6 py-3">활성여부</th>
+                    <th className="whitespace-nowrap px-6 py-3">노출수</th>
+                    <th className="whitespace-nowrap px-6 py-3">클릭수</th>
+                    <th className="whitespace-nowrap px-6 py-3">클릭률</th>
+                    <th className="whitespace-nowrap px-6 py-3">마지막 확인</th>
+                    <th className="whitespace-nowrap px-6 py-3">관리</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -1211,10 +1211,10 @@ export default function AdminShopProductsPage() {
                     const imageBroken = !p.image_url || brokenImageIds.has(p.id)
                     return (
                       <tr key={p.id} className={hasNoPerformance(p) ? 'bg-gray-100' : undefined}>
-                        <td className="px-6 py-3">
+                        <td className="whitespace-nowrap px-6 py-3">
                           <input type="checkbox" checked={selectedProductIds.has(p.id)} onChange={() => toggleProductSelect(p.id)} className="accent-brand-ink" />
                         </td>
-                        <td className="px-6 py-3">
+                        <td className="whitespace-nowrap px-6 py-3">
                           {imageBroken ? (
                             <ImageThumbnail src={null} alt={p.title} className="h-14 w-14 rounded" />
                           ) : (
@@ -1222,7 +1222,7 @@ export default function AdminShopProductsPage() {
                               <ImageThumbnail
                                 src={p.image_url}
                                 alt={p.title}
-                                className="h-14 w-14 rounded object-cover"
+                                className="h-14 w-14 rounded bg-gray-50 object-contain"
                                 onError={() => markImageBroken(p.id)}
                               />
                             </a>
@@ -1231,26 +1231,26 @@ export default function AdminShopProductsPage() {
                         <td className="px-6 py-3 font-medium text-[#333]">
                           {p.title}
                           {imageBroken && (
-                            <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500">
+                            <span className="ml-2 whitespace-nowrap rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500">
                               이미지 없음
                             </span>
                           )}
                         </td>
                         <td className="px-6 py-3 text-[#777]">{categoryLabel(p)}</td>
-                        <td className="px-6 py-3 text-[#777]">{p.price_text ?? '-'}</td>
+                        <td className="whitespace-nowrap px-6 py-3 text-[#777]">{p.price_text ?? '-'}</td>
                         <td className="px-6 py-3 text-[#777]">{(p.tags ?? []).join(', ') || '-'}</td>
-                        <td className="px-6 py-3">
+                        <td className="whitespace-nowrap px-6 py-3">
                           <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${p.is_active ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500'}`}>
                             {p.is_active ? '활성' : '비활성'}
                           </span>
                         </td>
-                        <td className="px-6 py-3 text-[#777]">{p.impression_count.toLocaleString()}</td>
-                        <td className="px-6 py-3 text-[#777]">{p.click_count.toLocaleString()}</td>
-                        <td className="px-6 py-3 text-[#777]">{ctrLabel(p.click_count, p.impression_count)}</td>
-                        <td className={`px-6 py-3 ${isStale(p.last_checked_at) ? 'bg-amber-50 text-amber-700' : 'text-[#777]'}`}>
+                        <td className="whitespace-nowrap px-6 py-3 text-[#777]">{p.impression_count.toLocaleString()}</td>
+                        <td className="whitespace-nowrap px-6 py-3 text-[#777]">{p.click_count.toLocaleString()}</td>
+                        <td className="whitespace-nowrap px-6 py-3 text-[#777]">{ctrLabel(p.click_count, p.impression_count)}</td>
+                        <td className={`whitespace-nowrap px-6 py-3 ${isStale(p.last_checked_at) ? 'bg-amber-50 text-amber-700' : 'text-[#777]'}`}>
                           {p.last_checked_at ? new Date(p.last_checked_at).toLocaleDateString('ko-KR') : '미확인'}
                         </td>
-                        <td className="px-6 py-3">
+                        <td className="whitespace-nowrap px-6 py-3">
                           <div className="flex items-center gap-3">
                             <button onClick={() => toggleProductActive(p)} className="text-xs text-amber-600 hover:text-amber-800">
                               {p.is_active ? '비공개로' : '공개로'}
@@ -1460,7 +1460,7 @@ export default function AdminShopProductsPage() {
                       placeholder="https://..."
                       className="flex-1 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
                     />
-                    <ImageThumbnail key={pImageUrl} src={pImageUrl.trim() || null} alt="미리보기" className="h-14 w-14 shrink-0 rounded object-cover" />
+                    <ImageThumbnail key={pImageUrl} src={pImageUrl.trim() || null} alt="미리보기" className="h-14 w-14 shrink-0 rounded bg-gray-50 object-contain" />
                   </div>
                 </div>
 
@@ -1566,7 +1566,7 @@ export default function AdminShopProductsPage() {
                             onChange={() => toggleCoupangSelect(p.productId)}
                             className="accent-brand-ink"
                           />
-                          <ImageThumbnail src={p.productImage} alt={p.productName} className="h-16 w-16 shrink-0 rounded object-cover" />
+                          <ImageThumbnail src={p.productImage} alt={p.productName} className="h-16 w-16 shrink-0 rounded bg-gray-50 object-contain" />
                           <div className="min-w-0 flex-1">
                             <p className="truncate text-sm font-medium text-[#333]">{p.productName}</p>
                             <p className="text-xs text-[#777]">{p.productPrice.toLocaleString()}원</p>
