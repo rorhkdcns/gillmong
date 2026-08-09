@@ -163,15 +163,15 @@ export default function SiteHeader({ categories }: Props) {
       <FloatingDreamButton remaining={remaining} fetchRemaining={fetchRemaining} />
       <div className="sticky top-0 z-50">
         <header className="border-b border-brand-line bg-white/85 backdrop-blur-lg">
-          <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+          <div className="relative mx-auto min-h-[74px] max-w-6xl px-6 py-3">
 
-            {/* 로고 */}
-            <Link href="/" className="flex items-center">
+            {/* 로고 — 메뉴 폭을 본문 컨테이너(max-w-[600px])와 맞추기 위해 좌측에 절대 배치 */}
+            <Link href="/" className="absolute left-6 top-1/2 flex -translate-y-1/2 items-center">
               <Image src="/logo_1.jpg" alt="길몽상점" height={50} width={160} className="h-[50px] w-auto object-contain" priority />
             </Link>
 
-            {/* 데스크탑 네비 */}
-            <nav className="hidden items-center gap-1 md:flex">
+            {/* 데스크탑 네비 — 좌우 끝이 본문 컨테이너(max-w-[600px])와 정확히 맞도록 독립적으로 중앙 정렬 */}
+            <nav className="mx-auto hidden max-w-[600px] items-center justify-between lg:flex">
               {NAV.map((item) =>
                 item.dropdown ? (
                   /* 드롭다운 메뉴 */
@@ -215,12 +215,12 @@ export default function SiteHeader({ categories }: Props) {
             </nav>
 
             {/* 우측 액션 */}
-            <div className="flex items-center gap-4 text-brand-ink-soft">
+            <div className="absolute right-6 top-1/2 flex -translate-y-1/2 items-center gap-4 text-brand-ink-soft">
               {/* 검색 버튼 (데스크탑) */}
               <button
                 type="button"
                 onClick={() => setSearchOpen((v) => !v)}
-                className={`hidden transition-colors hover:text-brand-ink md:block ${searchOpen ? 'text-brand-ink' : ''}`}
+                className={`hidden transition-colors hover:text-brand-ink lg:block ${searchOpen ? 'text-brand-ink' : ''}`}
               >
                 {searchOpen
                   ? <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -230,7 +230,7 @@ export default function SiteHeader({ categories }: Props) {
               {/* 로그인/유저 (데스크탑) */}
               <Link
                 href={loggedIn ? '/mypage' : '/auth/login'}
-                className="flex items-center gap-1.5 text-brand-ink-soft transition-colors hover:text-brand-ink max-md:hidden"
+                className="flex items-center gap-1.5 text-brand-ink-soft transition-colors hover:text-brand-ink max-lg:hidden"
               >
                 <svg className="h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0zM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7z" />
@@ -251,7 +251,7 @@ export default function SiteHeader({ categories }: Props) {
 
               {/* 로그인 상태 (모바일) */}
               {loggedIn && (
-                <Link href="/mypage" className="flex flex-col items-end leading-tight md:hidden">
+                <Link href="/mypage" className="flex flex-col items-end leading-tight lg:hidden">
                   <span className="text-xs font-semibold text-brand-ink">{nickname}님</span>
                   {remaining !== null && (
                     <span className={`text-xs ${remaining === 0 ? 'text-red-400' : 'text-brand-primary'}`}>
@@ -262,7 +262,7 @@ export default function SiteHeader({ categories }: Props) {
               )}
 
               {/* 햄버거 (모바일) */}
-              <button type="button" onClick={() => setMenuOpen(true)} className="flex items-center justify-center text-brand-ink md:hidden">
+              <button type="button" onClick={() => setMenuOpen(true)} className="flex items-center justify-center text-brand-ink lg:hidden">
                 <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
@@ -282,12 +282,12 @@ export default function SiteHeader({ categories }: Props) {
 
       {/* 모바일 오버레이 */}
       <div
-        className={`fixed inset-0 z-[60] bg-black/40 transition-opacity duration-300 md:hidden ${menuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
+        className={`fixed inset-0 z-[60] bg-black/40 transition-opacity duration-300 lg:hidden ${menuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
         onClick={() => setMenuOpen(false)}
       />
 
       {/* 모바일 사이드 패널 */}
-      <div className={`fixed right-0 top-0 z-[70] h-full w-72 bg-white shadow-2xl transition-transform duration-300 ease-in-out md:hidden ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div className={`fixed right-0 top-0 z-[70] h-full w-72 bg-white shadow-2xl transition-transform duration-300 ease-in-out lg:hidden ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
         {/* 패널 헤더 */}
         <div className="flex items-center justify-between border-b border-brand-line px-5 py-4">
           <span className="text-base font-semibold text-brand-ink">메뉴</span>
