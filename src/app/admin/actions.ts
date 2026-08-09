@@ -4,6 +4,9 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { requireAdminAction } from '@/lib/supabase/adminAuth'
 import { searchProducts } from '@/lib/coupang'
+import { keywordToSlug } from '@/lib/slugify'
+import { romanize } from '@/lib/romanize'
+import { SAFETY_SETTINGS, isBlockedResponse } from '@/lib/contentFilter'
 
 // 카테고리는 여러 페이지(메인/카테고리/사전)가 getActiveCategories() 캐시를 공유해서 쓰므로
 // 태그 무효화 + 그 캐시를 쓰는 ISR 페이지들의 경로 무효화를 함께 해줘야 즉시 반영된다.
@@ -958,6 +961,229 @@ export async function deleteAdminDictionaryEntry(id: string): Promise<{ success?
   if (error) return { error: error.message }
   revalidateDictionaryPages()
   return { success: true }
+}
+
+// ── 사전 초안 자동 생성(구 generate_drafts.py 대체) ──────────────────────
+// dictionary_headwords에서 미작성 표제어를 하나 골라 Gemini로 글을 쓰고
+// dictionary_entries에 비공개(is_published: false) 초안으로 저장한다.
+const DRAFT_GEMINI_MODEL = 'gemini-2.5-flash'
+const DRAFT_GEMINI_URL =
+  `https://generativelanguage.googleapis.com/v1beta/models/${DRAFT_GEMINI_MODEL}:generateContent`
+const BODY_MARKER = '===BODY==='
+
+function buildDraftPrompt(headword: string, longtailKeywords: string[]): string {
+  const longtailBlock = longtailKeywords.map((k) => `   - ${k}`).join('\n')
+  return `한국 전통 꿈해몽 사전에 들어갈 글을 써줘. 표제어: "${headword}"
+
+실제 검색되는 관련 키워드들이야. 이 중 자연스러운 것들을 "상황별 해석" 항목으로 다뤄줘.
+전부 억지로 넣지 말고 뜻이 통하는 것만 골라도 돼:
+${longtailBlock}
+
+────────────────────────────────────
+출력 형식 — 반드시 이 형식 그대로 지켜줘. HTML 태그, 마크다운(#, *, **) 절대 쓰지 마.
+
+첫 줄에 한 줄 요약(길몽/흉몽/양면 여부, 1~2문장)만 쓰고,
+그다음 줄에 정확히 "===BODY===" 라고만 쓰고,
+그다음부터 아래 문법으로 본문을 써줘:
+
+  [[소제목]]              -> 일반 섹션 시작
+  [[!소제목]]             -> 주의/반전 섹션 시작 (예: 반대로 해석되는 경우)
+  >라벨 | 설명            -> 항목 카드. 라벨은 5~15자 정도로 짧게, 설명은 한 줄에
+                            이어서 쓰고 절대 줄바꿈하지 말 것 (한 항목 = 한 줄)
+  빈 줄                   -> 문단/항목 구분
+
+⚠️ 가장 중요한 규칙 — "상황별 해석" 항목은 절대로 라벨과 설명을 다른 줄에
+나눠 쓰면 안 됨. 반드시 ">"로 시작해서 "|"로 라벨과 설명을 같은 줄에
+이어 붙여야 함. 예시:
+
+  나쁜 예 (절대 이렇게 쓰지 말 것):
+  돼지꿈 태몽
+  건강하고 총명한 아이를 낳을 길몽입니다.
+
+  좋은 예 (반드시 이렇게):
+  >돼지꿈 태몽 | 건강하고 총명한 아이를 낳을 길몽으로 해석됩니다.
+
+"상황별 해석" 섹션 안의 모든 줄은 예외 없이 ">"로 시작해야 함.
+
+본문 구성 순서:
+[[기본 상징 의미]]
+(3~4개 문단. 뱀/돼지 등 표제어가 전통적으로 어떤 의미를 갖는지)
+
+[[상황별 해석]]
+(위에서 고른 관련 키워드들을 ">라벨 | 설명" 카드 형식으로, 5~12개)
+
+[[!반대로 해석되는 경우]]
+(1~2개 문단. 같은 소재가 흉몽으로 뒤집히는 상황)
+
+[[이런 꿈을 꿨다면]]
+(1개 문단. 짧은 마무리 조언)
+
+────────────────────────────────────
+톤·분량 규칙:
+- 단정하지 말고 "~라고 봅니다", "~로 해석되곤 합니다" 체
+- 한자 표기 없이 순한글 위주
+- 미신을 사실처럼 강요하지 말고 전통적 해석을 소개하는 톤
+- 전체 분량 2000자 이상
+- 표제어를 다시 언급하는 제목 줄("표제어: OO")을 절대 넣지 말 것 — 요약부터 바로 시작
+- 안내 문구나 "알겠습니다" 같은 말 없이, 첫 줄부터 바로 요약 문장으로 시작`
+}
+
+/** "라벨" 줄 다음에 "설명" 줄이 따로 온 걸 ">라벨 | 설명" 한 줄로 합쳐주는 안전장치(Gemini가 형식을 안 지켰을 때 대비). */
+function autoFixLabelDescPairs(body: string): string {
+  const endsLikeSentence = (s: string) => /[다요음임함]$/.test(s)
+  const lines = body.split('\n')
+  const result: string[] = []
+  let i = 0
+  while (i < lines.length) {
+    const cur  = lines[i].trim()
+    const next = lines[i + 1]?.trim() ?? ''
+    const looksLikeLabel = cur && !cur.startsWith('[[') && !cur.startsWith('>') && cur.length <= 20 && !endsLikeSentence(cur)
+    const looksLikeDesc  = next && !next.startsWith('[[') && !next.startsWith('>') && endsLikeSentence(next)
+    if (looksLikeLabel && looksLikeDesc) {
+      result.push(`>${cur} | ${next}`)
+      i += 2
+    } else {
+      result.push(lines[i])
+      i += 1
+    }
+  }
+  return result.join('\n')
+}
+
+/** 매핑에 없는 단어가 섞인 표제어의 slug 폴백. 로마자 변환 결과를 [a-z0-9-]만 남게 정리한다. */
+function romanizeSlugFallback(headword: string): string {
+  const raw = `${romanize(headword)}-dream`
+  const cleaned = raw.toLowerCase().replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '')
+  return cleaned || 'dream'
+}
+
+async function generateUniqueDictionarySlug(
+  admin: ReturnType<typeof createAdminClient>, base: string,
+): Promise<string> {
+  let candidate = base
+  let n = 2
+  while (true) {
+    const { data } = await admin.from('dictionary_entries').select('id').eq('slug', candidate).limit(1)
+    if (!data || data.length === 0) return candidate
+    candidate = `${base}-${n}`
+    n++
+  }
+}
+
+export async function generateDictionaryDraft(
+  categorySlug?: string,
+): Promise<{ headword?: string; slug?: string; bodyLength?: number; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+
+  const apiKey = process.env.GEMINI_API_KEY
+  if (!apiKey) return { error: 'GEMINI_API_KEY가 설정되지 않았습니다.' }
+
+  const admin = createAdminClient()
+
+  // ── 1. 대상 표제어 선정 ──
+  let headwordQuery = admin
+    .from('dictionary_headwords')
+    .select('id, headword, category_slug')
+    .eq('status', '미작성')
+    .order('tier', { ascending: true })
+    .order('total_search_volume', { ascending: false })
+    .limit(1)
+  if (categorySlug) headwordQuery = headwordQuery.eq('category_slug', categorySlug)
+
+  const { data: headwordRows, error: headwordErr } = await headwordQuery
+  if (headwordErr) return { error: headwordErr.message }
+  const target = headwordRows?.[0]
+  if (!target) return { error: '생성할 표제어가 없습니다.' }
+
+  const { data: longtailRows, error: longtailErr } = await admin
+    .from('dictionary_longtails')
+    .select('keyword, search_volume')
+    .eq('headword_id', target.id)
+    .order('search_volume', { ascending: false })
+  if (longtailErr) return { error: longtailErr.message }
+  const longtails = longtailRows ?? []
+
+  // ── 2. keyword / slug 생성 ──
+  const keyword = target.headword.endsWith('꿈') ? target.headword : `${target.headword} 꿈`
+
+  const slugResult = keywordToSlug(keyword)
+  const baseSlug = (!slugResult.hasUnmatched && slugResult.slug)
+    ? slugResult.slug
+    : romanizeSlugFallback(target.headword)
+  const finalSlug = await generateUniqueDictionarySlug(admin, baseSlug)
+
+  // ── 3. Gemini 호출 ──
+  const prompt = buildDraftPrompt(target.headword, longtails.map((l) => l.keyword))
+  const reqBody = JSON.stringify({
+    contents: [{ parts: [{ text: prompt }] }],
+    generationConfig: { temperature: 0.75 },
+    safetySettings: SAFETY_SETTINGS,
+  })
+
+  let res: Response | null = null
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    res = await fetch(`${DRAFT_GEMINI_URL}?key=${apiKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: reqBody,
+    })
+    if (res.ok || (res.status !== 503 && res.status !== 529)) break
+    if (attempt < 3) await new Promise((r) => setTimeout(r, 1000))
+  }
+  if (!res || !res.ok) {
+    const errText = await res?.text()
+    console.error('[generateDictionaryDraft] Gemini API 오류', { status: res?.status, errText })
+    return { error: `Gemini API 오류 (${res?.status ?? '알 수 없음'})` }
+  }
+
+  const geminiData = await res.json()
+  if (isBlockedResponse(geminiData)) {
+    console.error('[generateDictionaryDraft] Gemini 안전 차단', target.headword)
+    return { error: '콘텐츠 생성이 차단되었습니다. (안전 필터)' }
+  }
+
+  const rawText: string = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
+
+  // ── 4. 응답 파싱 + 자동 보정 ──
+  const cleaned = rawText.trim()
+    .replace(/^```[a-z]*\s*/i, '').replace(/```\s*$/, '').trim()
+    .replaceAll('**', '')
+
+  let summary: string
+  let body: string
+  const markerIdx = cleaned.indexOf(BODY_MARKER)
+  if (markerIdx === -1) {
+    const lines = cleaned.split('\n')
+    summary = (lines[0] ?? '').trim()
+    body = lines.slice(1).join('\n').trim()
+  } else {
+    summary = cleaned.slice(0, markerIdx).trim()
+    body = cleaned.slice(markerIdx + BODY_MARKER.length).trim()
+  }
+  body = autoFixLabelDescPairs(body)
+
+  if (!summary || !body) return { error: 'Gemini 응답을 파싱하지 못했습니다.' }
+
+  // ── 5. 저장 ──
+  const tags = longtails.slice(0, 5).map((l) => l.keyword)
+
+  const { error: insertErr } = await admin.from('dictionary_entries').insert({
+    slug: finalSlug,
+    keyword,
+    summary,
+    body,
+    category_slug: target.category_slug,
+    subcategory_slug: null,
+    tags,
+    is_published: false,
+    updated_at: new Date().toISOString(),
+  })
+  if (insertErr) return { error: insertErr.message }
+
+  await admin.from('dictionary_headwords').update({ status: '초안생성' }).eq('id', target.id)
+
+  return { headword: target.headword, slug: finalSlug, bodyLength: body.length }
 }
 
 // ── 제휴 상품 ──────────────────────────────────────────────────

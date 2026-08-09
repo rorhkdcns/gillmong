@@ -10,6 +10,7 @@ import {
   checkAdminDictionarySlugExists,
   createAdminDictionaryEntry,
   deleteAdminDictionaryEntry,
+  generateDictionaryDraft,
   getAdminDictionaryEntries,
   getAdminDictionaryEntryById,
   getAdminDictionarySubcategories,
@@ -293,6 +294,23 @@ export default function AdminDictionaryPage() {
     load()
   }
 
+  // ── 글생성 (구 generate_drafts.py 대체) ──────────────────────────────
+  const [generatingDraft, setGeneratingDraft] = useState(false)
+  const [draftResult, setDraftResult] = useState<{ ok: boolean; text: string } | null>(null)
+
+  async function handleGenerateDraft() {
+    setGeneratingDraft(true)
+    setDraftResult(null)
+    const result = await generateDictionaryDraft(categoryFilter === ALL_CATEGORY ? undefined : categoryFilter)
+    setGeneratingDraft(false)
+    if (result.error) {
+      setDraftResult({ ok: false, text: result.error })
+      return
+    }
+    setDraftResult({ ok: true, text: `"${result.headword}" 표제어로 글 저장됨 (본문 ${result.bodyLength}자)` })
+    load()
+  }
+
   return (
     <div className="p-4 sm:p-8">
       <div className="mb-6 flex items-center justify-between sm:mb-8">
@@ -497,7 +515,7 @@ export default function AdminDictionaryPage() {
           </h2>
 
           {/* 카테고리 탭 */}
-          <div className="mt-3 flex flex-wrap gap-1.5">
+          <div className="mt-3 flex flex-wrap items-center gap-1.5">
             <button
               type="button"
               onClick={() => setCategoryFilter(ALL_CATEGORY)}
@@ -523,7 +541,20 @@ export default function AdminDictionaryPage() {
                 {c.name} ({categoryCounts.get(c.slug) ?? 0})
               </button>
             ))}
+            <button
+              type="button"
+              onClick={handleGenerateDraft}
+              disabled={generatingDraft}
+              className="ml-auto shrink-0 rounded bg-brand-primary px-3 py-1.5 text-xs font-semibold text-white hover:brightness-95 disabled:opacity-60"
+            >
+              {generatingDraft ? '생성 중...' : '글생성'}
+            </button>
           </div>
+          {draftResult && (
+            <p className={`mt-2 text-xs ${draftResult.ok ? 'text-emerald-600' : 'text-red-500'}`}>
+              {draftResult.text}
+            </p>
+          )}
 
           {/* 발행상태 필터 */}
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
