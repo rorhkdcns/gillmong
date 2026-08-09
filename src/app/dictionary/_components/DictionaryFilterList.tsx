@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import Link from 'next/link'
-import { CHOSEONG_GROUPS, getChoseongGroup } from '@/lib/hangul'
+import { CHOSEONG_GROUPS, ETC_GROUP, getChoseongGroup } from '@/lib/hangul'
 
 export interface DictionaryFilterEntry {
   slug: string
@@ -48,6 +48,22 @@ export default function DictionaryFilterList({ entries }: Props) {
     if (cho === ALL_CHO) return bySearch
     return bySearch.filter((e) => getChoseongGroup(e.keyword) === cho)
   }, [bySearch, cho])
+
+  // "전체" 상태일 때만 초성별 소제목으로 구간을 나눈다 — 특정 초성이 이미
+  // 선택된 상태에서는 그룹이 하나뿐이라 소제목을 또 보여주면 중복이라 생략.
+  const groupedByChoseong = useMemo(() => {
+    if (cho !== ALL_CHO) return null
+    const buckets = new Map<string, DictionaryFilterEntry[]>()
+    for (const e of filtered) {
+      const group = getChoseongGroup(e.keyword)
+      const bucket = buckets.get(group)
+      if (bucket) bucket.push(e)
+      else buckets.set(group, [e])
+    }
+    return [...CHOSEONG_GROUPS, ETC_GROUP]
+      .filter((group) => buckets.has(group))
+      .map((group) => ({ group, items: buckets.get(group)! }))
+  }, [filtered, cho])
 
   const hasActiveFilter = query.trim() !== '' || cho !== ALL_CHO
 
@@ -120,6 +136,32 @@ export default function DictionaryFilterList({ entries }: Props) {
                 필터 초기화
               </button>
             )}
+          </div>
+        ) : groupedByChoseong ? (
+          <div>
+            {groupedByChoseong.map(({ group, items }, gi) => (
+              <div key={group}>
+                <h3 className={`px-1 text-lg font-bold text-[#0B2433] ${gi === 0 ? 'mb-2' : 'mb-2 mt-7'}`}>
+                  {group}
+                </h3>
+                <div>
+                  {items.map((e, i) => (
+                    <Link
+                      key={e.slug}
+                      href={`/dictionary/${e.slug}`}
+                      className={`flex min-h-[52px] items-center justify-between gap-3 bg-white px-1 py-3 transition-colors hover:bg-[#F7FAFC] ${
+                        i > 0 ? 'border-t border-[#E2E9EE]' : ''
+                      }`}
+                    >
+                      <span className="flex min-w-0 items-center gap-2">
+                        <span className="truncate text-[17px] text-[#16303F]">{e.keyword}</span>
+                      </span>
+                      <ChevronRightIcon />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         ) : (
           <div>
