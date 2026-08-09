@@ -50,7 +50,7 @@ export async function generateMetadata({
   const subcat = await getSubcategory(cat.id, sub)
   if (!subcat) return {}
 
-  const title = `${subcat.name} - 길몽상점 샵`
+  const title = `${subcat.name} - 길몽상점 굿즈샵`
   const description = `${cat.name} > ${subcat.name} 카테고리의 추천 상품을 만나보세요.`
   return { title, description, openGraph: { title, description } }
 }
@@ -81,7 +81,7 @@ export default async function ShopSubcategoryPage({
       {/* 작은 히어로 */}
       <div className="rounded-[14px] bg-[linear-gradient(150deg,#14547A_0%,#2E7DD1_120%)] px-6 py-6 md:px-8 md:py-7">
         <nav className="mb-1.5 text-xs text-white/70">
-          <Link href="/shop" className="hover:text-white">샵</Link>
+          <Link href="/shop" className="hover:text-white">굿즈샵</Link>
           <span className="mx-1.5">›</span>
           <Link href={`/shop/${cat.slug}`} className="hover:text-white">{cat.name}</Link>
           <span className="mx-1.5">›</span>

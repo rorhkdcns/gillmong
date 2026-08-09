@@ -16,14 +16,37 @@ interface Props {
   products: ShopGridProduct[]
 }
 
+type SortOption = 'default' | 'price_asc' | 'price_desc'
+
+const SORT_OPTIONS: { value: SortOption; label: string }[] = [
+  { value: 'default', label: '기본순' },
+  { value: 'price_asc', label: '낮은 가격순' },
+  { value: 'price_desc', label: '높은 가격순' },
+]
+
 const PAGE_SIZE = 20
+
+/** "10,900원" 같은 텍스트에서 숫자만 뽑아낸다. 파싱 실패(빈 값·숫자 없음) 시 null. */
+function parsePriceNumber(priceText: string | null): number | null {
+  if (!priceText) return null
+  const digits = priceText.replace(/[^0-9]/g, '')
+  if (!digits) return null
+  const n = parseInt(digits, 10)
+  return Number.isNaN(n) ? null : n
+}
 
 export default function ShopProductGrid({ products }: Props) {
   const [query, setQuery] = useState('')
+  const [sort, setSort] = useState<SortOption>('default')
   const [page, setPage] = useState(1)
 
   function handleQueryChange(value: string) {
     setQuery(value)
+    setPage(1)
+  }
+
+  function handleSortChange(value: SortOption) {
+    setSort(value)
     setPage(1)
   }
 
@@ -33,19 +56,51 @@ export default function ShopProductGrid({ products }: Props) {
     return products.filter((p) => p.title.toLowerCase().includes(q))
   }, [products, query])
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const sorted = useMemo(() => {
+    if (sort === 'default') return filtered
+    // 가격 미상(null)인 상품은 정렬 방향과 무관하게 항상 맨 뒤로 보낸다.
+    const withPrice: [ShopGridProduct, number][] = []
+    const withoutPrice: ShopGridProduct[] = []
+    for (const p of filtered) {
+      const price = parsePriceNumber(p.price_text)
+      if (price === null) withoutPrice.push(p)
+      else withPrice.push([p, price])
+    }
+    withPrice.sort((a, b) => (sort === 'price_asc' ? a[1] - b[1] : b[1] - a[1]))
+    return [...withPrice.map(([p]) => p), ...withoutPrice]
+  }, [filtered, sort])
+
+  const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE))
   const currentPage = Math.min(page, totalPages)
-  const paged = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+  const paged = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
 
   return (
     <div className="rounded-[14px] bg-white p-[20px_18px] shadow-[0_1px_3px_rgba(11,36,51,0.06)] md:p-[26px_24px]">
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => handleQueryChange(e.target.value)}
-        placeholder="상품명으로 검색해보세요"
-        className="w-full rounded-[10px] border border-[#DCE5EB] bg-white px-4 py-2.5 text-sm text-[#16303F] outline-none focus:border-[#2E7DD1]"
-      />
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => handleQueryChange(e.target.value)}
+          placeholder="상품명으로 검색해보세요"
+          className="w-full rounded-[10px] border border-[#DCE5EB] bg-white px-4 py-2.5 text-sm text-[#16303F] outline-none focus:border-[#2E7DD1] sm:flex-1"
+        />
+        <div className="flex shrink-0 gap-1.5">
+          {SORT_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => handleSortChange(opt.value)}
+              className={`rounded-[8px] px-3 py-2 text-xs font-semibold whitespace-nowrap transition-colors sm:text-sm ${
+                sort === opt.value
+                  ? 'bg-[#2E7DD1] text-white'
+                  : 'border border-[#DCE5EB] text-[#5C6E7C] hover:border-[#2E7DD1] hover:text-[#2E7DD1]'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <div className="mt-4">
         {products.length === 0 ? (

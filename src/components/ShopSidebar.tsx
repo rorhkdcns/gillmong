@@ -36,6 +36,10 @@ export default function ShopSidebar({ categories, subcategoriesByCategory }: Pro
           전체
         </Link>
 
+        {categories.length === 0 && (
+          <p className="px-3 py-4 text-center text-xs text-[#8A9AA6]">등록된 상품을 준비 중입니다.</p>
+        )}
+
         {categories.map((c) => {
           const isCategoryActive = c.slug === currentCategorySlug
           const subs = subcategoriesByCategory[c.id] ?? []
