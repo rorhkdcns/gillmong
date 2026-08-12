@@ -125,6 +125,9 @@ export default function ShopProductGrid({ products }: Props) {
                     {p.price_text && (
                       <p className="mt-auto text-sm font-bold text-brand-violet-deep">{p.price_text}</p>
                     )}
+                    <div className="mt-2 rounded-[6px] bg-brand-primary py-1.5 text-center text-xs font-semibold text-white">
+                      구매하러 가기
+                    </div>
                   </div>
                 </AffiliateProductLink>
               ))}

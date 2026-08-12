@@ -65,6 +65,7 @@ export default async function ShopCategoryPage({
           <span>{cat.name}</span>
         </nav>
         <h1 className="text-2xl font-bold text-white md:text-3xl">{cat.name}</h1>
+        <p className="mt-1 text-xs text-white/70">{(products ?? []).length}개 상품</p>
       </div>
 
       {/* 상품 그리드 (하위카테고리 무관 이 카테고리 전체) */}

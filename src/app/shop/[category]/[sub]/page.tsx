@@ -88,6 +88,7 @@ export default async function ShopSubcategoryPage({
           <span>{subcat.name}</span>
         </nav>
         <h1 className="text-2xl font-bold text-white md:text-3xl">{subcat.name}</h1>
+        <p className="mt-1 text-xs text-white/70">{(products ?? []).length}개 상품</p>
       </div>
 
       {/* 상품 그리드 */}
