@@ -18,6 +18,7 @@ import {
   reactivateAdminAffiliateProduct,
   bulkUpdateAdminProductCategory,
   bulkUpdateAdminProductActive,
+  bulkReactivateAdminProducts,
   bulkAddAdminProductTags,
   bulkDeleteAdminProducts,
   generateShopProducts,
@@ -232,6 +233,17 @@ export default function AdminShopProductsPage() {
     if (selectedProductIds.size === 0) return
     setBulkActing(true); setBulkError('')
     const result = await bulkUpdateAdminProductActive(Array.from(selectedProductIds), isActive)
+    setBulkActing(false)
+    if (result.error) { setBulkError(result.error); return }
+    clearSelection()
+    load()
+  }
+
+  // "확인 필요" 목록 전용 — deactivated_reason/deactivated_at도 함께 지운다.
+  async function applyBulkReactivate() {
+    if (selectedProductIds.size === 0) return
+    setBulkActing(true); setBulkError('')
+    const result = await bulkReactivateAdminProducts(Array.from(selectedProductIds))
     setBulkActing(false)
     if (result.error) { setBulkError(result.error); return }
     clearSelection()
@@ -894,6 +906,17 @@ export default function AdminShopProductsPage() {
   }
 
   const needsAttention = useMemo(() => products.filter((p) => !p.is_active && p.deactivated_reason), [products])
+  const attentionIds = useMemo(() => needsAttention.map((p) => p.id), [needsAttention])
+  const allAttentionSelected = attentionIds.length > 0 && attentionIds.every((id) => selectedProductIds.has(id))
+  const attentionSelectedCount = attentionIds.filter((id) => selectedProductIds.has(id)).length
+  function toggleSelectAllAttention() {
+    setSelectedProductIds((prev) => {
+      const next = new Set(prev)
+      if (allAttentionSelected) { for (const id of attentionIds) next.delete(id) }
+      else { for (const id of attentionIds) next.add(id) }
+      return next
+    })
+  }
 
   const tagActiveCounts = useMemo(() => {
     const allTags = new Set<string>()
@@ -1090,12 +1113,42 @@ export default function AdminShopProductsPage() {
       {/* ── 확인 필요 (자동 점검에서 품절/판매중지로 추정되어 비활성화된 상품) ── */}
       {needsAttention.length > 0 && (
         <div className="mt-8 rounded border border-amber-300 bg-amber-50 p-6">
-          <h2 className="mb-1 font-semibold text-amber-800">확인 필요 ({needsAttention.length}개)</h2>
+          <div className="mb-1 flex flex-wrap items-center justify-between gap-2">
+            <h2 className="font-semibold text-amber-800">확인 필요 ({needsAttention.length}개)</h2>
+            <label className="flex shrink-0 items-center gap-1.5 text-xs font-semibold text-amber-800">
+              <input type="checkbox" checked={allAttentionSelected} onChange={toggleSelectAllAttention} className="accent-brand-ink" />
+              전체 선택
+            </label>
+          </div>
           <p className="mb-3 text-xs text-amber-700">자동 점검에서 품절/판매중지로 추정되어 비활성화된 상품입니다.</p>
+
+          {attentionSelectedCount > 0 && (
+            <div className="mb-3 flex flex-wrap items-center gap-2 rounded border border-amber-300 bg-white px-3 py-2">
+              <span className="shrink-0 text-xs font-semibold text-brand-ink">{attentionSelectedCount}개 선택됨</span>
+              <button type="button" onClick={applyBulkReactivate} disabled={bulkActing}
+                className="rounded border border-emerald-300 px-2.5 py-1 text-xs font-semibold text-emerald-600 hover:bg-emerald-50 disabled:opacity-50">
+                선택 재활성화
+              </button>
+              <button type="button" onClick={() => setBulkDeleteConfirm(true)} disabled={bulkActing}
+                className="rounded border border-red-300 px-2.5 py-1 text-xs font-semibold text-red-500 hover:bg-red-50 disabled:opacity-50">
+                선택 삭제
+              </button>
+              <button type="button" onClick={clearSelection}
+                className="rounded border border-gray-300 px-2.5 py-1 text-xs font-semibold text-[#555] hover:bg-gray-50">
+                선택 해제
+              </button>
+              {bulkError && <p className="w-full text-xs text-red-500">{bulkError}</p>}
+            </div>
+          )}
+
           <div className="space-y-2">
             {needsAttention.map((p) => (
-              <div key={p.id} className="flex items-center justify-between gap-3 rounded border border-amber-200 bg-white p-3">
-                <div className="min-w-0">
+              <div key={p.id} className="flex items-center gap-3 rounded border border-amber-200 bg-white p-3">
+                <input
+                  type="checkbox" checked={selectedProductIds.has(p.id)} onChange={() => toggleProductSelect(p.id)}
+                  className="shrink-0 accent-brand-ink"
+                />
+                <div className="min-w-0 flex-1">
                   <p className="truncate text-sm font-medium text-[#333]">{p.title}</p>
                   <p className="text-xs text-amber-700">
                     {p.deactivated_reason}

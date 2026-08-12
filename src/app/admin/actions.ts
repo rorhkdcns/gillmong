@@ -1651,6 +1651,24 @@ export async function bulkUpdateAdminProductActive(
   return { success: true }
 }
 
+// "확인 필요" 목록(자동 점검으로 비활성화된 상품)을 여러 개 한 번에 재활성화할 때 쓴다.
+// bulkUpdateAdminProductActive와 달리 deactivated_reason/deactivated_at도 함께 지워서
+// reactivateAdminAffiliateProduct(단건)와 동일하게 "확인 필요" 사유가 남지 않게 한다.
+export async function bulkReactivateAdminProducts(ids: string[]): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+  if (ids.length === 0) return { error: '선택된 상품이 없습니다.' }
+
+  const admin = createAdminClient()
+  const { error } = await admin.from('affiliate_products').update({
+    is_active: true,
+    deactivated_reason: null,
+    deactivated_at: null,
+  }).in('id', ids)
+  if (error) return { error: error.message }
+  return { success: true }
+}
+
 export async function bulkAddAdminProductTags(
   ids: string[], tagsToAdd: string[],
 ): Promise<{ success?: boolean; error?: string }> {
