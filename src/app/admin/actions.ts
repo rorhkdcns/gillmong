@@ -7,6 +7,7 @@ import { searchProducts } from '@/lib/coupang'
 import { keywordToSlug } from '@/lib/slugify'
 import { romanize } from '@/lib/romanize'
 import { SAFETY_SETTINGS, isBlockedResponse } from '@/lib/contentFilter'
+import { suggestTagsFromTitle } from '@/lib/autoTagProduct'
 
 // 카테고리는 여러 페이지(메인/카테고리/사전)가 getActiveCategories() 캐시를 공유해서 쓰므로
 // 태그 무효화 + 그 캐시를 쓰는 ISR 페이지들의 경로 무효화를 함께 해줘야 즉시 반영된다.
@@ -1597,7 +1598,7 @@ export async function generateShopProducts(
       price_text: Number.isFinite(p.productPrice) ? `${p.productPrice.toLocaleString()}원` : null,
       image_url: p.productImage || null,
       link_url: p.productUrl,
-      tags: [],
+      tags: suggestTagsFromTitle(p.productName),
       sort_order: nextSortOrder++,
       is_active: false,
       coupang_product_id: String(p.productId),

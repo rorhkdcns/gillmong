@@ -25,6 +25,7 @@ import {
   type AdminAffiliateFields,
 } from '../actions'
 import ImageThumbnail from '@/components/ImageThumbnail'
+import { suggestTagsFromTitle } from '@/lib/autoTagProduct'
 
 type ShopCategory = { id: string; name: string; slug: string; sort_order: number; is_active: boolean }
 type ShopSubcategory = { id: string; category_id: string; name: string; slug: string; sort_order: number; is_active: boolean }
@@ -530,9 +531,16 @@ export default function AdminShopProductsPage() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error ?? '검색에 실패했습니다.')
-      setCoupangResults(data.products ?? [])
+      const results: CoupangProduct[] = data.products ?? []
+      setCoupangResults(results)
       setSelectedCoupangIds(new Set())
-      setCoupangTags({})
+      // 상품명 기준 추천 태그로 미리 채워두되(등록 전 자유롭게 수정 가능), 추천이 없는 상품은 빈 칸으로 둔다.
+      const suggestedTags: Record<number, string> = {}
+      for (const p of results) {
+        const suggested = suggestTagsFromTitle(p.productName)
+        if (suggested.length > 0) suggestedTags[p.productId] = suggested.join(', ')
+      }
+      setCoupangTags(suggestedTags)
       setBulkTagInput('')
     } catch (err) {
       setCoupangError(err instanceof Error ? err.message : '검색 중 오류가 발생했습니다.')
@@ -664,6 +672,15 @@ export default function AdminShopProductsPage() {
   function handleFormCategoryChange(value: string) {
     setPCategoryId(value)
     if (!subcategories.some((s) => s.id === pSubcategoryId && s.category_id === value)) setPSubcategoryId('')
+  }
+
+  // 태그 입력란이 비어있을 때만 상품명 기준 추천 태그로 채워준다 (사용자가 직접 입력/수정한 값은 덮어쓰지 않음).
+  function handlePTitleChange(value: string) {
+    setPTitle(value)
+    if (!pTagsInput.trim()) {
+      const suggested = suggestTagsFromTitle(value)
+      if (suggested.length > 0) setPTagsInput(suggested.join(', '))
+    }
   }
 
   async function submitProductForm(e: React.FormEvent) {
@@ -1537,7 +1554,7 @@ export default function AdminShopProductsPage() {
                 <div>
                   <label className="mb-1 block text-sm text-[#555]">상품명</label>
                   <input
-                    type="text" value={pTitle} onChange={(e) => setPTitle(e.target.value)}
+                    type="text" value={pTitle} onChange={(e) => handlePTitleChange(e.target.value)}
                     className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
                   />
                 </div>
