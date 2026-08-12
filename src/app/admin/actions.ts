@@ -1072,7 +1072,7 @@ async function generateUniqueDictionarySlug(
 
 export async function generateDictionaryDraft(
   categorySlug?: string,
-): Promise<{ headword?: string; slug?: string; bodyLength?: number; error?: string }> {
+): Promise<{ headword?: string; slug?: string; bodyLength?: number; error?: string; skipped?: boolean }> {
   const auth = await requireAdminAction()
   if (!auth.ok) return { error: auth.error }
 
@@ -1096,6 +1096,21 @@ export async function generateDictionaryDraft(
   const target = headwordRows?.[0]
   if (!target) return { error: '생성할 표제어가 없습니다.' }
 
+  // ── 1.5. 중복 확인 (로컬 generate_drafts.py가 이미 만들어둔 글일 수 있음) ──
+  // 로컬 스크립트는 dictionary_headwords를 모르고 dictionary_entries에 직접 저장하므로,
+  // status가 여전히 '미작성'인 표제어라도 실제로는 이미 글이 존재할 수 있다.
+  const dedupeKeyword = target.headword.endsWith('꿈') ? target.headword : `${target.headword} 꿈`
+  const { data: existingRows, error: existingErr } = await admin
+    .from('dictionary_entries')
+    .select('id')
+    .eq('keyword', dedupeKeyword)
+    .limit(1)
+  if (existingErr) return { headword: target.headword, error: existingErr.message }
+  if (existingRows && existingRows.length > 0) {
+    await admin.from('dictionary_headwords').update({ status: '초안생성' }).eq('id', target.id)
+    return { headword: target.headword, skipped: true }
+  }
+
   const { data: longtailRows, error: longtailErr } = await admin
     .from('dictionary_longtails')
     .select('keyword, search_volume')
@@ -1105,7 +1120,7 @@ export async function generateDictionaryDraft(
   const longtails = longtailRows ?? []
 
   // ── 2. keyword / slug 생성 ──
-  const keyword = target.headword.endsWith('꿈') ? target.headword : `${target.headword} 꿈`
+  const keyword = dedupeKeyword
 
   const slugResult = keywordToSlug(keyword)
   const baseSlug = (!slugResult.hasUnmatched && slugResult.slug)
@@ -1201,6 +1216,7 @@ export interface DictionaryDraftBatchResult {
   requested: number
   succeeded: number
   failed: number
+  skipped: number
   results: DictionaryDraftBatchItem[]
   stoppedReason?: string
 }
@@ -1208,21 +1224,33 @@ export interface DictionaryDraftBatchResult {
 const DRAFT_BATCH_MAX_COUNT = 20
 const DRAFT_BATCH_DELAY_MS = 1500
 const NO_HEADWORD_LEFT_MESSAGE = '생성할 표제어가 없습니다.'
+// 로컬 스크립트가 이미 처리해둔 표제어를 계속 건너뛰기만 하는 경우에도 무한루프에
+// 빠지지 않도록, 실제 시도 횟수 상한을 count의 배수로 둔다.
+const DRAFT_BATCH_MAX_ATTEMPT_MULTIPLIER = 3
 
 export async function generateDictionaryDrafts(
   categorySlug?: string, count: number = 1,
 ): Promise<DictionaryDraftBatchResult> {
   const auth = await requireAdminAction()
-  if (!auth.ok) return { requested: 0, succeeded: 0, failed: 0, results: [], stoppedReason: auth.error }
+  if (!auth.ok) return { requested: 0, succeeded: 0, failed: 0, skipped: 0, results: [], stoppedReason: auth.error }
 
   const clampedCount = Math.min(DRAFT_BATCH_MAX_COUNT, Math.max(1, Math.trunc(count) || 1))
+  const maxAttempts = clampedCount * DRAFT_BATCH_MAX_ATTEMPT_MULTIPLIER
   const results: DictionaryDraftBatchItem[] = []
+  let skipped = 0
   let stoppedReason: string | undefined
+  let attempts = 0
 
-  for (let i = 0; i < clampedCount; i++) {
-    if (i > 0) await new Promise((r) => setTimeout(r, DRAFT_BATCH_DELAY_MS))
+  while (results.length < clampedCount && attempts < maxAttempts) {
+    if (attempts > 0) await new Promise((r) => setTimeout(r, DRAFT_BATCH_DELAY_MS))
+    attempts++
 
     const result = await generateDictionaryDraft(categorySlug)
+
+    if (result.skipped) {
+      skipped++
+      continue
+    }
 
     if (result.error) {
       if (!result.headword && result.error === NO_HEADWORD_LEFT_MESSAGE) {
@@ -1236,10 +1264,15 @@ export async function generateDictionaryDrafts(
     results.push({ headword: result.headword!, slug: result.slug, status: 'ok' })
   }
 
+  if (!stoppedReason && attempts >= maxAttempts && results.length < clampedCount) {
+    stoppedReason = `이미 작성된 표제어를 건너뛰느라 최대 시도 횟수(${maxAttempts}회)에 도달하여 중단했습니다.`
+  }
+
   return {
     requested: clampedCount,
     succeeded: results.filter((r) => r.status === 'ok').length,
     failed: results.filter((r) => r.status === 'error').length,
+    skipped,
     results,
     stoppedReason,
   }

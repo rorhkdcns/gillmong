@@ -596,11 +596,13 @@ export default function AdminDictionaryPage() {
             <div className="mt-2 text-xs">
               {draftResult.requested === 0 ? (
                 <p className="text-red-500">{draftResult.stoppedReason}</p>
-              ) : draftResult.succeeded === 0 && draftResult.failed === 0 ? (
+              ) : draftResult.succeeded === 0 && draftResult.failed === 0 && draftResult.skipped === 0 ? (
                 <p className="text-gray-500">{draftResult.stoppedReason ?? '생성할 표제어가 없습니다.'}</p>
               ) : (
                 <p className={draftResult.failed > 0 ? 'text-amber-600' : 'text-emerald-600'}>
-                  {draftResult.succeeded}개 생성 완료{draftResult.failed > 0 ? ` (실패 ${draftResult.failed}개)` : ''}
+                  {draftResult.succeeded}개 생성 완료
+                  {draftResult.failed > 0 ? ` (실패 ${draftResult.failed}개)` : ''}
+                  {draftResult.skipped > 0 ? ` (이미 작성됨 ${draftResult.skipped}개 건너뜀)` : ''}
                   {draftResult.stoppedReason ? ` — ${draftResult.stoppedReason}` : ''}
                 </p>
               )}
