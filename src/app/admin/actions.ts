@@ -1600,7 +1600,7 @@ export async function generateShopProducts(
       link_url: p.productUrl,
       tags: suggestTagsFromTitle(p.productName),
       sort_order: nextSortOrder++,
-      is_active: false,
+      is_active: true,
       is_rocket: p.isRocket ?? null,
       is_free_shipping: p.isFreeShipping ?? null,
       coupang_product_id: String(p.productId),
