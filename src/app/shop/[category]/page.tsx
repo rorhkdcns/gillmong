@@ -50,7 +50,7 @@ export default async function ShopCategoryPage({
   const admin = createAdminClient()
   const { data: products } = await admin
     .from('affiliate_products')
-    .select('id, title, price_text, image_url, link_url')
+    .select('id, title, price_text, image_url, link_url, is_rocket, is_free_shipping')
     .eq('shop_category_id', cat.id)
     .eq('is_active', true)
     .order('sort_order', { ascending: true })

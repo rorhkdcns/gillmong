@@ -8,6 +8,8 @@ interface SaveItem {
   productImage: string
   productUrl: string
   tags: string[]
+  isRocket?: boolean
+  isFreeShipping?: boolean
 }
 
 export async function POST(req: NextRequest) {
@@ -70,6 +72,8 @@ export async function POST(req: NextRequest) {
     tags: item.tags,
     sort_order: nextSortOrder++,
     is_active: true,
+    is_rocket: item.isRocket ?? null,
+    is_free_shipping: item.isFreeShipping ?? null,
     coupang_product_id: String(item.productId),
     product_id: String(item.productId),
     last_checked_at: new Date().toISOString(),

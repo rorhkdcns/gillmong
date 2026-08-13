@@ -584,6 +584,8 @@ export default function AdminShopProductsPage() {
         productImage: p.productImage,
         productUrl: p.productUrl,
         tags: (coupangTags[p.productId] ?? '').split(',').map((t) => t.trim()).filter(Boolean),
+        isRocket: p.isRocket,
+        isFreeShipping: p.isFreeShipping,
       }))
     if (items.length === 0) { setCoupangError('저장할 상품을 선택해주세요.'); return }
     if (items.some((item) => item.tags.length === 0)) {

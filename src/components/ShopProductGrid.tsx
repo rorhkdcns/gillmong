@@ -10,6 +10,8 @@ export interface ShopGridProduct {
   price_text: string | null
   image_url: string | null
   link_url: string
+  is_rocket?: boolean | null
+  is_free_shipping?: boolean | null
 }
 
 interface Props {
@@ -117,8 +119,22 @@ export default function ShopProductGrid({ products }: Props) {
                   href={p.link_url}
                   className="flex flex-col overflow-hidden rounded-[10px] border border-[#DCE5EB] transition-shadow hover:shadow-[0_6px_16px_rgba(11,36,51,0.08)]"
                 >
-                  <div className="aspect-square w-full bg-[#EDF3F7]">
+                  <div className="relative aspect-square w-full bg-[#EDF3F7]">
                     <ImageThumbnail src={p.image_url} alt={p.title} className="h-full w-full object-cover" />
+                    {(p.is_rocket === true || p.is_free_shipping === true) && (
+                      <div className="absolute top-2 left-2 flex gap-1">
+                        {p.is_rocket === true && (
+                          <span className="rounded-[4px] bg-[#185FA5] px-[7px] py-[3px] text-[10px] font-medium text-white">
+                            로켓배송
+                          </span>
+                        )}
+                        {p.is_free_shipping === true && (
+                          <span className="rounded-[4px] bg-[#639922] px-[7px] py-[3px] text-[10px] font-medium text-white">
+                            무료배송
+                          </span>
+                        )}
+                      </div>
+                    )}
                   </div>
                   <div className="flex flex-1 flex-col gap-1 p-3">
                     <p className="line-clamp-2 text-sm font-medium text-[#16303F]">{p.title}</p>
