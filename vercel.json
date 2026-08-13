@@ -7,6 +7,10 @@
     {
       "path": "/api/cron/affiliate-health",
       "schedule": "0 17 * * *"
+    },
+    {
+      "path": "/api/cron/shop-collect",
+      "schedule": "30 0 * * *"
     }
   ]
 }
