@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 import SiteHeaderGate from "@/components/SiteHeaderGate";
 import { getActiveCategories } from "@/lib/categories";
 import "./globals.css";
@@ -70,6 +71,7 @@ export default async function RootLayout({
       <body className="min-h-full flex flex-col">
         <SiteHeaderGate categories={categories.map((c) => ({ name: c.name, slug: c.slug }))} />
         {children}
+        <Analytics />
       </body>
       <Script
         src="https://pg-web.nicepay.co.kr/js/nicepay-pgweb.js"
