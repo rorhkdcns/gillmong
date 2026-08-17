@@ -87,22 +87,22 @@ export default function HeroSlider() {
         }}
       >
         {SLIDES.map((slide, i) => (
-          <div key={i} className={`relative flex min-h-[300px] w-full shrink-0 items-center px-6 py-14 md:min-h-[380px] md:px-16 md:py-20 ${slide.bg}`}>
+          <div key={i} className={`relative flex min-h-[150px] w-full shrink-0 items-center px-6 py-6 md:min-h-[380px] md:px-16 md:py-20 ${slide.bg}`}>
             <div className="relative z-10 mx-auto w-full max-w-3xl">
               {slide.eyebrow && (
-                <span className="mb-4 inline-block rounded-full bg-white/70 px-4 py-1.5 text-sm font-bold text-brand-violet-deep">
+                <span className="mb-2 inline-block rounded-full bg-white/70 px-4 py-1.5 text-sm font-bold text-brand-violet-deep md:mb-4">
                   {slide.eyebrow}
                 </span>
               )}
-              <h1 className={`mb-4 text-3xl font-black leading-snug tracking-tight md:text-5xl ${slide.dark ? 'text-white' : 'text-brand-ink'}`}>
+              <h1 className={`mb-2 text-3xl font-black leading-snug tracking-tight md:mb-4 md:text-5xl ${slide.dark ? 'text-white' : 'text-brand-ink'}`}>
                 {slide.title}
               </h1>
-              <p className={`mb-7 max-w-lg text-base leading-relaxed md:text-lg ${slide.dark ? 'text-white/85' : 'text-brand-ink-soft'}`}>
+              <p className={`mb-7 hidden max-w-lg text-base leading-relaxed md:block md:text-lg ${slide.dark ? 'text-white/85' : 'text-brand-ink-soft'}`}>
                 {slide.desc}
               </p>
               <a
                 href={slide.ctaHref}
-                className={`inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-base font-bold shadow-lg transition-transform hover:-translate-y-0.5 ${
+                className={`inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-base font-bold shadow-lg transition-transform hover:-translate-y-0.5 md:px-8 md:py-3.5 ${
                   slide.ctaStyle === 'dark' ? 'bg-brand-ink text-white' : 'bg-white text-brand-ink'
                 }`}
               >
