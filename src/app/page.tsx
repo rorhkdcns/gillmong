@@ -63,8 +63,12 @@ export default async function Home() {
       {/* ① 히어로 슬라이더 */}
       <HeroSlider />
 
-      {/* ①-1 모바일 퀵메뉴 */}
-      <MobileQuickMenu />
+      {/* ①-1 모바일 퀵메뉴 (히어로 하단에 흰 카드로 살짝 겹침) */}
+      <div className="relative z-10 -mt-5 px-4 md:hidden">
+        <div className="rounded-[16px] bg-white shadow-md">
+          <MobileQuickMenu />
+        </div>
+      </div>
 
       {/* ② 꿈 감정소 */}
       <section id="appraisal" className="px-6 pb-20 pt-16">
