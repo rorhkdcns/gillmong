@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/shop-collect",
       "schedule": "0 */3 * * *"
+    },
+    {
+      "path": "/api/cron/daily-fortune",
+      "schedule": "10 15 * * *"
     }
   ]
 }
