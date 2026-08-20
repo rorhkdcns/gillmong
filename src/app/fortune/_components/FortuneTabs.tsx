@@ -1,13 +1,48 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type ComponentType } from 'react'
 import { lunarToSolar } from 'manseryeok'
+import {
+  IconZodiacAries,
+  IconZodiacTaurus,
+  IconZodiacGemini,
+  IconZodiacCancer,
+  IconZodiacLeo,
+  IconZodiacVirgo,
+  IconZodiacLibra,
+  IconZodiacScorpio,
+  IconZodiacSagittarius,
+  IconZodiacCapricorn,
+  IconZodiacAquarius,
+  IconZodiacPisces,
+} from '@tabler/icons-react'
 import {
   ZODIAC_ANIMALS,
   STAR_SIGNS,
   getZodiacKeyByYear,
   getStarSignKeyByDate,
 } from '@/lib/fortune'
+
+type TablerIcon = ComponentType<{ size?: number; className?: string }>
+
+// 별자리 12개는 Tabler Icons에 전용 세트(IconZodiac*)가 있어 전부 선 아이콘으로 교체.
+// 띠 12개는 12지신에 대응하는 선 아이콘 세트가 없어(호랑이/토끼/뱀 등 다수 미보유),
+// 그리드 안에서 일부만 아이콘·나머지는 이모지로 섞으면 오히려 더 어수선해 보여서
+// 기존 이모지를 그대로 유지한다.
+const STAR_ICONS: Record<string, TablerIcon> = {
+  '양자리': IconZodiacAries,
+  '황소자리': IconZodiacTaurus,
+  '쌍둥이자리': IconZodiacGemini,
+  '게자리': IconZodiacCancer,
+  '사자자리': IconZodiacLeo,
+  '처녀자리': IconZodiacVirgo,
+  '천칭자리': IconZodiacLibra,
+  '전갈자리': IconZodiacScorpio,
+  '사수자리': IconZodiacSagittarius,
+  '염소자리': IconZodiacCapricorn,
+  '물병자리': IconZodiacAquarius,
+  '물고기자리': IconZodiacPisces,
+}
 
 interface Props {
   date: string
@@ -155,7 +190,7 @@ export default function FortuneTabs({ date, zodiacFortunes, starFortunes }: Prop
           </div>
 
           <FortuneGrid
-            items={ZODIAC_ANIMALS.map((a) => ({ key: a.key, icon: a.emoji }))}
+            items={ZODIAC_ANIMALS.map((a) => ({ key: a.key, emoji: a.emoji }))}
             selectedKey={displayZodiac}
             onSelect={(key) => setSelectedZodiac(key)}
           />
@@ -193,7 +228,7 @@ export default function FortuneTabs({ date, zodiacFortunes, starFortunes }: Prop
           </div>
 
           <FortuneGrid
-            items={STAR_SIGNS.map((s) => ({ key: s.key, icon: s.symbol, sub: s.label }))}
+            items={STAR_SIGNS.map((s) => ({ key: s.key, Icon: STAR_ICONS[s.key], sub: s.label }))}
             selectedKey={displayStar}
             onSelect={(key) => setSelectedStar(key)}
           />
@@ -215,7 +250,7 @@ function FortuneGrid({
   selectedKey,
   onSelect,
 }: {
-  items: { key: string; icon: string; sub?: string }[]
+  items: { key: string; emoji?: string; Icon?: TablerIcon; sub?: string }[]
   selectedKey: string | null
   onSelect: (key: string) => void
 }) {
@@ -234,7 +269,9 @@ function FortuneGrid({
                 : 'border-brand-line bg-white hover:shadow-[0_20px_34px_rgba(11,36,51,0.12)]'
             }`}
           >
-            <span className="text-2xl leading-none">{item.icon}</span>
+            {item.Icon
+              ? <item.Icon size={24} className={active ? 'text-brand-primary-hover' : 'text-brand-ink-soft'} />
+              : <span className="text-2xl leading-none">{item.emoji}</span>}
             <span className={`text-sm font-semibold ${active ? 'text-brand-primary-hover' : 'text-brand-ink'}`}>
               {item.key}
             </span>

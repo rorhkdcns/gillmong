@@ -166,19 +166,20 @@ export default function SiteHeader({ categories }: Props) {
         <header className="border-b border-brand-line bg-white/85 backdrop-blur-lg">
           <div className="relative mx-auto min-h-[74px] max-w-6xl px-6 py-3">
 
-            {/* 로고 — 메뉴 폭을 본문 컨테이너(max-w-[600px])와 맞추기 위해 좌측에 절대 배치 */}
+            {/* 로고 — 메뉴 폭을 본문 컨테이너(max-w-[680px])와 맞추기 위해 좌측에 절대 배치 */}
             <Link href="/" className="absolute left-6 top-1/2 flex -translate-y-1/2 items-center">
               <Image src="/logo_1.jpg" alt="길몽상점" height={50} width={160} className="h-[50px] w-auto object-contain" priority />
             </Link>
 
-            {/* 데스크탑 네비 — 좌우 끝이 본문 컨테이너(max-w-[600px])와 정확히 맞도록 독립적으로 중앙 정렬 */}
-            <nav className="mx-auto hidden max-w-[600px] items-center justify-between lg:flex">
+            {/* 데스크탑 네비 — 좌우 끝이 본문 컨테이너(max-w-[680px])와 정확히 맞도록 독립적으로 중앙 정렬.
+                항목이 7개로 늘어나 max-w-[600px]에서는 줄바꿈이 생겨 680px로 소폭 확장했다. */}
+            <nav className="mx-auto hidden max-w-[680px] items-center justify-between lg:flex">
               {NAV.map((item) =>
                 item.dropdown ? (
                   /* 드롭다운 메뉴 */
                   <div key={item.label} className="group relative">
                     <button
-                      className="flex items-center gap-1 rounded-full px-3 py-2 text-base font-semibold text-brand-ink-soft transition-colors hover:text-brand-ink"
+                      className="flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-semibold text-brand-ink-soft transition-colors hover:text-brand-ink"
                     >
                       {item.label}
                       <ChevronDown className="h-2.5 w-2.5 opacity-60 transition-transform duration-200 group-hover:rotate-180" />
@@ -207,7 +208,7 @@ export default function SiteHeader({ categories }: Props) {
                   <Link
                     key={item.label}
                     href={item.href!}
-                    className="rounded-full px-3 py-2 text-base font-semibold text-brand-ink-soft transition-colors hover:text-brand-ink"
+                    className="whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-semibold text-brand-ink-soft transition-colors hover:text-brand-ink"
                   >
                     {item.label}
                   </Link>

@@ -63,7 +63,7 @@ export default async function DictionarySubcategoryPage({
     <div className="flex min-h-screen flex-col">
 
       <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#DDE6EC' }}>
-        <div className="mx-auto flex max-w-[600px] flex-col gap-[14px]">
+        <div className="mx-auto flex max-w-[680px] flex-col gap-[14px]">
 
           {/* 헤더 블록 */}
           <div className={`${BLOCK_SHAPE} bg-white`}>
