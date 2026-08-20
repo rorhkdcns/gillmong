@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { pickShopCollectionTargets, runShopProductGeneration } from '@/lib/shopProductGeneration'
 
-// Hobby 요금제 함수 실행 시간 제한(60초) 안에 여유 있게 끝내기 위해 한 번엔 적게 처리하고,
-// 대신 vercel.json에서 3시간마다(하루 8회) 자주 돌려 전체 대상을 순환시킨다.
+// Hobby 요금제는 cron을 하루 1번만 돌릴 수 있어, 그 한 번에 여러 건을 처리한다.
+// 60초 제한 안에서 안전하게 끝나는 선에서 최대한 처리량을 확보.
 export const maxDuration = 60
 
-const TARGET_COUNT = 3
+const TARGET_COUNT = 8
 const DELAY_MS = 1500 // 쿠팡 API 호출량 제한 회피용 딜레이
 
 function sleep(ms: number) {
@@ -13,8 +13,8 @@ function sleep(ms: number) {
 }
 
 // GET /api/cron/shop-collect
-// Vercel Cron이 3시간마다(KST) 호출
-// 수집 이력이 오래된 카테고리/하위카테고리 순으로 3개를 골라 순차적으로 쿠팡 검색 → 신규 상품 저장
+// Vercel Cron이 하루 1번(KST 09:30) 호출
+// 수집 이력이 오래된 카테고리/하위카테고리 순으로 8개를 골라 순차적으로 쿠팡 검색 → 신규 상품 저장
 export async function GET(req: NextRequest) {
   const authHeader = req.headers.get('authorization')
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
