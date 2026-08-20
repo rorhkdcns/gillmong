@@ -1,19 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/cron/auto-settle",
-      "schedule": "0 16 * * *"
-    },
-    {
-      "path": "/api/cron/affiliate-health",
-      "schedule": "0 17 * * *"
-    },
-    {
-      "path": "/api/cron/shop-collect",
-      "schedule": "30 0 * * *"
-    },
-    {
-      "path": "/api/cron/daily-fortune",
+      "path": "/api/cron/daily-tasks",
       "schedule": "10 15 * * *"
     }
   ]
