@@ -54,6 +54,33 @@ export type CoupangResult<T> =
   | { ok: true; data: T }
   | { ok: false; error: string }
 
+// ── 호출 속도 제한 (계정 정지 재발 방지) ──────────────────────────
+// 쿠팡파트너스 검색 API의 실제 제한은 "하루 총량"이 아니라 "분당 호출 횟수"였다
+// (분당 50회 제한, 기존 300ms 간격은 분당 200회 페이스라 매번 초과했음).
+// 계정이 실제로 정지됐다 풀린 상태라 아주 보수적으로, 이 파일을 통한 모든 호출이
+// 호출자(cron/admin)와 무관하게 전역적으로 최소 5초 간격을 두도록 강제한다.
+// 모듈 레벨 프라미스 체인(callQueue)에 매 호출을 순서대로 이어붙여, 동시에 여러
+// 호출이 들어와도 도착 순서대로 하나씩만 통과시킨다.
+const MIN_CALL_INTERVAL_MS = 5000
+let lastCallAt = 0
+let callQueue: Promise<void> = Promise.resolve()
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+function waitForTurn(source: string): Promise<void> {
+  const turn = callQueue.then(async () => {
+    const wait = Math.max(0, lastCallAt + MIN_CALL_INTERVAL_MS - Date.now())
+    if (wait > 0) await sleep(wait)
+    lastCallAt = Date.now()
+    console.log(`[coupang] 호출 시각=${new Date(lastCallAt).toISOString()} source=${source}`)
+  })
+  // 이번 turn이 어떤 이유로 실패하더라도 큐 자체가 막히지 않도록 흡수한다.
+  callQueue = turn.catch(() => undefined)
+  return turn
+}
+
 function pad2(n: number): string {
   return String(n).padStart(2, '0')
 }
@@ -90,10 +117,13 @@ function getCredentials(): { ok: true; accessKey: string; secretKey: string } | 
 async function coupangRequest<T>(
   method: 'GET' | 'POST',
   path: string,
+  source: string,
   options: { query?: Record<string, string | number | boolean | undefined>; body?: unknown } = {},
 ): Promise<CoupangResult<T>> {
   const creds = getCredentials()
   if (!creds.ok) return creds
+
+  await waitForTurn(source)
 
   try {
     const url = new URL(path, BASE_URL)
@@ -147,10 +177,18 @@ async function coupangRequest<T>(
   }
 }
 
-export async function searchProducts(keyword: string, limit = SEARCH_LIMIT_DEFAULT): Promise<CoupangResult<CoupangProduct[]>> {
+export async function searchProducts(
+  keyword: string,
+  limit = SEARCH_LIMIT_DEFAULT,
+  source = 'unknown',
+): Promise<CoupangResult<CoupangProduct[]>> {
+  // 킬스위치: 계정 문제 재발 등 긴급 상황에서 배포 없이 즉시 전체 호출을 막기 위함.
+  if (process.env.COUPANG_API_ENABLED === 'false') {
+    return { ok: false, error: '쿠팡 API 비활성화 상태' }
+  }
   if (!keyword.trim()) return { ok: false, error: '검색어를 입력해주세요.' }
 
-  const result = await coupangRequest<{ landingUrl: string; productData: CoupangProduct[] }>('GET', SEARCH_PATH, {
+  const result = await coupangRequest<{ landingUrl: string; productData: CoupangProduct[] }>('GET', SEARCH_PATH, source, {
     query: { keyword: keyword.trim(), limit: clampSearchLimit(limit), imageSize: '230x230' },
   })
   if (!result.ok) return result

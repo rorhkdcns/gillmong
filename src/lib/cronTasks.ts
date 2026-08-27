@@ -65,8 +65,8 @@ export async function runAutoSettle() {
   return { settled, total: overdueOrders.length }
 }
 
-const AFFILIATE_BATCH_SIZE = 50
-const AFFILIATE_DELAY_MS = 300 // 쿠팡 API 호출량 제한 회피용 딜레이
+const AFFILIATE_BATCH_SIZE = 15
+const AFFILIATE_DELAY_MS = 5000 // 쿠팡 API 분당 호출 제한 회피용 딜레이 (coupang.ts의 전역 5초 큐와 별개로 유지)
 
 // 활성 제휴상품을 오래된 순으로 재조회해 품절/판매중지 상품을 자동 비활성화
 export async function runAffiliateHealth() {
@@ -97,7 +97,7 @@ export async function runAffiliateHealth() {
     if (checked > 0) await sleep(AFFILIATE_DELAY_MS)
     checked++
 
-    const result = await searchProducts(product.title, 20)
+    const result = await searchProducts(product.title, 20, 'cron:affiliate-health')
     if (!result.ok) {
       console.error('[AffiliateHealth] 검색 실패, 다음 회차에 재시도:', product.id, result.error)
       continue
@@ -126,8 +126,8 @@ export async function runAffiliateHealth() {
   return { checked, deactivated, total: targets.length }
 }
 
-const SHOP_COLLECT_TARGET_COUNT = 8
-const SHOP_COLLECT_DELAY_MS = 1500 // 쿠팡 API 호출량 제한 회피용 딜레이
+const SHOP_COLLECT_TARGET_COUNT = 5
+const SHOP_COLLECT_DELAY_MS = 5000 // 쿠팡 API 분당 호출 제한 회피용 딜레이 (coupang.ts의 전역 5초 큐와 별개로 유지)
 
 // 수집 이력이 오래된 카테고리/하위카테고리 순으로 몇 개를 골라 순차적으로 쿠팡 검색 → 신규 상품 저장
 export async function runShopCollect() {
@@ -144,7 +144,7 @@ export async function runShopCollect() {
     if (processed > 0) await sleep(SHOP_COLLECT_DELAY_MS)
     processed++
 
-    const result = await runShopProductGeneration(target.categoryId, target.subcategoryId)
+    const result = await runShopProductGeneration(target.categoryId, target.subcategoryId, 'cron:shop-collect')
     if (result.error) {
       console.error('[ShopCollect] 수집 실패, 다음 대상으로 계속:', target, result.error)
       failed++

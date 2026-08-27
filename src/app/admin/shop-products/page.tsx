@@ -533,6 +533,7 @@ export default function AdminShopProductsPage() {
       if (!res.ok) throw new Error(data.error ?? '검색에 실패했습니다.')
       const results: CoupangProduct[] = data.products ?? []
       setCoupangResults(results)
+      if (data.notice) setCoupangSaveMsg(data.notice)
       setSelectedCoupangIds(new Set())
       // 상품명 기준 추천 태그로 미리 채워두되(등록 전 자유롭게 수정 가능), 추천이 없는 상품은 빈 칸으로 둔다.
       const suggestedTags: Record<number, string> = {}

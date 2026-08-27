@@ -1539,7 +1539,7 @@ export async function generateShopProducts(
   const auth = await requireAdminAction()
   if (!auth.ok) return { error: auth.error }
 
-  return runShopProductGeneration(categoryId, subcategoryId)
+  return runShopProductGeneration(categoryId, subcategoryId, `admin:generate:${auth.userId}`)
 }
 
 // ── 상품 일괄 작업(체크박스 선택 후 카테고리/발행상태/태그/삭제) ──────────────────

@@ -13,7 +13,7 @@ export interface ShopProductGenerationResult {
 // product_id/coupang_product_id/last_checked_at도 함께 채워서 /api/cron/affiliate-health
 // (product_id가 있는 상품만 자동 점검 대상으로 삼음)가 이후 정상적으로 점검할 수 있게 한다.
 export async function runShopProductGeneration(
-  categoryId: string, subcategoryId?: string,
+  categoryId: string, subcategoryId?: string, source = 'shop-product-generation',
 ): Promise<ShopProductGenerationResult> {
   const admin = createAdminClient()
 
@@ -39,7 +39,7 @@ export async function runShopProductGeneration(
     ? (subcategory.search_keyword || subcategory.name)
     : (category.search_keyword || category.name)
 
-  const result = await searchProducts(keyword, 10)
+  const result = await searchProducts(keyword, 10, source)
   if (!result.ok) return { error: result.error }
 
   const productIds = result.data.map((p) => String(p.productId))
