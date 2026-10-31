@@ -220,7 +220,7 @@ async function CategoryView({
                     href={`/dictionary/${c.slug}`}
                     className="rounded-[3px] border border-[#EADFD8] bg-white px-4 py-2 text-sm font-medium text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F]"
                   >
-                    {c.name} 해몽
+                    {c.name}
                   </Link>
                 ))}
                 <Link

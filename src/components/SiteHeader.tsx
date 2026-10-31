@@ -73,7 +73,7 @@ export default function SiteHeader({ categories }: Props) {
   const dictionaryDropdown: DropdownItem[] = [
     { label: '전체 사전', href: '/dictionary' },
     ...categoryItems.map((c) => ({
-      label: `${c.label} 해몽`,
+      label: c.label,
       href: `/dictionary/${c.href.replace('/category/', '')}`,
     })),
   ]
