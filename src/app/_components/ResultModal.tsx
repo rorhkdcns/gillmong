@@ -202,7 +202,7 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
         {/* X 버튼 */}
         <button
           onClick={onClose}
-          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200"
+          className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-[3px] bg-gray-100 text-gray-500 hover:bg-gray-200"
           aria-label="닫기"
         >
           <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
@@ -213,7 +213,7 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
         <div className="p-5">
 
           {/* 제목 */}
-          <h2 className="mb-4 text-center text-xl font-black text-brand-heading">길몽상점 감정 결과</h2>
+          <h2 className="mb-4 text-center text-xl font-black text-brand-ink">길몽상점 감정 결과</h2>
 
           {/* 알파벳 원형 — 중앙 상단 */}
           <div className="mb-6 flex flex-col items-center gap-3">
@@ -223,14 +223,14 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
 
             {/* 태그들 — 중앙 정렬 */}
             <div className="flex flex-row items-center justify-center gap-2">
-              <span className={`rounded-full border px-3 py-1 text-xs font-semibold ${TYPE_STYLE[analysis.type] ?? TYPE_STYLE['중립']}`}>
+              <span className={`rounded-[3px] border px-3 py-1 text-xs font-semibold ${TYPE_STYLE[analysis.type] ?? TYPE_STYLE['중립']}`}>
                 {analysis.type}
               </span>
             </div>
 
             {/* 요약 텍스트 — 태그 아래 */}
             {analysis.summary && (
-              <p className="max-w-sm text-center text-sm leading-relaxed text-brand-body">
+              <p className="max-w-sm text-center text-sm leading-relaxed text-brand-ink">
                 {analysis.summary}
               </p>
             )}
@@ -240,7 +240,7 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
 
           {/* 나의 꿈 기록 */}
           <section className="mb-4">
-            <h3 className="mb-1.5 text-sm font-bold text-brand-muted">
+            <h3 className="mb-1.5 text-sm font-bold text-brand-ink-soft">
               나의 꿈 기록
               <span className="ml-1.5 text-xs font-normal text-gray-400">직접 수정 가능</span>
             </h3>
@@ -249,10 +249,10 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
               <button
                 type="button"
                 onClick={() => setMode('original')}
-                className={`flex-1 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${
+                className={`flex-1 rounded-[3px] border px-3 py-2 text-xs font-semibold transition-colors ${
                   mode === 'original'
-                    ? 'border-brand-violet bg-brand-violet text-white'
-                    : 'border-[#CCCCCC] bg-white text-brand-muted hover:border-brand-violet'
+                    ? 'border-brand-primary bg-brand-primary text-white'
+                    : 'border-[#EADFD8] bg-white text-brand-ink-soft hover:border-brand-primary'
                 }`}
               >
                 내가 쓴 그대로
@@ -261,10 +261,10 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
               <button
                 type="button"
                 onClick={() => setMode('ai')}
-                className={`flex-1 rounded-lg border px-3 py-2 text-xs font-semibold transition-colors ${
+                className={`flex-1 rounded-[3px] border px-3 py-2 text-xs font-semibold transition-colors ${
                   mode === 'ai'
-                    ? 'border-brand-violet bg-brand-violet text-white'
-                    : 'border-[#CCCCCC] bg-white text-brand-muted hover:border-brand-violet'
+                    ? 'border-brand-primary bg-brand-primary text-white'
+                    : 'border-[#EADFD8] bg-white text-brand-ink-soft hover:border-brand-primary'
                 }`}
               >
                 AI가 다듬은 글
@@ -277,7 +277,7 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
               value={editedDream}
               onChange={(e) => setEditedDream(e.target.value)}
               rows={3}
-              className="w-full max-h-[60vh] resize-none overflow-y-auto rounded-lg bg-brand-page px-3 py-2 text-sm leading-relaxed text-brand-body outline-none focus:ring-1 focus:ring-brand-violet"
+              className="w-full max-h-[60vh] resize-none overflow-y-auto rounded-[3px] bg-brand-page px-3 py-2 text-sm leading-relaxed text-brand-ink outline-none focus:ring-1 focus:ring-brand-primary"
             />
           </section>
 
@@ -286,18 +286,18 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
             const sections = parseInterpretation(analysis.interpretation)
             return (
               <section className="mb-4">
-                <h3 className="mb-1.5 text-sm font-bold text-brand-muted">상세 해몽</h3>
-                <div className="rounded-lg border border-[#CCCCCC] overflow-hidden">
+                <h3 className="mb-1.5 text-sm font-bold text-brand-ink-soft">상세 해몽</h3>
+                <div className="rounded-[3px] border border-[#EADFD8] overflow-hidden">
                   {sections.length > 0 ? sections.map((sec, i) => (
                     <div key={i}>
-                      {i > 0 && <hr style={{ borderColor: '#EEEEEE' }} />}
+                      {i > 0 && <hr style={{ borderColor: '#F0E6DF' }} />}
                       <div className="px-3 py-2">
                         <p className="mb-1 text-xs font-bold" style={{ color: sec.color }}>{sec.title}</p>
-                        <p className="text-sm leading-relaxed text-brand-body whitespace-pre-line">{sec.content}</p>
+                        <p className="text-sm leading-relaxed text-brand-ink whitespace-pre-line">{sec.content}</p>
                       </div>
                     </div>
                   )) : (
-                    <div className="px-3 py-2 text-sm leading-relaxed text-brand-body whitespace-pre-line">
+                    <div className="px-3 py-2 text-sm leading-relaxed text-brand-ink whitespace-pre-line">
                       {analysis.interpretation}
                     </div>
                   )}
@@ -309,8 +309,8 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
           {/* 실생활 조언 */}
           {analysis.advice && (
             <section className="mb-4">
-              <h3 className="mb-1.5 text-sm font-bold text-brand-muted">실생활 조언</h3>
-              <div className="rounded-lg border border-brand-primary-border bg-brand-primary-light/40 px-3 py-2 text-sm leading-relaxed text-brand-body">
+              <h3 className="mb-1.5 text-sm font-bold text-brand-ink-soft">실생활 조언</h3>
+              <div className="rounded-[3px] border border-brand-primary-border bg-brand-primary-light/40 px-3 py-2 text-sm leading-relaxed text-brand-ink">
                 {analysis.advice}
               </div>
             </section>
@@ -318,12 +318,12 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
 
           {/* 행운의 추천 번호 */}
           <section className="mb-4">
-            <h3 className="mb-2 text-sm font-bold text-brand-muted">행운의 추천 번호</h3>
+            <h3 className="mb-2 text-sm font-bold text-brand-ink-soft">행운의 추천 번호</h3>
             <div className="flex justify-center gap-2">
               {analysis.lucky_numbers.map((num) => (
                 <div
                   key={num}
-                  className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-brand-violet to-brand-pink text-sm font-black text-white shadow"
+                  className="flex h-11 w-11 items-center justify-center rounded-full bg-brand-primary text-sm font-black text-white shadow"
                 >
                   {num}
                 </div>
@@ -335,25 +335,25 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
 
           {/* 마켓 판매 등록 */}
           <section>
-            <h3 className="mb-3 text-sm font-black text-brand-heading">마켓 판매 등록</h3>
+            <h3 className="mb-3 text-sm font-black text-brand-ink">마켓 판매 등록</h3>
 
             <div className="mb-2">
-              <label className="mb-1 block text-sm font-medium text-brand-body">꿈 제목 <span className="text-red-400">*</span></label>
+              <label className="mb-1 block text-sm font-medium text-brand-ink">꿈 제목 <span className="text-red-400">*</span></label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="꿈을 한 줄로 표현해주세요"
-                className="w-full rounded-lg border border-[#CCCCCC] bg-white px-3 py-2 text-sm text-brand-heading outline-none focus:border-brand-violet"
+                className="w-full rounded-[3px] border border-[#EADFD8] bg-white px-3 py-2 text-sm text-brand-ink outline-none focus:border-brand-primary"
               />
             </div>
 
             <div className="mb-2">
-              <label className="mb-1 block text-sm font-medium text-brand-body">카테고리 <span className="text-red-400">*</span></label>
+              <label className="mb-1 block text-sm font-medium text-brand-ink">카테고리 <span className="text-red-400">*</span></label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full rounded-lg border border-[#CCCCCC] bg-white px-3 py-2 text-sm text-brand-heading outline-none"
+                className="w-full rounded-[3px] border border-[#EADFD8] bg-white px-3 py-2 text-sm text-brand-ink outline-none"
               >
                 <option value="">카테고리를 선택해주세요</option>
                 {categories.map((cat) => (
@@ -363,7 +363,7 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
             </div>
 
             <div className="mb-3">
-              <label className="mb-1 block text-sm font-medium text-brand-body">감정가 <span className="text-red-400">*</span></label>
+              <label className="mb-1 block text-sm font-medium text-brand-ink">감정가 <span className="text-red-400">*</span></label>
               <div className="relative">
                 <input
                   type="number"
@@ -372,9 +372,9 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
                   onBlur={handlePriceBlur}
                   min="5000"
                   step="100"
-                  className="w-full rounded-lg border border-[#CCCCCC] bg-white px-3 py-2 pr-8 text-sm text-brand-heading outline-none focus:border-brand-violet"
+                  className="w-full rounded-[3px] border border-[#EADFD8] bg-white px-3 py-2 pr-8 text-sm text-brand-ink outline-none focus:border-brand-primary"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-brand-muted">P</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-brand-ink-soft">P</span>
               </div>
               {priceError && <p className="mt-1 text-xs text-red-500">{priceError}</p>}
             </div>
@@ -387,20 +387,20 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
               <button
                 onClick={handleRegister}
                 disabled={saving || savingPrivate || !!priceError}
-                className="flex-1 rounded-lg bg-gradient-to-r from-brand-violet to-brand-pink py-2.5 text-sm font-bold text-white transition-all hover:brightness-95 disabled:opacity-60"
+                className="flex-1 rounded-[3px] bg-brand-primary py-2.5 text-sm font-bold text-white transition-all hover:bg-brand-primary-hover disabled:opacity-60"
               >
                 {saving ? '등록 중...' : '마켓 등록'}
               </button>
               <button
                 onClick={handlePrivateSave}
                 disabled={saving || savingPrivate}
-                className="flex-1 rounded-lg border-2 border-brand-violet bg-white py-2.5 text-sm font-bold text-brand-violet-deep transition-colors hover:bg-brand-violet hover:text-white disabled:opacity-60"
+                className="flex-1 rounded-[3px] border-2 border-brand-primary bg-white py-2.5 text-sm font-bold text-brand-primary-hover transition-colors hover:bg-brand-primary hover:text-white disabled:opacity-60"
               >
                 {savingPrivate ? '저장 중...' : '개인 저장'}
               </button>
               <button
                 onClick={onClose}
-                className="rounded-lg border-2 border-gray-300 px-4 py-2.5 text-sm font-bold text-gray-400 transition-colors hover:border-gray-400 hover:text-gray-500"
+                className="rounded-[3px] border-2 border-gray-300 px-4 py-2.5 text-sm font-bold text-gray-400 transition-colors hover:border-gray-400 hover:text-gray-500"
               >
                 닫기
               </button>

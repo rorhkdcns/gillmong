@@ -113,7 +113,7 @@ export default function DreamInput() {
   const totalChars  = Object.values(answers).reduce((s, v) => s + v.trim().length, 0)
   const fillPercent = Math.min(100, Math.round((totalChars / 80) * 100))
   const fillLabel   = fillPercent >= 100 ? '상세함 ✓' : fillPercent >= 50 ? '보통' : '간략함'
-  const fillColor   = fillPercent >= 100 ? 'bg-emerald-400' : fillPercent >= 50 ? 'bg-gradient-to-r from-brand-violet to-brand-pink' : 'bg-gray-300'
+  const fillColor   = fillPercent >= 100 ? 'bg-grade-b-fg' : fillPercent >= 50 ? 'bg-brand-primary' : 'bg-gray-300'
 
   if (dailyLimitReached) {
     return (
@@ -144,7 +144,7 @@ export default function DreamInput() {
           return (
             <div key={field.key}>
               <div className="mb-1 flex items-start gap-3">
-                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-violet to-brand-pink text-sm font-bold text-white">
+                <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-[3px] bg-brand-primary text-sm font-bold text-white">
                   {i + 1}
                 </span>
                 <div>
@@ -171,11 +171,11 @@ export default function DreamInput() {
                   onBlur={() => setFocusedKey(null)}
                   placeholder={field.placeholder}
                   rows={isFocused ? 3 : 2}
-                  className="w-full resize-none rounded-xl border border-gray-400 bg-white px-4 py-3 pb-6 text-base text-brand-ink placeholder:text-[#BBBBBB] outline-none transition-all focus:border-brand-violet focus:shadow-[0_0_0_3px_rgba(229,66,31,0.14)]"
+                  className="w-full resize-none rounded-xl border border-gray-400 bg-white px-4 py-3 pb-6 text-base text-brand-ink placeholder:text-[#B8ADA6] outline-none transition-all focus:border-brand-primary focus:shadow-[0_0_0_3px_rgba(229,66,31,0.14)]"
                 />
                 {/* 글자 수 */}
                 <span className={`absolute bottom-2 right-3 text-xs transition-colors ${
-                  charCount === 0 ? 'text-transparent' : charCount >= 30 ? 'text-brand-violet-deep font-semibold' : 'text-[#AAAAAA]'
+                  charCount === 0 ? 'text-transparent' : charCount >= 30 ? 'text-brand-primary-hover font-semibold' : 'text-[#9A8F88]'
                 }`}>
                   {charCount}자{charCount >= 30 ? ' ✓' : ''}
                 </span>
@@ -188,18 +188,18 @@ export default function DreamInput() {
         <div>
           <div className="mb-1.5 flex items-center justify-between text-sm text-brand-ink-soft">
             <span>작성 충실도</span>
-            <span className={fillPercent >= 100 ? 'font-bold text-emerald-500' : fillPercent >= 50 ? 'font-semibold text-brand-violet-deep' : 'text-[#888888]'}>
+            <span className={fillPercent >= 100 ? 'font-bold text-grade-b-fg' : fillPercent >= 50 ? 'font-semibold text-brand-primary-hover' : 'text-[#6B605A]'}>
               {fillLabel}
             </span>
           </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
+          <div className="h-2 w-full overflow-hidden rounded-[2px] bg-gray-200">
             <div
-              className={`h-full rounded-full transition-all duration-500 ${fillColor}`}
+              className={`h-full rounded-[2px] transition-all duration-500 ${fillColor}`}
               style={{ width: `${fillPercent}%` }}
             />
           </div>
           {fillPercent < 50 && totalChars > 0 && (
-            <p className="mt-1.5 text-sm text-[#666666]">각 항목을 20자 이상 작성하면 더 정확한 해몽이 가능합니다</p>
+            <p className="mt-1.5 text-sm text-[#6B605A]">각 항목을 20자 이상 작성하면 더 정확한 해몽이 가능합니다</p>
           )}
         </div>
 
@@ -211,7 +211,7 @@ export default function DreamInput() {
                 type="button"
                 onClick={handleSubmit}
                 disabled={loading}
-                className="self-start rounded-lg border border-red-300 px-4 py-1.5 text-sm font-semibold text-red-500 hover:bg-red-50 disabled:opacity-60"
+                className="self-start rounded-[3px] border border-red-300 px-4 py-1.5 text-sm font-semibold text-red-500 hover:bg-red-50 disabled:opacity-60"
               >
                 재시도
               </button>
@@ -222,7 +222,7 @@ export default function DreamInput() {
         {remaining !== null && (
           <p className="text-center text-sm">
             <span className="text-brand-ink-soft">오늘 해몽 </span>
-            <span className={`font-bold ${remaining === 0 ? 'text-red-400' : 'text-brand-violet-deep'}`}>{remaining}회</span>
+            <span className={`font-bold ${remaining === 0 ? 'text-red-400' : 'text-brand-primary-hover'}`}>{remaining}회</span>
             <span className="text-brand-ink-soft"> 남음</span>
           </p>
         )}
@@ -231,7 +231,7 @@ export default function DreamInput() {
           type="button"
           onClick={handleSubmit}
           disabled={loading}
-          className="w-full rounded-xl bg-gradient-to-r from-brand-violet to-brand-pink py-5 text-xl font-black text-white shadow-[0_10px_26px_rgba(35,28,23,0.28)] transition-all hover:brightness-95 active:scale-[0.98] disabled:opacity-60"
+          className="w-full rounded-xl bg-brand-primary py-5 text-xl font-black text-white  transition-all hover:bg-brand-primary-hover active:scale-[0.98] disabled:opacity-60"
         >
           나의 꿈 감정하기
         </button>
@@ -241,10 +241,10 @@ export default function DreamInput() {
       {loading && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="flex w-full max-w-sm flex-col items-center gap-6 rounded-2xl bg-white px-8 py-12 shadow-2xl text-center">
-            <div className="h-14 w-14 animate-spin rounded-full border-4 border-gray-200 border-t-brand-violet" />
+            <div className="h-14 w-14 animate-spin rounded-full border-4 border-gray-200 border-t-brand-primary" />
             <div>
-              <p className="text-lg font-black text-brand-heading">무의식의 서사를 분석하고 있습니다...</p>
-              <p className="mt-2 text-base text-brand-muted">AI가 꿈의 상징과 의미를 해석하는 중입니다.</p>
+              <p className="text-lg font-black text-brand-ink">무의식의 서사를 분석하고 있습니다...</p>
+              <p className="mt-2 text-base text-brand-ink-soft">AI가 꿈의 상징과 의미를 해석하는 중입니다.</p>
             </div>
           </div>
         </div>
