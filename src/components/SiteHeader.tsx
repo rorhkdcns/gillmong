@@ -179,7 +179,7 @@ export default function SiteHeader({ categories }: Props) {
                   /* 드롭다운 메뉴 */
                   <div key={item.label} className="group relative">
                     <button
-                      className="flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-semibold text-brand-ink-soft transition-colors hover:text-brand-ink"
+                      className="flex items-center gap-1 whitespace-nowrap rounded-[3px] px-2.5 py-2 text-sm font-semibold text-brand-ink-soft transition-colors hover:text-brand-primary"
                     >
                       {item.label}
                       <ChevronDown className="h-2.5 w-2.5 opacity-60 transition-transform duration-200 group-hover:rotate-180" />
@@ -187,7 +187,7 @@ export default function SiteHeader({ categories }: Props) {
 
                     {/* 드롭다운 패널 */}
                     <div className="absolute left-1/2 top-full -translate-x-1/2 pt-2.5 invisible opacity-0 translate-y-1.5 transition-all duration-200 group-hover:visible group-hover:opacity-100 group-hover:translate-y-0">
-                      <ul className="min-w-[150px] overflow-hidden rounded-2xl border border-brand-line bg-white p-1.5 shadow-[0_14px_34px_rgba(11,36,51,0.12)]">
+                      <ul className="min-w-[150px] overflow-hidden rounded-2xl border border-brand-line bg-white p-1.5 shadow-[0_14px_34px_rgba(35,28,23,0.12)]">
                         {item.dropdown.map((d) => (
                           <li key={d.label}>
                             <Link
@@ -208,7 +208,7 @@ export default function SiteHeader({ categories }: Props) {
                   <Link
                     key={item.label}
                     href={item.href!}
-                    className="whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-semibold text-brand-ink-soft transition-colors hover:text-brand-ink"
+                    className={`whitespace-nowrap rounded-[3px] px-2.5 py-2 text-sm font-semibold transition-colors hover:text-brand-primary ${isActive(item) ? 'text-brand-primary' : 'text-brand-ink-soft'}`}
                   >
                     {item.label}
                   </Link>
@@ -217,12 +217,13 @@ export default function SiteHeader({ categories }: Props) {
             </nav>
 
             {/* 우측 액션 */}
-            <div className="absolute right-6 top-1/2 flex -translate-y-1/2 items-center gap-4 text-brand-ink-soft">
+            <div className="absolute right-6 top-1/2 flex -translate-y-1/2 items-center gap-2 text-brand-ink-soft lg:gap-4">
               {/* 검색 버튼 (데스크탑) */}
               <button
                 type="button"
+                aria-label="꿈 검색"
                 onClick={() => setSearchOpen((v) => !v)}
-                className={`hidden transition-colors hover:text-brand-ink lg:block ${searchOpen ? 'text-brand-ink' : ''}`}
+                className={`flex h-10 w-10 items-center justify-center rounded-[3px] border-2 transition-colors hover:border-brand-ink hover:text-brand-ink ${searchOpen ? 'border-brand-ink text-brand-ink' : 'border-brand-line'}`}
               >
                 {searchOpen
                   ? <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -251,20 +252,18 @@ export default function SiteHeader({ categories }: Props) {
                 )}
               </Link>
 
-              {/* 로그인 상태 (모바일) */}
-              {loggedIn && (
-                <Link href="/mypage" className="flex flex-col items-end leading-tight lg:hidden">
-                  <span className="text-xs font-semibold text-brand-ink">{nickname}님</span>
-                  {remaining !== null && (
-                    <span className={`text-xs ${remaining === 0 ? 'text-red-400' : 'text-brand-primary'}`}>
-                      해몽 {remaining}회 남음
-                    </span>
-                  )}
+              {/* 로그인 상태 (모바일) — 남은 횟수 칩 */}
+              {loggedIn && remaining !== null && (
+                <Link
+                  href="/mypage"
+                  className={`rounded-[2px] px-2 py-1 text-xs font-bold lg:hidden ${remaining === 0 ? 'bg-red-50 text-red-500' : 'bg-brand-primary-light text-brand-primary-hover'}`}
+                >
+                  해몽 {remaining}회 남음
                 </Link>
               )}
 
               {/* 햄버거 (모바일) */}
-              <button type="button" onClick={() => setMenuOpen(true)} className="flex items-center justify-center text-brand-ink lg:hidden">
+              <button type="button" aria-label="메뉴 열기" aria-expanded={menuOpen} onClick={() => setMenuOpen(true)} className="flex h-10 w-10 items-center justify-center text-brand-ink lg:hidden">
                 <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
@@ -277,14 +276,14 @@ export default function SiteHeader({ categories }: Props) {
         <div className={`overflow-hidden border-b border-brand-line bg-white transition-all duration-300 ease-in-out ${searchOpen ? 'max-h-20 opacity-100' : 'max-h-0 opacity-0'}`}>
           <form onSubmit={(e) => handleSearch(e, query, 'desktop')} className="mx-auto flex max-w-6xl items-center gap-3 px-6 py-3">
             <input ref={inputRef} type="text" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="꿈 제목 또는 내용으로 검색" className="flex-1 bg-transparent text-base text-brand-ink outline-none placeholder:text-brand-ink-soft/60" />
-            <button type="submit" className="shrink-0 rounded-full bg-brand-ink px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-primary-hover">검색</button>
+            <button type="submit" className="shrink-0 rounded-[3px] bg-brand-ink px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-primary-hover">검색</button>
           </form>
         </div>
       </div>
 
       {/* 모바일 오버레이 */}
       <div
-        className={`fixed inset-0 z-[60] bg-black/40 transition-opacity duration-300 lg:hidden ${menuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
+        className={`fixed inset-0 z-[60] bg-brand-ink/50 transition-opacity duration-300 lg:hidden ${menuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'}`}
         onClick={() => setMenuOpen(false)}
       />
 
@@ -293,7 +292,7 @@ export default function SiteHeader({ categories }: Props) {
         {/* 패널 헤더 */}
         <div className="flex items-center justify-between border-b border-brand-line px-5 py-4">
           <span className="text-base font-semibold text-brand-ink">메뉴</span>
-          <button type="button" onClick={() => setMenuOpen(false)} className="text-brand-ink">
+          <button type="button" aria-label="메뉴 닫기" onClick={() => setMenuOpen(false)} className="flex h-10 w-10 items-center justify-center text-brand-ink">
             <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -303,7 +302,7 @@ export default function SiteHeader({ categories }: Props) {
         <div className="flex flex-col overflow-y-auto" style={{ height: 'calc(100% - 57px)' }}>
           {/* 검색 */}
           <div className="border-b border-brand-line px-5 py-4">
-            <form onSubmit={(e) => handleSearch(e, mobileQuery, 'mobile')} className="flex items-center gap-2 rounded-full border border-brand-line px-4 py-2">
+            <form onSubmit={(e) => handleSearch(e, mobileQuery, 'mobile')} className="flex items-center gap-2 rounded-[3px] border border-brand-line px-4 py-2">
               <input type="text" value={mobileQuery} onChange={(e) => setMobileQuery(e.target.value)} placeholder="꿈 검색" className="flex-1 bg-transparent text-sm text-brand-ink outline-none" />
             </form>
           </div>

@@ -2,13 +2,14 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #231C17;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-pretendard);
+  --font-sans: "Noto Sans KR Variable", "Apple SD Gothic Neo", "Malgun Gothic", Arial, sans-serif;
+  --font-display: "Bricolage Grotesque Variable", "Noto Sans KR Variable", sans-serif;
 }
 
 html {
@@ -18,49 +19,83 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-pretendard), Arial, Helvetica, sans-serif;
+  font-family: "Noto Sans KR Variable", "Apple SD Gothic Neo", "Malgun Gothic", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* ============================================================
-   길몽상점 브랜드 컬러 (2026 리디자인 — violet/ink 팔레트)
+   길몽상점 브랜드 컬러 (2026 H안 리디자인 — 화이트 + 코랄 팔레트)
    색상을 바꾸려면 아래 값만 수정하세요.
    ============================================================ */
 @theme {
   /* 배경 */
-  --color-brand-page:    #F4F7F9;   /* 페이지 배경 */
+  --color-brand-page:    #FAF6F2;   /* 페이지 배경 (크림) */
   --color-brand-surface: #FFFFFF;   /* 순백 — 카드·섹션 배경 */
 
-  /* 바이올렛 포인트 — 버튼·뱃지·강조 */
-  --color-brand-primary:        #2E7DD1;   /* 바이올렛 */
-  --color-brand-primary-hover:  #14547A;   /* 바이올렛 딥 (hover) */
-  --color-brand-primary-light:  #E8F2FA;   /* 연한 바이올렛 배경 */
-  --color-brand-primary-border: #CFE3F5;   /* 바이올렛 테두리 */
+  /* 코랄 포인트 — 버튼·뱃지·강조 */
+  --color-brand-primary:        #E5421F;   /* 코랄 */
+  --color-brand-primary-hover:  #C23A18;   /* 코랄 딥 (hover) */
+  --color-brand-primary-light:  #FFF1EA;   /* 연한 복숭아 배경 */
+  --color-brand-primary-border: #FFD3C4;   /* 코랄 테두리 */
 
-  /* 잉크 — 헤더·푸터·히어로·제목 */
-  --color-brand-logo:    #0B2433;
-  --color-brand-dark:    #0B2433;
+  /* 잉크 — 헤더·푸터·히어로·제목 (따뜻한 검정) */
+  --color-brand-logo:    #231C17;
+  --color-brand-dark:    #231C17;
 
   /* 텍스트 */
-  --color-brand-heading: #0B2433;   /* 딥 잉크 — 제목 */
-  --color-brand-body:    #0B2433;   /* 본문 */
-  --color-brand-muted:   #5C6E7C;   /* 보조 */
-  --color-brand-link:    #2E7DD1;   /* 바이올렛 링크 */
+  --color-brand-heading: #231C17;
+  --color-brand-body:    #231C17;
+  --color-brand-muted:   #6B605A;   /* 보조 */
+  --color-brand-link:    #C93412;   /* 링크 (흰 배경에서 대비 확보) */
 
   /* 구분선·테두리 */
-  --color-brand-border:  #E2E9EE;   /* 연한 회색-블루 */
+  --color-brand-border:  #EADFD8;
 
-  /* 확장 팔레트 (그라디언트·포인트 색) */
-  --color-brand-ink:         #0B2433;
-  --color-brand-ink-soft:    #5C6E7C;
-  --color-brand-line:        #E2E9EE;
-  --color-brand-bg:          #F4F7F9;
-  --color-brand-violet:      #2E7DD1;
-  --color-brand-violet-deep: #14547A;
-  --color-brand-pink:        #54D0E0;
-  --color-brand-gold:        #F2B33D;
+  /* 확장 팔레트 */
+  --color-brand-ink:         #231C17;
+  --color-brand-ink-soft:    #6B605A;
+  --color-brand-line:        #EADFD8;
+  --color-brand-bg:          #FAF6F2;
+  --color-brand-violet:      #E5421F;   /* (옛 이름 유지) 코랄 */
+  --color-brand-violet-deep: #C23A18;
+  --color-brand-pink:        #F0613F;   /* (옛 이름 유지) 코랄 밝은 쪽 — 그라디언트가 거의 티 나지 않게 */
+  --color-brand-gold:        #FFD23F;   /* 노랑 포인트 (남은 횟수 배지 등) */
   --color-brand-mint:        #2FB68E;
+  --color-brand-cream:       #FFF1EA;
 
   /* 시맨틱 확장 (해몽 사전/해석 화면 전용) */
-  --color-brand-warning-text: #5A3D10;  /* 주의 섹션(경고형 콘텐츠) 텍스트 — #FDF6E8 배경과 짝 */
-  --color-brand-slate:        #6B96A8;  /* 해몽 관점 3색 코드 중 "서양 심리학적 관점" 전용 색 */
+  --color-brand-warning-text: #5A3D10;
+  --color-brand-slate:        #6B96A8;
+
+  /* 꿈 등급 5단계 (A~E) — 배경 / 글자. 모든 화면은 이 토큰만 사용 */
+  --color-grade-a-bg: #231C17;  --color-grade-a-fg: #FFE14D;
+  --color-grade-b-bg: #D3F0DE;  --color-grade-b-fg: #0B6A36;
+  --color-grade-c-bg: #D6E6FF;  --color-grade-c-fg: #1B4DB3;
+  --color-grade-d-bg: #FFE9A8;  --color-grade-d-fg: #7A4B00;
+  --color-grade-e-bg: #FFDDE2;  --color-grade-e-fg: #9E1530;
+
+  /* 꿈 종류 태그 */
+  --color-type-good-bg: #DFF3E6;  --color-type-good-fg: #17663A;
+  --color-type-bad-bg:  #FFE1E5;  --color-type-bad-fg:  #A3182F;
+  --color-type-mid-bg:  #F1ECE8;  --color-type-mid-fg:  #5A4F49;
+
+  /* 모서리: 각진 톤 (카드 4px, 버튼 3px) — rounded-xl 등 기존 클래스가 자동으로 작아진다 */
+  --radius-xs:  2px;
+  --radius-sm:  3px;
+  --radius-md:  3px;
+  --radius-lg:  4px;
+  --radius-xl:  4px;
+  --radius-2xl: 4px;
+  --radius-3xl: 4px;
+  --radius-4xl: 4px;
+}
+
+/* 숫자·등급 알파벳용 서체 */
+.font-display { font-family: var(--font-display); }
+
+/* 움직임 줄이기 설정이면 애니메이션 끄기 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }

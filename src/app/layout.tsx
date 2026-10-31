@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import SiteHeaderGate from "@/components/SiteHeaderGate";
 import { getActiveCategories } from "@/lib/categories";
+import "@fontsource-variable/noto-sans-kr";
+import "@fontsource-variable/bricolage-grotesque";
 import "./globals.css";
-
-const pretendard = localFont({
-  src: "../../node_modules/pretendard/dist/web/variable/woff2/PretendardVariable.woff2",
-  variable: "--font-pretendard",
-  display: "swap",
-  weight: "45 920",
-});
 
 const SITE_URL = 'https://www.gillmong.com'
 const OG_TITLE = '길몽상점 - 꿈을 거래하는 마켓플레이스'
@@ -66,7 +60,7 @@ export default async function RootLayout({
   return (
     <html
       lang="ko"
-      className={`${pretendard.variable} h-full antialiased`}
+      className="h-full antialiased"
     >
       <body className="min-h-full flex flex-col">
         <SiteHeaderGate categories={categories.map((c) => ({ name: c.name, slug: c.slug }))} />

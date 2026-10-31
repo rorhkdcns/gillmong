@@ -99,18 +99,18 @@ export default function FloatingDreamButton({ remaining, fetchRemaining }: Props
           onClick={handleOpen}
           disabled={remaining === 0}
           aria-label="꿈 감정하기"
-          className={`relative flex h-14 w-14 items-center justify-center rounded-full shadow-[0_12px_30px_rgba(11,36,51,0.35)] transition-transform ${
+          className={`relative flex h-14 w-14 items-center justify-center rounded-[4px] shadow-[0_10px_24px_rgba(229,66,31,0.35)] transition-transform ${
             remaining === 0
               ? 'cursor-not-allowed bg-gray-400'
-              : 'bg-gradient-to-br from-brand-violet to-brand-pink hover:scale-105 hover:brightness-95'
+              : 'bg-brand-primary hover:scale-105 hover:bg-brand-primary-hover'
           }`}
         >
           <svg className="h-6 w-6 text-white" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
           {remaining !== null && (
-            <span className={`absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full text-xs font-black text-white ${
-              remaining === 0 ? 'bg-gray-500' : 'bg-brand-gold'
+            <span className={`absolute -right-2 -top-2 flex h-[22px] min-w-[22px] items-center justify-center rounded-full px-1.5 font-display text-xs font-extrabold ${
+              remaining === 0 ? 'bg-gray-500 text-white' : 'bg-brand-gold text-brand-ink'
             }`}>
               {remaining}
             </span>
