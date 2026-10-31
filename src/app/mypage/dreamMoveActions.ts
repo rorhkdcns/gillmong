@@ -6,8 +6,8 @@ import { createAdminClient } from '@/lib/supabase/admin'
 
 type Result = { success?: boolean; error?: string }
 
-/** 저장함의 꿈을 마켓에 판매 등록한다. (저장함에서는 빠지고 마켓으로 이동) */
-export async function sellSavedDream(savedId: number, categorySlug: string, price: number): Promise<Result> {
+/** 저장함의 꿈을 마켓에 판매 등록한다. keepCopy=true면 저장함에도 그대로 남겨둔다. */
+export async function sellSavedDream(savedId: number, categorySlug: string, price: number, keepCopy = true): Promise<Result> {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: '로그인이 필요합니다.' }
@@ -41,7 +41,7 @@ export async function sellSavedDream(savedId: number, categorySlug: string, pric
   })
   if (error) return { error: `등록 오류: ${error.message}` }
 
-  await admin.from('saved_dreams').delete().eq('id', savedId).eq('user_id', user.id)
+  if (!keepCopy) await admin.from('saved_dreams').delete().eq('id', savedId).eq('user_id', user.id)
   revalidatePath('/mypage')
   revalidatePath('/')
   return { success: true }

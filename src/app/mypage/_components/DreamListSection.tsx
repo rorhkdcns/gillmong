@@ -38,6 +38,7 @@ export default function DreamListSection({
   const [sellTarget, setSellTarget] = useState<DreamListItem | null>(null)
   const [sellCat, setSellCat] = useState('')
   const [sellPrice, setSellPrice] = useState('')
+  const [keepCopy, setKeepCopy] = useState(true)
   const [busy, setBusy] = useState(false)
   const [err, setErr] = useState('')
   const [notice, setNotice] = useState('')
@@ -46,7 +47,7 @@ export default function DreamListSection({
     if (!sellTarget) return
     if (!sellCat) { setErr('카테고리를 선택해주세요.'); return }
     setBusy(true); setErr('')
-    const r = await sellSavedDream(sellTarget.id, sellCat, Number(sellPrice))
+    const r = await sellSavedDream(sellTarget.id, sellCat, Number(sellPrice), keepCopy)
     setBusy(false)
     if (r.error) { setErr(r.error); return }
     setSellTarget(null); setSellCat(''); setSellPrice('')
@@ -405,6 +406,10 @@ export default function DreamListSection({
             <label className="mb-3 block text-sm">
               <span className="mb-1 block font-semibold text-brand-ink">판매금액 (5,000원 이상, 100원 단위)</span>
               <input type="number" inputMode="numeric" min={5000} step={100} value={sellPrice} onChange={(e) => setSellPrice(e.target.value)} placeholder="예) 10000" className="w-full rounded-[3px] border border-brand-line px-3 py-2 outline-none focus:border-brand-primary" />
+            </label>
+            <label className="mb-3 flex items-center gap-2 text-sm text-brand-ink">
+              <input type="checkbox" checked={keepCopy} onChange={(e) => setKeepCopy(e.target.checked)} className="h-4 w-4 accent-[#E5421F]" />
+              저장함에도 남겨두기
             </label>
             {err && <p className="mb-3 text-sm text-red-600">{err}</p>}
             <div className="flex gap-2">

@@ -7,7 +7,9 @@ import {
   getAdminNotices,
   getAdminNoticeById,
   updateAdminNotice,
+  bulkDeleteAdminNotices,
 } from '../actions'
+import { useBulkSelect, SelectAllBox, RowBox, BulkBar, confirmBulk } from '../_components/Bulk'
 
 type Notice = { id: number; title: string; is_pinned: boolean; created_at: string }
 type FormMode = 'create' | 'edit'
@@ -32,6 +34,18 @@ export default function AdminNoticePage() {
 
   const [deleteTarget, setDeleteTarget] = useState<number | null>(null)
   const [deleting,     setDeleting]     = useState(false)
+
+  const bulk = useBulkSelect<number>()
+  const [bulkBusy, setBulkBusy] = useState(false)
+  async function handleBulkDelete() {
+    const ids = [...bulk.selected]
+    if (!confirmBulk(ids.length, '공지')) return
+    setBulkBusy(true)
+    await bulkDeleteAdminNotices(ids)
+    setBulkBusy(false)
+    bulk.clear()
+    await load()
+  }
 
   async function load() {
     setLoading(true)
@@ -168,9 +182,12 @@ export default function AdminNoticePage() {
         ) : notices.length === 0 ? (
           <div className="py-12 text-center text-sm text-gray-400">등록된 공지사항이 없습니다.</div>
         ) : (
+          <>
+          <BulkBar count={bulk.selected.size} busy={bulkBusy} noun="공지" onDelete={handleBulkDelete} onClear={bulk.clear} />
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
+                <th className="w-10 px-4 py-3"><SelectAllBox ids={notices.map((n) => n.id)} selected={bulk.selected as Set<string | number>} setAll={bulk.setAll as (ids: (string | number)[], on: boolean) => void} /></th>
                 <th className="px-6 py-3">제목</th>
                 <th className="px-6 py-3">고정</th>
                 <th className="px-6 py-3">날짜</th>
@@ -180,6 +197,7 @@ export default function AdminNoticePage() {
             <tbody className="divide-y divide-gray-100">
               {notices.map((n) => (
                 <tr key={n.id}>
+                  <td className="w-10 px-4 py-3"><RowBox id={n.id} selected={bulk.selected as Set<string | number>} toggle={bulk.toggle as (id: string | number) => void} /></td>
                   <td className="px-6 py-3">
                     <a href={`/notice/${n.id}`} target="_blank" rel="noopener noreferrer" className="text-[#3A322C] hover:underline">
                       {n.title}
@@ -209,6 +227,7 @@ export default function AdminNoticePage() {
               ))}
             </tbody>
           </table>
+          </>
         )}
       </div>
 

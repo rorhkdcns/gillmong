@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { getAdminDreams, adminDeleteDreamById } from '../actions'
+import { getAdminDreams, adminDeleteDreamById, bulkDeleteAdminDreams } from '../actions'
+import { useBulkSelect, SelectAllBox, RowBox, BulkBar, confirmBulk } from '../_components/Bulk'
 import { createClient } from '@/lib/supabase/client'
 import { GRADE_INFO, type Grade } from '@/lib/dreamDisplay'
 
@@ -57,6 +58,19 @@ export default function AdminDreams() {
 
   useEffect(() => { load() }, [category, isSold])
 
+  const bulk = useBulkSelect<number>()
+  const [bulkBusy, setBulkBusy] = useState(false)
+  async function handleBulkDelete() {
+    const ids = [...bulk.selected]
+    if (!confirmBulk(ids.length, '꿈')) return
+    setBulkBusy(true)
+    const res = await bulkDeleteAdminDreams(ids)
+    setBulkBusy(false)
+    if (res.error) setMsg(res.error)
+    bulk.clear()
+    load()
+  }
+
   async function handleDelete() {
     if (!confirm) return
     setDeleting(true)
@@ -106,9 +120,11 @@ export default function AdminDreams() {
 
       {/* 테이블 */}
       <div className="overflow-x-auto rounded border border-gray-200 bg-white">
+        <BulkBar count={bulk.selected.size} busy={bulkBusy} noun="꿈" onDelete={handleBulkDelete} onClear={bulk.clear} />
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
+              <th className="w-10 px-4 py-3"><SelectAllBox ids={filtered.map((d) => d.id)} selected={bulk.selected as Set<string | number>} setAll={bulk.setAll as (ids: (string | number)[], on: boolean) => void} /></th>
               <th className="px-6 py-3">등급</th>
               <th className="px-6 py-3">제목</th>
               <th className="px-6 py-3">카테고리</th>
@@ -122,11 +138,12 @@ export default function AdminDreams() {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {loading ? (
-              <tr><td colSpan={9} className="py-12 text-center text-sm text-[#9A8F88]">불러오는 중...</td></tr>
+              <tr><td colSpan={10} className="py-12 text-center text-sm text-[#9A8F88]">불러오는 중...</td></tr>
             ) : filtered.length === 0 ? (
-              <tr><td colSpan={9} className="py-12 text-center text-sm text-[#9A8F88]">꿈이 없습니다</td></tr>
+              <tr><td colSpan={10} className="py-12 text-center text-sm text-[#9A8F88]">꿈이 없습니다</td></tr>
             ) : filtered.map((d) => (
               <tr key={d.id} className={`hover:bg-gray-50 ${d.pending_report_count > 0 ? 'bg-red-50/30' : ''}`}>
+                <td className="w-10 px-4 py-3"><RowBox id={d.id} selected={bulk.selected as Set<string | number>} toggle={bulk.toggle as (id: string | number) => void} /></td>
                 <td className="px-6 py-3">
                   <span className={`inline-flex h-6 w-6 items-center justify-center rounded-[3px] text-xs font-bold ${GRADE_INFO[d.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>{d.grade}</span>
                 </td>

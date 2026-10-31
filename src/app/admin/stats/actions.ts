@@ -154,3 +154,58 @@ export async function getAdminStatsSummary(): Promise<AdminStatsSummary> {
     topProducts,
   }
 }
+
+// ───────── 기간 조회 (일별) ─────────
+export interface DailyRow {
+  date: string        // YYYY-MM-DD (KST)
+  visits: number
+  signups: number
+  dreams: number
+  orders: number
+  revenue: number
+}
+export interface PeriodStats {
+  from: string
+  to: string
+  rows: DailyRow[]
+  totals: Omit<DailyRow, 'date'>
+  visitsReady: boolean
+  error?: string
+}
+
+const KST = 9 * 3600000
+const kstDay = (iso: string) => new Date(new Date(iso).getTime() + KST).toISOString().slice(0, 10)
+
+export async function getAdminPeriodStats(from: string, to: string): Promise<PeriodStats> {
+  const empty: PeriodStats = { from, to, rows: [], totals: { visits: 0, signups: 0, dreams: 0, orders: 0, revenue: 0 }, visitsReady: true }
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { ...empty, error: auth.error }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(from) || !/^\d{4}-\d{2}-\d{2}$/.test(to) || from > to) return { ...empty, error: '기간을 다시 확인해주세요.' }
+
+  const startIso = new Date(`${from}T00:00:00+09:00`).toISOString()
+  const endIso = new Date(new Date(`${to}T00:00:00+09:00`).getTime() + 86400000).toISOString()
+  const admin = createAdminClient()
+
+  const [visitsRes, profilesRes, dreamsRes, ordersRes] = await Promise.all([
+    admin.from('site_visits').select('created_at').gte('created_at', startIso).lt('created_at', endIso).limit(50000),
+    admin.from('profiles').select('created_at').gte('created_at', startIso).lt('created_at', endIso).limit(20000),
+    admin.from('dreams').select('created_at').gte('created_at', startIso).lt('created_at', endIso).limit(20000),
+    admin.from('orders').select('amount, status, paid_at').in('status', PAID_STATUSES).gte('paid_at', startIso).lt('paid_at', endIso).limit(ORDER_FETCH_LIMIT),
+  ])
+
+  const map = new Map<string, DailyRow>()
+  // 기간 내 모든 날짜를 0으로 채운다 (최대 366일)
+  const days = Math.min(366, Math.round((new Date(`${to}T00:00:00Z`).getTime() - new Date(`${from}T00:00:00Z`).getTime()) / 86400000) + 1)
+  for (let i = 0; i < days; i++) {
+    const d = new Date(new Date(`${from}T00:00:00Z`).getTime() + i * 86400000).toISOString().slice(0, 10)
+    map.set(d, { date: d, visits: 0, signups: 0, dreams: 0, orders: 0, revenue: 0 })
+  }
+  for (const r of visitsRes.data ?? []) { const x = map.get(kstDay(r.created_at)); if (x) x.visits++ }
+  for (const r of profilesRes.data ?? []) { const x = map.get(kstDay(r.created_at)); if (x) x.signups++ }
+  for (const r of dreamsRes.data ?? []) { const x = map.get(kstDay(r.created_at)); if (x) x.dreams++ }
+  for (const r of ordersRes.data ?? []) { const x = map.get(kstDay(r.paid_at)); if (x) { x.orders++; x.revenue += r.amount } }
+
+  const rows = [...map.values()]
+  const totals = rows.reduce((t, r) => ({ visits: t.visits + r.visits, signups: t.signups + r.signups, dreams: t.dreams + r.dreams, orders: t.orders + r.orders, revenue: t.revenue + r.revenue }), { visits: 0, signups: 0, dreams: 0, orders: 0, revenue: 0 })
+  return { from, to, rows, totals, visitsReady: !visitsRes.error }
+}

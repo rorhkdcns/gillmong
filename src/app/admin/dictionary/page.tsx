@@ -11,6 +11,7 @@ import {
   checkAdminDictionarySlugExists,
   createAdminDictionaryEntry,
   deleteAdminDictionaryEntry,
+  bulkDeleteAdminDictionary,
   generateDictionaryDrafts,
   getAdminDictionaryEntries,
   getAdminDictionaryEntryById,
@@ -19,6 +20,7 @@ import {
   type AdminDictionaryFields,
   type DictionaryDraftBatchResult,
 } from '../actions'
+import { useBulkSelect, SelectAllBox, RowBox, BulkBar, confirmBulk } from '../_components/Bulk'
 
 type Entry = {
   id: string
@@ -312,6 +314,18 @@ export default function AdminDictionaryPage() {
     if (result.error) { setError(result.error); return }
     closeForm()
     load()
+  }
+
+  const bulk = useBulkSelect<string>()
+  const [bulkBusy, setBulkBusy] = useState(false)
+  async function handleBulkDelete() {
+    const ids = [...bulk.selected]
+    if (!confirmBulk(ids.length, '사전 항목')) return
+    setBulkBusy(true)
+    await bulkDeleteAdminDictionary(ids)
+    setBulkBusy(false)
+    bulk.clear()
+    await load()
   }
 
   async function confirmDelete() {
@@ -707,9 +721,12 @@ export default function AdminDictionaryPage() {
             </button>
           </div>
         ) : (
+          <>
+          <BulkBar count={bulk.selected.size} busy={bulkBusy} noun="항목" onDelete={handleBulkDelete} onClear={bulk.clear} />
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
+                <th className="w-10 px-4 py-3"><SelectAllBox ids={filteredEntries.map((e) => e.id)} selected={bulk.selected as Set<string | number>} setAll={bulk.setAll as (ids: (string | number)[], on: boolean) => void} /></th>
                 <th className="px-6 py-3">키워드</th>
                 <th className="px-6 py-3">카테고리</th>
                 <th className="px-6 py-3">발행상태</th>
@@ -720,6 +737,7 @@ export default function AdminDictionaryPage() {
             <tbody className="divide-y divide-gray-100">
               {filteredEntries.map((e) => (
                 <tr key={e.id}>
+                  <td className="w-10 px-4 py-3"><RowBox id={e.id} selected={bulk.selected as Set<string | number>} toggle={bulk.toggle as (id: string | number) => void} /></td>
                   <td className="px-6 py-3 font-medium text-[#3A322C]">{e.keyword}</td>
                   <td className="px-6 py-3 text-[#6B605A]">{e.category_slug ?? '-'}</td>
                   <td className="px-6 py-3">
@@ -738,6 +756,7 @@ export default function AdminDictionaryPage() {
               ))}
             </tbody>
           </table>
+          </>
         )}
       </div>
 

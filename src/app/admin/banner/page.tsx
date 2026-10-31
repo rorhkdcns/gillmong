@@ -1,5 +1,6 @@
 'use client'
 
+import { useBulkSelect, SelectAllBox, RowBox, confirmBulk } from '../_components/Bulk'
 import { useState, useEffect, useRef } from 'react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -84,6 +85,19 @@ export default function AdminBannerPage() {
     setLinkUrl('/')
     setOrder(0)
     if (fileRef.current) fileRef.current.value = ''
+    fetchBanners()
+  }
+
+  const bulk = useBulkSelect<number>()
+  const [bulkBusy, setBulkBusy] = useState(false)
+  async function handleBulkDelete() {
+    const ids = [...bulk.selected]
+    if (!confirmBulk(ids.length, '배너')) return
+    setBulkBusy(true)
+    const supabase = createClient()
+    await supabase.from('banners').delete().in('id', ids)
+    setBulkBusy(false)
+    bulk.clear()
     fetchBanners()
   }
 
@@ -182,8 +196,19 @@ export default function AdminBannerPage() {
           </p>
         ) : (
           <div className="space-y-3">
+            <div className="flex items-center gap-3 rounded border border-gray-200 bg-white px-4 py-2.5 text-sm">
+              <SelectAllBox ids={banners.map((b) => b.id)} selected={bulk.selected as Set<string | number>} setAll={bulk.setAll as (ids: (string | number)[], on: boolean) => void} />
+              <span className="text-[#6B605A]">전체 선택</span>
+              {bulk.selected.size > 0 && (
+                <>
+                  <strong className="ml-2 text-[#231C17]">{bulk.selected.size}개 선택됨</strong>
+                  <button type="button" disabled={bulkBusy} onClick={handleBulkDelete} className="rounded-[3px] bg-red-500 px-3 py-1 text-xs font-bold text-white hover:bg-red-600 disabled:opacity-60">{bulkBusy ? '삭제 중...' : '선택한 배너 삭제'}</button>
+                </>
+              )}
+            </div>
             {banners.map((b) => (
               <div key={b.id} className="flex items-center gap-4 rounded border border-gray-200 bg-white p-4">
+                <RowBox id={b.id} selected={bulk.selected as Set<string | number>} toggle={bulk.toggle as (id: string | number) => void} />
                 <img
                   src={b.image_url}
                   alt=""

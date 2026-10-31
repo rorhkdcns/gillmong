@@ -1680,3 +1680,20 @@ export async function getAcquisitionStats(days = 30) {
     ready: true,
   }
 }
+
+// ───────── 일괄 삭제 (체크박스) ─────────
+export async function bulkDeleteAdminDictionary(ids: string[]): Promise<{ success?: boolean; deleted: number; error?: string }> {
+  let deleted = 0
+  for (const id of ids) { const r = await deleteAdminDictionaryEntry(id); if (r.success) deleted++ ; else if (r.error) return { deleted, error: r.error } }
+  return { success: true, deleted }
+}
+export async function bulkDeleteAdminDreams(ids: number[]): Promise<{ success?: boolean; deleted: number; error?: string }> {
+  let deleted = 0
+  for (const id of ids) { const r = await adminDeleteDreamById(id); if (r.success) deleted++ ; else if (r.error) return { deleted, error: r.error } }
+  return { success: true, deleted }
+}
+export async function bulkDeleteAdminNotices(ids: number[]): Promise<{ success?: boolean; deleted: number; error?: string }> {
+  let deleted = 0
+  for (const id of ids) { const r = await deleteAdminNotice(id); if (r.success) deleted++ ; else if (r.error) return { deleted, error: r.error } }
+  return { success: true, deleted }
+}
