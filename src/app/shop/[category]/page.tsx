@@ -58,7 +58,7 @@ export default async function ShopCategoryPage({
   return (
     <>
       {/* 작은 히어로 */}
-      <div className="rounded-[14px] bg-[linear-gradient(150deg,#14547A_0%,#2E7DD1_120%)] px-6 py-6 md:px-8 md:py-7">
+      <div className="rounded-[4px] bg-brand-ink px-6 py-6 md:px-8 md:py-7">
         <nav className="mb-1.5 text-xs text-white/70">
           <Link href="/shop" className="hover:text-white">굿즈샵</Link>
           <span className="mx-1.5">›</span>

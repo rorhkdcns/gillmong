@@ -185,7 +185,7 @@ export default function AdminSidebar() {
       {/* 모바일 햄버거 버튼 */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed left-4 top-4 z-40 flex h-10 w-10 items-center justify-center rounded-lg bg-[#231C17] text-white shadow-md md:hidden"
+        className="fixed left-4 top-4 z-40 flex h-10 w-10 items-center justify-center rounded-lg bg-[#231C17] text-white md:hidden"
         aria-label="메뉴 열기"
       >
         <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">

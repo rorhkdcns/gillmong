@@ -83,7 +83,7 @@ export default function CategoryCarousel({ dreams }: { dreams: Dream[] }) {
             onClick={prev}
             disabled={current === 0}
             aria-label="이전"
-            className="absolute left-0 top-1/2 z-10 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-xl text-brand-ink shadow-md transition hover:bg-brand-primary hover:text-white disabled:opacity-30"
+            className="absolute left-0 top-1/2 z-10 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-xl text-brand-ink transition hover:bg-brand-primary hover:text-white disabled:opacity-30"
           >
             ‹
           </button>
@@ -91,7 +91,7 @@ export default function CategoryCarousel({ dreams }: { dreams: Dream[] }) {
             onClick={next}
             disabled={current >= maxIndex}
             aria-label="다음"
-            className="absolute right-0 top-1/2 z-10 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-xl text-brand-ink shadow-md transition hover:bg-brand-primary hover:text-white disabled:opacity-30"
+            className="absolute right-0 top-1/2 z-10 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-xl text-brand-ink transition hover:bg-brand-primary hover:text-white disabled:opacity-30"
           >
             ›
           </button>

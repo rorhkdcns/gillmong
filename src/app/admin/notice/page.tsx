@@ -215,7 +215,7 @@ export default function AdminNoticePage() {
       {deleteTarget !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-2xl">
-            <h3 className="mb-2 text-center text-lg font-black text-[#231C17]">공지사항 삭제</h3>
+            <h3 className="mb-2 text-center text-lg font-extrabold text-[#231C17]">공지사항 삭제</h3>
             <p className="mb-6 text-center text-sm text-[#6B605A]">이 공지사항을 삭제하시겠습니까?<br />삭제 후 복구할 수 없습니다.</p>
             <div className="flex gap-3">
               <button

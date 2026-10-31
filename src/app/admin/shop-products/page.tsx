@@ -1510,13 +1510,13 @@ export default function AdminShopProductsPage() {
               <div className="flex gap-1.5 rounded-lg bg-gray-100 p-1">
                 <button
                   type="button" onClick={() => setPFormTab('manual')}
-                  className={`flex-1 rounded-md py-1.5 text-xs font-semibold transition-colors ${pFormTab === 'manual' ? 'bg-white text-brand-ink shadow-sm' : 'text-[#6B605A]'}`}
+                  className={`flex-1 rounded-md py-1.5 text-xs font-semibold transition-colors ${pFormTab === 'manual' ? 'bg-white text-brand-ink' : 'text-[#6B605A]'}`}
                 >
                   직접 입력
                 </button>
                 <button
                   type="button" onClick={() => setPFormTab('coupang')}
-                  className={`flex-1 rounded-md py-1.5 text-xs font-semibold transition-colors ${pFormTab === 'coupang' ? 'bg-white text-brand-ink shadow-sm' : 'text-[#6B605A]'}`}
+                  className={`flex-1 rounded-md py-1.5 text-xs font-semibold transition-colors ${pFormTab === 'coupang' ? 'bg-white text-brand-ink' : 'text-[#6B605A]'}`}
                 >
                   쿠팡에서 검색
                 </button>
@@ -1727,7 +1727,7 @@ export default function AdminShopProductsPage() {
       {deleteTarget !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-2xl">
-            <h3 className="mb-2 text-center text-lg font-black text-brand-ink">
+            <h3 className="mb-2 text-center text-lg font-extrabold text-brand-ink">
               {deleteTarget.type === 'category' ? '카테고리 삭제' : deleteTarget.type === 'subcategory' ? '하위카테고리 삭제' : '상품 삭제'}
             </h3>
             <p className="mb-6 text-center text-sm text-[#6B605A]">
@@ -1752,7 +1752,7 @@ export default function AdminShopProductsPage() {
       {bulkDeleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-2xl">
-            <h3 className="mb-2 text-center text-lg font-black text-brand-ink">상품 일괄 삭제</h3>
+            <h3 className="mb-2 text-center text-lg font-extrabold text-brand-ink">상품 일괄 삭제</h3>
             <p className="mb-6 text-center text-sm text-[#6B605A]">
               선택한 {selectedProductIds.size}개 상품을 삭제하시겠습니까?<br />삭제 후 복구할 수 없습니다.
             </p>

@@ -80,10 +80,10 @@ export default function MyPageEdit() {
           <div className="mb-6 flex items-center gap-3">
             <a href="/mypage" className="text-sm text-gray-400 hover:text-[#231C17]">← 마이페이지</a>
           </div>
-          <h1 className="mb-8 text-2xl font-black text-[#231C17]">정보 변경</h1>
+          <h1 className="mb-8 text-2xl font-extrabold text-[#231C17]">정보 변경</h1>
 
           {/* 닉네임 변경 */}
-          <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
+          <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-8">
             <h2 className="mb-5 text-lg font-bold text-[#231C17]">닉네임 변경</h2>
             <form onSubmit={handleNickname} className="flex flex-col gap-4">
               <div>
@@ -109,7 +109,7 @@ export default function MyPageEdit() {
           </div>
 
           {/* 비밀번호 변경 */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
+          <div className="rounded-2xl border border-gray-200 bg-white p-8">
             <h2 className="mb-5 text-lg font-bold text-[#231C17]">비밀번호 변경</h2>
             <form onSubmit={handlePassword} className="flex flex-col gap-4">
               <div>

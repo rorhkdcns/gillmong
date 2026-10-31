@@ -93,11 +93,11 @@ export default function DreamListSection({
   }, [totalPages, currentPage])
 
   return (
-    <section id={`section-${title}`} className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm md:p-8">
+    <section id={`section-${title}`} className="rounded-2xl border border-gray-200 bg-white p-5 md:p-8">
       {/* 헤더 */}
       <div className="mb-5 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <h2 className="text-xl font-black text-[#231C17]">{title}</h2>
+          <h2 className="text-xl font-extrabold text-[#231C17]">{title}</h2>
           <span className="text-base font-bold text-[#C23A18]">{items.length}건</span>
         </div>
         <div className="flex items-center gap-2">

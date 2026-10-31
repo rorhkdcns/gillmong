@@ -7,7 +7,7 @@ export const metadata = {
 
 function Section({ title, color, children }: { title: string; color: string; children: React.ReactNode }) {
   return (
-    <div className={`rounded-2xl border bg-white p-8 shadow-sm ${color}`}>
+    <div className={`rounded-2xl border bg-white p-8 ${color}`}>
       <h2 className="mb-6 text-xl font-bold text-[#231C17]">{title}</h2>
       {children}
     </div>
@@ -32,7 +32,7 @@ export default function UsageGuidePage() {
         <div className="mx-auto max-w-3xl">
 
           <div className="mb-12 text-center">
-            <h1 className="text-3xl font-black text-[#231C17]">이용안내</h1>
+            <h1 className="text-3xl font-extrabold text-[#231C17]">이용안내</h1>
             <p className="mt-2 text-sm text-gray-400">Service Usage Guide</p>
           </div>
 
@@ -65,7 +65,7 @@ export default function UsageGuidePage() {
           </div>
 
           {/* 수수료 안내 */}
-          <div className="mt-6 overflow-hidden rounded-2xl border border-[#231C17] bg-white shadow-sm">
+          <div className="mt-6 overflow-hidden rounded-2xl border border-[#231C17] bg-white">
             <div className="bg-[#231C17] px-6 py-4">
               <h2 className="text-base font-bold text-white">수수료 안내</h2>
             </div>
@@ -73,17 +73,17 @@ export default function UsageGuidePage() {
               <div className="flex items-center justify-between gap-6 sm:gap-12">
                 <div className="text-center">
                   <p className="text-xs text-[#9A8F88]">판매금액</p>
-                  <p className="mt-1 text-2xl font-black text-[#231C17]">100%</p>
+                  <p className="mt-1 text-2xl font-extrabold text-[#231C17]">100%</p>
                 </div>
                 <div className="flex-1 border-t-2 border-dashed border-gray-200" />
                 <div className="text-center">
                   <p className="text-xs text-[#9A8F88]">서비스 수수료</p>
-                  <p className="mt-1 text-2xl font-black text-red-400">– 20%</p>
+                  <p className="mt-1 text-2xl font-extrabold text-red-400">– 20%</p>
                 </div>
                 <div className="flex-1 border-t-2 border-dashed border-gray-200" />
                 <div className="text-center">
                   <p className="text-xs text-[#9A8F88]">판매자 수령</p>
-                  <p className="mt-1 text-2xl font-black text-[#C23A18]">80%</p>
+                  <p className="mt-1 text-2xl font-extrabold text-[#C23A18]">80%</p>
                 </div>
               </div>
               <p className="mt-5 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-[#6B605A]">
@@ -94,7 +94,7 @@ export default function UsageGuidePage() {
           </div>
 
           {/* 에스크로 정산 프로세스 */}
-          <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white">
             <div className="bg-[#231C17] px-6 py-4">
               <h2 className="text-base font-bold text-white">에스크로 정산 프로세스</h2>
             </div>
@@ -141,7 +141,7 @@ export default function UsageGuidePage() {
           </div>
 
           {/* 비교표 */}
-          <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white">
             <div className="bg-[#231C17] px-6 py-4">
               <h2 className="text-base font-bold text-white">회원 유형 비교</h2>
             </div>
@@ -175,7 +175,7 @@ export default function UsageGuidePage() {
           </div>
 
           {/* 안내 */}
-          <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-6">
             <h2 className="mb-3 text-base font-bold text-[#231C17]">이용 관련 문의</h2>
             <p className="text-sm leading-relaxed text-[#6B605A]">
               회원 유형 변경 또는 이용한도 관련 문의는{' '}

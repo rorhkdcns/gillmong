@@ -41,7 +41,7 @@ export default function PartnershipsPage() {
       <section className="flex-1 px-6 py-16">
         <div className="mx-auto max-w-xl">
           <div className="mb-10 text-center">
-            <h1 className="text-3xl font-black text-[#231C17]">제휴문의</h1>
+            <h1 className="text-3xl font-extrabold text-[#231C17]">제휴문의</h1>
             <p className="mt-2 text-sm text-gray-500">길몽상점과의 제휴 및 협력 문의를 남겨주세요.</p>
           </div>
 
@@ -51,7 +51,7 @@ export default function PartnershipsPage() {
               <p className="mt-2 text-sm text-emerald-600">입력하신 이메일로 검토 후 연락드리겠습니다.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
+            <form onSubmit={handleSubmit} className="space-y-4 rounded-2xl border border-gray-200 bg-white p-8">
               {/* 이름 · 이메일 */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>

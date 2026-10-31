@@ -106,9 +106,9 @@ export default function AdminDreamDetailPage() {
       )}
 
       {/* 꿈 기본 정보 */}
-      <div className="mb-4 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <div className="mb-4 overflow-hidden rounded-2xl border border-gray-200 bg-white">
         <div className="flex items-center gap-3 border-b border-gray-100 bg-gray-50 px-6 py-4">
-          <span className={`inline-flex h-7 w-7 items-center justify-center rounded-[3px] text-sm font-black ${GRADE_INFO[dream.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
+          <span className={`inline-flex h-7 w-7 items-center justify-center rounded-[3px] text-sm font-extrabold ${GRADE_INFO[dream.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
             {dream.grade}
           </span>
           <h1 className="text-lg font-bold text-[#231C17]">{dream.title}</h1>
@@ -125,7 +125,7 @@ export default function AdminDreamDetailPage() {
       </div>
 
       {/* 원본 내용 */}
-      <div className="mb-4 rounded-2xl border border-amber-200 bg-amber-50/40 shadow-sm">
+      <div className="mb-4 rounded-2xl border border-amber-200 bg-amber-50/40">
         <div className="border-b border-amber-200 px-6 py-3">
           <h2 className="text-sm font-bold text-amber-800">원본 내용 (사용자 입력)</h2>
         </div>
@@ -139,7 +139,7 @@ export default function AdminDreamDetailPage() {
       </div>
 
       {/* AI 해석 */}
-      <div className="mb-4 rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <div className="mb-4 rounded-2xl border border-gray-200 bg-white">
         <div className="border-b border-gray-100 px-6 py-3">
           <h2 className="text-sm font-bold text-[#231C17]">AI 해석 (전체 열람)</h2>
         </div>
@@ -172,7 +172,7 @@ export default function AdminDreamDetailPage() {
       </div>
 
       {/* 구매자 목록 */}
-      <div className="mb-4 rounded-2xl border border-gray-200 bg-white shadow-sm">
+      <div className="mb-4 rounded-2xl border border-gray-200 bg-white">
         <div className="border-b border-gray-100 px-6 py-3 flex items-center justify-between">
           <h2 className="text-sm font-bold text-[#231C17]">구매자 목록</h2>
           <span className="text-xs text-[#9A8F88]">{dream.buyers.length}명</span>
@@ -203,7 +203,7 @@ export default function AdminDreamDetailPage() {
 
       {/* 신고 목록 */}
       {dream.reports.length > 0 && (
-        <div className="mb-4 rounded-2xl border border-gray-200 bg-white shadow-sm">
+        <div className="mb-4 rounded-2xl border border-gray-200 bg-white">
           <div className="border-b border-gray-100 px-6 py-3 flex items-center justify-between">
             <h2 className="text-sm font-bold text-[#231C17]">신고 내역</h2>
             <span className="text-xs text-[#9A8F88]">{dream.reports.length}건</span>
@@ -255,7 +255,7 @@ export default function AdminDreamDetailPage() {
       {confirmDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-2xl">
-            <h3 className="mb-2 text-center text-lg font-black text-[#231C17]">꿈 삭제 확인</h3>
+            <h3 className="mb-2 text-center text-lg font-extrabold text-[#231C17]">꿈 삭제 확인</h3>
             <p className="mb-1 text-center text-sm text-[#6B605A]">&ldquo;{dream.title}&rdquo;</p>
             <p className="mb-6 text-center text-xs text-[#9A8F88]">
               구매자 {dream.buyers.length}명에게 포인트가 환불되며,<br />관련 신고는 처리완료로 변경됩니다.

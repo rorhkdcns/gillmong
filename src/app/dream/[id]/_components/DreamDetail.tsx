@@ -155,7 +155,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
 
       <main className="flex-1 px-6 py-12">
         <div className="mx-auto max-w-[800px]">
-          <div className="rounded-2xl border border-gray-200 bg-white p-7 shadow-sm">
+          <div className="rounded-2xl border border-gray-200 bg-white p-7">
 
             {/* 1. 등급 원형 + 등급 설명 + 유형 뱃지 */}
             <div className="mb-6 flex flex-col items-center gap-3">
@@ -169,7 +169,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
             </div>
 
             {/* 2. 꿈 제목 + 작성자 닉네임 */}
-            <h1 className="mb-2 text-center text-2xl font-black leading-snug text-[#231C17]">{dream.title}</h1>
+            <h1 className="mb-2 text-center text-2xl font-extrabold leading-snug text-[#231C17]">{dream.title}</h1>
             {nickname && (
               <p className="mb-6 text-center text-sm text-gray-400">@{nickname}</p>
             )}
@@ -323,7 +323,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                 <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-brand-muted">행운의 추천 번호</h3>
                 <div className="flex flex-wrap gap-2">
                   {dream.lucky_numbers.map((num) => (
-                    <div key={num} className="flex h-11 w-11 items-center justify-center rounded-full bg-[#C23A18] text-base font-black text-white shadow">
+                    <div key={num} className="flex h-11 w-11 items-center justify-center rounded-full bg-[#C23A18] text-base font-extrabold text-white shadow">
                       {num}
                     </div>
                   ))}
@@ -337,7 +337,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
             <div className="mb-6 flex flex-col items-center gap-4 rounded-xl bg-brand-page px-6 py-6">
               <div className="flex flex-col items-center">
                 <span className="mb-1 text-sm font-semibold text-[#6B605A]">감정가</span>
-                <span className="text-3xl font-black text-[#C23A18]">{dream.price.toLocaleString()}원</span>
+                <span className="text-3xl font-extrabold text-[#C23A18]">{dream.price.toLocaleString()}원</span>
               </div>
               {dream.is_sold && !purchased && (
                 <span className="rounded-[3px] bg-gray-400 px-5 py-1.5 text-sm font-bold text-white">판매완료</span>

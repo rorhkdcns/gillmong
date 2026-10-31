@@ -32,7 +32,7 @@ export default async function WithdrawPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
                 </svg>
               </div>
-              <h2 className="text-lg font-black text-[#231C17]">정말로 탈퇴하시겠습니까?</h2>
+              <h2 className="text-lg font-extrabold text-[#231C17]">정말로 탈퇴하시겠습니까?</h2>
               <p className="text-sm text-[#6B605A]">탈퇴 시 아래의 모든 데이터가 <span className="font-semibold text-red-500">영구 삭제</span>됩니다.</p>
             </div>
 

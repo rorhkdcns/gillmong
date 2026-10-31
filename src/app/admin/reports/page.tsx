@@ -190,7 +190,7 @@ export default function AdminReportsPage() {
       {deleteTarget && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-2xl">
-            <h3 className="mb-2 text-center text-lg font-black text-[#231C17]">꿈 삭제 확인</h3>
+            <h3 className="mb-2 text-center text-lg font-extrabold text-[#231C17]">꿈 삭제 확인</h3>
             <p className="mb-1 text-center text-sm text-[#6B605A]">
               아래 꿈을 삭제하시겠습니까?
             </p>

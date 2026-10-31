@@ -23,11 +23,11 @@ export default async function NoticePage() {
       <main className="flex-1 px-6 py-16">
         <div className="mx-auto max-w-3xl">
           <div className="mb-10 text-center">
-            <h1 className="text-3xl font-black text-[#231C17]">공지사항</h1>
+            <h1 className="text-3xl font-extrabold text-[#231C17]">공지사항</h1>
             <p className="mt-2 text-sm text-gray-400">Notice</p>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white">
             {list.length === 0 ? (
               <div className="py-20 text-center text-sm text-gray-400">등록된 공지사항이 없습니다.</div>
             ) : (

@@ -44,7 +44,7 @@ export default async function SavedDreamPage({
 
       <main className="flex-1 px-6 py-12">
         <div className="mx-auto max-w-[800px]">
-          <div className="rounded-2xl border border-gray-200 bg-white p-7 shadow-sm">
+          <div className="rounded-2xl border border-gray-200 bg-white p-7">
 
             <div className="mb-2 flex justify-center">
               <span className="rounded-[3px] bg-gray-100 px-3 py-0.5 text-xs font-semibold text-gray-500">개인 저장</span>
@@ -63,7 +63,7 @@ export default async function SavedDreamPage({
               )}
             </div>
 
-            <h1 className="mb-6 text-center text-2xl font-black leading-snug text-[#231C17]">{d.title}</h1>
+            <h1 className="mb-6 text-center text-2xl font-extrabold leading-snug text-[#231C17]">{d.title}</h1>
 
             <hr className="mb-6 border-brand-border" />
 
@@ -111,7 +111,7 @@ export default async function SavedDreamPage({
                 <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-brand-muted">행운의 추천 번호</h3>
                 <div className="flex flex-wrap gap-2">
                   {d.lucky_numbers.map((num) => (
-                    <div key={num} className="flex h-11 w-11 items-center justify-center rounded-full bg-[#C23A18] text-base font-black text-white shadow">
+                    <div key={num} className="flex h-11 w-11 items-center justify-center rounded-full bg-[#C23A18] text-base font-extrabold text-white shadow">
                       {num}
                     </div>
                   ))}

@@ -86,7 +86,7 @@ function SearchResults() {
             {results.map((card) => (
               <article
                 key={card.id}
-                className={`flex flex-col border p-6 shadow-sm transition-shadow ${
+                className={`flex flex-col border p-6 transition-shadow ${
                   card.is_sold
                     ? 'border-gray-200 bg-gray-50 opacity-70'
                     : 'border-gray-200 bg-white hover:shadow-md'

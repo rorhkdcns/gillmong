@@ -6,7 +6,7 @@ export default function TermsPage() {
 
       <main className="flex-1 px-6 py-16">
         <div className="mx-auto max-w-3xl">
-          <div className="border border-gray-200 bg-white p-10 shadow-sm">
+          <div className="border border-gray-200 bg-white p-10">
             <h1 className="mb-2 text-3xl font-bold text-[#231C17]">이용약관</h1>
             <p className="mb-10 text-sm text-[#9A8F88]">시행일: 2026년 6월 15일</p>
 

@@ -76,8 +76,8 @@ export default function EscrowOrders({ orders }: { orders: Order[] }) {
   }
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm md:p-8">
-      <h2 className="mb-5 text-xl font-black text-[#231C17]">결제 주문 내역</h2>
+    <section className="rounded-2xl border border-gray-200 bg-white p-5 md:p-8">
+      <h2 className="mb-5 text-xl font-extrabold text-[#231C17]">결제 주문 내역</h2>
       <ul className="divide-y divide-gray-100">
         {orders.map((o) => {
           const st   = STATUS_META[o.status] ?? { label: o.status, cls: 'bg-gray-100 text-gray-500' }

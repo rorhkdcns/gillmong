@@ -70,11 +70,11 @@ export default function InquiryPage() {
       <main className="flex-1 px-6 py-16">
         <div className="mx-auto max-w-xl">
           <div className="mb-8 text-center">
-            <h1 className="text-3xl font-black text-[#231C17]">1:1 문의</h1>
+            <h1 className="text-3xl font-extrabold text-[#231C17]">1:1 문의</h1>
             <p className="mt-2 text-sm text-gray-400">영업일 기준 1~2일 내에 답변드립니다</p>
           </div>
 
-          <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
+          <div className="rounded-2xl border border-gray-200 bg-white p-8">
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
               <div>
                 <label className="mb-1.5 block text-sm font-semibold text-[#3A322C]">

@@ -168,7 +168,7 @@ export default function GuidePage() {
               ))}
             </ul>
           </div>
-          <div className="mt-8 rounded-2xl bg-[#231C17] p-6 shadow-sm md:mt-0 md:w-1/2 md:p-10">
+          <div className="mt-8 rounded-2xl bg-[#231C17] p-6 md:mt-0 md:w-1/2 md:p-10">
             <p className="mb-4 text-base text-white md:mb-6 md:text-xl">구매 흐름</p>
             {['꿈 마켓 탐색', '운세 등급 & 상징 확인', '직접 결제', '행운 상징물 소유'].map((step, i) => (
               <div key={i} className="flex items-center gap-4 border-b border-white/10 py-4 last:border-0 md:gap-5 md:py-5">
@@ -220,7 +220,7 @@ export default function GuidePage() {
           </div>
           <div className="grid gap-5 md:grid-cols-3 md:gap-8">
             {trustCards.map((card, i) => (
-              <div key={i} className="rounded-2xl bg-white p-6 shadow-sm md:p-10">
+              <div key={i} className="rounded-2xl bg-white p-6 md:p-10">
                 <card.Icon className="mb-4 text-[#C23A18] md:mb-8" size={28} strokeWidth={1.5} />
                 <p className="mb-3 text-lg text-[#231C17] md:mb-4 md:text-xl">{card.title}</p>
                 <p className="text-sm leading-relaxed text-[#3A322C] md:text-base">{card.desc}</p>
@@ -298,7 +298,7 @@ export default function GuidePage() {
           </div>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 md:gap-5">
             {GRADE_GUIDE_LIST.map((g) => (
-              <div key={g.grade} className="flex flex-col items-center rounded-2xl bg-white p-5 text-center shadow-sm md:p-6">
+              <div key={g.grade} className="flex flex-col items-center rounded-2xl bg-white p-5 text-center md:p-6">
                 <div className={`mb-3 flex h-12 w-12 items-center justify-center rounded-[3px] text-xl font-bold shadow md:h-14 md:w-14 md:text-2xl ${g.badgeBg}`}>
                   {g.grade}
                 </div>

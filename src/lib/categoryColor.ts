@@ -7,11 +7,11 @@ export interface CategoryColorSet {
 }
 
 export const CATEGORY_COLORS: Record<string, CategoryColorSet> = {
-  people:  { main: '#6A4FB5', badgeBg: '#EFEBF9', badgeText: '#4A3585' },
-  animals: { main: '#0F7A5A', badgeBg: '#E4F0EB', badgeText: '#0D4E3A' },
-  nature:  { main: '#0E6E8C', badgeBg: '#E2F0F5', badgeText: '#0A4B60' },
-  action:  { main: '#B5502A', badgeBg: '#FAEBE4', badgeText: '#83371B' },
-  etc:     { main: '#6B605A', badgeBg: '#ECF1F4', badgeText: '#3D4E59' },
+  people:  { main: '#C23A18', badgeBg: '#FFE9E0', badgeText: '#8F2A10' },
+  animals: { main: '#0B6A36', badgeBg: '#D3F0DE', badgeText: '#0B6A36' },
+  nature:  { main: '#1B4DB3', badgeBg: '#D6E6FF', badgeText: '#1B4DB3' },
+  action:  { main: '#7A4B00', badgeBg: '#FFE9A8', badgeText: '#7A4B00' },
+  etc:     { main: '#6B605A', badgeBg: '#F0E6DF', badgeText: '#3A322C' },
 }
 
 const DEFAULT_COLOR = CATEGORY_COLORS.etc

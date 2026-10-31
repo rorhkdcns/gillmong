@@ -33,7 +33,7 @@ export default async function FortunePage() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#EADFD8' }}>
+      <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#FAF6F2' }}>
         <div className="mx-auto flex max-w-[680px] flex-col gap-[14px]">
           <div className="text-center">
             <h1 className="mb-2 text-2xl font-medium text-[#231C17] md:text-3xl">오늘의 운세</h1>

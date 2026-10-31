@@ -135,12 +135,12 @@ export default function FloatingDreamButton({ remaining, fetchRemaining }: Props
               </svg>
             </button>
 
-            <h2 className="mb-5 text-center text-xl font-black text-brand-ink">나의 꿈 감정하기</h2>
+            <h2 className="mb-5 text-center text-xl font-extrabold text-brand-ink">나의 꿈 감정하기</h2>
 
             {dailyLimitReached ? (
               <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-8 text-center">
                 <p className="mb-1 text-3xl">🌙</p>
-                <p className="font-black text-brand-ink">오늘의 해몽 횟수를 모두 사용하셨습니다</p>
+                <p className="font-extrabold text-brand-ink">오늘의 해몽 횟수를 모두 사용하셨습니다</p>
                 <p className="mt-2 text-sm text-amber-700">하루 3회 제공되며, 자정에 다시 초기화됩니다.</p>
               </div>
             ) : (
@@ -245,7 +245,7 @@ export default function FloatingDreamButton({ remaining, fetchRemaining }: Props
                   type="button"
                   onClick={handleSubmit}
                   disabled={loading}
-                  className="w-full rounded-xl bg-brand-primary py-4 text-lg font-black text-white transition-all hover:bg-brand-primary-hover disabled:opacity-60"
+                  className="w-full rounded-xl bg-brand-primary py-4 text-lg font-extrabold text-white transition-all hover:bg-brand-primary-hover disabled:opacity-60"
                 >
                   나의 꿈 감정하기
                 </button>
@@ -261,7 +261,7 @@ export default function FloatingDreamButton({ remaining, fetchRemaining }: Props
           <div className="flex w-full max-w-sm flex-col items-center gap-6 rounded-2xl bg-white px-8 py-12 shadow-2xl text-center">
             <div className="h-14 w-14 animate-spin rounded-full border-4 border-gray-200 border-t-brand-primary" />
             <div>
-              <p className="text-lg font-black text-brand-ink">무의식의 서사를 분석하고 있습니다...</p>
+              <p className="text-lg font-extrabold text-brand-ink">무의식의 서사를 분석하고 있습니다...</p>
               <p className="mt-2 text-base text-brand-ink-soft">AI가 꿈의 상징과 의미를 해석하는 중입니다.</p>
             </div>
           </div>

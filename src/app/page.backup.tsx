@@ -112,7 +112,7 @@ export default function Home() {
           <span className="mb-6 inline-block rounded-[3px] bg-white/20 px-5 py-2 text-base font-semibold text-white ring-1 ring-white/40">
             우리의 모든 꿈은 가치가 있습니다
           </span>
-          <h1 className="mb-6 text-3xl font-black leading-tight tracking-wide text-white md:text-5xl">
+          <h1 className="mb-6 text-3xl font-extrabold leading-tight tracking-wide text-white md:text-5xl">
             꿈은 누구에게나<br />
             기회와 아이디어가<br />
             될 수 있어요
@@ -128,10 +128,10 @@ export default function Home() {
       {/* ───── 꿈 감정소 ───── */}
       <section className="px-6 pt-16 pb-20">
         <div className="mx-auto max-w-2xl">
-          <div className="rounded-2xl border border-brand-border bg-white p-8 shadow-sm">
+          <div className="rounded-2xl border border-brand-border bg-white p-8">
             <div className="mb-6 text-center">
               <span className="text-3xl">⭐</span>
-              <h2 className="mt-2 text-2xl font-black text-brand-heading">꿈 감정소</h2>
+              <h2 className="mt-2 text-2xl font-extrabold text-brand-heading">꿈 감정소</h2>
               <p className="mt-1 text-sm text-brand-muted">Dream Appraisal Center</p>
             </div>
             <DreamInput />
@@ -144,7 +144,7 @@ export default function Home() {
         <div className="mx-auto max-w-6xl">
           <div className="mb-12 text-center">
             <p className="mb-2 text-sm font-bold uppercase tracking-widest text-brand-primary">Community</p>
-            <h2 className="text-3xl font-black text-brand-heading">EVERYONE'S DREAMS</h2>
+            <h2 className="text-3xl font-extrabold text-brand-heading">EVERYONE'S DREAMS</h2>
             <p className="mt-3 text-base text-brand-muted">모든 사람의 꿈에는 의미가 있습니다</p>
           </div>
 
@@ -152,7 +152,7 @@ export default function Home() {
             {dreamCards.map((card) => (
               <article
                 key={card.id}
-                className="flex flex-col rounded-2xl border border-brand-border bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
+                className="flex flex-col rounded-2xl border border-brand-border bg-white p-6 transition-shadow hover:shadow-md"
               >
                 <div className="mb-3 flex flex-wrap gap-1.5">
                   {card.tags.map((tag) => (

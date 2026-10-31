@@ -75,7 +75,7 @@ export default function DreamEditForm({ dream }: Props) {
 
       <main className="flex-1 px-6 py-12">
         <div className="mx-auto max-w-2xl">
-          <div className="border border-gray-200 bg-white p-8 shadow-sm">
+          <div className="border border-gray-200 bg-white p-8">
             <h1 className="mb-8 text-center text-2xl text-[#231C17]">꿈 수정</h1>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-6">

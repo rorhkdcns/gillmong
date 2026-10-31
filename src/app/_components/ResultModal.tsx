@@ -213,7 +213,7 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
         <div className="p-5">
 
           {/* 제목 */}
-          <h2 className="mb-4 text-center text-xl font-black text-brand-ink">길몽상점 감정 결과</h2>
+          <h2 className="mb-4 text-center text-xl font-extrabold text-brand-ink">길몽상점 감정 결과</h2>
 
           {/* 알파벳 원형 — 중앙 상단 */}
           <div className="mb-6 flex flex-col items-center gap-3">
@@ -323,7 +323,7 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
               {analysis.lucky_numbers.map((num) => (
                 <div
                   key={num}
-                  className="flex h-11 w-11 items-center justify-center rounded-full bg-brand-primary text-sm font-black text-white shadow"
+                  className="flex h-11 w-11 items-center justify-center rounded-full bg-brand-primary text-sm font-extrabold text-white shadow"
                 >
                   {num}
                 </div>
@@ -335,7 +335,7 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
 
           {/* 마켓 판매 등록 */}
           <section>
-            <h3 className="mb-3 text-sm font-black text-brand-ink">마켓 판매 등록</h3>
+            <h3 className="mb-3 text-sm font-extrabold text-brand-ink">마켓 판매 등록</h3>
 
             <div className="mb-2">
               <label className="mb-1 block text-sm font-medium text-brand-ink">꿈 제목 <span className="text-red-400">*</span></label>

@@ -24,7 +24,7 @@ export default async function ShopPage() {
   return (
     <>
       {/* 작은 히어로 — 메인 홈 히어로(HeroSlider)와는 별개의, 훨씬 작은 고정 배너 */}
-      <div className="rounded-[14px] bg-[linear-gradient(150deg,#14547A_0%,#2E7DD1_120%)] px-6 py-6 md:px-8 md:py-7">
+      <div className="rounded-[4px] bg-brand-ink px-6 py-6 md:px-8 md:py-7">
         <h1 className="text-2xl font-bold text-white md:text-3xl">굿즈샵</h1>
         <p className="mt-1 text-xs text-white/70">{(products ?? []).length}개 상품</p>
         <p className="mt-1.5 text-sm text-white/85">

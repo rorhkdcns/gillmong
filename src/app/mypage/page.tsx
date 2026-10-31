@@ -106,7 +106,7 @@ export default async function MyPage() {
         <div className="mx-auto max-w-3xl space-y-4 md:space-y-6">
 
           {/* 1. 프로필 */}
-          <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm md:p-8">
+          <section className="rounded-2xl border border-gray-200 bg-white p-5 md:p-8">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
               {/* 1줄: 프로필 이미지 + 닉네임 */}
               <div className="flex min-w-0 items-center gap-4">
@@ -140,10 +140,10 @@ export default async function MyPage() {
           </section>
 
           {/* 2. 포인트 */}
-          <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm md:p-8">
+          <section className="rounded-2xl border border-gray-200 bg-white p-5 md:p-8">
             {/* 포인트 타이틀 + 잔액 */}
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-black text-[#231C17]">판매금액</h2>
+              <h2 className="text-xl font-extrabold text-[#231C17]">판매금액</h2>
               <div className="flex items-baseline gap-1">
                 <span className="text-2xl font-bold text-[#C23A18]">{pointBalance.toLocaleString()}</span>
                 <span className="text-base font-medium text-[#6B605A]">원</span>
@@ -185,9 +185,9 @@ export default async function MyPage() {
           <DreamListSection title="판매 현황" items={soldItems} />
 
           {/* 7. 1:1 문의 내역 */}
-          <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm md:p-8">
+          <section className="rounded-2xl border border-gray-200 bg-white p-5 md:p-8">
             <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-xl font-black text-[#231C17]">1:1 문의 내역</h2>
+              <h2 className="text-xl font-extrabold text-[#231C17]">1:1 문의 내역</h2>
               <a href="/inquiry" className="text-sm font-medium text-[#9A8F88] hover:underline">+ 문의하기</a>
             </div>
             {myInquiries.length === 0 ? (
