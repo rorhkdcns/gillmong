@@ -36,7 +36,7 @@ function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="rounded border border-gray-200 bg-white p-4 sm:p-6">
       <p className="text-sm text-[#777777]">{label}</p>
-      <p className="mt-2 text-2xl font-bold text-[#0B2433] sm:text-3xl">
+      <p className="mt-2 text-2xl font-bold text-[#231C17] sm:text-3xl">
         {typeof value === 'number' ? value.toLocaleString() : value}
       </p>
     </div>
@@ -47,7 +47,7 @@ function Panel({ title, children }: { title: string; children: React.ReactNode }
   return (
     <div className="rounded border border-gray-200 bg-white">
       <div className="border-b border-gray-100 px-4 py-3 sm:px-6 sm:py-4">
-        <h2 className="font-semibold text-[#0B2433]">{title}</h2>
+        <h2 className="font-semibold text-[#231C17]">{title}</h2>
       </div>
       <div className="p-4 sm:p-6">{children}</div>
     </div>
@@ -72,7 +72,7 @@ export default function AdminStatsPage() {
 
   return (
     <div className="p-4 sm:p-8">
-      <h1 className="mb-6 text-xl font-bold text-[#0B2433] sm:mb-8 sm:text-2xl">통계</h1>
+      <h1 className="mb-6 text-xl font-bold text-[#231C17] sm:mb-8 sm:text-2xl">통계</h1>
 
       {/* 핵심 지표 카드 (최근 30일) */}
       <div className="mb-8 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
@@ -91,9 +91,9 @@ export default function AdminStatsPage() {
             ) : (
               <ResponsiveContainer width="100%" height={280}>
                 <LineChart data={stats.dailyRevenue} margin={{ top: 8, right: 16, left: 8, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E2E9EE" />
-                  <XAxis dataKey="date" tickFormatter={formatMonthDay} tick={{ fontSize: 12, fill: '#5C6E7C' }} />
-                  <YAxis tick={{ fontSize: 12, fill: '#5C6E7C' }} tickFormatter={(v) => v.toLocaleString()} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#EADFD8" />
+                  <XAxis dataKey="date" tickFormatter={formatMonthDay} tick={{ fontSize: 12, fill: '#6B605A' }} />
+                  <YAxis tick={{ fontSize: 12, fill: '#6B605A' }} tickFormatter={(v) => v.toLocaleString()} />
                   <Tooltip formatter={(value) => [`${Number(value).toLocaleString()}원`, '매출']} />
                   <Line type="monotone" dataKey="amount" stroke="var(--color-brand-primary)" strokeWidth={2} dot={false} />
                 </LineChart>
@@ -129,7 +129,7 @@ export default function AdminStatsPage() {
                 />
                 <Legend
                   formatter={(value: string) => PAYMENT_METHOD_LABELS[value] ?? value}
-                  wrapperStyle={{ fontSize: 12, color: '#5C6E7C' }}
+                  wrapperStyle={{ fontSize: 12, color: '#6B605A' }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -143,13 +143,13 @@ export default function AdminStatsPage() {
           ) : (
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={stats.byStatus} margin={{ top: 8, right: 16, left: 8, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#E2E9EE" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#EADFD8" />
                 <XAxis
                   dataKey="status"
                   tickFormatter={(v) => STATUS_LABELS[v] ?? v}
-                  tick={{ fontSize: 12, fill: '#5C6E7C' }}
+                  tick={{ fontSize: 12, fill: '#6B605A' }}
                 />
-                <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#5C6E7C' }} />
+                <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: '#6B605A' }} />
                 <Tooltip
                   formatter={(value) => [`${Number(value).toLocaleString()}건`, '건수']}
                   labelFormatter={(label) => STATUS_LABELS[label as string] ?? label}
@@ -185,7 +185,7 @@ export default function AdminStatsPage() {
                         </Link>
                       </td>
                       <td className="py-2 pr-3 text-[#555]">{d.salesCount.toLocaleString()}건</td>
-                      <td className="py-2 text-[#14547A]">{d.revenue.toLocaleString()}원</td>
+                      <td className="py-2 text-[#C23A18]">{d.revenue.toLocaleString()}원</td>
                     </tr>
                   ))}
                 </tbody>

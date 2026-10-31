@@ -24,10 +24,10 @@ type Order = {
 const STATUS_META: Record<string, { label: string; cls: string }> = {
   pending:     { label: '결제대기',   cls: 'bg-gray-100 text-gray-500' },
   paid_escrow: { label: '에스크로중', cls: 'bg-amber-50 text-amber-600' },
-  confirmed:   { label: '확정',       cls: 'bg-blue-50 text-blue-600' },
+  confirmed:   { label: '확정',       cls: 'bg-brand-primary-light text-brand-primary' },
   settled:     { label: '정산완료',   cls: 'bg-emerald-50 text-emerald-600' },
   disputed:    { label: '분쟁중',     cls: 'bg-red-50 text-red-600' },
-  refunded:    { label: '환불완료',   cls: 'bg-purple-50 text-purple-600' },
+  refunded:    { label: '환불완료',   cls: 'bg-brand-primary-light text-brand-primary' },
 }
 
 type TabKey = 'paid_escrow' | 'disputed' | 'settled'
@@ -80,7 +80,7 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="p-4 sm:p-8">
-      <h1 className="mb-6 text-xl font-bold text-[#0B2433] sm:text-2xl">에스크로 주문 관리</h1>
+      <h1 className="mb-6 text-xl font-bold text-[#231C17] sm:text-2xl">에스크로 주문 관리</h1>
 
       <div className="mb-6 flex border-b border-gray-200">
         {TABS.map((t) => (
@@ -89,8 +89,8 @@ export default function AdminOrdersPage() {
             onClick={() => setTab(t.key)}
             className={`px-5 py-3 text-sm font-medium transition-colors ${
               tab === t.key
-                ? 'border-b-2 border-[#0B2433] font-bold text-[#0B2433]'
-                : 'text-gray-500 hover:text-[#0B2433]'
+                ? 'border-b-2 border-[#231C17] font-bold text-[#231C17]'
+                : 'text-gray-500 hover:text-[#231C17]'
             }`}
           >
             {t.label}
@@ -134,7 +134,7 @@ export default function AdminOrdersPage() {
                     <p className="text-xs text-[#999]">@{o.seller_profile?.username ?? '-'}</p>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="font-semibold text-[#14547A]">₩{o.amount.toLocaleString()}</p>
+                    <p className="font-semibold text-[#C23A18]">₩{o.amount.toLocaleString()}</p>
                     <p className="text-xs text-[#999]">판매자 {o.seller_amount.toLocaleString()}원</p>
                   </td>
                   <td className="px-4 py-3">

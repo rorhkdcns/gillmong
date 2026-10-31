@@ -11,7 +11,7 @@ const STATUS_LABEL: Record<string, string> = {
   done:      '완료',
 }
 const STATUS_COLOR: Record<string, string> = {
-  new:       'bg-blue-100 text-blue-700',
+  new:       'bg-brand-primary-light text-brand-primary-hover',
   reviewing: 'bg-amber-100 text-amber-700',
   done:      'bg-emerald-100 text-emerald-700',
 }
@@ -54,7 +54,7 @@ export default function AdminPartnershipsPage() {
 
   return (
     <div className="p-4 sm:p-8">
-      <h1 className="mb-2 text-xl font-bold text-[#0B2433] sm:text-2xl">제휴문의 관리</h1>
+      <h1 className="mb-2 text-xl font-bold text-[#231C17] sm:text-2xl">제휴문의 관리</h1>
       <p className="mb-6 text-sm text-[#999] sm:mb-8">고객사의 제휴 문의 내역을 확인하고 처리합니다.</p>
 
       {loading ? (
@@ -128,7 +128,7 @@ export default function AdminPartnershipsPage() {
                         onChange={(e) => setNote(e.target.value)}
                         rows={3}
                         placeholder="처리 메모 또는 답변 내용을 입력하세요"
-                        className="w-full resize-none rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#0B2433]"
+                        className="w-full resize-none rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#231C17]"
                       />
                     </div>
 
@@ -136,7 +136,7 @@ export default function AdminPartnershipsPage() {
                       <button
                         onClick={() => handleSave(item.id)}
                         disabled={saving}
-                        className="rounded bg-[#0B2433] px-4 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
+                        className="rounded bg-[#231C17] px-4 py-2 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
                       >
                         {saving ? '저장 중...' : '저장'}
                       </button>

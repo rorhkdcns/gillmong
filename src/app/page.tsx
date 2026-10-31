@@ -2,11 +2,13 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import DreamInput from './_components/DreamInput'
 import SiteFooter from '@/components/SiteFooter'
 import BannerSlider from '@/components/BannerSlider'
-import HeroSlider from '@/components/HeroSlider'
 import MobileQuickMenu from '@/components/MobileQuickMenu'
-import CategoryCarousel from '@/components/CategoryCarousel'
+import HomeHero from '@/components/home/HomeHero'
+import RecentTicker from '@/components/home/RecentTicker'
+import GradeStrip from '@/components/home/GradeStrip'
+import DreamMarket from '@/components/home/DreamMarket'
+import FortuneBanner from '@/components/home/FortuneBanner'
 import { getActiveCategories } from '@/lib/categories'
-import Link from 'next/link'
 
 export const revalidate = 60
 
@@ -24,11 +26,11 @@ export default async function Home() {
     ...categories.map(({ id }) =>
       supabase
         .from('dreams')
-        .select('id, title, summary, grade, price, user_id')
+        .select('id, title, summary, grade, price, user_id, created_at')
         .eq('category_id', id)
         .eq('is_sold', false)
         .order('created_at', { ascending: false })
-        .limit(10)
+        .limit(8)
     ),
   ])
 
@@ -51,8 +53,14 @@ export default async function Home() {
       price:    d.price,
       is_sold:  false,
       nickname: nickMap[d.user_id] ?? null,
+      created_at: d.created_at as string,
     }))
   )
+  // 전체 탭: 모든 카테고리를 합쳐 최신순
+  const merged = categoryDreams
+    .flat()
+    .sort((x, y) => (y.created_at > x.created_at ? 1 : -1))
+  const ticker = merged.slice(0, 12).map((d) => ({ id: d.id, title: d.title, grade: d.grade }))
 
   return (
     <div className="flex min-h-screen flex-col bg-brand-page">
@@ -60,56 +68,40 @@ export default async function Home() {
       {/* ① 배너 (관리자 등록 이미지 배너) */}
       <BannerSlider banners={activeBanners ?? []} />
 
-      {/* ① 히어로 슬라이더 */}
-      <HeroSlider />
+      {/* ① 히어로 */}
+      <HomeHero />
 
-      {/* ①-1 모바일 퀵메뉴 (히어로 하단에 흰 카드로 살짝 겹침) */}
-      <div className="relative z-10 -mt-5 px-4 md:hidden">
-        <div className="rounded-[16px] bg-white shadow-md">
+      {/* ①-1 방금 감정된 꿈 */}
+      <RecentTicker items={ticker} />
+
+      {/* ①-2 모바일 퀵메뉴 */}
+      <div className="px-4 pt-4 md:hidden">
+        <div className="rounded-[4px] border border-brand-line bg-white">
           <MobileQuickMenu />
         </div>
       </div>
 
-      {/* ② 꿈 감정소 */}
-      <section id="appraisal" className="px-6 pb-20 pt-16">
+      {/* ② 등급 안내 (한 줄) */}
+      <GradeStrip />
+
+      {/* ③ 지금 팔고 있는 꿈 */}
+      <DreamMarket tabs={categories.map(({ slug, name }) => ({ slug, name }))} dreamsByTab={categoryDreams} all={merged} />
+
+      {/* ④ 꿈 감정소 */}
+      <section id="appraisal" className="scroll-mt-20 border-t border-brand-line bg-white px-6 py-16">
         <div className="mx-auto max-w-[800px]">
-          <div className="rounded-2xl border border-brand-line bg-white p-8 shadow-sm">
+          <div className="rounded-[4px] border border-brand-line bg-brand-page p-6 md:p-8">
             <div className="mb-8 text-center">
-              <h2 className="text-4xl font-black text-brand-ink">꿈 감정소</h2>
-              <p className="mt-2 text-base font-medium text-brand-ink-soft">Dream Appraisal Center</p>
+              <h2 className="text-3xl font-bold tracking-tight text-brand-ink md:text-4xl">꿈 감정소</h2>
+              <p className="mt-2 text-sm font-medium text-brand-ink-soft">꿈을 적으면 등급과 해몽, 행운 번호가 나와요</p>
             </div>
             <DreamInput />
           </div>
         </div>
       </section>
 
-      {/* ③–⑦ 카테고리 섹션 */}
-      <div id="categories" className="scroll-mt-20 border-t border-brand-line bg-brand-page">
-        {categories.map(({ slug, name }, idx) => (
-          <section
-            key={slug}
-            className={`px-6 py-14 ${idx !== 0 ? 'border-t border-brand-line' : ''}`}
-          >
-            <div className="mx-auto max-w-6xl">
-              {/* 섹션 헤더 */}
-              <div className="mb-10 text-center">
-                <Link
-                  href={`/category/${slug}`}
-                  className="group inline-flex flex-col items-center gap-3"
-                >
-                  <h2 className="text-xl font-black text-brand-ink transition group-hover:text-brand-primary-hover sm:text-2xl">
-                    {name}
-                  </h2>
-                  <span className="h-1 w-10 rounded-full bg-brand-primary transition group-hover:w-14" />
-                </Link>
-              </div>
-
-              {/* 캐러셀 */}
-              <CategoryCarousel dreams={categoryDreams[idx]} />
-            </div>
-          </section>
-        ))}
-      </div>
+      {/* ⑤ 운세 배너 */}
+      <FortuneBanner />
 
       <SiteFooter />
     </div>

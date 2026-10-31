@@ -75,23 +75,23 @@ export default function AdminDreams() {
 
   return (
     <div className="p-4 sm:p-8">
-      <h1 className="mb-4 text-xl font-bold text-[#0B2433] sm:mb-6 sm:text-2xl">꿈 관리</h1>
+      <h1 className="mb-4 text-xl font-bold text-[#231C17] sm:mb-6 sm:text-2xl">꿈 관리</h1>
 
       {/* 필터 */}
       <div className="mb-6 flex flex-wrap gap-3">
         <select value={category} onChange={(e) => setCategory(e.target.value)}
-          className="border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#0B2433]">
+          className="border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#231C17]">
           <option value="">전체 카테고리</option>
           {Object.entries(categoryLabel).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
         </select>
         <select value={isSold} onChange={(e) => setIsSold(e.target.value)}
-          className="border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#0B2433]">
+          className="border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#231C17]">
           <option value="">판매여부 전체</option>
           <option value="false">판매 중</option>
           <option value="true">판매 완료</option>
         </select>
         <select value={reported} onChange={(e) => setReported(e.target.value)}
-          className="border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#0B2433]">
+          className="border border-gray-300 px-4 py-2 text-sm outline-none focus:border-[#231C17]">
           <option value="">신고여부 전체</option>
           <option value="reported">신고된 꿈</option>
           <option value="pending">검토중 신고</option>
@@ -128,7 +128,7 @@ export default function AdminDreams() {
             ) : filtered.map((d) => (
               <tr key={d.id} className={`hover:bg-gray-50 ${d.pending_report_count > 0 ? 'bg-red-50/30' : ''}`}>
                 <td className="px-6 py-3">
-                  <span className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_INFO[d.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>{d.grade}</span>
+                  <span className={`inline-flex h-6 w-6 items-center justify-center rounded-[3px] text-xs font-bold ${GRADE_INFO[d.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>{d.grade}</span>
                 </td>
                 <td className="max-w-[200px] px-6 py-3 text-[#333]">
                   <Link href={`/admin/dreams/${d.id}`} className="truncate hover:underline block">
@@ -136,7 +136,7 @@ export default function AdminDreams() {
                   </Link>
                 </td>
                 <td className="px-6 py-3 text-[#777]">{categoryLabel[d.category] ?? d.category}</td>
-                <td className="px-6 py-3 text-[#14547A]">{d.price.toLocaleString()}원</td>
+                <td className="px-6 py-3 text-[#C23A18]">{d.price.toLocaleString()}원</td>
                 <td className="px-6 py-3">
                   <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${d.is_sold ? 'bg-gray-100 text-gray-500' : 'bg-emerald-50 text-emerald-600'}`}>
                     {d.is_sold ? '판매완료' : '판매중'}

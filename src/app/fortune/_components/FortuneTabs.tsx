@@ -113,7 +113,7 @@ export default function FortuneTabs({ date, zodiacFortunes, starFortunes }: Prop
   const displayStar = selectedStar ?? autoStar
 
   return (
-    <div className="rounded-[14px] bg-white p-[20px_18px] shadow-[0_1px_3px_rgba(11,36,51,0.06)] md:p-[26px_24px]">
+    <div className="rounded-[14px] bg-white p-[20px_18px] shadow-[0_1px_3px_rgba(35,28,23,0.06)] md:p-[26px_24px]">
 
       {/* 탭 전환 */}
       <div className="mb-5 flex gap-1.5">
@@ -266,7 +266,7 @@ function FortuneGrid({
             className={`flex flex-col items-center gap-1.5 rounded-[12px] border p-3 text-center transition-all ${
               active
                 ? 'border-brand-primary bg-brand-primary-light'
-                : 'border-brand-line bg-white hover:shadow-[0_20px_34px_rgba(11,36,51,0.12)]'
+                : 'border-brand-line bg-white hover:shadow-[0_20px_34px_rgba(35,28,23,0.12)]'
             }`}
           >
             {item.Icon

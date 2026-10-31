@@ -11,7 +11,7 @@ export const CATEGORY_COLORS: Record<string, CategoryColorSet> = {
   animals: { main: '#0F7A5A', badgeBg: '#E4F0EB', badgeText: '#0D4E3A' },
   nature:  { main: '#0E6E8C', badgeBg: '#E2F0F5', badgeText: '#0A4B60' },
   action:  { main: '#B5502A', badgeBg: '#FAEBE4', badgeText: '#83371B' },
-  etc:     { main: '#5C6E7C', badgeBg: '#ECF1F4', badgeText: '#3D4E59' },
+  etc:     { main: '#6B605A', badgeBg: '#ECF1F4', badgeText: '#3D4E59' },
 }
 
 const DEFAULT_COLOR = CATEGORY_COLORS.etc

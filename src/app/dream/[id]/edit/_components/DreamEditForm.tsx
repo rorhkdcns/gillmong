@@ -57,13 +57,13 @@ export default function DreamEditForm({ dream }: Props) {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
+    <div className="flex min-h-screen flex-col bg-[#FAF6F2]">
 
       <div className="border-b border-gray-100 bg-white px-6 py-3">
         <div className="mx-auto max-w-2xl">
           <a
             href={`/dream/${dream.id}`}
-            className="inline-flex items-center gap-1 text-sm text-[#777777] hover:text-[#0B2433]"
+            className="inline-flex items-center gap-1 text-sm text-[#777777] hover:text-[#231C17]"
           >
             <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -76,7 +76,7 @@ export default function DreamEditForm({ dream }: Props) {
       <main className="flex-1 px-6 py-12">
         <div className="mx-auto max-w-2xl">
           <div className="border border-gray-200 bg-white p-8 shadow-sm">
-            <h1 className="mb-8 text-center text-2xl text-[#0B2433]">꿈 수정</h1>
+            <h1 className="mb-8 text-center text-2xl text-[#231C17]">꿈 수정</h1>
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-6">
               <div>
@@ -139,14 +139,14 @@ export default function DreamEditForm({ dream }: Props) {
                   type="button"
                   onClick={() => router.push(`/dream/${dream.id}`)}
                   disabled={saving || saved}
-                  className="flex-1 border border-gray-300 py-3 text-[#555555] transition-colors hover:border-[#0B2433] hover:text-[#0B2433] disabled:opacity-50"
+                  className="flex-1 border border-gray-300 py-3 text-[#555555] transition-colors hover:border-[#231C17] hover:text-[#231C17] disabled:opacity-50"
                 >
                   취소
                 </button>
                 <button
                   type="submit"
                   disabled={saving || saved}
-                  className="flex-1 bg-[#0B2433] py-3 font-semibold text-white transition-all hover:brightness-90 disabled:opacity-50"
+                  className="flex-1 bg-[#231C17] py-3 font-semibold text-white transition-all hover:brightness-90 disabled:opacity-50"
                 >
                   {saving ? '저장 중...' : '저장하기'}
                 </button>

@@ -834,7 +834,7 @@ export default function AdminShopProductsPage() {
                           <button onClick={() => toggleProductActive(p)} className="text-xs text-amber-600 hover:text-amber-800">
                             {p.is_active ? '비공개로' : '공개로'}
                           </button>
-                          <button onClick={() => openEditProduct(p.id)} className="text-xs text-blue-500 hover:text-blue-700">수정</button>
+                          <button onClick={() => openEditProduct(p.id)} className="text-xs text-brand-primary hover:text-brand-primary-hover">수정</button>
                           <button
                             onClick={() => setDeleteTarget({ type: 'product', id: p.id, label: p.title })}
                             className="text-xs text-red-400 hover:text-red-600"
@@ -999,7 +999,7 @@ export default function AdminShopProductsPage() {
                         <td className="px-4 py-3 text-[#777]">{catProducts.filter((p) => p.is_active).length}</td>
                         <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                           <div className="flex flex-wrap items-center gap-3">
-                            <button onClick={() => openEditCat(c)} className="text-xs text-blue-500 hover:text-blue-700">수정</button>
+                            <button onClick={() => openEditCat(c)} className="text-xs text-brand-primary hover:text-brand-primary-hover">수정</button>
                             <button
                               onClick={() => handleGenerateProducts(c.id, undefined, `cat:${c.id}`)}
                               disabled={generatingKey === `cat:${c.id}`}
@@ -1060,7 +1060,7 @@ export default function AdminShopProductsPage() {
                                             <td className="px-4 py-2 text-[#777]">{productsOfSubcategory(s.id).length}개</td>
                                             <td className="px-4 py-2" onClick={(e) => e.stopPropagation()}>
                                               <div className="flex flex-wrap items-center gap-2.5">
-                                                <button onClick={() => openEditSub(s)} className="text-blue-500 hover:text-blue-700">수정</button>
+                                                <button onClick={() => openEditSub(s)} className="text-brand-primary hover:text-brand-primary-hover">수정</button>
                                                 <button
                                                   onClick={() => handleGenerateProducts(s.category_id, s.id, `sub:${s.id}`)}
                                                   disabled={generatingKey === `sub:${s.id}`}
@@ -1374,7 +1374,7 @@ export default function AdminShopProductsPage() {
                             <button onClick={() => toggleProductActive(p)} className="text-xs text-amber-600 hover:text-amber-800">
                               {p.is_active ? '비공개로' : '공개로'}
                             </button>
-                            <button onClick={() => openEditProduct(p.id)} className="text-xs text-blue-500 hover:text-blue-700">수정</button>
+                            <button onClick={() => openEditProduct(p.id)} className="text-xs text-brand-primary hover:text-brand-primary-hover">수정</button>
                             <button onClick={() => setDeleteTarget({ type: 'product', id: p.id, label: p.title })} className="text-xs text-red-400 hover:text-red-600">삭제</button>
                           </div>
                         </td>

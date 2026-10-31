@@ -30,7 +30,7 @@ export default async function PurchaseSuccessPage({
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h1 className="mb-2 text-2xl font-bold text-[#0B2433]">가상계좌 채번 완료</h1>
+            <h1 className="mb-2 text-2xl font-bold text-[#231C17]">가상계좌 채번 완료</h1>
             <p className="mb-2 text-sm text-gray-500">입금 확인 후 꿈을 열람하실 수 있습니다</p>
             <p className="mb-6 text-xs text-amber-600 font-semibold">입금 완료까지 콘텐츠 열람이 제한될 수 있습니다</p>
 
@@ -38,20 +38,20 @@ export default async function PurchaseSuccessPage({
               <dl className="space-y-3 text-sm">
                 <div className="flex justify-between">
                   <dt className="text-gray-500">은행명</dt>
-                  <dd className="font-bold text-[#0B2433]">{vbankName}</dd>
+                  <dd className="font-bold text-[#231C17]">{vbankName}</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-gray-500">계좌번호</dt>
-                  <dd className="font-bold text-[#0B2433]">{vbankNumber}</dd>
+                  <dd className="font-bold text-[#231C17]">{vbankNumber}</dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-gray-500">예금주</dt>
-                  <dd className="font-bold text-[#0B2433]">{vbankHolder}</dd>
+                  <dd className="font-bold text-[#231C17]">{vbankHolder}</dd>
                 </div>
                 {amount && (
                   <div className="flex justify-between">
                     <dt className="text-gray-500">입금 금액</dt>
-                    <dd className="font-bold text-[#14547A]">₩{amount.toLocaleString()}</dd>
+                    <dd className="font-bold text-[#C23A18]">₩{amount.toLocaleString()}</dd>
                   </div>
                 )}
                 {vbankExpDate && (
@@ -70,9 +70,9 @@ export default async function PurchaseSuccessPage({
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h1 className="mb-2 text-2xl font-bold text-[#0B2433]">구매 완료!</h1>
+            <h1 className="mb-2 text-2xl font-bold text-[#231C17]">구매 완료!</h1>
             {amount && (
-              <p className="mb-1 text-2xl font-bold text-[#14547A]">₩{amount.toLocaleString()}</p>
+              <p className="mb-1 text-2xl font-bold text-[#C23A18]">₩{amount.toLocaleString()}</p>
             )}
             <p className="mb-1 text-sm text-gray-500">결제가 완료되었습니다. 콘텐츠를 바로 열람하실 수 있습니다.</p>
             <p className="mb-2 text-xs text-gray-400">7일 이내 구매확정 또는 환불요청이 가능합니다.</p>
@@ -84,14 +84,14 @@ export default async function PurchaseSuccessPage({
           {dreamId && (
             <Link
               href={`/dream/${dreamId}`}
-              className="inline-block rounded-xl bg-[#14547A] px-10 py-3 font-bold text-white hover:brightness-95"
+              className="inline-block rounded-xl bg-[#C23A18] px-10 py-3 font-bold text-white hover:brightness-95"
             >
               꿈 내용 보기
             </Link>
           )}
           <Link
             href="/mypage"
-            className="inline-block rounded-xl border border-[#0B2433] px-10 py-3 font-bold text-[#0B2433] hover:bg-[#0B2433] hover:text-white transition"
+            className="inline-block rounded-xl border border-[#231C17] px-10 py-3 font-bold text-[#231C17] hover:bg-[#231C17] hover:text-white transition"
           >
             마이페이지 확인
           </Link>

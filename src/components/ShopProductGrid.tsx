@@ -77,14 +77,14 @@ export default function ShopProductGrid({ products }: Props) {
   const paged = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
 
   return (
-    <div className="rounded-[14px] bg-white p-[20px_18px] shadow-[0_1px_3px_rgba(11,36,51,0.06)] md:p-[26px_24px]">
+    <div className="rounded-[14px] bg-white p-[20px_18px] shadow-[0_1px_3px_rgba(35,28,23,0.06)] md:p-[26px_24px]">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <input
           type="text"
           value={query}
           onChange={(e) => handleQueryChange(e.target.value)}
           placeholder="상품명으로 검색해보세요"
-          className="w-full rounded-[10px] border border-[#DCE5EB] bg-white px-4 py-2.5 text-sm text-[#16303F] outline-none focus:border-[#2E7DD1] sm:flex-1"
+          className="w-full rounded-[10px] border border-[#EADFD8] bg-white px-4 py-2.5 text-sm text-[#3A322C] outline-none focus:border-[#E5421F] sm:flex-1"
         />
         <div className="flex shrink-0 gap-1.5">
           {SORT_OPTIONS.map((opt) => (
@@ -94,8 +94,8 @@ export default function ShopProductGrid({ products }: Props) {
               onClick={() => handleSortChange(opt.value)}
               className={`rounded-[8px] px-3 py-2 text-xs font-semibold whitespace-nowrap transition-colors sm:text-sm ${
                 sort === opt.value
-                  ? 'bg-[#2E7DD1] text-white'
-                  : 'border border-[#DCE5EB] text-[#5C6E7C] hover:border-[#2E7DD1] hover:text-[#2E7DD1]'
+                  ? 'bg-[#E5421F] text-white'
+                  : 'border border-[#EADFD8] text-[#6B605A] hover:border-[#E5421F] hover:text-[#E5421F]'
               }`}
             >
               {opt.label}
@@ -106,9 +106,9 @@ export default function ShopProductGrid({ products }: Props) {
 
       <div className="mt-4">
         {products.length === 0 ? (
-          <div className="py-14 text-center text-sm text-[#5C6E7C]">등록된 상품이 없습니다.</div>
+          <div className="py-14 text-center text-sm text-[#6B605A]">등록된 상품이 없습니다.</div>
         ) : filtered.length === 0 ? (
-          <div className="py-14 text-center text-sm text-[#5C6E7C]">검색 결과가 없습니다.</div>
+          <div className="py-14 text-center text-sm text-[#6B605A]">검색 결과가 없습니다.</div>
         ) : (
           <>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
@@ -117,14 +117,14 @@ export default function ShopProductGrid({ products }: Props) {
                   key={p.id}
                   productId={p.id}
                   href={p.link_url}
-                  className="flex flex-col overflow-hidden rounded-[10px] border border-[#DCE5EB] transition-shadow hover:shadow-[0_6px_16px_rgba(11,36,51,0.08)]"
+                  className="flex flex-col overflow-hidden rounded-[10px] border border-[#EADFD8] transition-shadow hover:shadow-[0_6px_16px_rgba(35,28,23,0.08)]"
                 >
-                  <div className="relative aspect-square w-full bg-[#EDF3F7]">
+                  <div className="relative aspect-square w-full bg-[#FFF1EA]">
                     <ImageThumbnail src={p.image_url} alt={p.title} className="h-full w-full object-cover" />
                     {(p.is_rocket === true || p.is_free_shipping === true) && (
                       <div className="absolute top-2 left-2 flex gap-1">
                         {p.is_rocket === true && (
-                          <span className="rounded-[4px] bg-[#185FA5] px-[7px] py-[3px] text-[10px] font-medium text-white">
+                          <span className="rounded-[4px] bg-[#C23A18] px-[7px] py-[3px] text-[10px] font-medium text-white">
                             로켓배송
                           </span>
                         )}
@@ -137,7 +137,7 @@ export default function ShopProductGrid({ products }: Props) {
                     )}
                   </div>
                   <div className="flex flex-1 flex-col gap-1 p-3">
-                    <p className="line-clamp-2 text-sm font-medium text-[#16303F]">{p.title}</p>
+                    <p className="line-clamp-2 text-sm font-medium text-[#3A322C]">{p.title}</p>
                     {p.price_text && (
                       <p className="mt-auto text-sm font-bold text-brand-violet-deep">{p.price_text}</p>
                     )}
@@ -155,16 +155,16 @@ export default function ShopProductGrid({ products }: Props) {
                   type="button"
                   onClick={() => setPage((v) => Math.max(1, v - 1))}
                   disabled={currentPage <= 1}
-                  className="rounded-[8px] border border-[#DCE5EB] px-3 py-1.5 text-sm font-semibold text-[#5C6E7C] transition-colors hover:border-[#2E7DD1] hover:text-[#2E7DD1] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="rounded-[8px] border border-[#EADFD8] px-3 py-1.5 text-sm font-semibold text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   이전
                 </button>
-                <span className="text-sm text-[#5C6E7C]">{currentPage} / {totalPages}</span>
+                <span className="text-sm text-[#6B605A]">{currentPage} / {totalPages}</span>
                 <button
                   type="button"
                   onClick={() => setPage((v) => Math.min(totalPages, v + 1))}
                   disabled={currentPage >= totalPages}
-                  className="rounded-[8px] border border-[#DCE5EB] px-3 py-1.5 text-sm font-semibold text-[#5C6E7C] transition-colors hover:border-[#2E7DD1] hover:text-[#2E7DD1] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="rounded-[8px] border border-[#EADFD8] px-3 py-1.5 text-sm font-semibold text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   다음
                 </button>

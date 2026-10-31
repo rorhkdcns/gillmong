@@ -85,9 +85,9 @@ export default function AdminDreamDetailPage() {
 
       {/* 헤더 */}
       <div className="mb-6 flex items-center gap-3">
-        <Link href="/admin/dreams" className="text-sm text-[#999] hover:text-[#0B2433]">← 꿈 관리</Link>
+        <Link href="/admin/dreams" className="text-sm text-[#999] hover:text-[#231C17]">← 꿈 관리</Link>
         <span className="text-gray-300">/</span>
-        <span className="text-sm font-semibold text-[#0B2433]">상세</span>
+        <span className="text-sm font-semibold text-[#231C17]">상세</span>
       </div>
 
       {/* 결과 토스트 */}
@@ -108,16 +108,16 @@ export default function AdminDreamDetailPage() {
       {/* 꿈 기본 정보 */}
       <div className="mb-4 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
         <div className="flex items-center gap-3 border-b border-gray-100 bg-gray-50 px-6 py-4">
-          <span className={`inline-flex h-7 w-7 items-center justify-center rounded-full text-sm font-black text-white ${GRADE_INFO[dream.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
+          <span className={`inline-flex h-7 w-7 items-center justify-center rounded-[3px] text-sm font-black ${GRADE_INFO[dream.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
             {dream.grade}
           </span>
-          <h1 className="text-lg font-bold text-[#0B2433]">{dream.title}</h1>
+          <h1 className="text-lg font-bold text-[#231C17]">{dream.title}</h1>
           <span className={`ml-auto rounded-full px-2.5 py-0.5 text-xs font-semibold ${dream.is_sold ? 'bg-gray-100 text-gray-500' : 'bg-emerald-50 text-emerald-600'}`}>
             {dream.is_sold ? '판매완료' : '판매중'}
           </span>
         </div>
         <div className="grid grid-cols-2 gap-4 px-6 py-4 text-sm sm:grid-cols-4">
-          <div><p className="text-xs text-[#999]">감정가</p><p className="font-semibold text-[#14547A]">{dream.price.toLocaleString()}원</p></div>
+          <div><p className="text-xs text-[#999]">감정가</p><p className="font-semibold text-[#C23A18]">{dream.price.toLocaleString()}원</p></div>
           <div><p className="text-xs text-[#999]">등록자</p><p className="font-semibold text-[#333]">{dream.seller?.nickname ?? '-'}</p></div>
           <div><p className="text-xs text-[#999]">등록일</p><p className="text-[#555]">{formatDate(dream.created_at)}</p></div>
           <div><p className="text-xs text-[#999]">꿈 ID</p><p className="font-mono text-[#777]">#{dream.id}</p></div>
@@ -141,7 +141,7 @@ export default function AdminDreamDetailPage() {
       {/* AI 해석 */}
       <div className="mb-4 rounded-2xl border border-gray-200 bg-white shadow-sm">
         <div className="border-b border-gray-100 px-6 py-3">
-          <h2 className="text-sm font-bold text-[#0B2433]">AI 해석 (전체 열람)</h2>
+          <h2 className="text-sm font-bold text-[#231C17]">AI 해석 (전체 열람)</h2>
         </div>
         <div className="space-y-4 px-6 py-5 text-sm">
           {dream.reconstructed_dream && (
@@ -174,7 +174,7 @@ export default function AdminDreamDetailPage() {
       {/* 구매자 목록 */}
       <div className="mb-4 rounded-2xl border border-gray-200 bg-white shadow-sm">
         <div className="border-b border-gray-100 px-6 py-3 flex items-center justify-between">
-          <h2 className="text-sm font-bold text-[#0B2433]">구매자 목록</h2>
+          <h2 className="text-sm font-bold text-[#231C17]">구매자 목록</h2>
           <span className="text-xs text-[#999]">{dream.buyers.length}명</span>
         </div>
         {dream.buyers.length === 0 ? (
@@ -193,7 +193,7 @@ export default function AdminDreamDetailPage() {
                 <tr key={b.id} className="hover:bg-gray-50">
                   <td className="px-6 py-3 text-[#333]">{b.profile?.nickname ?? b.buyer_id.slice(0,8)}</td>
                   <td className="px-6 py-3 text-[#999]">{formatDate(b.created_at)}</td>
-                  <td className="px-6 py-3 text-right font-semibold text-[#14547A]">{b.price.toLocaleString()}원</td>
+                  <td className="px-6 py-3 text-right font-semibold text-[#C23A18]">{b.price.toLocaleString()}원</td>
                 </tr>
               ))}
             </tbody>
@@ -205,7 +205,7 @@ export default function AdminDreamDetailPage() {
       {dream.reports.length > 0 && (
         <div className="mb-4 rounded-2xl border border-gray-200 bg-white shadow-sm">
           <div className="border-b border-gray-100 px-6 py-3 flex items-center justify-between">
-            <h2 className="text-sm font-bold text-[#0B2433]">신고 내역</h2>
+            <h2 className="text-sm font-bold text-[#231C17]">신고 내역</h2>
             <span className="text-xs text-[#999]">{dream.reports.length}건</span>
           </div>
           <table className="w-full text-sm">
@@ -255,7 +255,7 @@ export default function AdminDreamDetailPage() {
       {confirmDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-2xl">
-            <h3 className="mb-2 text-center text-lg font-black text-[#0B2433]">꿈 삭제 확인</h3>
+            <h3 className="mb-2 text-center text-lg font-black text-[#231C17]">꿈 삭제 확인</h3>
             <p className="mb-1 text-center text-sm text-[#555]">&ldquo;{dream.title}&rdquo;</p>
             <p className="mb-6 text-center text-xs text-[#999]">
               구매자 {dream.buyers.length}명에게 포인트가 환불되며,<br />관련 신고는 처리완료로 변경됩니다.

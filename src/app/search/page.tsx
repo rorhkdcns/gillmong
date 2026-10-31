@@ -55,15 +55,15 @@ function SearchResults() {
           {q ? (
             <>
               <p className="mb-1 text-sm text-[#777777]">검색어</p>
-              <h1 className="text-3xl text-[#0B2433]">
-                <span className="text-[#14547A]">&ldquo;{q}&rdquo;</span> 검색 결과
+              <h1 className="text-3xl text-[#231C17]">
+                <span className="text-[#C23A18]">&ldquo;{q}&rdquo;</span> 검색 결과
               </h1>
               <p className="mt-2 text-sm text-[#777777]">
                 {results.length > 0 ? `총 ${results.length}건의 꿈이 검색되었습니다` : '검색 결과가 없습니다'}
               </p>
             </>
           ) : (
-            <h1 className="text-2xl text-[#0B2433]">검색어를 입력해주세요</h1>
+            <h1 className="text-2xl text-[#231C17]">검색어를 입력해주세요</h1>
           )}
         </div>
 
@@ -74,7 +74,7 @@ function SearchResults() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
             </svg>
             <p className="text-lg text-[#555555]">
-              <span className="font-semibold text-[#0B2433]">&ldquo;{q}&rdquo;</span>에 대한 검색 결과가 없습니다
+              <span className="font-semibold text-[#231C17]">&ldquo;{q}&rdquo;</span>에 대한 검색 결과가 없습니다
             </p>
             <p className="mt-2 text-sm text-[#777777]">다른 검색어로 시도해보세요</p>
           </div>
@@ -94,7 +94,7 @@ function SearchResults() {
               >
                 {/* 등급 + 판매완료 뱃지 */}
                 <div className="mb-3 flex items-center gap-2">
-                  <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_INFO[card.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
+                  <span className={`flex h-6 w-6 items-center justify-center rounded-[3px] text-xs font-bold ${GRADE_INFO[card.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
                     {card.grade}
                   </span>
                   {card.is_sold && (
@@ -114,7 +114,7 @@ function SearchResults() {
                 <div className="flex items-center justify-between border-t border-gray-100 pt-4">
                   <div>
                     <span className="text-xs text-gray-400">감정가</span>
-                    <p className={`text-base font-bold ${card.is_sold ? 'text-gray-400' : 'text-[#14547A]'}`}>
+                    <p className={`text-base font-bold ${card.is_sold ? 'text-gray-400' : 'text-[#C23A18]'}`}>
                       {card.price.toLocaleString()}원
                     </p>
                   </div>
@@ -143,7 +143,7 @@ function SearchResults() {
 
 export default function SearchPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
+    <div className="flex min-h-screen flex-col bg-[#FAF6F2]">
 
       <Suspense fallback={
         <main className="flex flex-1 items-center justify-center">

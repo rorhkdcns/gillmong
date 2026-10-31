@@ -171,7 +171,7 @@ export default function DreamInput() {
                   onBlur={() => setFocusedKey(null)}
                   placeholder={field.placeholder}
                   rows={isFocused ? 3 : 2}
-                  className="w-full resize-none rounded-xl border border-gray-400 bg-white px-4 py-3 pb-6 text-base text-brand-ink placeholder:text-[#BBBBBB] outline-none transition-all focus:border-brand-violet focus:shadow-[0_0_0_3px_rgba(46,125,209,0.14)]"
+                  className="w-full resize-none rounded-xl border border-gray-400 bg-white px-4 py-3 pb-6 text-base text-brand-ink placeholder:text-[#BBBBBB] outline-none transition-all focus:border-brand-violet focus:shadow-[0_0_0_3px_rgba(229,66,31,0.14)]"
                 />
                 {/* 글자 수 */}
                 <span className={`absolute bottom-2 right-3 text-xs transition-colors ${
@@ -231,7 +231,7 @@ export default function DreamInput() {
           type="button"
           onClick={handleSubmit}
           disabled={loading}
-          className="w-full rounded-xl bg-gradient-to-r from-brand-violet to-brand-pink py-5 text-xl font-black text-white shadow-[0_10px_26px_rgba(11,36,51,0.28)] transition-all hover:brightness-95 active:scale-[0.98] disabled:opacity-60"
+          className="w-full rounded-xl bg-gradient-to-r from-brand-violet to-brand-pink py-5 text-xl font-black text-white shadow-[0_10px_26px_rgba(35,28,23,0.28)] transition-all hover:brightness-95 active:scale-[0.98] disabled:opacity-60"
         >
           나의 꿈 감정하기
         </button>

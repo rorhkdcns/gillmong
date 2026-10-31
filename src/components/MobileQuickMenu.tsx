@@ -78,8 +78,8 @@ export default function MobileQuickMenu() {
   }, [])
 
   const items = [
-    { label: '꿈감정', href: '/#appraisal', gradient: 'from-[#534AB7] to-[#6F63D6]', Icon: MoonStarsIcon },
-    { label: '꿈구경', href: '/category/all', gradient: 'from-[#185FA5] to-[#2E7DD1]', Icon: ShoppingBagIcon },
+    { label: '꿈감정', href: '/#appraisal', gradient: 'from-[#E5421F] to-[#F0613F]', Icon: MoonStarsIcon },
+    { label: '꿈구경', href: '/category/all', gradient: 'from-[#231C17] to-[#3A322C]', Icon: ShoppingBagIcon },
     { label: '해몽사전', href: '/dictionary', gradient: 'from-[#0F6E56] to-[#1D9E75]', Icon: BookIcon },
     { label: '굿즈샵', href: '/shop', gradient: 'from-[#B5502A] to-[#D46B3E]', Icon: TagIcon },
     { label: '마이', href: loggedIn ? '/mypage' : '/auth/login', gradient: 'from-[#5F5E5A] to-[#7A7975]', Icon: UserIcon },
@@ -93,7 +93,7 @@ export default function MobileQuickMenu() {
           href={item.href}
           className="flex flex-col items-center gap-1.5 py-1"
         >
-          <span className={`flex h-[48px] w-[48px] items-center justify-center rounded-[12px] bg-gradient-to-br text-white ${item.gradient}`}>
+          <span className={`flex h-[48px] w-[48px] items-center justify-center rounded-[4px] bg-gradient-to-br text-white ${item.gradient}`}>
             <item.Icon />
           </span>
           <span className="text-xs font-medium text-brand-ink-soft">{item.label}</span>

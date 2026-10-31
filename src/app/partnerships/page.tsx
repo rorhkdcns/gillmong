@@ -36,12 +36,12 @@ export default function PartnershipsPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
+    <div className="flex min-h-screen flex-col bg-[#FAF6F2]">
 
       <section className="flex-1 px-6 py-16">
         <div className="mx-auto max-w-xl">
           <div className="mb-10 text-center">
-            <h1 className="text-3xl font-black text-[#0B2433]">제휴문의</h1>
+            <h1 className="text-3xl font-black text-[#231C17]">제휴문의</h1>
             <p className="mt-2 text-sm text-gray-500">길몽상점과의 제휴 및 협력 문의를 남겨주세요.</p>
           </div>
 
@@ -56,11 +56,11 @@ export default function PartnershipsPage() {
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-1 block text-sm font-semibold text-[#333]">이름 <span className="text-red-400">*</span></label>
-                  <input name="name" value={form.name} onChange={change} placeholder="홍길동" className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#0B2433]" />
+                  <input name="name" value={form.name} onChange={change} placeholder="홍길동" className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#231C17]" />
                 </div>
                 <div>
                   <label className="mb-1 block text-sm font-semibold text-[#333]">이메일 <span className="text-red-400">*</span></label>
-                  <input name="email" value={form.email} onChange={change} type="email" placeholder="example@company.com" className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#0B2433]" />
+                  <input name="email" value={form.email} onChange={change} type="email" placeholder="example@company.com" className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#231C17]" />
                 </div>
               </div>
 
@@ -68,24 +68,24 @@ export default function PartnershipsPage() {
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
                   <label className="mb-1 block text-sm font-semibold text-[#333]">회사명 <span className="text-xs font-normal text-gray-400">(선택)</span></label>
-                  <input name="company" value={form.company} onChange={change} placeholder="(주)회사명" className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#0B2433]" />
+                  <input name="company" value={form.company} onChange={change} placeholder="(주)회사명" className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#231C17]" />
                 </div>
                 <div>
                   <label className="mb-1 block text-sm font-semibold text-[#333]">연락처 <span className="text-xs font-normal text-gray-400">(선택)</span></label>
-                  <input name="phone" value={form.phone} onChange={change} placeholder="010-0000-0000" className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#0B2433]" />
+                  <input name="phone" value={form.phone} onChange={change} placeholder="010-0000-0000" className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#231C17]" />
                 </div>
               </div>
 
               {/* 제목 */}
               <div>
                 <label className="mb-1 block text-sm font-semibold text-[#333]">제목 <span className="text-red-400">*</span></label>
-                <input name="title" value={form.title} onChange={change} placeholder="문의 제목을 입력하세요" className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#0B2433]" />
+                <input name="title" value={form.title} onChange={change} placeholder="문의 제목을 입력하세요" className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#231C17]" />
               </div>
 
               {/* 내용 */}
               <div>
                 <label className="mb-1 block text-sm font-semibold text-[#333]">내용 <span className="text-red-400">*</span></label>
-                <textarea name="content" value={form.content} onChange={change} rows={6} placeholder="제휴 목적 및 문의 내용을 자세히 작성해주세요." className="w-full resize-none rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#0B2433]" />
+                <textarea name="content" value={form.content} onChange={change} rows={6} placeholder="제휴 목적 및 문의 내용을 자세히 작성해주세요." className="w-full resize-none rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#231C17]" />
               </div>
 
               {error && <p className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-500">{error}</p>}
@@ -93,7 +93,7 @@ export default function PartnershipsPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full rounded-xl bg-[#0B2433] py-3 text-sm font-bold text-white transition hover:brightness-90 disabled:opacity-60"
+                className="w-full rounded-xl bg-[#231C17] py-3 text-sm font-bold text-white transition hover:brightness-90 disabled:opacity-60"
               >
                 {loading ? '제출 중...' : '문의 제출하기'}
               </button>

@@ -7,7 +7,7 @@ import { getVisibleSubcategories } from '@/lib/dictionary'
 import SiteFooter from '@/components/SiteFooter'
 import DictionaryFilterList, { type DictionaryFilterEntry } from '../../_components/DictionaryFilterList'
 
-const BLOCK_SHAPE = 'rounded-[14px] shadow-[0_1px_3px_rgba(11,36,51,0.06)] p-[20px_18px] md:p-[26px_24px]'
+const BLOCK_SHAPE = 'rounded-[14px] shadow-[0_1px_3px_rgba(35,28,23,0.06)] p-[20px_18px] md:p-[26px_24px]'
 
 async function getSubcategoryEntries(subSlug: string): Promise<DictionaryFilterEntry[]> {
   const admin = createAdminClient()
@@ -62,22 +62,22 @@ export default async function DictionarySubcategoryPage({
   return (
     <div className="flex min-h-screen flex-col">
 
-      <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#DDE6EC' }}>
+      <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#EADFD8' }}>
         <div className="mx-auto flex max-w-[680px] flex-col gap-[14px]">
 
           {/* 헤더 블록 */}
           <div className={`${BLOCK_SHAPE} bg-white`}>
-            <nav className="mb-2 text-sm text-[#5C6E7C]">
-              <Link href="/dictionary" className="hover:text-[#2E7DD1]">해몽 사전</Link>
+            <nav className="mb-2 text-sm text-[#6B605A]">
+              <Link href="/dictionary" className="hover:text-[#E5421F]">해몽 사전</Link>
               <span className="mx-1.5">›</span>
-              <Link href={`/dictionary/${parentCategory.slug}`} className="hover:text-[#2E7DD1]">
+              <Link href={`/dictionary/${parentCategory.slug}`} className="hover:text-[#E5421F]">
                 {parentCategory.name}
               </Link>
               <span className="mx-1.5">›</span>
               <span>{subcategory.name}</span>
             </nav>
-            <h1 className="mb-2 text-2xl font-medium text-[#0B2433] md:text-3xl">{subcategory.name} 꿈 해몽</h1>
-            <p className="text-sm text-[#5C6E7C]">
+            <h1 className="mb-2 text-2xl font-medium text-[#231C17] md:text-3xl">{subcategory.name} 꿈 해몽</h1>
+            <p className="text-sm text-[#6B605A]">
               {subcategory.description ?? `${subcategory.name}에 관한 꿈 키워드를 모아봤습니다.`}
             </p>
           </div>
@@ -88,20 +88,20 @@ export default async function DictionarySubcategoryPage({
           {/* 같은 대분류의 다른 소분류 */}
           {siblingSubs.length > 0 && (
             <div className={`${BLOCK_SHAPE} bg-white`}>
-              <h2 className="mb-3 text-sm font-bold text-[#5C6E7C]">{parentCategory.name}의 다른 소분류</h2>
+              <h2 className="mb-3 text-sm font-bold text-[#6B605A]">{parentCategory.name}의 다른 소분류</h2>
               <div className="flex flex-wrap gap-2">
                 {siblingSubs.map((s) => (
                   <Link
                     key={s.slug}
                     href={`/dictionary/${category}/${s.slug}`}
-                    className="rounded-full border border-[#DCE5EB] bg-white px-4 py-2 text-sm font-medium text-[#5C6E7C] transition-colors hover:border-[#2E7DD1] hover:text-[#2E7DD1]"
+                    className="rounded-full border border-[#EADFD8] bg-white px-4 py-2 text-sm font-medium text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F]"
                   >
                     {s.name}
                   </Link>
                 ))}
                 <Link
                   href={`/dictionary/${category}`}
-                  className="rounded-full border border-[#DCE5EB] bg-white px-4 py-2 text-sm font-medium text-[#5C6E7C] transition-colors hover:border-[#2E7DD1] hover:text-[#2E7DD1]"
+                  className="rounded-full border border-[#EADFD8] bg-white px-4 py-2 text-sm font-medium text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F]"
                 >
                   {parentCategory.name} 전체 보기
                 </Link>

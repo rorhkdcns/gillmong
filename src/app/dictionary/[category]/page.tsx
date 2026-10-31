@@ -172,18 +172,18 @@ async function CategoryView({
   return (
     <div className="flex min-h-screen flex-col">
 
-      <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#DDE6EC' }}>
+      <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#EADFD8' }}>
         <div className="mx-auto flex max-w-[680px] flex-col gap-[14px]">
 
           {/* 헤더 블록 */}
           <div className={`${BLOCK_SHAPE} bg-white`}>
-            <nav className="mb-2 text-sm text-[#5C6E7C]">
-              <Link href="/dictionary" className="hover:text-[#2E7DD1]">해몽 사전</Link>
+            <nav className="mb-2 text-sm text-[#6B605A]">
+              <Link href="/dictionary" className="hover:text-[#E5421F]">해몽 사전</Link>
               <span className="mx-1.5">›</span>
               <span>{category.name}</span>
             </nav>
-            <h1 className="mb-2 text-2xl font-medium text-[#0B2433] md:text-3xl">{category.name} 꿈 해몽</h1>
-            <p className="text-sm text-[#5C6E7C]">
+            <h1 className="mb-2 text-2xl font-medium text-[#231C17] md:text-3xl">{category.name} 꿈 해몽</h1>
+            <p className="text-sm text-[#6B605A]">
               {category.description ?? `${category.name}에 관한 꿈 키워드를 모아봤습니다.`}
             </p>
           </div>
@@ -191,13 +191,13 @@ async function CategoryView({
           {/* 소분류 */}
           {subcategories.length > 0 && (
             <div className={`${BLOCK_SHAPE} bg-white`}>
-              <h2 className="mb-3 text-sm font-bold text-[#5C6E7C]">세부 카테고리</h2>
+              <h2 className="mb-3 text-sm font-bold text-[#6B605A]">세부 카테고리</h2>
               <div className="flex flex-wrap gap-2">
                 {subcategories.map((s) => (
                   <Link
                     key={s.slug}
                     href={`/dictionary/${category.slug}/${s.slug}`}
-                    className="rounded-full border border-[#DCE5EB] bg-white px-4 py-2 text-sm font-medium text-[#5C6E7C] transition-colors hover:border-[#2E7DD1] hover:text-[#2E7DD1]"
+                    className="rounded-full border border-[#EADFD8] bg-white px-4 py-2 text-sm font-medium text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F]"
                   >
                     {s.name}
                   </Link>
@@ -212,20 +212,20 @@ async function CategoryView({
           {/* 다른 카테고리 */}
           {otherCategories.length > 0 && (
             <div className={`${BLOCK_SHAPE} bg-white`}>
-              <h2 className="mb-3 text-sm font-bold text-[#5C6E7C]">다른 카테고리 둘러보기</h2>
+              <h2 className="mb-3 text-sm font-bold text-[#6B605A]">다른 카테고리 둘러보기</h2>
               <div className="flex flex-wrap gap-2">
                 {otherCategories.map((c) => (
                   <Link
                     key={c.slug}
                     href={`/dictionary/${c.slug}`}
-                    className="rounded-full border border-[#DCE5EB] bg-white px-4 py-2 text-sm font-medium text-[#5C6E7C] transition-colors hover:border-[#2E7DD1] hover:text-[#2E7DD1]"
+                    className="rounded-full border border-[#EADFD8] bg-white px-4 py-2 text-sm font-medium text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F]"
                   >
                     {c.name} 해몽
                   </Link>
                 ))}
                 <Link
                   href="/dictionary"
-                  className="rounded-full border border-[#DCE5EB] bg-white px-4 py-2 text-sm font-medium text-[#5C6E7C] transition-colors hover:border-[#2E7DD1] hover:text-[#2E7DD1]"
+                  className="rounded-full border border-[#EADFD8] bg-white px-4 py-2 text-sm font-medium text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F]"
                 >
                   전체 사전 보기
                 </Link>
@@ -242,7 +242,7 @@ async function CategoryView({
 
 function ChevronRightIcon() {
   return (
-    <svg className="h-4 w-4 shrink-0 text-[#8CA0AC]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+    <svg className="h-4 w-4 shrink-0 text-[#9A8F88]" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
     </svg>
   )
@@ -296,11 +296,11 @@ async function EntryView({
   return (
     <div className="flex min-h-screen flex-col">
 
-      <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#DDE6EC' }}>
+      <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#EADFD8' }}>
         <div className="mx-auto flex max-w-[680px] flex-col gap-[14px]">
 
           {/* 1) 헤더 블록 */}
-          <div className="overflow-hidden rounded-[14px] bg-white shadow-[0_1px_3px_rgba(11,36,51,0.06)]">
+          <div className="overflow-hidden rounded-[14px] bg-white shadow-[0_1px_3px_rgba(35,28,23,0.06)]">
             <div
               className="flex flex-wrap items-center gap-1.5 px-[18px] py-2.5 text-sm text-white md:px-6"
               style={{ backgroundColor: colors.main }}
@@ -325,10 +325,10 @@ async function EntryView({
             </div>
 
             <div className="p-[20px_18px] md:p-[26px_24px]">
-              <h1 className="mb-3 text-2xl font-medium text-[#0B2433] md:text-3xl">
+              <h1 className="mb-3 text-2xl font-medium text-[#231C17] md:text-3xl">
                 {entry.keyword} 해몽
               </h1>
-              <p className="text-[18px] leading-[1.85] text-[#1C3547]">
+              <p className="text-[18px] leading-[1.85] text-[#3A322C]">
                 {entry.summary}
               </p>
               {entry.tags && entry.tags.length > 0 && (
@@ -350,14 +350,14 @@ async function EntryView({
           <DictionaryBodyBlocks blocks={bodyBlocks} colors={colors} />
 
           {/* 5) AI 해몽 CTA */}
-          <div className={`${BLOCK_SHAPE} text-center`} style={{ backgroundColor: '#0B2433' }}>
+          <div className={`${BLOCK_SHAPE} text-center`} style={{ backgroundColor: '#231C17' }}>
             <p className="text-[20px] font-semibold text-white">내 꿈은 어떤 의미일까요?</p>
             <p className="mt-1.5 text-base text-white/70">
               AI가 당신의 꿈을 직접 분석해드립니다. 지금 바로 무료로 감정받아보세요.
             </p>
             <Link
               href="/#appraisal"
-              className="mt-4 inline-block w-full rounded-[10px] bg-[#2E7DD1] px-[30px] py-[14px] text-lg font-semibold text-white transition-transform hover:scale-[1.02] md:w-auto"
+              className="mt-4 inline-block w-full rounded-[10px] bg-[#E5421F] px-[30px] py-[14px] text-lg font-semibold text-white transition-transform hover:scale-[1.02] md:w-auto"
             >
               AI 해몽 받으러 가기
             </Link>
@@ -369,16 +369,16 @@ async function EntryView({
           {/* 관련 거래중인 꿈 */}
           {relatedDreams && relatedDreams.length > 0 && (
             <div className={`${BLOCK_SHAPE} bg-white`}>
-              <h2 className="mb-4 text-2xl font-medium text-[#0B2433]">관련 거래중인 꿈</h2>
+              <h2 className="mb-4 text-2xl font-medium text-[#231C17]">관련 거래중인 꿈</h2>
               <div className="flex flex-col gap-[10px]">
                 {relatedDreams.map((d) => (
                   <Link
                     key={d.id}
                     href={`/dream/${d.id}`}
-                    className="flex items-center justify-between gap-3 rounded-[10px] bg-[#EDF3F7] px-5 py-4 text-base text-[#16303F] transition-colors hover:bg-[#E4ECF1]"
+                    className="flex items-center justify-between gap-3 rounded-[10px] bg-[#FFF1EA] px-5 py-4 text-base text-[#3A322C] transition-colors hover:bg-[#F0E6DF]"
                   >
                     <span className="flex min-w-0 items-center gap-2">
-                      <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_INFO[d.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
+                      <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-[3px] text-xs font-bold ${GRADE_INFO[d.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
                         {d.grade}
                       </span>
                       <span className="truncate">{d.title}</span>
@@ -395,13 +395,13 @@ async function EntryView({
           {/* 6) 관련 해몽 */}
           {relatedEntries.length > 0 && (
             <div className={`${BLOCK_SHAPE} bg-white`}>
-              <h2 className="mb-4 text-2xl font-medium text-[#0B2433]">같은 카테고리의 다른 해몽</h2>
+              <h2 className="mb-4 text-2xl font-medium text-[#231C17]">같은 카테고리의 다른 해몽</h2>
               <div className="flex flex-col gap-[10px]">
                 {relatedEntries.map((e) => (
                   <Link
                     key={e.slug}
                     href={`/dictionary/${e.slug}`}
-                    className="flex items-center justify-between gap-3 rounded-[10px] bg-[#EDF3F7] px-5 py-4 text-base text-[#16303F] transition-colors hover:bg-[#E4ECF1]"
+                    className="flex items-center justify-between gap-3 rounded-[10px] bg-[#FFF1EA] px-5 py-4 text-base text-[#3A322C] transition-colors hover:bg-[#F0E6DF]"
                   >
                     <span className="truncate">{e.keyword} 해몽</span>
                     <ChevronRightIcon />

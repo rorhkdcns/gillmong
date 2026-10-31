@@ -493,10 +493,10 @@ export default function AdminDictionaryPage() {
         </form>
 
         {showPreview && (
-          <div className="mb-8 max-w-[600px] rounded-[14px] p-4" style={{ backgroundColor: '#DDE6EC' }}>
+          <div className="mb-8 max-w-[600px] rounded-[14px] p-4" style={{ backgroundColor: '#EADFD8' }}>
             <div className="flex flex-col gap-[14px]">
               {/* 헤더 블록 */}
-              <div className="overflow-hidden rounded-[14px] bg-white shadow-[0_1px_3px_rgba(11,36,51,0.06)]">
+              <div className="overflow-hidden rounded-[14px] bg-white shadow-[0_1px_3px_rgba(35,28,23,0.06)]">
                 <div
                   className="flex flex-wrap items-center gap-1.5 px-[18px] py-2.5 text-sm text-white md:px-6"
                   style={{ backgroundColor: previewColors.main }}
@@ -504,10 +504,10 @@ export default function AdminDictionaryPage() {
                   <span>{previewCategoryName}</span>
                 </div>
                 <div className="p-[20px_18px] md:p-[26px_24px]">
-                  <h1 className="mb-3 text-2xl font-medium text-[#0B2433] md:text-3xl">
+                  <h1 className="mb-3 text-2xl font-medium text-[#231C17] md:text-3xl">
                     {keyword.trim() || '(키워드 없음)'} 해몽
                   </h1>
-                  <p className="text-[18px] leading-[1.85] text-[#1C3547]">
+                  <p className="text-[18px] leading-[1.85] text-[#3A322C]">
                     {summary.trim() || '(요약 없음)'}
                   </p>
                   {previewTags.length > 0 && (
@@ -730,7 +730,7 @@ export default function AdminDictionaryPage() {
                   <td className="px-6 py-3 text-[#777]">{e.view_count.toLocaleString()}</td>
                   <td className="px-6 py-3">
                     <div className="flex items-center gap-3">
-                      <button onClick={() => openEditForm(e.id)} className="text-xs text-blue-500 hover:text-blue-700">수정</button>
+                      <button onClick={() => openEditForm(e.id)} className="text-xs text-brand-primary hover:text-brand-primary-hover">수정</button>
                       <button onClick={() => setDeleteTarget(e.id)} className="text-xs text-red-400 hover:text-red-600">삭제</button>
                     </div>
                   </td>

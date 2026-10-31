@@ -64,7 +64,7 @@ function LoginForm() {
 
   return (
     <div className="w-full max-w-sm">
-      <h1 className="mb-2 text-center text-2xl text-[#0B2433]">로그인</h1>
+      <h1 className="mb-2 text-center text-2xl text-[#231C17]">로그인</h1>
       <p className="mb-6 text-center text-sm text-[#777777]">길몽상점에 오신 것을 환영합니다</p>
 
       {resetDone && (
@@ -83,7 +83,7 @@ function LoginForm() {
             onChange={(e) => setUsername(e.target.value)}
             placeholder="아이디 입력"
             required
-            className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#0B2433]"
+            className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
           />
         </div>
 
@@ -94,7 +94,7 @@ function LoginForm() {
             name="password"
             placeholder="비밀번호 입력"
             required
-            className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#0B2433]"
+            className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
           />
         </div>
 
@@ -103,7 +103,7 @@ function LoginForm() {
             type="checkbox"
             checked={saveId}
             onChange={(e) => setSaveId(e.target.checked)}
-            className="h-4 w-4 accent-[#0B2433]"
+            className="h-4 w-4 accent-[#231C17]"
           />
           <span className="text-sm text-[#555555]">아이디 저장</span>
         </label>
@@ -115,7 +115,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={isPending}
-          className="mt-2 w-full bg-[#0B2433] py-3 text-base font-semibold text-white transition-all hover:brightness-90 disabled:opacity-60"
+          className="mt-2 w-full bg-[#231C17] py-3 text-base font-semibold text-white transition-all hover:brightness-90 disabled:opacity-60"
         >
           {isPending ? '로그인 중...' : '로그인'}
         </button>
@@ -150,14 +150,14 @@ function LoginForm() {
       </div>
 
       <div className="mt-6 text-center">
-        <a href="/auth/reset-password" className="text-sm text-[#777777] underline underline-offset-2 hover:text-[#0B2433]">
+        <a href="/auth/reset-password" className="text-sm text-[#777777] underline underline-offset-2 hover:text-[#231C17]">
           비밀번호를 잊으셨나요?
         </a>
       </div>
 
       <p className="mt-4 text-center text-sm text-[#777777]">
         아직 계정이 없으신가요?{' '}
-        <a href="/auth/signup" className="text-[#0B2433] underline underline-offset-2 hover:brightness-75">
+        <a href="/auth/signup" className="text-[#231C17] underline underline-offset-2 hover:brightness-75">
           회원가입
         </a>
       </p>
@@ -167,7 +167,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
+    <div className="flex min-h-screen flex-col bg-[#FAF6F2]">
       <header className="border-b border-gray-200 bg-white px-6 py-4">
         <div className="mx-auto max-w-6xl">
           <a href="/">

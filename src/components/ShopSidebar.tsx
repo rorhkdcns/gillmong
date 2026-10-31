@@ -20,8 +20,8 @@ interface Props {
 }
 
 const LINK_BASE = 'block rounded-[8px] px-3 py-2 text-sm transition-colors'
-const LINK_INACTIVE = 'font-medium text-[#5C6E7C] hover:bg-[#F1F5F8] hover:text-[#2E7DD1]'
-const LINK_ACTIVE = 'font-semibold text-[#2E7DD1] bg-[#EAF2FB]'
+const LINK_INACTIVE = 'font-medium text-[#6B605A] hover:bg-[#F1F5F8] hover:text-[#E5421F]'
+const LINK_ACTIVE = 'font-semibold text-[#E5421F] bg-[#EAF2FB]'
 
 export default function ShopSidebar({ categories, subcategoriesByCategory }: Props) {
   const pathname = usePathname()
@@ -31,7 +31,7 @@ export default function ShopSidebar({ categories, subcategoriesByCategory }: Pro
 
   return (
     <aside className="w-full shrink-0 md:w-[240px]">
-      <nav className="flex flex-col gap-1 rounded-[14px] bg-white p-3 shadow-[0_1px_3px_rgba(11,36,51,0.06)] md:sticky md:top-4">
+      <nav className="flex flex-col gap-1 rounded-[14px] bg-white p-3 shadow-[0_1px_3px_rgba(35,28,23,0.06)] md:sticky md:top-4">
         <Link href="/shop" className={`${LINK_BASE} ${!currentCategorySlug ? LINK_ACTIVE : LINK_INACTIVE}`}>
           전체
         </Link>
@@ -52,7 +52,7 @@ export default function ShopSidebar({ categories, subcategoriesByCategory }: Pro
                 {c.name}
               </Link>
               {isCategoryActive && subs.length > 0 && (
-                <div className="ml-3 flex flex-col gap-1 border-l border-[#DCE5EB] pl-3">
+                <div className="ml-3 flex flex-col gap-1 border-l border-[#EADFD8] pl-3">
                   {subs.map((s) => (
                     <Link
                       key={s.id}

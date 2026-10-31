@@ -97,15 +97,15 @@ export default function DreamListSection({
       {/* 헤더 */}
       <div className="mb-5 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <h2 className="text-xl font-black text-[#0B2433]">{title}</h2>
-          <span className="text-base font-bold text-[#14547A]">{items.length}건</span>
+          <h2 className="text-xl font-black text-[#231C17]">{title}</h2>
+          <span className="text-base font-bold text-[#C23A18]">{items.length}건</span>
         </div>
         <div className="flex items-center gap-2">
           {selectedDate && (
             <button
               type="button"
               onClick={clearFilter}
-              className="flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs text-[#14547A] hover:bg-amber-100"
+              className="flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs text-[#C23A18] hover:bg-amber-100"
             >
               {selectedDate}
               <svg className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
@@ -119,8 +119,8 @@ export default function DreamListSection({
               onClick={() => setCalendarOpen(v => !v)}
               className={`flex items-center gap-1.5 rounded border px-3 py-1.5 text-xs font-medium transition-colors ${
                 calendarOpen
-                  ? 'border-[#0B2433] bg-[#0B2433] text-white'
-                  : 'border-gray-300 text-[#555555] hover:border-[#0B2433] hover:text-[#0B2433]'
+                  ? 'border-[#231C17] bg-[#231C17] text-white'
+                  : 'border-gray-300 text-[#555555] hover:border-[#231C17] hover:text-[#231C17]'
               }`}
             >
               <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -146,7 +146,7 @@ export default function DreamListSection({
                     >
                       ‹
                     </button>
-                    <span className="text-sm font-semibold text-[#0B2433]">
+                    <span className="text-sm font-semibold text-[#231C17]">
                       {year}년 {month + 1}월
                     </span>
                     <button
@@ -161,7 +161,7 @@ export default function DreamListSection({
                     {WEEKDAYS.map((d, i) => (
                       <span
                         key={d}
-                        className={`text-xs ${i === 0 ? 'text-red-400' : i === 6 ? 'text-blue-400' : 'text-gray-400'}`}
+                        className={`text-xs ${i === 0 ? 'text-red-400' : i === 6 ? 'text-brand-primary' : 'text-gray-400'}`}
                       >
                         {d}
                       </span>
@@ -182,16 +182,16 @@ export default function DreamListSection({
                           onClick={() => handleDateClick(dateStr)}
                           className={`flex flex-col items-center justify-center rounded py-1.5 text-xs transition-colors ${
                             isSelected
-                              ? 'bg-[#0B2433] text-white'
+                              ? 'bg-[#231C17] text-white'
                               : count > 0
                               ? 'bg-amber-50 hover:bg-amber-100'
                               : 'hover:bg-gray-50'
-                          } ${!isSelected && dow === 0 ? 'text-red-400' : ''} ${!isSelected && dow === 6 ? 'text-blue-400' : ''}`}
+                          } ${!isSelected && dow === 0 ? 'text-red-400' : ''} ${!isSelected && dow === 6 ? 'text-brand-primary' : ''}`}
                         >
                           <span
                             className={
                               isToday && !isSelected
-                                ? 'underline decoration-[#14547A] underline-offset-2'
+                                ? 'underline decoration-[#C23A18] underline-offset-2'
                                 : ''
                             }
                           >
@@ -199,7 +199,7 @@ export default function DreamListSection({
                           </span>
                           {count > 0 && (
                             <span
-                              className={`mt-0.5 h-1 w-1 rounded-full ${isSelected ? 'bg-white' : 'bg-[#14547A]'}`}
+                              className={`mt-0.5 h-1 w-1 rounded-full ${isSelected ? 'bg-white' : 'bg-[#C23A18]'}`}
                             />
                           )}
                         </button>
@@ -238,14 +238,14 @@ export default function DreamListSection({
               {/* 등급 + 제목 */}
               <div className="flex min-w-0 flex-1 items-center gap-2">
                 <span
-                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_INFO[item.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}
+                  className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-[3px] text-xs font-bold ${GRADE_INFO[item.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}
                 >
                   {item.grade}
                 </span>
                 <div className="min-w-0">
                   <Link
                     href={item.href}
-                    className="block truncate text-base font-medium text-[#333333] hover:text-[#0B2433] hover:underline"
+                    className="block truncate text-base font-medium text-[#333333] hover:text-[#231C17] hover:underline"
                   >
                     {item.title}
                   </Link>
@@ -257,7 +257,7 @@ export default function DreamListSection({
               {/* 포인트 */}
               {item.price != null && (
                 <div className="shrink-0 text-right">
-                  <p className="text-base font-bold text-[#14547A]">
+                  <p className="text-base font-bold text-[#C23A18]">
                     {item.price.toLocaleString()}원
                     {item.priceLabel && (
                       <span className="ml-0.5 text-xs font-normal text-[#666666]">{item.priceLabel}</span>
@@ -303,7 +303,7 @@ export default function DreamListSection({
               onClick={() => handlePageChange(p)}
               className={`flex h-8 w-8 items-center justify-center rounded text-sm transition-colors ${
                 p === currentPage
-                  ? 'bg-[#0B2433] font-semibold text-white'
+                  ? 'bg-[#231C17] font-semibold text-white'
                   : 'text-[#555555] hover:bg-gray-100'
               }`}
             >

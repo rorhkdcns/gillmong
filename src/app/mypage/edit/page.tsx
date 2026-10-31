@@ -65,7 +65,7 @@ export default function MyPageEdit() {
 
   if (!initDone) {
     return (
-      <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
+      <div className="flex min-h-screen flex-col bg-[#FAF6F2]">
         <main className="flex flex-1 items-center justify-center">
           <p className="text-sm text-gray-400">불러오는 중...</p>
         </main>
@@ -74,17 +74,17 @@ export default function MyPageEdit() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
+    <div className="flex min-h-screen flex-col bg-[#FAF6F2]">
       <main className="flex-1 px-6 py-12">
         <div className="mx-auto max-w-md">
           <div className="mb-6 flex items-center gap-3">
-            <a href="/mypage" className="text-sm text-gray-400 hover:text-[#0B2433]">← 마이페이지</a>
+            <a href="/mypage" className="text-sm text-gray-400 hover:text-[#231C17]">← 마이페이지</a>
           </div>
-          <h1 className="mb-8 text-2xl font-black text-[#0B2433]">정보 변경</h1>
+          <h1 className="mb-8 text-2xl font-black text-[#231C17]">정보 변경</h1>
 
           {/* 닉네임 변경 */}
           <div className="mb-6 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
-            <h2 className="mb-5 text-lg font-bold text-[#0B2433]">닉네임 변경</h2>
+            <h2 className="mb-5 text-lg font-bold text-[#231C17]">닉네임 변경</h2>
             <form onSubmit={handleNickname} className="flex flex-col gap-4">
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-[#555555]">새 닉네임</label>
@@ -93,7 +93,7 @@ export default function MyPageEdit() {
                   value={nickname}
                   onChange={(e) => { setNickname(e.target.value); setNickError(''); setNickDone(false) }}
                   maxLength={20}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#333333] outline-none focus:border-[#0B2433]"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#333333] outline-none focus:border-[#231C17]"
                 />
               </div>
               {nickError && <p className="text-sm text-red-500">{nickError}</p>}
@@ -101,7 +101,7 @@ export default function MyPageEdit() {
               <button
                 type="submit"
                 disabled={loadingNick}
-                className="w-full rounded-xl bg-[#0B2433] py-3 text-base font-bold text-white hover:brightness-90 disabled:opacity-60 transition-all"
+                className="w-full rounded-xl bg-[#231C17] py-3 text-base font-bold text-white hover:brightness-90 disabled:opacity-60 transition-all"
               >
                 {loadingNick ? '변경 중...' : '닉네임 변경'}
               </button>
@@ -110,7 +110,7 @@ export default function MyPageEdit() {
 
           {/* 비밀번호 변경 */}
           <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
-            <h2 className="mb-5 text-lg font-bold text-[#0B2433]">비밀번호 변경</h2>
+            <h2 className="mb-5 text-lg font-bold text-[#231C17]">비밀번호 변경</h2>
             <form onSubmit={handlePassword} className="flex flex-col gap-4">
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-[#555555]">새 비밀번호</label>
@@ -120,7 +120,7 @@ export default function MyPageEdit() {
                   onChange={(e) => { setNewPassword(e.target.value); setPwError(''); setPwDone(false) }}
                   placeholder="6자리 이상"
                   minLength={6}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#333333] outline-none focus:border-[#0B2433]"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#333333] outline-none focus:border-[#231C17]"
                 />
               </div>
               <div>
@@ -130,7 +130,7 @@ export default function MyPageEdit() {
                   value={confirmPw}
                   onChange={(e) => { setConfirmPw(e.target.value); setPwError(''); setPwDone(false) }}
                   placeholder="비밀번호 재입력"
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#333333] outline-none focus:border-[#0B2433]"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#333333] outline-none focus:border-[#231C17]"
                 />
               </div>
               {pwError && <p className="text-sm text-red-500">{pwError}</p>}
@@ -138,7 +138,7 @@ export default function MyPageEdit() {
               <button
                 type="submit"
                 disabled={loadingPw}
-                className="w-full rounded-xl bg-[#0B2433] py-3 text-base font-bold text-white hover:brightness-90 disabled:opacity-60 transition-all"
+                className="w-full rounded-xl bg-[#231C17] py-3 text-base font-bold text-white hover:brightness-90 disabled:opacity-60 transition-all"
               >
                 {loadingPw ? '변경 중...' : '비밀번호 변경'}
               </button>

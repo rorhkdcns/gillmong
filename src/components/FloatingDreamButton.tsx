@@ -188,7 +188,7 @@ export default function FloatingDreamButton({ remaining, fetchRemaining }: Props
                           onBlur={() => setFocusedKey(null)}
                           placeholder={field.placeholder}
                           rows={isFocused ? 3 : 2}
-                          className="w-full resize-none rounded-xl border border-brand-line bg-white px-4 py-2.5 pb-6 text-sm text-brand-ink placeholder:text-[#BBBBBB] outline-none transition-all focus:border-brand-violet focus:shadow-[0_0_0_3px_rgba(46,125,209,0.14)]"
+                          className="w-full resize-none rounded-xl border border-brand-line bg-white px-4 py-2.5 pb-6 text-sm text-brand-ink placeholder:text-[#BBBBBB] outline-none transition-all focus:border-brand-violet focus:shadow-[0_0_0_3px_rgba(229,66,31,0.14)]"
                         />
                         {/* 글자 수 */}
                         <span className={`absolute bottom-2 right-3 text-xs transition-colors ${

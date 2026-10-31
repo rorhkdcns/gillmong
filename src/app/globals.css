@@ -99,3 +99,20 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ===== H안 애니메이션 (움직임 줄이기 설정이면 위 규칙으로 꺼짐) ===== */
+@keyframes gm-rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+@keyframes gm-deal { from { opacity: 0; transform: translate(0, 90px) rotate(0deg) scale(.9); } to { opacity: 1; transform: translate(var(--tx), 0) rotate(var(--rot)); } }
+@keyframes gm-holo { from { background-position: 160% 0; } to { background-position: -60% 0; } }
+@keyframes gm-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.gm-rise { animation: gm-rise .8s cubic-bezier(.2,.8,.2,1) both; }
+.gm-deal { animation: gm-deal .9s cubic-bezier(.2,.8,.2,1) both; }
+.gm-marquee { animation: gm-marquee 40s linear infinite; }
+.gm-marquee:hover { animation-play-state: paused; }
+.gm-holo::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+  background: linear-gradient(115deg, rgba(255,255,255,0) 25%, rgba(255,225,77,.35) 38%, rgba(120,220,255,.5) 48%, rgba(255,143,184,.4) 58%, rgba(255,255,255,0) 72%);
+  background-size: 260% 100%; animation: gm-holo 4.5s linear infinite;
+}
+.gm-card { transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease; }
+.gm-card:hover { transform: translateY(-6px); box-shadow: 0 16px 32px rgba(35,28,23,.14); }

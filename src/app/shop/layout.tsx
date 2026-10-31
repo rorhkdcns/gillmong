@@ -63,7 +63,7 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
 
   return (
     <div className="flex min-h-screen flex-col">
-      <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#DDE6EC' }}>
+      <main className="flex-1 px-4 py-6 md:px-6 md:py-10" style={{ backgroundColor: '#EADFD8' }}>
         <div className="mx-auto flex max-w-[1200px] flex-col gap-[14px] md:flex-row md:items-start">
           <ShopSidebar categories={visibleCategories} subcategoriesByCategory={subcategoriesByCategory} />
           <div className="flex min-w-0 flex-1 flex-col gap-[14px]">{children}</div>

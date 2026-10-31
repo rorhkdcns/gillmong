@@ -16,13 +16,16 @@ interface GradeInfo {
 }
 
 export const GRADE_INFO: Record<Grade, GradeInfo> = {
-  A: { badgeBg: 'bg-emerald-500', text: 'text-emerald-600', label: '최고의 길몽',     rank: '최상위 등급', desc: '드물게 나타나는 최고의 길몽' },
-  B: { badgeBg: 'bg-blue-500',    text: 'text-blue-600',    label: '좋은 길몽',       rank: '상위 등급',   desc: '뚜렷한 행운의 전조가 보이는 꿈' },
-  C: { badgeBg: 'bg-amber-400',   text: 'text-amber-500',   label: '평범한 꿈',       rank: '일반 등급',   desc: '긍정적인 의미를 담은 좋은 꿈' },
-  D: { badgeBg: 'bg-orange-500',  text: 'text-orange-500',  label: '주의가 필요한 꿈', rank: '주의 등급',   desc: '경고·부담·위험을 암시하는 꿈' },
-  E: { badgeBg: 'bg-red-500',     text: 'text-red-500',     label: '흉몽의 기운',     rank: '흉몽 등급',   desc: '두려움·상실·불안이 담긴 꿈' },
+  A: { badgeBg: 'bg-grade-a-bg text-grade-a-fg', text: 'text-brand-ink', label: '최고의 길몽',     rank: '최상위 등급', desc: '드물게 나타나는 최고의 길몽' },
+  B: { badgeBg: 'bg-grade-b-bg text-grade-b-fg', text: 'text-grade-b-fg', label: '좋은 길몽',       rank: '상위 등급',   desc: '뚜렷한 행운의 전조가 보이는 꿈' },
+  C: { badgeBg: 'bg-grade-c-bg text-grade-c-fg', text: 'text-grade-c-fg', label: '평범한 꿈',       rank: '일반 등급',   desc: '긍정적인 의미를 담은 좋은 꿈' },
+  D: { badgeBg: 'bg-grade-d-bg text-grade-d-fg', text: 'text-grade-d-fg', label: '주의가 필요한 꿈', rank: '주의 등급',   desc: '경고·부담·위험을 암시하는 꿈' },
+  E: { badgeBg: 'bg-grade-e-bg text-grade-e-fg', text: 'text-grade-e-fg', label: '흉몽의 기운',     rank: '흉몽 등급',   desc: '두려움·상실·불안이 담긴 꿈' },
   F: { badgeBg: 'bg-gray-400',    text: 'text-gray-500',    label: '해석 불가',       rank: '',            desc: '' },
 }
+
+/** A는 어두운 배경이라 흰 배경 위에서도 보이는 별도 글자색이 필요할 때 쓰는 공용 헬퍼 */
+export const GRADE_ORDER = ['A', 'B', 'C', 'D', 'E'] as const
 
 /** 홈페이지/가이드 "등급 안내" 섹션에서 쓰는 A~E 목록 (AI 감정 결과는 F를 반환하지 않음) */
 export const GRADE_GUIDE_LIST = (['A', 'B', 'C', 'D', 'E'] as const).map((grade) => ({
@@ -31,17 +34,17 @@ export const GRADE_GUIDE_LIST = (['A', 'B', 'C', 'D', 'E'] as const).map((grade)
 }))
 
 export const TYPE_STYLE: Record<string, string> = {
-  길몽: 'bg-emerald-50 text-emerald-600 border-emerald-200',
-  흉몽: 'bg-red-50 text-red-500 border-red-200',
-  중립: 'bg-gray-100 text-gray-500 border-gray-200',
+  길몽: 'bg-type-good-bg text-type-good-fg border-transparent',
+  흉몽: 'bg-type-bad-bg text-type-bad-fg border-transparent',
+  중립: 'bg-type-mid-bg text-type-mid-fg border-transparent',
 }
 
 /** 해몽 본문에서 "한국 전통 해몽 관점:" 등 소제목을 찾아 색을 입히는 데 쓰는 패턴 */
 export const INTERPRETATION_SECTIONS = [
-  { pattern: /한국\s*전통\s*해몽\s*관점\s*:/, color: '#0B2433' },
-  { pattern: /아시아\s*관점[^:]*:/,            color: '#14547A' },
+  { pattern: /한국\s*전통\s*해몽\s*관점\s*:/, color: '#231C17' },
+  { pattern: /아시아\s*관점[^:]*:/,            color: '#C23A18' },
   { pattern: /서양\s*심리학적\s*관점\s*:/,     color: 'var(--color-brand-slate)' },
-  { pattern: /종합\s*해석\s*:/,                color: '#0B2433' },
+  { pattern: /종합\s*해석\s*:/,                color: '#231C17' },
 ]
 
 export interface InterpretationSection {

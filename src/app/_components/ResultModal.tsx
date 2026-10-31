@@ -217,8 +217,8 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
 
           {/* 알파벳 원형 — 중앙 상단 */}
           <div className="mb-6 flex flex-col items-center gap-3">
-            <div className={`flex h-20 w-20 items-center justify-center rounded-full ${alphaBg} shadow-lg`}>
-              <span className="text-4xl font-black text-white">{analysis.alphabet}</span>
+            <div className={`flex h-20 w-20 items-center justify-center rounded-[3px] ${alphaBg} shadow-lg`}>
+              <span className="font-display text-4xl font-extrabold">{analysis.alphabet}</span>
             </div>
 
             {/* 태그들 — 중앙 정렬 */}
@@ -310,7 +310,7 @@ export default function ResultModal({ dream, originalText, analysis, onClose }: 
           {analysis.advice && (
             <section className="mb-4">
               <h3 className="mb-1.5 text-sm font-bold text-brand-muted">실생활 조언</h3>
-              <div className="rounded-lg border border-blue-100 bg-blue-50/40 px-3 py-2 text-sm leading-relaxed text-brand-body">
+              <div className="rounded-lg border border-brand-primary-border bg-brand-primary-light/40 px-3 py-2 text-sm leading-relaxed text-brand-body">
                 {analysis.advice}
               </div>
             </section>

@@ -29,11 +29,11 @@ export default async function SavedDreamPage({
   const sections = d.interpretation ? parseInterpretation(d.interpretation) : []
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F7F7F5]">
+    <div className="flex min-h-screen flex-col bg-[#FAF6F2]">
 
       <div className="border-b border-gray-100 bg-white px-6 py-3">
         <div className="mx-auto max-w-[800px]">
-          <a href="/mypage" className="inline-flex items-center gap-1 text-sm text-[#777777] hover:text-[#0B2433]">
+          <a href="/mypage" className="inline-flex items-center gap-1 text-sm text-[#777777] hover:text-[#231C17]">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
@@ -52,8 +52,8 @@ export default async function SavedDreamPage({
 
             {/* 등급 + 유형 */}
             <div className="mb-6 flex flex-col items-center gap-3">
-              <div className={`flex h-24 w-24 items-center justify-center rounded-full ${gradeStyle.badgeBg} shadow-lg`}>
-                <span className="text-5xl font-black text-white">{d.grade}</span>
+              <div className={`flex h-24 w-24 items-center justify-center rounded-[3px] ${gradeStyle.badgeBg} shadow-lg`}>
+                <span className="font-display text-5xl font-extrabold">{d.grade}</span>
               </div>
               <span className={`text-base font-bold ${gradeStyle.text}`}>{gradeStyle.label}</span>
               {d.type && (
@@ -63,7 +63,7 @@ export default async function SavedDreamPage({
               )}
             </div>
 
-            <h1 className="mb-6 text-center text-2xl font-black leading-snug text-[#0B2433]">{d.title}</h1>
+            <h1 className="mb-6 text-center text-2xl font-black leading-snug text-[#231C17]">{d.title}</h1>
 
             <hr className="mb-6 border-brand-border" />
 
@@ -99,7 +99,7 @@ export default async function SavedDreamPage({
             {d.advice && (
               <section className="mb-6">
                 <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">실생활 조언</h3>
-                <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 text-sm leading-relaxed text-brand-body">
+                <div className="rounded-xl border border-brand-primary-border bg-brand-primary-light/40 p-4 text-sm leading-relaxed text-brand-body">
                   {d.advice}
                 </div>
               </section>
@@ -111,7 +111,7 @@ export default async function SavedDreamPage({
                 <h3 className="mb-3 text-sm font-bold uppercase tracking-wider text-brand-muted">행운의 추천 번호</h3>
                 <div className="flex flex-wrap gap-2">
                   {d.lucky_numbers.map((num) => (
-                    <div key={num} className="flex h-11 w-11 items-center justify-center rounded-full bg-[#14547A] text-base font-black text-white shadow">
+                    <div key={num} className="flex h-11 w-11 items-center justify-center rounded-full bg-[#C23A18] text-base font-black text-white shadow">
                       {num}
                     </div>
                   ))}

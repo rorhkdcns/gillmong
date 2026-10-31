@@ -93,7 +93,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
             value={startDate}
             onChange={handleStartDate}
             max={endDate || undefined}
-            className="flex-1 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-[#333333] outline-none focus:border-[#0B2433]"
+            className="flex-1 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-[#333333] outline-none focus:border-[#231C17]"
           />
           <span className="text-sm text-[#777777]">~</span>
           <input
@@ -101,7 +101,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
             value={endDate}
             onChange={handleEndDate}
             min={startDate || undefined}
-            className="flex-1 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-[#333333] outline-none focus:border-[#0B2433]"
+            className="flex-1 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-[#333333] outline-none focus:border-[#231C17]"
           />
           {hasFilter && (
             <button
@@ -114,7 +114,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
           )}
         </div>
         {hasFilter && (
-          <p className="mt-2 text-xs text-[#14547A]">
+          <p className="mt-2 text-xs text-[#C23A18]">
             {filteredItems.length}건 표시 중
           </p>
         )}
@@ -129,7 +129,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
         >
           ‹ 이전
         </button>
-        <span className="text-sm font-semibold text-[#0B2433]">{year}년 {month + 1}월</span>
+        <span className="text-sm font-semibold text-[#231C17]">{year}년 {month + 1}월</span>
         <button
           type="button"
           onClick={() => { setBase(new Date(year, month + 1, 1)); setSelected(null) }}
@@ -142,7 +142,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
       {/* 요일 헤더 */}
       <div className="mb-1 grid grid-cols-7 text-center">
         {WEEKDAYS.map((d, i) => (
-          <span key={d} className={`text-xs ${i === 0 ? 'text-red-400' : i === 6 ? 'text-blue-400' : 'text-gray-400'}`}>
+          <span key={d} className={`text-xs ${i === 0 ? 'text-red-400' : i === 6 ? 'text-brand-primary' : 'text-gray-400'}`}>
             {d}
           </span>
         ))}
@@ -166,19 +166,19 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
               onClick={() => setSelected(isSelected ? null : dateStr)}
               className={`flex flex-col items-center justify-center rounded-lg py-2 transition-colors ${
                 isSelected
-                  ? 'bg-[#0B2433] text-white'
+                  ? 'bg-[#231C17] text-white'
                   : count > 0
                   ? 'bg-amber-50 hover:bg-amber-100'
                   : hasFilter && !inRange
                   ? 'opacity-30'
                   : 'hover:bg-gray-50'
-              } ${!isSelected && dow === 0 ? 'text-red-400' : ''} ${!isSelected && dow === 6 ? 'text-blue-400' : ''}`}
+              } ${!isSelected && dow === 0 ? 'text-red-400' : ''} ${!isSelected && dow === 6 ? 'text-brand-primary' : ''}`}
             >
-              <span className={`text-xs font-medium leading-none ${isToday && !isSelected ? 'underline decoration-[#14547A] underline-offset-2' : ''}`}>
+              <span className={`text-xs font-medium leading-none ${isToday && !isSelected ? 'underline decoration-[#C23A18] underline-offset-2' : ''}`}>
                 {day}
               </span>
               {count > 0 && (
-                <span className={`mt-0.5 h-1 w-1 rounded-full ${isSelected ? 'bg-white' : 'bg-[#14547A]'}`} />
+                <span className={`mt-0.5 h-1 w-1 rounded-full ${isSelected ? 'bg-white' : 'bg-[#C23A18]'}`} />
               )}
             </button>
           )
@@ -196,7 +196,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
               {(byDate[selected] ?? []).map(item => (
                 <li key={item.id} className="flex items-center justify-between py-3">
                   <div className="flex min-w-0 items-center gap-2">
-                    <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${GRADE_INFO[item.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
+                    <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-[3px] text-xs font-bold ${GRADE_INFO[item.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
                       {item.grade}
                     </span>
                     <Link href={item.href} className="truncate text-sm text-[#333333] hover:underline">
@@ -204,7 +204,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
                     </Link>
                   </div>
                   {item.price != null && (
-                    <span className="ml-2 shrink-0 text-sm font-semibold text-[#14547A]">
+                    <span className="ml-2 shrink-0 text-sm font-semibold text-[#C23A18]">
                       {item.price.toLocaleString()}원
                     </span>
                   )}
