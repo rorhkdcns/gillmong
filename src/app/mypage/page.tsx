@@ -6,6 +6,7 @@ import PointTabs from './_components/PointTabs'
 import DreamListSection, { type DreamListItem } from './_components/DreamListSection'
 import EscrowOrders from './_components/EscrowOrders'
 import { getMyOrders } from '@/app/actions'
+import { getActiveCategories } from '@/lib/categories'
 
 function formatDate(iso: string) {
   const d = new Date(iso)
@@ -18,6 +19,8 @@ export default async function MyPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
+
+  const categories = (await getActiveCategories()).map((c) => ({ slug: c.slug, name: c.name }))
 
   // 프로필 + 공개 꿈 + 개인 저장 꿈 + 구매한 꿈 + 판매한 꿈 + 에스크로 주문 병렬 조회
   const [profileRes, myDreamsRes, privateDreamsRes, purchasedRes, soldRes, inquiriesRes, escrowOrders] = await Promise.all([
@@ -55,6 +58,8 @@ export default async function MyPage() {
       price: d.price,
       href: `/dream/${d.id}?owner=1`,
       subText: d.is_sold ? '판매완료' : undefined,
+      action: 'save' as const,
+      actionLabel: d.is_sold ? '저장함에 복사' : '저장함으로',
     }))
 
   const savedItems: DreamListItem[] = privateDreams
@@ -65,6 +70,8 @@ export default async function MyPage() {
       title: d.title,
       grade: d.grade,
       href: `/saved/${d.id}`,
+      action: 'sell' as const,
+      actionLabel: '판매하기',
     }))
 
   const purchasedItems: DreamListItem[] = purchased
@@ -90,6 +97,8 @@ export default async function MyPage() {
     priceLabel: '수령',
     href: `/dream/${d.id}`,
     subText: '판매완료',
+    action: 'save' as const,
+    actionLabel: '저장함에 복사',
   }))
 
   const nickname     = profile?.nickname ?? (user.user_metadata?.nickname as string) ?? '회원'
@@ -169,7 +178,7 @@ export default async function MyPage() {
           <div id="my-dreams" className="scroll-mt-20"><DreamListSection title="내가 등록한 꿈" items={myDreamsItems} /></div>
 
           {/* 4. 내가 저장한 꿈 */}
-          <div id="my-saved" className="scroll-mt-20"><DreamListSection title="내가 저장한 꿈" items={savedItems} /></div>
+          <div id="my-saved" className="scroll-mt-20"><DreamListSection title="내가 저장한 꿈" items={savedItems} categories={categories} /></div>
 
           {/* 5. 구매한 꿈 */}
           <div id="my-purchased" className="scroll-mt-20"><DreamListSection title="구매한 꿈" items={purchasedItems} /></div>

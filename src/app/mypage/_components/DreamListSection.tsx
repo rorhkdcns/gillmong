@@ -2,6 +2,8 @@
 
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { sellSavedDream, saveMyDream } from '../dreamMoveActions'
 import { GRADE_INFO, type Grade } from '@/lib/dreamDisplay'
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
@@ -16,15 +18,54 @@ export type DreamListItem = {
   priceLabel?: string
   href: string
   subText?: string
+  /** 'sell' = 저장함 → 마켓 판매, 'save' = 내 꿈 → 저장함 */
+  action?: 'sell' | 'save'
+  actionLabel?: string
 }
+
+export type CategoryOpt = { slug: string; name: string }
 
 export default function DreamListSection({
   title,
   items,
+  categories = [],
 }: {
   title: string
   items: DreamListItem[]
+  categories?: CategoryOpt[]
 }) {
+  const router = useRouter()
+  const [sellTarget, setSellTarget] = useState<DreamListItem | null>(null)
+  const [sellCat, setSellCat] = useState('')
+  const [sellPrice, setSellPrice] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState('')
+  const [notice, setNotice] = useState('')
+
+  async function doSell() {
+    if (!sellTarget) return
+    if (!sellCat) { setErr('카테고리를 선택해주세요.'); return }
+    setBusy(true); setErr('')
+    const r = await sellSavedDream(sellTarget.id, sellCat, Number(sellPrice))
+    setBusy(false)
+    if (r.error) { setErr(r.error); return }
+    setSellTarget(null); setSellCat(''); setSellPrice('')
+    setNotice('마켓에 판매 등록했어요.')
+    router.refresh()
+  }
+
+  async function doSave(item: DreamListItem) {
+    const msg = item.subText === '판매완료'
+      ? `"${item.title}"을(를) 저장함에 복사할까요?\n(판매 기록은 그대로 남아요)`
+      : `"${item.title}"을(를) 마켓에서 내리고 저장함으로 옮길까요?`
+    if (!window.confirm(msg)) return
+    setBusy(true)
+    const r = await saveMyDream(item.id)
+    setBusy(false)
+    if (r.error) { setNotice(r.error); return }
+    setNotice(r.moved ? '마켓에서 내리고 저장함으로 옮겼어요.' : '저장함에 복사했어요.')
+    router.refresh()
+  }
   const [page, setPage] = useState(1)
   const [calendarOpen, setCalendarOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
@@ -254,6 +295,16 @@ export default function DreamListSection({
                   )}
                 </div>
               </div>
+              {item.action && (
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={() => (item.action === 'sell' ? (setSellTarget(item), setErr('')) : doSave(item))}
+                  className="shrink-0 rounded-[3px] border border-brand-ink px-2.5 py-1 text-xs font-semibold text-brand-ink transition-colors hover:bg-brand-ink hover:text-white disabled:opacity-50"
+                >
+                  {item.actionLabel ?? (item.action === 'sell' ? '판매하기' : '저장하기')}
+                </button>
+              )}
               {/* 포인트 */}
               {item.price != null && (
                 <div className="shrink-0 text-right">
@@ -333,6 +384,34 @@ export default function DreamListSection({
               ›
             </button>
           )}
+        </div>
+      )}
+      {notice && (
+        <p role="status" className="mt-4 rounded-[3px] bg-brand-primary-light px-3 py-2 text-sm text-brand-primary-hover">{notice}</p>
+      )}
+
+      {sellTarget && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 px-4" onClick={() => !busy && setSellTarget(null)}>
+          <div className="w-full max-w-sm rounded-[4px] bg-white p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <h3 className="mb-1 text-lg font-bold text-brand-ink">마켓에 판매하기</h3>
+            <p className="mb-4 truncate text-sm text-brand-ink-soft">{sellTarget.title}</p>
+            <label className="mb-3 block text-sm">
+              <span className="mb-1 block font-semibold text-brand-ink">카테고리</span>
+              <select value={sellCat} onChange={(e) => setSellCat(e.target.value)} className="w-full rounded-[3px] border border-brand-line bg-white px-3 py-2 outline-none focus:border-brand-primary">
+                <option value="">선택해주세요</option>
+                {categories.map((c) => <option key={c.slug} value={c.slug}>{c.name}</option>)}
+              </select>
+            </label>
+            <label className="mb-3 block text-sm">
+              <span className="mb-1 block font-semibold text-brand-ink">판매금액 (5,000원 이상, 100원 단위)</span>
+              <input type="number" inputMode="numeric" min={5000} step={100} value={sellPrice} onChange={(e) => setSellPrice(e.target.value)} placeholder="예) 10000" className="w-full rounded-[3px] border border-brand-line px-3 py-2 outline-none focus:border-brand-primary" />
+            </label>
+            {err && <p className="mb-3 text-sm text-red-600">{err}</p>}
+            <div className="flex gap-2">
+              <button type="button" disabled={busy} onClick={doSell} className="flex-1 rounded-[3px] bg-brand-primary py-2.5 text-sm font-bold text-white hover:bg-brand-primary-hover disabled:opacity-60">{busy ? '등록 중...' : '판매 등록'}</button>
+              <button type="button" disabled={busy} onClick={() => setSellTarget(null)} className="rounded-[3px] border border-brand-line px-4 py-2.5 text-sm font-semibold text-brand-ink-soft hover:border-brand-ink">취소</button>
+            </div>
+          </div>
         </div>
       )}
     </section>
