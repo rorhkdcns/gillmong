@@ -43,7 +43,7 @@ export default function PrivacyPage() {
                       </tr>
                       <tr>
                         <td className="border border-gray-200 px-4 py-2">자동 수집</td>
-                        <td className="border border-gray-200 px-4 py-2">서비스 이용 기록, IP 주소, 쿠키</td>
+                        <td className="border border-gray-200 px-4 py-2">서비스 이용 기록, IP 주소, 쿠키, 유입 경로(방문 경로·검색어)</td>
                         <td className="border border-gray-200 px-4 py-2">서비스 이용 중 자동 생성</td>
                       </tr>
                       <tr>

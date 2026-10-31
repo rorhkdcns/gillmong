@@ -1,6 +1,8 @@
 import SiteFooter from '@/components/SiteFooter'
+import { getSiteInfo } from '@/lib/siteSettings'
 
-export default function SupportPage() {
+export default async function SupportPage() {
+  const info = await getSiteInfo()
   return (
     <div className="flex min-h-screen flex-col bg-[#FAF6F2]">
       <main className="flex-1 px-6 py-16">
@@ -24,10 +26,10 @@ export default function SupportPage() {
                 영업일 기준 1~2일 내에 답변드립니다.
               </p>
               <a
-                href="mailto:admin@gillmong.com"
+                href={`mailto:${info.email}`}
                 className="inline-block rounded-xl bg-[#231C17] px-5 py-2.5 text-sm font-semibold text-white hover:brightness-90 transition-all"
               >
-                admin@gillmong.com
+                {info.email}
               </a>
             </div>
 
@@ -42,11 +44,11 @@ export default function SupportPage() {
               <div className="space-y-2 text-sm text-[#6B605A]">
                 <div className="flex justify-between">
                   <span>평일 (월~금)</span>
-                  <span className="font-semibold">10:00 ~ 18:00</span>
+                  <span className="font-semibold">{info.hours.replace(/^평일\s*/, "")}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>점심시간</span>
-                  <span className="font-semibold">12:00 ~ 13:00</span>
+                  <span className="font-semibold">{info.lunch.replace(/^점심\s*/, "")}</span>
                 </div>
                 <div className="flex justify-between text-gray-400">
                   <span>주말 · 공휴일</span>

@@ -23,6 +23,8 @@ const SUPPORT_LINKS = [
 const POLICY_LINKS = [
   { label: '이용약관', href: '/terms' },
   { label: '개인정보처리방침', href: '/privacy' },
+  { label: '환불 정책', href: '/refund-policy' },
+  { label: '청소년 보호 정책', href: '/youth-policy' },
 ]
 
 function LinkColumn({ title, links }: { title: string; links: { label: string; href: string }[] }) {
