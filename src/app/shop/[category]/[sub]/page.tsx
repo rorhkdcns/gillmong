@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { fetchAllRows } from '@/lib/fetchAll'
 import { dedupeProducts } from '@/lib/dedupeProducts'
 import ShopProductGrid from '@/components/ShopProductGrid'
 
@@ -70,12 +71,16 @@ export default async function ShopSubcategoryPage({
   if (!subcat) notFound()
 
   const admin = createAdminClient()
-  const { data: products } = await admin
-    .from('affiliate_products')
-    .select('id, title, price_text, image_url, link_url, is_rocket, is_free_shipping')
-    .eq('shop_subcategory_id', subcat.id)
-    .eq('is_active', true)
-    .order('sort_order', { ascending: true })
+  const { data: products } = await fetchAllRows((from, to) =>
+    admin
+      .from('affiliate_products')
+      .select('id, title, price_text, image_url, link_url, is_rocket, is_free_shipping')
+      .eq('shop_subcategory_id', subcat.id)
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true })
+      .order('id', { ascending: true })
+      .range(from, to)
+  )
 
   return (
     <>

@@ -1,3 +1,5 @@
+import { fetchAllRows } from '@/lib/fetchAll'
+import { productKey } from '@/lib/dedupeProducts'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { searchProducts } from '@/lib/coupang'
 import { suggestTagsFromTitle } from '@/lib/autoTagProduct'
@@ -55,7 +57,22 @@ export async function runShopProductGeneration(
     }
   }
 
-  const newProducts = result.data.filter((p) => !existingIds.has(String(p.productId)))
+  // 상품번호가 달라도 제목이 같은 상품(옵션·판매자만 다른 중복)은 건너뛴다.
+  const existingTitleKeys = new Set<string>()
+  {
+    const { data: titleRows } = await fetchAllRows((from, to) =>
+      admin.from('affiliate_products').select('title, link_url').order('id', { ascending: true }).range(from, to)
+    )
+    for (const r of titleRows) existingTitleKeys.add(productKey(r as { title: string; link_url: string }))
+  }
+  const seenInBatch = new Set<string>()
+  const newProducts = result.data.filter((p) => {
+    if (existingIds.has(String(p.productId))) return false
+    const key = productKey({ title: p.productName, link_url: p.productUrl })
+    if (existingTitleKeys.has(key) || seenInBatch.has(key)) return false
+    seenInBatch.add(key)
+    return true
+  })
   const skipCount = result.data.length - newProducts.length
 
   if (newProducts.length > 0) {

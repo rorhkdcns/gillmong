@@ -1517,15 +1517,20 @@ export async function getAdminShopProducts(): Promise<{ data: unknown[]; error?:
   if (!auth.ok) return { data: [], error: auth.error }
 
   const admin = createAdminClient()
-  const { data, error } = await admin
-    .from('affiliate_products')
-    .select(
-      'id, title, price_text, image_url, link_url, tags, sort_order, is_active, shop_category_id, shop_subcategory_id, ' +
-      'click_count, impression_count, last_checked_at, deactivated_reason, deactivated_at'
-    )
-    .order('sort_order', { ascending: true })
-  if (error) return { data: [], error: error.message }
-  return { data: data ?? [] }
+  const { fetchAllRows } = await import('@/lib/fetchAll')
+  const { data, error } = await fetchAllRows((from, to) =>
+    admin
+      .from('affiliate_products')
+      .select(
+        'id, title, price_text, image_url, link_url, tags, sort_order, is_active, shop_category_id, shop_subcategory_id, ' +
+        'click_count, impression_count, last_checked_at, deactivated_reason, deactivated_at'
+      )
+      .order('sort_order', { ascending: true })
+      .order('id', { ascending: true })
+      .range(from, to)
+  )
+  if (error) return { data: [], error }
+  return { data: data as unknown[] }
 }
 
 // ── 상품 자동 생성(카테고리/하위카테고리 단위) ──────────────────────────

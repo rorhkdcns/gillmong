@@ -1,3 +1,4 @@
+import { fetchAllRows } from '@/lib/fetchAll'
 import { createAdminClient } from '@/lib/supabase/admin'
 import SiteFooter from '@/components/SiteFooter'
 import ShopSidebar from '@/components/ShopSidebar'
@@ -35,10 +36,14 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
       .select('id, name, slug, category_id')
       .eq('is_active', true)
       .order('sort_order', { ascending: true }),
-    admin
-      .from('affiliate_products')
-      .select('shop_category_id, shop_subcategory_id')
-      .eq('is_active', true),
+    fetchAllRows((from, to) =>
+      admin
+        .from('affiliate_products')
+        .select('shop_category_id, shop_subcategory_id')
+        .eq('is_active', true)
+        .order('id', { ascending: true })
+        .range(from, to)
+    ),
   ])
 
   // 하위카테고리 상품도 부모의 shop_category_id를 함께 갖고 있으므로(등록 시 항상 같이 저장됨),
