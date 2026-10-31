@@ -1625,3 +1625,58 @@ export async function bulkDeleteAdminProducts(ids: string[]): Promise<{ success?
   if (error) return { error: error.message }
   return { success: true }
 }
+
+// ───────── 사이트 설정(푸터 정보) ─────────
+export async function saveSiteInfo(values: Record<string, string>): Promise<{ success?: boolean; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+  const allowed = ['companyName','ceo','businessNumber','mailOrderNumber','address','phone','email','hours','lunch','privacyOfficer']
+  const clean: Record<string, string> = {}
+  for (const k of allowed) if (typeof values[k] === 'string') clean[k] = values[k].trim().slice(0, 200)
+  const { error } = await createAdminClient()
+    .from('site_settings')
+    .upsert({ key: 'site_info', value: clean, updated_at: new Date().toISOString() })
+  if (error) return { error: '저장에 실패했어요. 아직 DB 준비(SQL 실행)가 안 됐을 수 있어요: ' + error.message }
+  revalidateTag('site-settings', 'max')
+  revalidatePath('/', 'layout')
+  return { success: true }
+}
+
+export async function getSiteInfoForAdmin() {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return null
+  const { getSiteInfo } = await import('@/lib/siteSettings')
+  return getSiteInfo()
+}
+
+// ───────── 유입 통계 ─────────
+export async function getAcquisitionStats(days = 30) {
+  const empty = { total: 0, sources: [] as [string, number][], keywords: [] as [string, number][], landings: [] as [string, number][], daily: [] as [string, number][], ready: true }
+  const auth = await requireAdminAction()
+  if (!auth.ok) return empty
+  const since = new Date(Date.now() - days * 86400000).toISOString()
+  const { data, error } = await createAdminClient()
+    .from('site_visits')
+    .select('created_at, source, keyword, landing_path')
+    .gte('created_at', since)
+    .order('created_at', { ascending: false })
+    .limit(20000)
+  if (error) return { ...empty, ready: false }
+  const count = (arr: (string | null)[]) => {
+    const m = new Map<string, number>()
+    for (const v of arr) if (v) m.set(v, (m.get(v) ?? 0) + 1)
+    return [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10)
+  }
+  const rows = data ?? []
+  const dayKey = (iso: string) => new Date(new Date(iso).getTime() + 9 * 3600000).toISOString().slice(5, 10)
+  const dm = new Map<string, number>()
+  for (const r of rows) dm.set(dayKey(r.created_at), (dm.get(dayKey(r.created_at)) ?? 0) + 1)
+  return {
+    total: rows.length,
+    sources: count(rows.map((r) => r.source)),
+    keywords: count(rows.map((r) => r.keyword)),
+    landings: count(rows.map((r) => r.landing_path)),
+    daily: [...dm.entries()].sort((a, b) => (a[0] < b[0] ? -1 : 1)).slice(-14),
+    ready: true,
+  }
+}

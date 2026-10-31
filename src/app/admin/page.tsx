@@ -2,19 +2,45 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { getAdminStats, getPendingWithdrawals, getPendingPartnerships } from './actions'
+import { getAdminStats, getPendingWithdrawals, getPendingPartnerships, getAcquisitionStats } from './actions'
+
+type Acq = Awaited<ReturnType<typeof getAcquisitionStats>>
 
 type Stats = Awaited<ReturnType<typeof getAdminStats>>
 type PendingWithdrawal  = Awaited<ReturnType<typeof getPendingWithdrawals>>[number]
 type PendingPartnership = Awaited<ReturnType<typeof getPendingPartnerships>>[number]
 
-function StatCard({ label, value }: { label: string; value: string | number }) {
+function StatCard({ label, value, href }: { label: string; value: string | number; href: string }) {
   return (
-    <div className="rounded border border-gray-200 bg-white p-4 sm:p-6">
+    <Link href={href} className="block rounded border border-gray-200 bg-white p-4 transition-colors hover:border-[#E5421F] sm:p-6">
       <p className="text-sm text-[#6B605A]">{label}</p>
       <p className="mt-2 text-2xl font-bold text-[#231C17] sm:text-3xl">
         {typeof value === 'number' ? value.toLocaleString() : value}
       </p>
+    </Link>
+  )
+}
+
+function RankList({ title, rows, hrefOf, empty }: { title: string; rows: [string, number][]; hrefOf?: (k: string) => string; empty: string }) {
+  const max = Math.max(1, ...rows.map((r) => r[1]))
+  return (
+    <div className="rounded border border-gray-200 bg-white">
+      <div className="border-b border-gray-100 px-4 py-3 sm:px-6"><h3 className="font-semibold text-[#231C17]">{title}</h3></div>
+      <ul className="flex flex-col gap-2 p-4 text-sm sm:px-6">
+        {rows.length === 0 && <li className="text-[#9A8F88]">{empty}</li>}
+        {rows.map(([k, n]) => {
+          const label = <span className="truncate">{k}</span>
+          return (
+            <li key={k} className="relative flex items-center justify-between gap-3 overflow-hidden rounded-[2px] px-2 py-1.5">
+              <span aria-hidden className="absolute inset-y-0 left-0 bg-[#FFF1EA]" style={{ width: `${(n / max) * 100}%` }} />
+              <span className="relative min-w-0 flex-1 text-[#3A322C]">
+                {hrefOf ? <Link href={hrefOf(k)} className="hover:text-[#E5421F] hover:underline">{label}</Link> : label}
+              </span>
+              <strong className="relative text-[#231C17]">{n.toLocaleString()}</strong>
+            </li>
+          )
+        })}
+      </ul>
     </div>
   )
 }
@@ -36,10 +62,12 @@ export default function AdminDashboard() {
   const [wLoading, setWLoading]             = useState(true)
   const [partnerships, setPartnerships]     = useState<PendingPartnership[]>([])
   const [pLoading, setPLoading]             = useState(true)
+  const [acq, setAcq]                       = useState<Acq | null>(null)
 
   useEffect(() => {
     getAdminStats().then((s) => { setStats(s); setLoading(false) })
     getPendingWithdrawals().then((data) => { setWithdrawals(data); setWLoading(false) })
+    getAcquisitionStats(30).then(setAcq)
     getPendingPartnerships().then((data) => { setPartnerships(data); setPLoading(false) })
   }, [])
 
@@ -52,10 +80,28 @@ export default function AdminDashboard() {
 
       {/* 통계 카드 */}
       <div className="mb-8 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
-        <StatCard label="총 회원수" value={stats.totalUsers} />
-        <StatCard label="총 꿈 등록수" value={stats.totalDreams} />
-        <StatCard label="총 거래수" value={stats.totalTransactions} />
-        <StatCard label="총 거래금액" value={`${stats.totalPoints.toLocaleString()}원`} />
+        <StatCard label="총 회원수" value={stats.totalUsers} href="/admin/users" />
+        <StatCard label="총 꿈 등록수" value={stats.totalDreams} href="/admin/dreams" />
+        <StatCard label="총 거래수" value={stats.totalTransactions} href="/admin/transactions" />
+        <StatCard label="총 거래금액" value={`${stats.totalPoints.toLocaleString()}원`} href="/admin/transactions" />
+      </div>
+
+      {/* 유입 통계 (최근 30일) */}
+      <div className="mb-8">
+        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
+          <h2 className="text-lg font-bold text-[#231C17]">유입 통계 <span className="text-sm font-normal text-[#6B605A]">최근 30일 · 방문 {acq ? acq.total.toLocaleString() : '-'}회</span></h2>
+        </div>
+        {acq && !acq.ready ? (
+          <p className="rounded border border-dashed border-gray-300 bg-white p-5 text-sm text-[#6B605A]">
+            유입 기록 저장소가 아직 준비되지 않았어요. Supabase에서 <code>20261031_site_settings_and_visits.sql</code>을 한 번 실행하면 이 자리에 통계가 쌓여요.
+          </p>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+            <RankList title="어디서 들어왔나요" rows={acq?.sources ?? []} empty="아직 기록이 없어요" />
+            <RankList title="어떤 검색어로 들어왔나요" rows={acq?.keywords ?? []} hrefOf={(k) => `/search?q=${encodeURIComponent(k)}`} empty="검색어가 확인된 방문이 아직 없어요" />
+            <RankList title="처음 본 페이지" rows={acq?.landings ?? []} hrefOf={(k) => k} empty="아직 기록이 없어요" />
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">

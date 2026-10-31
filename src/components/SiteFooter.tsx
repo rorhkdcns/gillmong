@@ -1,5 +1,7 @@
+'use client'
+
 import Link from 'next/link'
-import { SITE_INFO } from '@/lib/siteConfig'
+import { useSiteInfo } from '@/components/SiteInfoProvider'
 
 const SERVICE_LINKS = [
   { label: '꿈 감정하기', href: '/#appraisal' },
@@ -37,6 +39,7 @@ function LinkColumn({ title, links }: { title: string; links: { label: string; h
 }
 
 export default function SiteFooter() {
+  const SITE_INFO = useSiteInfo()
   return (
     <footer className="border-t border-brand-line bg-brand-page text-brand-ink-soft">
       <div className="mx-auto flex max-w-6xl flex-wrap gap-x-10 gap-y-8 px-6 pb-5 pt-10 text-sm">
@@ -50,7 +53,7 @@ export default function SiteFooter() {
               {SITE_INFO.email}
             </p>
           </div>
-          <div className="flex items-start gap-2.5 rounded-lg border border-brand-line bg-white px-3 py-2.5">
+          <div className="flex items-start gap-2.5 rounded-[4px] border border-brand-line bg-white px-3 py-2.5">
             <span aria-hidden="true" className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-sm bg-[#12A150] text-xs font-extrabold text-white">✓</span>
             <span className="leading-relaxed">
               <strong className="text-brand-ink">에스크로 결제 보호</strong>

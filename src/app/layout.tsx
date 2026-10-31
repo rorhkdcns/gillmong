@@ -3,6 +3,9 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import SiteHeaderGate from "@/components/SiteHeaderGate";
 import { getActiveCategories } from "@/lib/categories";
+import { getSiteInfo } from "@/lib/siteSettings";
+import { SiteInfoProvider } from "@/components/SiteInfoProvider";
+import VisitTracker from "@/components/VisitTracker";
 import "@fontsource-variable/noto-sans-kr";
 import "@fontsource-variable/bricolage-grotesque";
 import "./globals.css";
@@ -55,7 +58,7 @@ export default async function RootLayout({
 }>) {
   // 카테고리는 거의 안 바뀌는 데이터라 여기서 한 번(60초 캐시)만 조회해 헤더에 props로 내려준다.
   // (예전엔 SiteHeader가 페이지마다 클라이언트에서 직접 Supabase를 호출했음)
-  const categories = await getActiveCategories();
+  const [categories, siteInfo] = await Promise.all([getActiveCategories(), getSiteInfo()]);
 
   return (
     <html
@@ -63,8 +66,11 @@ export default async function RootLayout({
       className="h-full antialiased"
     >
       <body className="min-h-full flex flex-col">
-        <SiteHeaderGate categories={categories.map((c) => ({ name: c.name, slug: c.slug }))} />
-        {children}
+        <SiteInfoProvider info={siteInfo}>
+          <SiteHeaderGate categories={categories.map((c) => ({ name: c.name, slug: c.slug }))} />
+          {children}
+        </SiteInfoProvider>
+        <VisitTracker />
         <Analytics />
       </body>
       <Script
