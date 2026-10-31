@@ -362,19 +362,19 @@ export default function AdminDictionaryPage() {
           </h2>
 
           <div>
-            <label className="mb-1 block text-sm text-[#555]">slug (URL용, 영문 소문자+하이픈만)</label>
+            <label className="mb-1 block text-sm text-[#6B605A]">slug (URL용, 영문 소문자+하이픈만)</label>
             <div className="flex gap-2">
               <input
                 type="text"
                 value={slug}
                 onChange={(e) => handleSlugChange(e.target.value)}
                 placeholder="예: pig-dream"
-                className="flex-1 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+                className="flex-1 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
               />
               <button
                 type="button"
                 onClick={autoGenerateSlug}
-                className="shrink-0 rounded border border-gray-300 px-3 py-2 text-xs font-semibold text-[#555] hover:bg-gray-50"
+                className="shrink-0 rounded border border-gray-300 px-3 py-2 text-xs font-semibold text-[#6B605A] hover:bg-gray-50"
               >
                 자동 생성
               </button>
@@ -388,44 +388,44 @@ export default function AdminDictionaryPage() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm text-[#555]">키워드</label>
+            <label className="mb-1 block text-sm text-[#6B605A]">키워드</label>
             <input
               type="text"
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               onBlur={handleKeywordBlur}
               placeholder="예: 돼지꿈"
-              className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+              className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm text-[#555]">요약 (리드 문단)</label>
+            <label className="mb-1 block text-sm text-[#6B605A]">요약 (리드 문단)</label>
             <textarea
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
               rows={2}
-              className="w-full resize-none rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+              className="w-full resize-none rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm text-[#555]">본문</label>
+            <label className="mb-1 block text-sm text-[#6B605A]">본문</label>
             <textarea
               value={body}
               onChange={(e) => setBody(e.target.value)}
               rows={10}
               placeholder={'[[소제목]]\n문단 내용\n\n>항목명 | 설명\n\n[[!주의 섹션 제목]]\n문단 내용'}
-              className="w-full resize-none rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+              className="w-full resize-none rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm text-[#555]">대분류 (선택)</label>
+            <label className="mb-1 block text-sm text-[#6B605A]">대분류 (선택)</label>
             <select
               value={categorySlug}
               onChange={(e) => handleCategoryChange(e.target.value)}
-              className="w-full rounded border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-violet"
+              className="w-full rounded border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-primary"
             >
               <option value="">선택 안 함</option>
               {categories.map((c) => (
@@ -435,12 +435,12 @@ export default function AdminDictionaryPage() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm text-[#555]">소분류 (선택, 대분류를 먼저 선택해야 표시됩니다)</label>
+            <label className="mb-1 block text-sm text-[#6B605A]">소분류 (선택, 대분류를 먼저 선택해야 표시됩니다)</label>
             <select
               value={subcategorySlug}
               onChange={(e) => setSubcategorySlug(e.target.value)}
               disabled={!categorySlug}
-              className="w-full rounded border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-violet disabled:bg-gray-50 disabled:text-gray-400"
+              className="w-full rounded border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-primary disabled:bg-gray-50 disabled:text-gray-400"
             >
               <option value="">선택 안 함</option>
               {filteredSubcategories.map((s) => (
@@ -450,17 +450,17 @@ export default function AdminDictionaryPage() {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm text-[#555]">태그 (쉼표로 구분)</label>
+            <label className="mb-1 block text-sm text-[#6B605A]">태그 (쉼표로 구분)</label>
             <input
               type="text"
               value={tagsInput}
               onChange={(e) => setTagsInput(e.target.value)}
               placeholder="예: 돼지, 재물운, 태몽"
-              className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+              className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
             />
           </div>
 
-          <label className="flex items-center gap-2 text-sm text-[#555]">
+          <label className="flex items-center gap-2 text-sm text-[#6B605A]">
             <input type="checkbox" checked={isPublished} onChange={(e) => setIsPublished(e.target.checked)} className="accent-brand-ink" />
             발행 (체크 시 공개 페이지에 노출)
           </label>
@@ -478,14 +478,14 @@ export default function AdminDictionaryPage() {
             <button
               type="button"
               onClick={closeForm}
-              className="rounded border border-gray-300 px-5 py-2 text-sm font-semibold text-[#555] hover:bg-gray-50"
+              className="rounded border border-gray-300 px-5 py-2 text-sm font-semibold text-[#6B605A] hover:bg-gray-50"
             >
               취소
             </button>
             <button
               type="button"
               onClick={() => setShowPreview((v) => !v)}
-              className="rounded border border-gray-300 px-5 py-2 text-sm font-semibold text-[#555] hover:bg-gray-50"
+              className="rounded border border-gray-300 px-5 py-2 text-sm font-semibold text-[#6B605A] hover:bg-gray-50"
             >
               {showPreview ? '미리보기 숨기기' : '미리보기 보기'}
             </button>
@@ -553,7 +553,7 @@ export default function AdminDictionaryPage() {
               className={`rounded px-3 py-1.5 text-xs font-semibold transition-colors ${
                 categoryFilter === ALL_CATEGORY
                   ? 'bg-brand-ink text-white'
-                  : 'border border-gray-200 text-[#555] hover:border-brand-violet hover:text-brand-violet'
+                  : 'border border-gray-200 text-[#6B605A] hover:border-brand-primary hover:text-brand-primary'
               }`}
             >
               전체 ({byStatusAndCho.length})
@@ -566,7 +566,7 @@ export default function AdminDictionaryPage() {
                 className={`rounded px-3 py-1.5 text-xs font-semibold transition-colors ${
                   categoryFilter === c.slug
                     ? 'bg-brand-ink text-white'
-                    : 'border border-gray-200 text-[#555] hover:border-brand-violet hover:text-brand-violet'
+                    : 'border border-gray-200 text-[#6B605A] hover:border-brand-primary hover:text-brand-primary'
                 }`}
               >
                 {c.name} ({categoryCounts.get(c.slug) ?? 0})
@@ -580,7 +580,7 @@ export default function AdminDictionaryPage() {
                 value={draftCount}
                 onChange={(e) => handleDraftCountChange(e.target.value)}
                 disabled={generatingDraft}
-                className="w-14 rounded border border-gray-200 px-2 py-1.5 text-xs outline-none focus:border-brand-violet disabled:bg-gray-100 disabled:text-gray-400"
+                className="w-14 rounded border border-gray-200 px-2 py-1.5 text-xs outline-none focus:border-brand-primary disabled:bg-gray-100 disabled:text-gray-400"
               />
               <button
                 type="button"
@@ -624,7 +624,7 @@ export default function AdminDictionaryPage() {
               className={`rounded px-3 py-1.5 text-xs font-semibold transition-colors ${
                 statusFilter === 'all'
                   ? 'bg-brand-ink text-white'
-                  : 'border border-gray-200 text-[#555] hover:border-brand-violet hover:text-brand-violet'
+                  : 'border border-gray-200 text-[#6B605A] hover:border-brand-primary hover:text-brand-primary'
               }`}
             >
               전체 ({statusCounts.all})
@@ -646,7 +646,7 @@ export default function AdminDictionaryPage() {
               className={`rounded px-3 py-1.5 text-xs font-semibold transition-colors ${
                 statusFilter === 'published'
                   ? 'bg-brand-ink text-white'
-                  : 'border border-gray-200 text-[#555] hover:border-brand-violet hover:text-brand-violet'
+                  : 'border border-gray-200 text-[#6B605A] hover:border-brand-primary hover:text-brand-primary'
               }`}
             >
               발행됨 ({statusCounts.published})
@@ -657,7 +657,7 @@ export default function AdminDictionaryPage() {
               value={listQuery}
               onChange={(e) => setListQuery(e.target.value)}
               placeholder="키워드로 검색"
-              className="ml-auto w-48 rounded border border-gray-200 px-3 py-1.5 text-xs outline-none focus:border-brand-violet"
+              className="ml-auto w-48 rounded border border-gray-200 px-3 py-1.5 text-xs outline-none focus:border-brand-primary"
             />
           </div>
 
@@ -669,7 +669,7 @@ export default function AdminDictionaryPage() {
               className={`rounded px-3 py-1.5 text-xs font-semibold transition-colors ${
                 choFilter === ALL_CHO
                   ? 'bg-brand-ink text-white'
-                  : 'border border-gray-200 text-[#555] hover:border-brand-violet hover:text-brand-violet'
+                  : 'border border-gray-200 text-[#6B605A] hover:border-brand-primary hover:text-brand-primary'
               }`}
             >
               전체
@@ -682,7 +682,7 @@ export default function AdminDictionaryPage() {
                 className={`rounded px-3 py-1.5 text-xs font-semibold transition-colors ${
                   choFilter === c
                     ? 'bg-brand-ink text-white'
-                    : 'border border-gray-200 text-[#555] hover:border-brand-violet hover:text-brand-violet'
+                    : 'border border-gray-200 text-[#6B605A] hover:border-brand-primary hover:text-brand-primary'
                 }`}
               >
                 {c} ({choCounts.get(c) ?? 0})
@@ -701,7 +701,7 @@ export default function AdminDictionaryPage() {
             <button
               type="button"
               onClick={resetListFilters}
-              className="rounded border border-gray-300 px-4 py-1.5 text-xs font-semibold text-[#555] hover:bg-gray-50"
+              className="rounded border border-gray-300 px-4 py-1.5 text-xs font-semibold text-[#6B605A] hover:bg-gray-50"
             >
               필터 초기화
             </button>
@@ -709,7 +709,7 @@ export default function AdminDictionaryPage() {
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+              <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
                 <th className="px-6 py-3">키워드</th>
                 <th className="px-6 py-3">카테고리</th>
                 <th className="px-6 py-3">발행상태</th>
@@ -720,14 +720,14 @@ export default function AdminDictionaryPage() {
             <tbody className="divide-y divide-gray-100">
               {filteredEntries.map((e) => (
                 <tr key={e.id}>
-                  <td className="px-6 py-3 font-medium text-[#333]">{e.keyword}</td>
-                  <td className="px-6 py-3 text-[#777]">{e.category_slug ?? '-'}</td>
+                  <td className="px-6 py-3 font-medium text-[#3A322C]">{e.keyword}</td>
+                  <td className="px-6 py-3 text-[#6B605A]">{e.category_slug ?? '-'}</td>
                   <td className="px-6 py-3">
-                    <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${e.is_published ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500'}`}>
+                    <span className={`rounded-[3px] px-2 py-0.5 text-xs font-semibold ${e.is_published ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500'}`}>
                       {e.is_published ? '발행됨' : '비공개'}
                     </span>
                   </td>
-                  <td className="px-6 py-3 text-[#777]">{e.view_count.toLocaleString()}</td>
+                  <td className="px-6 py-3 text-[#6B605A]">{e.view_count.toLocaleString()}</td>
                   <td className="px-6 py-3">
                     <div className="flex items-center gap-3">
                       <button onClick={() => openEditForm(e.id)} className="text-xs text-brand-primary hover:text-brand-primary-hover">수정</button>
@@ -745,10 +745,10 @@ export default function AdminDictionaryPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-2xl">
             <h3 className="mb-2 text-center text-lg font-black text-brand-ink">사전 항목 삭제</h3>
-            <p className="mb-6 text-center text-sm text-[#555]">이 항목을 삭제하시겠습니까?<br />삭제 후 복구할 수 없습니다.</p>
+            <p className="mb-6 text-center text-sm text-[#6B605A]">이 항목을 삭제하시겠습니까?<br />삭제 후 복구할 수 없습니다.</p>
             <div className="flex gap-3">
               <button type="button" onClick={() => setDeleteTarget(null)} disabled={deleting}
-                className="flex-1 rounded-xl border border-gray-300 py-3 text-sm font-semibold text-[#555] hover:bg-gray-50 disabled:opacity-50">
+                className="flex-1 rounded-xl border border-gray-300 py-3 text-sm font-semibold text-[#6B605A] hover:bg-gray-50 disabled:opacity-50">
                 취소
               </button>
               <button type="button" onClick={confirmDelete} disabled={deleting}

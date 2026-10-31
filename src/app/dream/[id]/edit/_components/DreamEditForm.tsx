@@ -63,7 +63,7 @@ export default function DreamEditForm({ dream }: Props) {
         <div className="mx-auto max-w-2xl">
           <a
             href={`/dream/${dream.id}`}
-            className="inline-flex items-center gap-1 text-sm text-[#777777] hover:text-[#231C17]"
+            className="inline-flex items-center gap-1 text-sm text-[#6B605A] hover:text-[#231C17]"
           >
             <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -80,47 +80,47 @@ export default function DreamEditForm({ dream }: Props) {
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-6">
               <div>
-                <label className="mb-1 block text-sm font-semibold text-[#555555]">제목</label>
+                <label className="mb-1 block text-sm font-semibold text-[#6B605A]">제목</label>
                 <input
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full border border-gray-200 px-4 py-3 text-[#333333] outline-none focus:border-[#6B96A8]"
+                  className="w-full border border-gray-200 px-4 py-3 text-[#3A322C] outline-none focus:border-[#9A8F88]"
                 />
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-semibold text-[#555555]">카테고리</label>
-                <div className="w-full border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-[#888888]">
+                <label className="mb-1 block text-sm font-semibold text-[#6B605A]">카테고리</label>
+                <div className="w-full border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-[#6B605A]">
                   {CATEGORY_LABEL[dream.category] ?? dream.category}
                 </div>
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-semibold text-[#555555]">꿈 요약</label>
-                <div className="w-full resize-none border border-gray-200 bg-gray-50 px-4 py-3 text-sm leading-relaxed text-[#888888]">
+                <label className="mb-1 block text-sm font-semibold text-[#6B605A]">꿈 요약</label>
+                <div className="w-full resize-none border border-gray-200 bg-gray-50 px-4 py-3 text-sm leading-relaxed text-[#6B605A]">
                   {dream.summary}
                 </div>
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-semibold text-[#555555]">꿈 원문</label>
-                <div className="w-full whitespace-pre-line border border-gray-200 bg-gray-50 px-4 py-3 text-sm leading-relaxed text-[#888888]">
+                <label className="mb-1 block text-sm font-semibold text-[#6B605A]">꿈 원문</label>
+                <div className="w-full whitespace-pre-line border border-gray-200 bg-gray-50 px-4 py-3 text-sm leading-relaxed text-[#6B605A]">
                   {dream.content}
                 </div>
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-semibold text-[#555555]">감정가 (P)</label>
+                <label className="mb-1 block text-sm font-semibold text-[#6B605A]">감정가 (P)</label>
                 <input
                   type="number"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
                   min={100}
                   step={100}
-                  className="w-full border border-gray-200 px-4 py-3 text-[#333333] outline-none focus:border-[#6B96A8]"
+                  className="w-full border border-gray-200 px-4 py-3 text-[#3A322C] outline-none focus:border-[#9A8F88]"
                 />
-                <p className="mt-1 text-xs text-[#999]">100원 단위로 입력해주세요.</p>
+                <p className="mt-1 text-xs text-[#9A8F88]">100원 단위로 입력해주세요.</p>
               </div>
 
               {error && <p className="text-center text-sm text-red-500">{error}</p>}
@@ -139,7 +139,7 @@ export default function DreamEditForm({ dream }: Props) {
                   type="button"
                   onClick={() => router.push(`/dream/${dream.id}`)}
                   disabled={saving || saved}
-                  className="flex-1 border border-gray-300 py-3 text-[#555555] transition-colors hover:border-[#231C17] hover:text-[#231C17] disabled:opacity-50"
+                  className="flex-1 border border-gray-300 py-3 text-[#6B605A] transition-colors hover:border-[#231C17] hover:text-[#231C17] disabled:opacity-50"
                 >
                   취소
                 </button>

@@ -102,7 +102,7 @@ export default function AdminBannerPage() {
   return (
     <div className="p-8">
       <h1 className="mb-2 text-2xl font-bold text-[#231C17]">슬라이드 배너 관리</h1>
-      <p className="mb-8 text-sm text-[#999]">
+      <p className="mb-8 text-sm text-[#9A8F88]">
         메인 페이지 상단 슬라이드 배너를 관리합니다. 활성화된 배너만 순서대로 표시됩니다.
       </p>
 
@@ -111,7 +111,7 @@ export default function AdminBannerPage() {
         <h2 className="text-base font-bold text-[#231C17]">새 배너 추가</h2>
 
         <div>
-          <label className="mb-1 block text-sm font-semibold text-[#333]">배너 이미지 *</label>
+          <label className="mb-1 block text-sm font-semibold text-[#3A322C]">배너 이미지 *</label>
           <input
             ref={fileRef}
             type="file"
@@ -122,11 +122,11 @@ export default function AdminBannerPage() {
           {imagePreview && (
             <img src={imagePreview} alt="미리보기" className="mt-3 h-32 w-full rounded object-cover" />
           )}
-          <p className="mt-1 text-xs text-[#aaa]">권장 비율 16:5 (예: 1600×500px)</p>
+          <p className="mt-1 text-xs text-[#9A8F88]">권장 비율 16:5 (예: 1600×500px)</p>
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-semibold text-[#333]">클릭 시 이동 URL</label>
+          <label className="mb-1 block text-sm font-semibold text-[#3A322C]">클릭 시 이동 URL</label>
           <input
             type="text"
             value={linkUrl}
@@ -137,7 +137,7 @@ export default function AdminBannerPage() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-semibold text-[#333]">표시 순서</label>
+          <label className="mb-1 block text-sm font-semibold text-[#3A322C]">표시 순서</label>
           <div className="flex items-center gap-3">
             <input
               type="number"
@@ -163,7 +163,7 @@ export default function AdminBannerPage() {
           {uploading ? '업로드 중...' : '배너 추가'}
         </button>
 
-        <p className="text-xs text-[#bbb]">
+        <p className="text-xs text-[#B8ADA6]">
           Supabase Storage에 <code className="rounded bg-gray-100 px-1">banners</code> 퍼블릭 버킷이 필요합니다.
         </p>
       </div>
@@ -190,12 +190,12 @@ export default function AdminBannerPage() {
                   className="h-16 w-28 shrink-0 rounded object-cover bg-gray-100"
                 />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-[#333]">{b.link_url}</p>
+                  <p className="truncate text-sm font-medium text-[#3A322C]">{b.link_url}</p>
                   <p className="mt-0.5 text-xs text-gray-400">순서 {b.order}</p>
                 </div>
                 <button
                   onClick={() => toggleActive(b.id, b.is_active)}
-                  className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                  className={`shrink-0 rounded-[3px] px-3 py-1 text-xs font-semibold transition-colors ${
                     b.is_active
                       ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-200'
                       : 'bg-gray-100 text-gray-500 hover:bg-gray-200'

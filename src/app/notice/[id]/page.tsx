@@ -39,7 +39,7 @@ export default async function NoticeDetailPage({
               <h1 className="text-2xl font-black text-[#231C17]">{notice.title}</h1>
               <p className="mt-2 text-sm text-gray-400">{formatDate(notice.created_at)}</p>
             </div>
-            <div className="prose max-w-none text-sm leading-relaxed text-[#444444] whitespace-pre-line">
+            <div className="prose max-w-none text-sm leading-relaxed text-[#3A322C] whitespace-pre-line">
               {notice.content}
             </div>
           </article>

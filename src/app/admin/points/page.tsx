@@ -75,7 +75,7 @@ export default function AdminPointsPage() {
               className={`flex-1 py-2.5 text-sm font-semibold transition ${
                 mode === 'give'
                   ? 'bg-[#231C17] text-white'
-                  : 'bg-white text-[#555] hover:bg-gray-50'
+                  : 'bg-white text-[#6B605A] hover:bg-gray-50'
               }`}
             >
               지급
@@ -86,7 +86,7 @@ export default function AdminPointsPage() {
               className={`flex-1 py-2.5 text-sm font-semibold transition ${
                 mode === 'deduct'
                   ? 'bg-red-500 text-white'
-                  : 'bg-white text-[#555] hover:bg-gray-50'
+                  : 'bg-white text-[#6B605A] hover:bg-gray-50'
               }`}
             >
               차감
@@ -95,7 +95,7 @@ export default function AdminPointsPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1 block text-sm font-semibold text-[#333]">아이디</label>
+              <label className="mb-1 block text-sm font-semibold text-[#3A322C]">아이디</label>
               <input
                 type="text"
                 value={username}
@@ -105,7 +105,7 @@ export default function AdminPointsPage() {
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-semibold text-[#333]">포인트 금액</label>
+              <label className="mb-1 block text-sm font-semibold text-[#3A322C]">포인트 금액</label>
               <input
                 type="number"
                 value={amount}
@@ -135,7 +135,7 @@ export default function AdminPointsPage() {
         {/* 판매 동기화 */}
         <div className="rounded border border-gray-200 bg-white p-8">
           <h2 className="mb-2 font-bold text-[#231C17]">판매 포인트 동기화</h2>
-          <p className="mb-5 text-sm text-[#777]">purchases 기준으로 누락된 판매자 포인트를 일괄 지급하고 is_sold를 수정합니다.</p>
+          <p className="mb-5 text-sm text-[#6B605A]">purchases 기준으로 누락된 판매자 포인트를 일괄 지급하고 is_sold를 수정합니다.</p>
           {syncResult && (
             <div className={`mb-4 rounded px-4 py-3 text-sm ${syncResult.type === 'success' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'}`}>
               {syncResult.message}
@@ -144,7 +144,7 @@ export default function AdminPointsPage() {
           <button
             onClick={handleSync}
             disabled={syncing}
-            className="w-full bg-brand-violet-deep py-3 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
+            className="w-full bg-brand-primary-hover py-3 text-sm font-semibold text-white hover:brightness-90 disabled:opacity-60"
           >
             {syncing ? '동기화 중...' : '판매 포인트 동기화 실행'}
           </button>
@@ -153,7 +153,7 @@ export default function AdminPointsPage() {
         {/* 전체 초기화 */}
         <div className="rounded border border-red-200 bg-white p-8">
           <h2 className="mb-2 font-bold text-red-600">전체 초기화</h2>
-          <p className="mb-5 text-sm text-[#777]">꿈, 구매 내역, 포인트 로그 삭제 및 전 회원 포인트 0 초기화. <span className="font-semibold text-red-500">되돌릴 수 없습니다.</span></p>
+          <p className="mb-5 text-sm text-[#6B605A]">꿈, 구매 내역, 포인트 로그 삭제 및 전 회원 포인트 0 초기화. <span className="font-semibold text-red-500">되돌릴 수 없습니다.</span></p>
           {resetResult && (
             <div className={`mb-4 rounded px-4 py-3 text-sm ${resetResult.type === 'success' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'}`}>
               {resetResult.message}
@@ -173,13 +173,13 @@ export default function AdminPointsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-2xl">
             <h3 className="mb-2 text-center text-lg font-black text-red-600">전체 초기화</h3>
-            <p className="mb-2 text-center text-sm text-[#555]">꿈 내역과 포인트를 전부 초기화합니다.</p>
+            <p className="mb-2 text-center text-sm text-[#6B605A]">꿈 내역과 포인트를 전부 초기화합니다.</p>
             <p className="mb-6 text-center text-sm font-semibold text-red-500">되돌릴 수 없습니다. 계속하시겠습니까?</p>
             <div className="flex gap-3">
               <button
                 type="button"
                 onClick={() => setShowResetModal(false)}
-                className="flex-1 rounded-xl border border-gray-300 py-3 text-sm font-semibold text-[#555] hover:bg-gray-50"
+                className="flex-1 rounded-xl border border-gray-300 py-3 text-sm font-semibold text-[#6B605A] hover:bg-gray-50"
               >
                 취소
               </button>

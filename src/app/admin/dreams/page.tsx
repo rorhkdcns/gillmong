@@ -108,7 +108,7 @@ export default function AdminDreams() {
       <div className="overflow-x-auto rounded border border-gray-200 bg-white">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+            <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
               <th className="px-6 py-3">등급</th>
               <th className="px-6 py-3">제목</th>
               <th className="px-6 py-3">카테고리</th>
@@ -122,39 +122,39 @@ export default function AdminDreams() {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {loading ? (
-              <tr><td colSpan={9} className="py-12 text-center text-sm text-[#999]">불러오는 중...</td></tr>
+              <tr><td colSpan={9} className="py-12 text-center text-sm text-[#9A8F88]">불러오는 중...</td></tr>
             ) : filtered.length === 0 ? (
-              <tr><td colSpan={9} className="py-12 text-center text-sm text-[#999]">꿈이 없습니다</td></tr>
+              <tr><td colSpan={9} className="py-12 text-center text-sm text-[#9A8F88]">꿈이 없습니다</td></tr>
             ) : filtered.map((d) => (
               <tr key={d.id} className={`hover:bg-gray-50 ${d.pending_report_count > 0 ? 'bg-red-50/30' : ''}`}>
                 <td className="px-6 py-3">
                   <span className={`inline-flex h-6 w-6 items-center justify-center rounded-[3px] text-xs font-bold ${GRADE_INFO[d.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>{d.grade}</span>
                 </td>
-                <td className="max-w-[200px] px-6 py-3 text-[#333]">
+                <td className="max-w-[200px] px-6 py-3 text-[#3A322C]">
                   <Link href={`/admin/dreams/${d.id}`} className="truncate hover:underline block">
                     {d.title}
                   </Link>
                 </td>
-                <td className="px-6 py-3 text-[#777]">{categoryLabel[d.category] ?? d.category}</td>
+                <td className="px-6 py-3 text-[#6B605A]">{categoryLabel[d.category] ?? d.category}</td>
                 <td className="px-6 py-3 text-[#C23A18]">{d.price.toLocaleString()}원</td>
                 <td className="px-6 py-3">
-                  <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${d.is_sold ? 'bg-gray-100 text-gray-500' : 'bg-emerald-50 text-emerald-600'}`}>
+                  <span className={`rounded-[3px] px-2 py-0.5 text-xs font-semibold ${d.is_sold ? 'bg-gray-100 text-gray-500' : 'bg-emerald-50 text-emerald-600'}`}>
                     {d.is_sold ? '판매완료' : '판매중'}
                   </span>
                 </td>
                 <td className="px-6 py-3">
                   {d.report_count > 0 ? (
-                    <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${d.pending_report_count > 0 ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-500'}`}>
+                    <span className={`rounded-[3px] px-2 py-0.5 text-xs font-semibold ${d.pending_report_count > 0 ? 'bg-red-100 text-red-600' : 'bg-gray-100 text-gray-500'}`}>
                       {d.pending_report_count > 0 ? `검토중 ${d.pending_report_count}` : `처리됨 ${d.report_count}`}
                     </span>
                   ) : (
                     <span className="text-xs text-gray-300">-</span>
                   )}
                 </td>
-                <td className="px-6 py-3 text-[#777]">{d.profiles?.nickname ?? '-'}</td>
-                <td className="px-6 py-3 text-[#999]">{formatDate(d.created_at)}</td>
+                <td className="px-6 py-3 text-[#6B605A]">{d.profiles?.nickname ?? '-'}</td>
+                <td className="px-6 py-3 text-[#9A8F88]">{formatDate(d.created_at)}</td>
                 <td className="px-6 py-3 flex gap-2">
-                  <Link href={`/admin/dreams/${d.id}`} className="rounded border border-gray-300 px-3 py-1 text-xs text-[#555] hover:border-gray-400">상세</Link>
+                  <Link href={`/admin/dreams/${d.id}`} className="rounded border border-gray-300 px-3 py-1 text-xs text-[#6B605A] hover:border-gray-400">상세</Link>
                   <button onClick={() => { setConfirm(d); setMsg('') }} className="rounded border border-red-200 px-3 py-1 text-xs text-red-500 hover:border-red-400">삭제</button>
                 </td>
               </tr>
@@ -169,13 +169,13 @@ export default function AdminDreams() {
           onClick={(e) => { if (e.target === e.currentTarget) setConfirm(null) }}>
           <div className="w-full max-w-sm bg-white p-8 shadow-xl">
             <h2 className="mb-3 text-lg font-bold text-red-600">꿈 삭제</h2>
-            <p className="mb-5 text-sm text-[#777]">
-              <span className="font-semibold text-[#333]">&ldquo;{confirm.title}&rdquo;</span>을(를) 삭제합니다.<br />
+            <p className="mb-5 text-sm text-[#6B605A]">
+              <span className="font-semibold text-[#3A322C]">&ldquo;{confirm.title}&rdquo;</span>을(를) 삭제합니다.<br />
               관련 구매 내역도 함께 삭제됩니다.
             </p>
             {msg && <p className="mb-3 text-sm text-red-500">{msg}</p>}
             <div className="flex gap-3">
-              <button onClick={() => setConfirm(null)} className="flex-1 border border-gray-300 py-2 text-sm text-[#555]">취소</button>
+              <button onClick={() => setConfirm(null)} className="flex-1 border border-gray-300 py-2 text-sm text-[#6B605A]">취소</button>
               <button onClick={handleDelete} disabled={deleting} className="flex-1 bg-red-500 py-2 text-sm font-semibold text-white hover:bg-red-600 disabled:opacity-60">{deleting ? '삭제 중...' : '삭제'}</button>
             </div>
           </div>

@@ -55,21 +55,21 @@ export default function GuidePage() {
       {/* ───── 1. 꿈의 가치를 거래합니다 ───── */}
       <section className="bg-[#231C17] px-5 py-14 text-white md:px-8 md:py-32">
         <div className="mx-auto max-w-4xl text-center">
-          <p className="mb-4 text-xs tracking-widest text-[#FFD700] md:mb-5 md:text-base">GILLMONG SERVICE</p>
+          <p className="mb-4 text-xs tracking-widest text-[#FFD23F] md:mb-5 md:text-base">GILLMONG SERVICE</p>
           <h1 className="mb-4 text-3xl leading-tight text-white md:mb-6 md:text-5xl">꿈의 가치를 거래합니다</h1>
           <p className="mx-auto mb-10 max-w-xl text-base leading-relaxed text-white/90 md:mb-20 md:text-lg">
             당신의 꿈이 하나의 상품이 됩니다
           </p>
           <div className="grid gap-5 text-left md:grid-cols-2 md:gap-8">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6 md:p-10">
-              <Sparkles className="mb-4 text-[#FFD700] md:mb-6" size={28} strokeWidth={1.5} />
+              <Sparkles className="mb-4 text-[#FFD23F] md:mb-6" size={28} strokeWidth={1.5} />
               <h3 className="mb-3 text-lg text-white md:mb-4 md:text-xl">AI 해몽 분석</h3>
               <p className="text-sm leading-relaxed text-white/85 md:text-base">
                 당신의 꿈을 GILLMONG AI가 한국 전통·동양·서양 심리학적 관점으로 정밀 분석하여 운세 등급과 해몽을 제공합니다.
               </p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6 md:p-10">
-              <CreditCard className="mb-4 text-[#FFD700] md:mb-6" size={28} strokeWidth={1.5} />
+              <CreditCard className="mb-4 text-[#FFD23F] md:mb-6" size={28} strokeWidth={1.5} />
               <h3 className="mb-3 text-lg text-white md:mb-4 md:text-xl">안전 결제 시스템</h3>
               <p className="text-sm leading-relaxed text-white/85 md:text-base">
                 좋은 꿈을 판매해 수익을 얻거나, 필요한 행운을 안전하게 결제로 구매할 수 있는 독창적인 마켓 플랫폼입니다.
@@ -88,12 +88,12 @@ export default function GuidePage() {
           </div>
           <div className="mx-auto max-w-2xl rounded-2xl border border-[#E8D9B8] bg-white/70 p-7 md:p-12">
             <BookOpen className="mb-5 text-[#9B7D4B] md:mb-8" size={28} strokeWidth={1.5} />
-            <p className="mb-4 text-sm leading-relaxed text-[#444444] md:text-base md:leading-loose">
+            <p className="mb-4 text-sm leading-relaxed text-[#3A322C] md:text-base md:leading-loose">
               예로부터 한국에는 좋은 꿈, 특히 복권 당첨이나 큰 행운을 암시하는 &quot;길몽&quot;을 사고파는 풍습이 있었습니다.
               태몽을 나눠주고 답례를 받거나, 복권을 사기 전 좋은 꿈을 미리 구매하는 문화 —
               꿈은 오랫동안 한국인의 삶 속에서 하나의 가치있는 자산으로 여겨져 왔습니다.
             </p>
-            <p className="text-sm leading-relaxed text-[#444444] md:text-base md:leading-loose">
+            <p className="text-sm leading-relaxed text-[#3A322C] md:text-base md:leading-loose">
               GILLMONG은 한국 고유의 이 전통을 디지털로 옮겨와,
               누구나 안전하고 투명하게 꿈을 거래할 수 있는 플랫폼을 만들었습니다.
             </p>
@@ -105,7 +105,7 @@ export default function GuidePage() {
       <section className="bg-white px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl">
           <div className="mb-10 text-center md:mb-20">
-            <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">HOW IT WORKS</p>
+            <p className="mb-3 text-xs tracking-widest text-[#6B605A] md:mb-4 md:text-base">HOW IT WORKS</p>
             <h2 className="text-2xl text-[#231C17] md:text-3xl">GILLMONG 서비스 프로세스</h2>
           </div>
           {/* 모바일: 2×2 그리드 */}
@@ -113,11 +113,11 @@ export default function GuidePage() {
             {processSteps.map((item, i) => (
               <div key={i} className="flex flex-col items-center px-1 text-center">
                 <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#231C17]">
-                  <item.Icon size={22} strokeWidth={1.5} className="text-[#FFD700]" />
+                  <item.Icon size={22} strokeWidth={1.5} className="text-[#FFD23F]" />
                 </div>
                 <p className="mb-1 text-xs text-[#C23A18]">{item.step}</p>
                 <p className="mb-2 text-sm font-semibold text-[#231C17]">{item.title}</p>
-                <p className="text-xs leading-relaxed text-[#555555]">{item.desc}</p>
+                <p className="text-xs leading-relaxed text-[#6B605A]">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -127,14 +127,14 @@ export default function GuidePage() {
               <Fragment key={i}>
                 <div className="flex flex-1 flex-col items-center px-4 text-center">
                   <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-[#231C17]">
-                    <item.Icon size={28} strokeWidth={1.5} className="text-[#FFD700]" />
+                    <item.Icon size={28} strokeWidth={1.5} className="text-[#FFD23F]" />
                   </div>
                   <p className="mb-1 text-base text-[#C23A18]">{item.step}</p>
                   <p className="mb-3 text-lg text-[#231C17]">{item.title}</p>
-                  <p className="text-base leading-relaxed text-[#333333]">{item.desc}</p>
+                  <p className="text-base leading-relaxed text-[#3A322C]">{item.desc}</p>
                 </div>
                 {i < processSteps.length - 1 && (
-                  <div className="flex shrink-0 items-center pt-9 text-[#888888]">
+                  <div className="flex shrink-0 items-center pt-9 text-[#6B605A]">
                     <ChevronRight size={20} />
                   </div>
                 )}
@@ -145,12 +145,12 @@ export default function GuidePage() {
       </section>
 
       {/* ───── 4. 행운을 구매하세요 ───── */}
-      <section className="bg-[#F2F2F2] px-5 py-14 md:px-8 md:py-28">
+      <section className="bg-[#F0E6DF] px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl md:flex md:items-start md:gap-20">
           <div className="mb-8 text-center md:mb-0 md:w-1/2 md:text-left">
-            <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">BUY LUCK</p>
+            <p className="mb-3 text-xs tracking-widest text-[#6B605A] md:mb-4 md:text-base">BUY LUCK</p>
             <h2 className="mb-4 text-2xl text-[#231C17] md:mb-5 md:text-3xl">행운을 구매하세요</h2>
-            <p className="mb-8 text-sm leading-relaxed text-[#333333] md:mb-10 md:text-lg">
+            <p className="mb-8 text-sm leading-relaxed text-[#3A322C] md:mb-10 md:text-lg">
               꿈 구경하기 메뉴에서 등록된 꿈들을 탐색하세요.
             </p>
             <ul className="flex flex-col gap-4 text-left md:gap-6">
@@ -163,7 +163,7 @@ export default function GuidePage() {
                   <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#C23A18] text-xs text-white md:h-7 md:w-7">
                     {i + 1}
                   </span>
-                  <span className="text-sm leading-relaxed text-[#333333] md:text-lg">{item}</span>
+                  <span className="text-sm leading-relaxed text-[#3A322C] md:text-lg">{item}</span>
                 </li>
               ))}
             </ul>
@@ -172,7 +172,7 @@ export default function GuidePage() {
             <p className="mb-4 text-base text-white md:mb-6 md:text-xl">구매 흐름</p>
             {['꿈 마켓 탐색', '운세 등급 & 상징 확인', '직접 결제', '행운 상징물 소유'].map((step, i) => (
               <div key={i} className="flex items-center gap-4 border-b border-white/10 py-4 last:border-0 md:gap-5 md:py-5">
-                <span className="text-sm text-[#FFD700] md:text-base">{String(i + 1).padStart(2, '0')}</span>
+                <span className="text-sm text-[#FFD23F] md:text-base">{String(i + 1).padStart(2, '0')}</span>
                 <span className="text-sm text-white md:text-lg">{step}</span>
               </div>
             ))}
@@ -184,7 +184,7 @@ export default function GuidePage() {
       <section className="bg-white px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl md:flex md:flex-row-reverse md:items-start md:gap-20">
           <div className="mb-8 text-center md:mb-0 md:w-1/2 md:text-left">
-            <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">SELL YOUR DREAM</p>
+            <p className="mb-3 text-xs tracking-widest text-[#6B605A] md:mb-4 md:text-base">SELL YOUR DREAM</p>
             <h2 className="mb-8 text-2xl text-[#231C17] md:mb-10 md:text-3xl">
               당신의 꿈이<br />수익이 됩니다
             </h2>
@@ -194,7 +194,7 @@ export default function GuidePage() {
                   <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#231C17] text-xs text-white md:h-7 md:w-7">
                     {i + 1}
                   </span>
-                  <span className="text-sm leading-relaxed text-[#333333] md:text-lg">{item}</span>
+                  <span className="text-sm leading-relaxed text-[#3A322C] md:text-lg">{item}</span>
                 </li>
               ))}
             </ul>
@@ -203,7 +203,7 @@ export default function GuidePage() {
             <p className="mb-4 text-base text-white md:mb-6 md:text-xl">판매 흐름</p>
             {['꿈 일기 상세 작성', 'AI 정밀 해몽 실행', '마켓 가격 설정', '판매 & 리워드 수령'].map((step, i) => (
               <div key={i} className="flex items-center gap-4 border-b border-white/10 py-4 last:border-0 md:gap-5 md:py-5">
-                <span className="text-sm text-[#FFD700] md:text-base">{String(i + 1).padStart(2, '0')}</span>
+                <span className="text-sm text-[#FFD23F] md:text-base">{String(i + 1).padStart(2, '0')}</span>
                 <span className="text-sm text-white md:text-lg">{step}</span>
               </div>
             ))}
@@ -212,10 +212,10 @@ export default function GuidePage() {
       </section>
 
       {/* ───── 6. 안심하고 거래하세요 ───── */}
-      <section className="bg-[#F2F2F2] px-5 py-14 md:px-8 md:py-28">
+      <section className="bg-[#F0E6DF] px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl">
           <div className="mb-10 text-center md:mb-20">
-            <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">TRUST & SAFETY</p>
+            <p className="mb-3 text-xs tracking-widest text-[#6B605A] md:mb-4 md:text-base">TRUST & SAFETY</p>
             <h2 className="text-2xl text-[#231C17] md:text-3xl">안심하고 거래하세요</h2>
           </div>
           <div className="grid gap-5 md:grid-cols-3 md:gap-8">
@@ -223,7 +223,7 @@ export default function GuidePage() {
               <div key={i} className="rounded-2xl bg-white p-6 shadow-sm md:p-10">
                 <card.Icon className="mb-4 text-[#C23A18] md:mb-8" size={28} strokeWidth={1.5} />
                 <p className="mb-3 text-lg text-[#231C17] md:mb-4 md:text-xl">{card.title}</p>
-                <p className="text-sm leading-relaxed text-[#333333] md:text-base">{card.desc}</p>
+                <p className="text-sm leading-relaxed text-[#3A322C] md:text-base">{card.desc}</p>
               </div>
             ))}
           </div>
@@ -234,7 +234,7 @@ export default function GuidePage() {
       <section className="bg-white px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl">
           <div className="mb-10 text-center md:mb-20">
-            <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">PAYMENT POLICY</p>
+            <p className="mb-3 text-xs tracking-widest text-[#6B605A] md:mb-4 md:text-base">PAYMENT POLICY</p>
             <h2 className="text-2xl text-[#231C17] md:text-3xl">결제 및 정산 정책 안내</h2>
           </div>
 
@@ -246,8 +246,8 @@ export default function GuidePage() {
                   <row.Icon size={18} strokeWidth={1.5} className="shrink-0 text-[#C23A18]" />
                   <span className="font-semibold text-[#231C17]">{row.service}</span>
                 </div>
-                <p className="mb-1 text-sm text-[#333333]">{row.policy}</p>
-                <p className="text-xs text-[#777777]">{row.detail}</p>
+                <p className="mb-1 text-sm text-[#3A322C]">{row.policy}</p>
+                <p className="text-xs text-[#6B605A]">{row.detail}</p>
               </div>
             ))}
           </div>
@@ -271,8 +271,8 @@ export default function GuidePage() {
                         <span className="text-base text-[#231C17]">{row.service}</span>
                       </div>
                     </td>
-                    <td className="px-8 py-5 text-base text-[#333333]">{row.policy}</td>
-                    <td className="px-8 py-5 text-base text-[#333333]">{row.detail}</td>
+                    <td className="px-8 py-5 text-base text-[#3A322C]">{row.policy}</td>
+                    <td className="px-8 py-5 text-base text-[#3A322C]">{row.detail}</td>
                   </tr>
                 ))}
               </tbody>
@@ -282,16 +282,16 @@ export default function GuidePage() {
       </section>
 
       {/* ───── 8. 운세 등급 시스템 ───── */}
-      <section className="bg-[#F2F2F2] px-5 py-14 md:px-8 md:py-28">
+      <section className="bg-[#F0E6DF] px-5 py-14 md:px-8 md:py-28">
         <div className="mx-auto max-w-4xl">
           <div className="mb-10 text-center md:mb-20">
-            <p className="mb-3 text-xs tracking-widest text-[#555555] md:mb-4 md:text-base">GRADE SYSTEM</p>
+            <p className="mb-3 text-xs tracking-widest text-[#6B605A] md:mb-4 md:text-base">GRADE SYSTEM</p>
             <h2 className="text-2xl text-[#231C17] md:text-3xl">운세 등급 시스템</h2>
           </div>
           <div className="mb-8 flex justify-center md:mb-16">
             <div className="flex h-32 w-32 flex-col items-center justify-center rounded-full bg-[#231C17] shadow-xl md:h-40 md:w-40">
-              <Star size={20} strokeWidth={1.5} className="mb-1 text-[#FFD700]" />
-              <span className="text-xs tracking-widest text-[#FFD700]">EXCEL</span>
+              <Star size={20} strokeWidth={1.5} className="mb-1 text-[#FFD23F]" />
+              <span className="text-xs tracking-widest text-[#FFD23F]">EXCEL</span>
               <span className="text-xs text-white/80">GILLMONG</span>
               <span className="text-lg text-white">GRADE</span>
             </div>
@@ -303,7 +303,7 @@ export default function GuidePage() {
                   {g.grade}
                 </div>
                 <p className="mb-1 text-sm font-semibold text-[#231C17] md:text-base">{g.rank}</p>
-                <p className="text-xs leading-relaxed text-[#555555] md:text-sm">{g.desc}</p>
+                <p className="text-xs leading-relaxed text-[#6B605A] md:text-sm">{g.desc}</p>
               </div>
             ))}
           </div>

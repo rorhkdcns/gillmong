@@ -45,7 +45,7 @@ export default function WithdrawalForm({
     <form action={formAction} className="flex flex-col gap-5">
       {/* 출금 금액 */}
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-[#555555]">
+        <label className="mb-1.5 block text-sm font-medium text-[#6B605A]">
           출금 금액 <span className="text-[#C23A18]">*</span>
         </label>
         <div className="relative">
@@ -59,11 +59,11 @@ export default function WithdrawalForm({
             }}
             placeholder="5,000 이상, 1,000 단위"
             required
-            className="w-full border border-gray-300 bg-white px-4 py-3 pr-8 text-base text-[#333333] outline-none focus:border-[#231C17]"
+            className="w-full border border-gray-300 bg-white px-4 py-3 pr-8 text-base text-[#3A322C] outline-none focus:border-[#231C17]"
           />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-[#777777]">원</span>
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-[#6B605A]">원</span>
         </div>
-        <p className="mt-1 text-xs text-[#999]">
+        <p className="mt-1 text-xs text-[#9A8F88]">
           보유 잔액:{' '}
           <span className="font-semibold text-[#C23A18]">{balance.toLocaleString()}원</span>
           {' '}· 최소 5,000원 · 1,000원 단위
@@ -81,7 +81,7 @@ export default function WithdrawalForm({
               const next = (parsed || 0) + v
               if (next <= balance) setAmount(next.toLocaleString())
             }}
-            className="rounded border border-gray-300 px-3 py-1.5 text-sm text-[#555555] transition hover:border-[#231C17] hover:text-[#231C17] disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded border border-gray-300 px-3 py-1.5 text-sm text-[#6B605A] transition hover:border-[#231C17] hover:text-[#231C17] disabled:cursor-not-allowed disabled:opacity-40"
           >
             +{v.toLocaleString()}원
           </button>
@@ -90,7 +90,7 @@ export default function WithdrawalForm({
           type="button"
           disabled={balance < 1000}
           onClick={() => setAmount(Math.floor(balance / 1000) * 1000 > 0 ? (Math.floor(balance / 1000) * 1000).toLocaleString() : '')}
-          className="rounded border border-gray-300 px-3 py-1.5 text-sm text-[#555555] transition hover:border-[#231C17] hover:text-[#231C17] disabled:cursor-not-allowed disabled:opacity-40"
+          className="rounded border border-gray-300 px-3 py-1.5 text-sm text-[#6B605A] transition hover:border-[#231C17] hover:text-[#231C17] disabled:cursor-not-allowed disabled:opacity-40"
         >
           전액
         </button>
@@ -107,14 +107,14 @@ export default function WithdrawalForm({
 
       {/* 은행명 */}
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-[#555555]">
+        <label className="mb-1.5 block text-sm font-medium text-[#6B605A]">
           은행명 <span className="text-[#C23A18]">*</span>
         </label>
         <select
           name="bank_name"
           required
           defaultValue=""
-          className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] outline-none focus:border-[#231C17]"
+          className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#3A322C] outline-none focus:border-[#231C17]"
         >
           <option value="" disabled>은행 선택</option>
           {BANKS.map((b) => (
@@ -125,7 +125,7 @@ export default function WithdrawalForm({
 
       {/* 계좌번호 */}
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-[#555555]">
+        <label className="mb-1.5 block text-sm font-medium text-[#6B605A]">
           계좌번호 <span className="text-[#C23A18]">*</span>
         </label>
         <input
@@ -134,13 +134,13 @@ export default function WithdrawalForm({
           placeholder="숫자만 입력 (예: 1234567890)"
           required
           inputMode="numeric"
-          className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
+          className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#3A322C] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
         />
       </div>
 
       {/* 예금주 */}
       <div>
-        <label className="mb-1.5 block text-sm font-medium text-[#555555]">
+        <label className="mb-1.5 block text-sm font-medium text-[#6B605A]">
           예금주 <span className="text-[#C23A18]">*</span>
         </label>
         <input
@@ -149,7 +149,7 @@ export default function WithdrawalForm({
           defaultValue={realName}
           placeholder="예금주 이름"
           required
-          className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
+          className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#3A322C] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
         />
       </div>
 
@@ -161,7 +161,7 @@ export default function WithdrawalForm({
       )}
 
       {/* 안내 */}
-      <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-[#777777]">
+      <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm text-[#6B605A]">
         <ul className="space-y-1.5">
           <li>• 신청 후 영업일 기준 3~5일 내 입금됩니다.</li>
           <li>• 잔액은 신청 즉시 차감됩니다.</li>

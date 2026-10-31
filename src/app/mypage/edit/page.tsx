@@ -87,13 +87,13 @@ export default function MyPageEdit() {
             <h2 className="mb-5 text-lg font-bold text-[#231C17]">닉네임 변경</h2>
             <form onSubmit={handleNickname} className="flex flex-col gap-4">
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-[#555555]">새 닉네임</label>
+                <label className="mb-1.5 block text-sm font-medium text-[#6B605A]">새 닉네임</label>
                 <input
                   type="text"
                   value={nickname}
                   onChange={(e) => { setNickname(e.target.value); setNickError(''); setNickDone(false) }}
                   maxLength={20}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#333333] outline-none focus:border-[#231C17]"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#3A322C] outline-none focus:border-[#231C17]"
                 />
               </div>
               {nickError && <p className="text-sm text-red-500">{nickError}</p>}
@@ -113,24 +113,24 @@ export default function MyPageEdit() {
             <h2 className="mb-5 text-lg font-bold text-[#231C17]">비밀번호 변경</h2>
             <form onSubmit={handlePassword} className="flex flex-col gap-4">
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-[#555555]">새 비밀번호</label>
+                <label className="mb-1.5 block text-sm font-medium text-[#6B605A]">새 비밀번호</label>
                 <input
                   type="password"
                   value={newPassword}
                   onChange={(e) => { setNewPassword(e.target.value); setPwError(''); setPwDone(false) }}
                   placeholder="6자리 이상"
                   minLength={6}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#333333] outline-none focus:border-[#231C17]"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#3A322C] outline-none focus:border-[#231C17]"
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-[#555555]">새 비밀번호 확인</label>
+                <label className="mb-1.5 block text-sm font-medium text-[#6B605A]">새 비밀번호 확인</label>
                 <input
                   type="password"
                   value={confirmPw}
                   onChange={(e) => { setConfirmPw(e.target.value); setPwError(''); setPwDone(false) }}
                   placeholder="비밀번호 재입력"
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#333333] outline-none focus:border-[#231C17]"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#3A322C] outline-none focus:border-[#231C17]"
                 />
               </div>
               {pwError && <p className="text-sm text-red-500">{pwError}</p>}

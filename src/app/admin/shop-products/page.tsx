@@ -282,7 +282,7 @@ export default function AdminShopProductsPage() {
           <select
             value={bulkCategoryId}
             onChange={(e) => { setBulkCategoryId(e.target.value); setBulkSubcategoryId('') }}
-            className="rounded border border-gray-200 bg-white px-2 py-1 text-xs outline-none focus:border-brand-violet"
+            className="rounded border border-gray-200 bg-white px-2 py-1 text-xs outline-none focus:border-brand-primary"
           >
             <option value="">미분류</option>
             {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -291,13 +291,13 @@ export default function AdminShopProductsPage() {
             value={bulkSubcategoryId}
             onChange={(e) => setBulkSubcategoryId(e.target.value)}
             disabled={!bulkCategoryId}
-            className="rounded border border-gray-200 bg-white px-2 py-1 text-xs outline-none focus:border-brand-violet disabled:bg-gray-100 disabled:text-gray-400"
+            className="rounded border border-gray-200 bg-white px-2 py-1 text-xs outline-none focus:border-brand-primary disabled:bg-gray-100 disabled:text-gray-400"
           >
             <option value="">선택 안 함</option>
             {bulkSubcategoryOptions.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
           </select>
           <button type="button" onClick={applyBulkCategory} disabled={bulkActing}
-            className="rounded border border-gray-300 px-2.5 py-1 text-xs font-semibold text-[#555] hover:bg-gray-50 disabled:opacity-50">
+            className="rounded border border-gray-300 px-2.5 py-1 text-xs font-semibold text-[#6B605A] hover:bg-gray-50 disabled:opacity-50">
             카테고리 적용
           </button>
         </div>
@@ -317,10 +317,10 @@ export default function AdminShopProductsPage() {
           <input
             type="text" value={bulkTagAddInput} onChange={(e) => setBulkTagAddInput(e.target.value)}
             placeholder="추가할 태그 (쉼표 구분)"
-            className="w-36 rounded border border-gray-200 px-2 py-1 text-xs outline-none focus:border-brand-violet"
+            className="w-36 rounded border border-gray-200 px-2 py-1 text-xs outline-none focus:border-brand-primary"
           />
           <button type="button" onClick={applyBulkAddTags} disabled={bulkActing || !bulkTagAddInput.trim()}
-            className="rounded border border-gray-300 px-2.5 py-1 text-xs font-semibold text-[#555] hover:bg-gray-50 disabled:opacity-50">
+            className="rounded border border-gray-300 px-2.5 py-1 text-xs font-semibold text-[#6B605A] hover:bg-gray-50 disabled:opacity-50">
             태그 추가
           </button>
         </div>
@@ -330,7 +330,7 @@ export default function AdminShopProductsPage() {
           일괄 삭제
         </button>
         <button type="button" onClick={clearSelection}
-          className="rounded border border-gray-300 px-2.5 py-1 text-xs font-semibold text-[#555] hover:bg-gray-50">
+          className="rounded border border-gray-300 px-2.5 py-1 text-xs font-semibold text-[#6B605A] hover:bg-gray-50">
           선택 해제
         </button>
 
@@ -760,7 +760,7 @@ export default function AdminShopProductsPage() {
             <button
               type="button" onClick={() => { setStatusFilter('all'); setScopedPage(1) }}
               className={`rounded px-2.5 py-1 text-xs font-semibold transition-colors ${
-                statusFilter === 'all' ? 'bg-brand-ink text-white' : 'border border-gray-200 text-[#555] hover:border-brand-violet hover:text-brand-violet'
+                statusFilter === 'all' ? 'bg-brand-ink text-white' : 'border border-gray-200 text-[#6B605A] hover:border-brand-primary hover:text-brand-primary'
               }`}
             >
               전체 ({scopedStatusCounts.all})
@@ -776,7 +776,7 @@ export default function AdminShopProductsPage() {
             <button
               type="button" onClick={() => { setStatusFilter('published'); setScopedPage(1) }}
               className={`rounded px-2.5 py-1 text-xs font-semibold transition-colors ${
-                statusFilter === 'published' ? 'bg-brand-ink text-white' : 'border border-gray-200 text-[#555] hover:border-brand-violet hover:text-brand-violet'
+                statusFilter === 'published' ? 'bg-brand-ink text-white' : 'border border-gray-200 text-[#6B605A] hover:border-brand-primary hover:text-brand-primary'
               }`}
             >
               공개 ({scopedStatusCounts.published})
@@ -784,7 +784,7 @@ export default function AdminShopProductsPage() {
             <input
               type="text" value={listQuery} onChange={(e) => { setListQuery(e.target.value); setScopedPage(1) }}
               placeholder="상품명 검색"
-              className="ml-auto w-40 rounded border border-gray-200 px-2.5 py-1 text-xs outline-none focus:border-brand-violet"
+              className="ml-auto w-40 rounded border border-gray-200 px-2.5 py-1 text-xs outline-none focus:border-brand-primary"
             />
           </div>
         </div>
@@ -800,7 +800,7 @@ export default function AdminShopProductsPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+                  <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
                     <th className="w-10 px-4 py-2">
                       <input type="checkbox" checked={allVisibleSelected} onChange={toggleSelectAllVisible} className="accent-brand-ink" />
                     </th>
@@ -820,12 +820,12 @@ export default function AdminShopProductsPage() {
                       <td className="px-4 py-2">
                         <ImageThumbnail src={p.image_url} alt={p.title} className="h-12 w-12 rounded bg-gray-50 object-contain" />
                       </td>
-                      <td className="max-w-xs px-4 py-2 font-medium text-[#333]">
+                      <td className="max-w-xs px-4 py-2 font-medium text-[#3A322C]">
                         <span className="line-clamp-2">{p.title}</span>
                       </td>
-                      <td className="px-4 py-2 text-[#777]">{p.price_text ?? '-'}</td>
+                      <td className="px-4 py-2 text-[#6B605A]">{p.price_text ?? '-'}</td>
                       <td className="px-4 py-2">
-                        <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${p.is_active ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500'}`}>
+                        <span className={`rounded-[3px] px-2 py-0.5 text-xs font-semibold ${p.is_active ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500'}`}>
                           {p.is_active ? '공개' : '비공개'}
                         </span>
                       </td>
@@ -852,12 +852,12 @@ export default function AdminShopProductsPage() {
             {scopedTotalPages > 1 && (
               <div className="flex items-center justify-center gap-3 border-t border-gray-100 px-4 py-3">
                 <button type="button" onClick={() => setScopedPage((v) => Math.max(1, v - 1))} disabled={scopedCurrentPage <= 1}
-                  className="rounded border border-gray-300 px-3 py-1.5 text-xs font-semibold text-[#555] hover:bg-gray-50 disabled:opacity-40">
+                  className="rounded border border-gray-300 px-3 py-1.5 text-xs font-semibold text-[#6B605A] hover:bg-gray-50 disabled:opacity-40">
                   이전
                 </button>
-                <span className="text-xs text-[#777]">{scopedCurrentPage} / {scopedTotalPages}</span>
+                <span className="text-xs text-[#6B605A]">{scopedCurrentPage} / {scopedTotalPages}</span>
                 <button type="button" onClick={() => setScopedPage((v) => Math.min(scopedTotalPages, v + 1))} disabled={scopedCurrentPage >= scopedTotalPages}
-                  className="rounded border border-gray-300 px-3 py-1.5 text-xs font-semibold text-[#555] hover:bg-gray-50 disabled:opacity-40">
+                  className="rounded border border-gray-300 px-3 py-1.5 text-xs font-semibold text-[#6B605A] hover:bg-gray-50 disabled:opacity-40">
                   다음
                 </button>
               </div>
@@ -972,7 +972,7 @@ export default function AdminShopProductsPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+                <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
                   <th className="w-10 px-4 py-3"></th>
                   <th className="px-4 py-3">카테고리</th>
                   <th className="px-4 py-3">하위카테고리 수</th>
@@ -993,10 +993,10 @@ export default function AdminShopProductsPage() {
                         className={`cursor-pointer transition-colors ${isExpanded ? 'bg-brand-primary-light' : 'hover:bg-gray-50'}`}
                       >
                         <td className="px-4 py-3"><ChevronIcon open={isExpanded} /></td>
-                        <td className="px-4 py-3 font-medium text-[#333]">{c.name}</td>
-                        <td className="px-4 py-3 text-[#777]">{subs.length}</td>
-                        <td className="px-4 py-3 text-[#777]">{catProducts.length}</td>
-                        <td className="px-4 py-3 text-[#777]">{catProducts.filter((p) => p.is_active).length}</td>
+                        <td className="px-4 py-3 font-medium text-[#3A322C]">{c.name}</td>
+                        <td className="px-4 py-3 text-[#6B605A]">{subs.length}</td>
+                        <td className="px-4 py-3 text-[#6B605A]">{catProducts.length}</td>
+                        <td className="px-4 py-3 text-[#6B605A]">{catProducts.filter((p) => p.is_active).length}</td>
                         <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                           <div className="flex flex-wrap items-center gap-3">
                             <button onClick={() => openEditCat(c)} className="text-xs text-brand-primary hover:text-brand-primary-hover">수정</button>
@@ -1031,7 +1031,7 @@ export default function AdminShopProductsPage() {
                                   <p className="text-xs font-semibold text-brand-ink">하위카테고리 ({subs.length}개)</p>
                                   <button
                                     type="button" onClick={() => openCreateSub(c.id)}
-                                    className="rounded border border-gray-300 px-2.5 py-1 text-xs font-semibold text-[#555] hover:bg-gray-50"
+                                    className="rounded border border-gray-300 px-2.5 py-1 text-xs font-semibold text-[#6B605A] hover:bg-gray-50"
                                   >
                                     + 하위카테고리 추가
                                   </button>
@@ -1041,7 +1041,7 @@ export default function AdminShopProductsPage() {
                                 ) : (
                                   <table className="w-full text-xs">
                                     <thead>
-                                      <tr className="border-b border-gray-100 text-left text-[#999]">
+                                      <tr className="border-b border-gray-100 text-left text-[#9A8F88]">
                                         <th className="px-4 py-2 font-normal">이름</th>
                                         <th className="px-4 py-2 font-normal">상품 수</th>
                                         <th className="px-4 py-2 font-normal">관리</th>
@@ -1056,8 +1056,8 @@ export default function AdminShopProductsPage() {
                                             onClick={() => toggleSubcategory(s.id)}
                                             className={`cursor-pointer transition-colors ${subSelected ? 'bg-brand-primary-light' : 'hover:bg-gray-50'}`}
                                           >
-                                            <td className="px-4 py-2 font-medium text-[#333]">{s.name}</td>
-                                            <td className="px-4 py-2 text-[#777]">{productsOfSubcategory(s.id).length}개</td>
+                                            <td className="px-4 py-2 font-medium text-[#3A322C]">{s.name}</td>
+                                            <td className="px-4 py-2 text-[#6B605A]">{productsOfSubcategory(s.id).length}개</td>
                                             <td className="px-4 py-2" onClick={(e) => e.stopPropagation()}>
                                               <div className="flex flex-wrap items-center gap-2.5">
                                                 <button onClick={() => openEditSub(s)} className="text-brand-primary hover:text-brand-primary-hover">수정</button>
@@ -1110,10 +1110,10 @@ export default function AdminShopProductsPage() {
                     className={`cursor-pointer transition-colors ${expandedKey === UNCATEGORIZED ? 'bg-brand-primary-light' : 'hover:bg-gray-50'}`}
                   >
                     <td className="px-4 py-3"><ChevronIcon open={expandedKey === UNCATEGORIZED} /></td>
-                    <td className="px-4 py-3 font-medium text-[#333]">미분류</td>
+                    <td className="px-4 py-3 font-medium text-[#3A322C]">미분류</td>
                     <td className="px-4 py-3 text-gray-300">-</td>
-                    <td className="px-4 py-3 text-[#777]">{uncategorizedProducts.length}</td>
-                    <td className="px-4 py-3 text-[#777]">{uncategorizedProducts.filter((p) => p.is_active).length}</td>
+                    <td className="px-4 py-3 text-[#6B605A]">{uncategorizedProducts.length}</td>
+                    <td className="px-4 py-3 text-[#6B605A]">{uncategorizedProducts.filter((p) => p.is_active).length}</td>
                     <td className="px-4 py-3"></td>
                   </tr>
                   {expandedKey === UNCATEGORIZED && (
@@ -1154,7 +1154,7 @@ export default function AdminShopProductsPage() {
                 선택 삭제
               </button>
               <button type="button" onClick={clearSelection}
-                className="rounded border border-gray-300 px-2.5 py-1 text-xs font-semibold text-[#555] hover:bg-gray-50">
+                className="rounded border border-gray-300 px-2.5 py-1 text-xs font-semibold text-[#6B605A] hover:bg-gray-50">
                 선택 해제
               </button>
               {bulkError && <p className="w-full text-xs text-red-500">{bulkError}</p>}
@@ -1169,7 +1169,7 @@ export default function AdminShopProductsPage() {
                   className="shrink-0 accent-brand-ink"
                 />
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-medium text-[#333]">{p.title}</p>
+                  <p className="truncate text-sm font-medium text-[#3A322C]">{p.title}</p>
                   <p className="text-xs text-amber-700">
                     {p.deactivated_reason}
                     {p.deactivated_at ? ` · ${new Date(p.deactivated_at).toLocaleDateString('ko-KR')}` : ''}
@@ -1207,12 +1207,12 @@ export default function AdminShopProductsPage() {
                   key={tag}
                   type="button"
                   onClick={() => handleAllQueryChange(tag)}
-                  className={`cursor-pointer rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+                  className={`cursor-pointer rounded-[3px] px-3 py-1 text-xs font-semibold transition-colors ${
                     isSelected
                       ? 'bg-brand-ink text-white'
                       : count < MIN_TAG_COUNT
                         ? 'bg-red-50 text-red-600 hover:bg-red-100'
-                        : 'bg-gray-100 text-[#555] hover:bg-gray-200'
+                        : 'bg-gray-100 text-[#6B605A] hover:bg-gray-200'
                   }`}
                 >
                   {tag} {count}개
@@ -1246,14 +1246,14 @@ export default function AdminShopProductsPage() {
                 value={allQuery}
                 onChange={(e) => handleAllQueryChange(e.target.value)}
                 placeholder="상품명 · 태그 검색"
-                className="w-48 rounded border border-gray-200 px-3 py-1.5 text-xs outline-none focus:border-brand-violet"
+                className="w-48 rounded border border-gray-200 px-3 py-1.5 text-xs outline-none focus:border-brand-primary"
               />
               <input
                 type="number"
                 value={allMinPrice}
                 onChange={(e) => handleAllMinPriceChange(e.target.value)}
                 placeholder="최소 금액"
-                className="w-28 rounded border border-gray-200 px-3 py-1.5 text-xs outline-none focus:border-brand-violet"
+                className="w-28 rounded border border-gray-200 px-3 py-1.5 text-xs outline-none focus:border-brand-primary"
               />
               <span className="text-xs text-gray-400">~</span>
               <input
@@ -1261,7 +1261,7 @@ export default function AdminShopProductsPage() {
                 value={allMaxPrice}
                 onChange={(e) => handleAllMaxPriceChange(e.target.value)}
                 placeholder="최대 금액"
-                className="w-28 rounded border border-gray-200 px-3 py-1.5 text-xs outline-none focus:border-brand-violet"
+                className="w-28 rounded border border-gray-200 px-3 py-1.5 text-xs outline-none focus:border-brand-primary"
               />
 
               <div className="ml-auto flex gap-1.5">
@@ -1273,7 +1273,7 @@ export default function AdminShopProductsPage() {
                     className={`rounded px-3 py-1.5 text-xs font-semibold transition-colors ${
                       allActiveFilter === v
                         ? 'bg-brand-ink text-white'
-                        : 'border border-gray-200 text-[#555] hover:border-brand-violet hover:text-brand-violet'
+                        : 'border border-gray-200 text-[#6B605A] hover:border-brand-primary hover:text-brand-primary'
                     }`}
                   >
                     {v === 'all' ? '전체' : v === 'active' ? '활성' : '비활성'}
@@ -1298,7 +1298,7 @@ export default function AdminShopProductsPage() {
             <button
               type="button"
               onClick={resetAllFilters}
-              className="rounded border border-gray-300 px-4 py-1.5 text-xs font-semibold text-[#555] hover:bg-gray-50"
+              className="rounded border border-gray-300 px-4 py-1.5 text-xs font-semibold text-[#6B605A] hover:bg-gray-50"
             >
               필터 초기화
             </button>
@@ -1308,7 +1308,7 @@ export default function AdminShopProductsPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+                  <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
                     <th className="w-10 whitespace-nowrap px-6 py-3">
                       <input type="checkbox" checked={allVisibleSelected} onChange={toggleSelectAllInAllList} className="accent-brand-ink" />
                     </th>
@@ -1347,26 +1347,26 @@ export default function AdminShopProductsPage() {
                             </a>
                           )}
                         </td>
-                        <td className="px-6 py-3 font-medium text-[#333]">
+                        <td className="px-6 py-3 font-medium text-[#3A322C]">
                           {p.title}
                           {imageBroken && (
-                            <span className="ml-2 whitespace-nowrap rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500">
+                            <span className="ml-2 whitespace-nowrap rounded-[3px] bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-500">
                               이미지 없음
                             </span>
                           )}
                         </td>
-                        <td className="px-6 py-3 text-[#777]">{categoryLabel(p)}</td>
-                        <td className="whitespace-nowrap px-6 py-3 text-[#777]">{p.price_text ?? '-'}</td>
-                        <td className="px-6 py-3 text-[#777]">{(p.tags ?? []).join(', ') || '-'}</td>
+                        <td className="px-6 py-3 text-[#6B605A]">{categoryLabel(p)}</td>
+                        <td className="whitespace-nowrap px-6 py-3 text-[#6B605A]">{p.price_text ?? '-'}</td>
+                        <td className="px-6 py-3 text-[#6B605A]">{(p.tags ?? []).join(', ') || '-'}</td>
                         <td className="whitespace-nowrap px-6 py-3">
-                          <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${p.is_active ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500'}`}>
+                          <span className={`rounded-[3px] px-2 py-0.5 text-xs font-semibold ${p.is_active ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500'}`}>
                             {p.is_active ? '활성' : '비활성'}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-6 py-3 text-[#777]">{p.impression_count.toLocaleString()}</td>
-                        <td className="whitespace-nowrap px-6 py-3 text-[#777]">{p.click_count.toLocaleString()}</td>
-                        <td className="whitespace-nowrap px-6 py-3 text-[#777]">{ctrLabel(p.click_count, p.impression_count)}</td>
-                        <td className={`whitespace-nowrap px-6 py-3 ${isStale(p.last_checked_at) ? 'bg-amber-50 text-amber-700' : 'text-[#777]'}`}>
+                        <td className="whitespace-nowrap px-6 py-3 text-[#6B605A]">{p.impression_count.toLocaleString()}</td>
+                        <td className="whitespace-nowrap px-6 py-3 text-[#6B605A]">{p.click_count.toLocaleString()}</td>
+                        <td className="whitespace-nowrap px-6 py-3 text-[#6B605A]">{ctrLabel(p.click_count, p.impression_count)}</td>
+                        <td className={`whitespace-nowrap px-6 py-3 ${isStale(p.last_checked_at) ? 'bg-amber-50 text-amber-700' : 'text-[#6B605A]'}`}>
                           {p.last_checked_at ? new Date(p.last_checked_at).toLocaleDateString('ko-KR') : '미확인'}
                         </td>
                         <td className="whitespace-nowrap px-6 py-3">
@@ -1391,16 +1391,16 @@ export default function AdminShopProductsPage() {
                   type="button"
                   onClick={() => setAllPage((p) => Math.max(1, p - 1))}
                   disabled={allCurrentPage <= 1}
-                  className="rounded border border-gray-300 px-3 py-1.5 text-xs font-semibold text-[#555] hover:bg-gray-50 disabled:opacity-40"
+                  className="rounded border border-gray-300 px-3 py-1.5 text-xs font-semibold text-[#6B605A] hover:bg-gray-50 disabled:opacity-40"
                 >
                   이전
                 </button>
-                <span className="text-xs text-[#777]">{allCurrentPage} / {allTotalPages}</span>
+                <span className="text-xs text-[#6B605A]">{allCurrentPage} / {allTotalPages}</span>
                 <button
                   type="button"
                   onClick={() => setAllPage((p) => Math.min(allTotalPages, p + 1))}
                   disabled={allCurrentPage >= allTotalPages}
-                  className="rounded border border-gray-300 px-3 py-1.5 text-xs font-semibold text-[#555] hover:bg-gray-50 disabled:opacity-40"
+                  className="rounded border border-gray-300 px-3 py-1.5 text-xs font-semibold text-[#6B605A] hover:bg-gray-50 disabled:opacity-40"
                 >
                   다음
                 </button>
@@ -1416,27 +1416,27 @@ export default function AdminShopProductsPage() {
           <form onSubmit={submitCatForm} className="w-full max-w-sm space-y-3 rounded-2xl bg-white p-6 shadow-2xl">
             <h3 className="text-base font-bold text-brand-ink">{catEditId ? '카테고리 수정' : '새 카테고리'}</h3>
             <div>
-              <label className="mb-1 block text-xs text-[#555]">이름</label>
+              <label className="mb-1 block text-xs text-[#6B605A]">이름</label>
               <input
                 type="text" value={catName} onChange={(e) => setCatName(e.target.value)}
                 placeholder="예: 여성패션"
-                className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+                className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
                 autoFocus
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-[#555]">slug</label>
+              <label className="mb-1 block text-xs text-[#6B605A]">slug</label>
               <input
                 type="text" value={catSlug} onChange={(e) => setCatSlug(e.target.value)}
                 placeholder="예: women-fashion"
-                className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+                className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-[#555]">정렬 순서</label>
+              <label className="mb-1 block text-xs text-[#6B605A]">정렬 순서</label>
               <input
                 type="number" value={catSortOrder} onChange={(e) => setCatSortOrder(e.target.value)}
-                className="w-32 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+                className="w-32 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
               />
             </div>
             {catError && <p className="text-xs text-red-500">{catError}</p>}
@@ -1446,7 +1446,7 @@ export default function AdminShopProductsPage() {
                 {catSaving ? '저장 중...' : catEditId ? '수정 완료' : '등록'}
               </button>
               <button type="button" onClick={closeCatModal}
-                className="flex-1 rounded border border-gray-300 px-4 py-2 text-sm font-semibold text-[#555] hover:bg-gray-50">
+                className="flex-1 rounded border border-gray-300 px-4 py-2 text-sm font-semibold text-[#6B605A] hover:bg-gray-50">
                 취소
               </button>
             </div>
@@ -1460,27 +1460,27 @@ export default function AdminShopProductsPage() {
           <form onSubmit={submitSubForm} className="w-full max-w-sm space-y-3 rounded-2xl bg-white p-6 shadow-2xl">
             <h3 className="text-base font-bold text-brand-ink">{subEditId ? '하위카테고리 수정' : '새 하위카테고리'}</h3>
             <div>
-              <label className="mb-1 block text-xs text-[#555]">이름</label>
+              <label className="mb-1 block text-xs text-[#6B605A]">이름</label>
               <input
                 type="text" value={subName} onChange={(e) => setSubName(e.target.value)}
                 placeholder="예: 원피스"
-                className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+                className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
                 autoFocus
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-[#555]">slug</label>
+              <label className="mb-1 block text-xs text-[#6B605A]">slug</label>
               <input
                 type="text" value={subSlug} onChange={(e) => setSubSlug(e.target.value)}
                 placeholder="예: dress"
-                className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+                className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs text-[#555]">정렬 순서</label>
+              <label className="mb-1 block text-xs text-[#6B605A]">정렬 순서</label>
               <input
                 type="number" value={subSortOrder} onChange={(e) => setSubSortOrder(e.target.value)}
-                className="w-32 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+                className="w-32 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
               />
             </div>
             {subError && <p className="text-xs text-red-500">{subError}</p>}
@@ -1490,7 +1490,7 @@ export default function AdminShopProductsPage() {
                 {subSaving ? '저장 중...' : subEditId ? '수정 완료' : '등록'}
               </button>
               <button type="button" onClick={closeSubModal}
-                className="flex-1 rounded border border-gray-300 px-4 py-2 text-sm font-semibold text-[#555] hover:bg-gray-50">
+                className="flex-1 rounded border border-gray-300 px-4 py-2 text-sm font-semibold text-[#6B605A] hover:bg-gray-50">
                 취소
               </button>
             </div>
@@ -1510,13 +1510,13 @@ export default function AdminShopProductsPage() {
               <div className="flex gap-1.5 rounded-lg bg-gray-100 p-1">
                 <button
                   type="button" onClick={() => setPFormTab('manual')}
-                  className={`flex-1 rounded-md py-1.5 text-xs font-semibold transition-colors ${pFormTab === 'manual' ? 'bg-white text-brand-ink shadow-sm' : 'text-[#777]'}`}
+                  className={`flex-1 rounded-md py-1.5 text-xs font-semibold transition-colors ${pFormTab === 'manual' ? 'bg-white text-brand-ink shadow-sm' : 'text-[#6B605A]'}`}
                 >
                   직접 입력
                 </button>
                 <button
                   type="button" onClick={() => setPFormTab('coupang')}
-                  className={`flex-1 rounded-md py-1.5 text-xs font-semibold transition-colors ${pFormTab === 'coupang' ? 'bg-white text-brand-ink shadow-sm' : 'text-[#777]'}`}
+                  className={`flex-1 rounded-md py-1.5 text-xs font-semibold transition-colors ${pFormTab === 'coupang' ? 'bg-white text-brand-ink shadow-sm' : 'text-[#6B605A]'}`}
                 >
                   쿠팡에서 검색
                 </button>
@@ -1526,10 +1526,10 @@ export default function AdminShopProductsPage() {
             {/* 카테고리/하위카테고리 — 직접 입력·쿠팡 검색 두 방식 공용 */}
             <div className="flex gap-3">
               <div className="flex-1">
-                <label className="mb-1 block text-sm text-[#555]">카테고리</label>
+                <label className="mb-1 block text-sm text-[#6B605A]">카테고리</label>
                 <select
                   value={pCategoryId} onChange={(e) => handleFormCategoryChange(e.target.value)}
-                  className="w-full rounded border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-violet"
+                  className="w-full rounded border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-primary"
                 >
                   <option value="">미분류</option>
                   {categories.map((c) => (
@@ -1538,11 +1538,11 @@ export default function AdminShopProductsPage() {
                 </select>
               </div>
               <div className="flex-1">
-                <label className="mb-1 block text-sm text-[#555]">하위카테고리</label>
+                <label className="mb-1 block text-sm text-[#6B605A]">하위카테고리</label>
                 <select
                   value={pSubcategoryId} onChange={(e) => setPSubcategoryId(e.target.value)}
                   disabled={!pCategoryId}
-                  className="w-full rounded border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-violet disabled:bg-gray-50 disabled:text-gray-400"
+                  className="w-full rounded border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-primary disabled:bg-gray-50 disabled:text-gray-400"
                 >
                   <option value="">선택 안 함</option>
                   {subcategoriesForForm.map((s) => (
@@ -1555,63 +1555,63 @@ export default function AdminShopProductsPage() {
             {(productFormMode === 'edit' || pFormTab === 'manual') ? (
               <form onSubmit={submitProductForm} className="space-y-4">
                 <div>
-                  <label className="mb-1 block text-sm text-[#555]">상품명</label>
+                  <label className="mb-1 block text-sm text-[#6B605A]">상품명</label>
                   <input
                     type="text" value={pTitle} onChange={(e) => handlePTitleChange(e.target.value)}
-                    className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+                    className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-sm text-[#555]">가격 텍스트 (선택)</label>
+                  <label className="mb-1 block text-sm text-[#6B605A]">가격 텍스트 (선택)</label>
                   <input
                     type="text" value={pPriceText} onChange={(e) => setPPriceText(e.target.value)}
                     placeholder="예: 12,900원"
-                    className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+                    className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-sm text-[#555]">이미지 URL (선택)</label>
+                  <label className="mb-1 block text-sm text-[#6B605A]">이미지 URL (선택)</label>
                   <div className="flex items-center gap-3">
                     <input
                       type="text" value={pImageUrl} onChange={(e) => setPImageUrl(e.target.value)}
                       placeholder="https://..."
-                      className="flex-1 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+                      className="flex-1 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
                     />
                     <ImageThumbnail key={pImageUrl} src={pImageUrl.trim() || null} alt="미리보기" className="h-14 w-14 shrink-0 rounded bg-gray-50 object-contain" />
                   </div>
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-sm text-[#555]">
+                  <label className="mb-1 block text-sm text-[#6B605A]">
                     링크 URL <span className="text-xs text-gray-400">(쿠팡 파트너스 등에서 발급받은 링크를 직접 입력하세요)</span>
                   </label>
                   <input
                     type="text" value={pLinkUrl} onChange={(e) => setPLinkUrl(e.target.value)}
                     placeholder="https://link.coupang.com/..."
-                    className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+                    className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-sm text-[#555]">태그 (쉼표로 구분, 사전 항목과 매칭됨)</label>
+                  <label className="mb-1 block text-sm text-[#6B605A]">태그 (쉼표로 구분, 사전 항목과 매칭됨)</label>
                   <input
                     type="text" value={pTagsInput} onChange={(e) => setPTagsInput(e.target.value)}
                     placeholder="예: 돼지, 재물운"
-                    className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+                    className="w-full rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-1 block text-sm text-[#555]">정렬 순서 (작을수록 먼저 노출)</label>
+                  <label className="mb-1 block text-sm text-[#6B605A]">정렬 순서 (작을수록 먼저 노출)</label>
                   <input
                     type="number" value={pSortOrder} onChange={(e) => setPSortOrder(e.target.value)}
-                    className="w-32 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+                    className="w-32 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
                   />
                 </div>
 
-                <label className="flex items-center gap-2 text-sm text-[#555]">
+                <label className="flex items-center gap-2 text-sm text-[#6B605A]">
                   <input type="checkbox" checked={pIsActive} onChange={(e) => setPIsActive(e.target.checked)} className="accent-brand-ink" />
                   공개 (체크 시 노출)
                 </label>
@@ -1624,14 +1624,14 @@ export default function AdminShopProductsPage() {
                     {pSaving ? '저장 중...' : productFormMode === 'edit' ? '수정 완료' : '등록'}
                   </button>
                   <button type="button" onClick={closeProductForm}
-                    className="flex-1 rounded border border-gray-300 px-5 py-2 text-sm font-semibold text-[#555] hover:bg-gray-50">
+                    className="flex-1 rounded border border-gray-300 px-5 py-2 text-sm font-semibold text-[#6B605A] hover:bg-gray-50">
                     취소
                   </button>
                 </div>
               </form>
             ) : (
               <div className="space-y-3">
-                <p className="text-xs text-[#888]">
+                <p className="text-xs text-[#6B605A]">
                   검색어를 쉼표로 여러 개 입력하면 순차 검색해 결과를 합쳐줍니다. 예: 돼지저금통, 복돼지, 황금돼지
                 </p>
 
@@ -1641,7 +1641,7 @@ export default function AdminShopProductsPage() {
                     value={coupangKeyword}
                     onChange={(e) => setCoupangKeyword(e.target.value)}
                     placeholder="검색어 입력, 쉼표로 여러 개 가능"
-                    className="flex-1 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-violet"
+                    className="flex-1 rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-brand-primary"
                   />
                   <button
                     type="submit"
@@ -1658,7 +1658,7 @@ export default function AdminShopProductsPage() {
                 {coupangResults.length > 0 && (
                   <div>
                     <div className="mb-2 flex items-center gap-3 rounded border border-gray-100 bg-gray-50 p-2">
-                      <label className="flex shrink-0 items-center gap-1.5 text-xs font-semibold text-[#555]">
+                      <label className="flex shrink-0 items-center gap-1.5 text-xs font-semibold text-[#6B605A]">
                         <input
                           type="checkbox"
                           checked={allCoupangSelected}
@@ -1673,7 +1673,7 @@ export default function AdminShopProductsPage() {
                         onChange={(e) => handleBulkTagChange(e.target.value)}
                         disabled={selectedCoupangIds.size === 0}
                         placeholder="선택 항목에 태그 일괄 입력 (쉼표 구분)"
-                        className="flex-1 rounded border border-gray-200 px-2 py-1 text-xs outline-none focus:border-brand-violet disabled:bg-gray-100 disabled:text-gray-400"
+                        className="flex-1 rounded border border-gray-200 px-2 py-1 text-xs outline-none focus:border-brand-primary disabled:bg-gray-100 disabled:text-gray-400"
                       />
                     </div>
                     <div className="max-h-72 space-y-2 overflow-y-auto">
@@ -1687,15 +1687,15 @@ export default function AdminShopProductsPage() {
                           />
                           <ImageThumbnail src={p.productImage} alt={p.productName} className="h-16 w-16 shrink-0 rounded bg-gray-50 object-contain" />
                           <div className="min-w-0 flex-1">
-                            <p className="truncate text-sm font-medium text-[#333]">{p.productName}</p>
-                            <p className="text-xs text-[#777]">{p.productPrice.toLocaleString()}원</p>
+                            <p className="truncate text-sm font-medium text-[#3A322C]">{p.productName}</p>
+                            <p className="text-xs text-[#6B605A]">{p.productPrice.toLocaleString()}원</p>
                           </div>
                           <input
                             type="text"
                             value={coupangTags[p.productId] ?? ''}
                             onChange={(e) => setCoupangTags((prev) => ({ ...prev, [p.productId]: e.target.value }))}
                             placeholder="태그 (쉼표 구분)"
-                            className="w-32 shrink-0 rounded border border-gray-200 px-2 py-1 text-xs outline-none focus:border-brand-violet"
+                            className="w-32 shrink-0 rounded border border-gray-200 px-2 py-1 text-xs outline-none focus:border-brand-primary"
                           />
                         </div>
                       ))}
@@ -1713,7 +1713,7 @@ export default function AdminShopProductsPage() {
 
                 <div className="flex justify-end pt-1">
                   <button type="button" onClick={closeProductForm}
-                    className="rounded border border-gray-300 px-5 py-2 text-sm font-semibold text-[#555] hover:bg-gray-50">
+                    className="rounded border border-gray-300 px-5 py-2 text-sm font-semibold text-[#6B605A] hover:bg-gray-50">
                     닫기
                   </button>
                 </div>
@@ -1730,13 +1730,13 @@ export default function AdminShopProductsPage() {
             <h3 className="mb-2 text-center text-lg font-black text-brand-ink">
               {deleteTarget.type === 'category' ? '카테고리 삭제' : deleteTarget.type === 'subcategory' ? '하위카테고리 삭제' : '상품 삭제'}
             </h3>
-            <p className="mb-6 text-center text-sm text-[#555]">
+            <p className="mb-6 text-center text-sm text-[#6B605A]">
               &ldquo;{deleteTarget.label}&rdquo;{deleteTarget.type !== 'product' ? '을(를) 삭제하면 소속된 하위 항목·상품 연결이 영향을 받을 수 있습니다.' : '을(를) 삭제하시겠습니까?'}
               <br />삭제 후 복구할 수 없습니다.
             </p>
             <div className="flex gap-3">
               <button type="button" onClick={() => setDeleteTarget(null)} disabled={deleting}
-                className="flex-1 rounded-xl border border-gray-300 py-3 text-sm font-semibold text-[#555] hover:bg-gray-50 disabled:opacity-50">
+                className="flex-1 rounded-xl border border-gray-300 py-3 text-sm font-semibold text-[#6B605A] hover:bg-gray-50 disabled:opacity-50">
                 취소
               </button>
               <button type="button" onClick={confirmDelete} disabled={deleting}
@@ -1753,12 +1753,12 @@ export default function AdminShopProductsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-2xl">
             <h3 className="mb-2 text-center text-lg font-black text-brand-ink">상품 일괄 삭제</h3>
-            <p className="mb-6 text-center text-sm text-[#555]">
+            <p className="mb-6 text-center text-sm text-[#6B605A]">
               선택한 {selectedProductIds.size}개 상품을 삭제하시겠습니까?<br />삭제 후 복구할 수 없습니다.
             </p>
             <div className="flex gap-3">
               <button type="button" onClick={() => setBulkDeleteConfirm(false)} disabled={bulkActing}
-                className="flex-1 rounded-xl border border-gray-300 py-3 text-sm font-semibold text-[#555] hover:bg-gray-50 disabled:opacity-50">
+                className="flex-1 rounded-xl border border-gray-300 py-3 text-sm font-semibold text-[#6B605A] hover:bg-gray-50 disabled:opacity-50">
                 취소
               </button>
               <button type="button" onClick={confirmBulkDelete} disabled={bulkActing}

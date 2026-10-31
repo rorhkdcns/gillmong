@@ -58,9 +58,9 @@ body {
   --color-brand-ink-soft:    #6B605A;
   --color-brand-line:        #EADFD8;
   --color-brand-bg:          #FAF6F2;
-  --color-brand-violet:      #E5421F;   /* (옛 이름 유지) 코랄 */
-  --color-brand-violet-deep: #C23A18;
-  --color-brand-pink:        #F0613F;   /* (옛 이름 유지) 코랄 밝은 쪽 — 그라디언트가 거의 티 나지 않게 */
+  --color-brand-primary:      #E5421F;   /* (옛 이름 유지) 코랄 */
+  --color-brand-primary-hover: #C23A18;
+  --color-brand-primary:        #F0613F;   /* (옛 이름 유지) 코랄 밝은 쪽 — 그라디언트가 거의 티 나지 않게 */
   --color-brand-gold:        #FFD23F;   /* 노랑 포인트 (남은 횟수 배지 등) */
   --color-brand-mint:        #2FB68E;
   --color-brand-cream:       #FFF1EA;

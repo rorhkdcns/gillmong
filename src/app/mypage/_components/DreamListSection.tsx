@@ -105,7 +105,7 @@ export default function DreamListSection({
             <button
               type="button"
               onClick={clearFilter}
-              className="flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs text-[#C23A18] hover:bg-amber-100"
+              className="flex items-center gap-1 rounded-[3px] bg-amber-50 px-2.5 py-1 text-xs text-[#C23A18] hover:bg-amber-100"
             >
               {selectedDate}
               <svg className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
@@ -120,7 +120,7 @@ export default function DreamListSection({
               className={`flex items-center gap-1.5 rounded border px-3 py-1.5 text-xs font-medium transition-colors ${
                 calendarOpen
                   ? 'border-[#231C17] bg-[#231C17] text-white'
-                  : 'border-gray-300 text-[#555555] hover:border-[#231C17] hover:text-[#231C17]'
+                  : 'border-gray-300 text-[#6B605A] hover:border-[#231C17] hover:text-[#231C17]'
               }`}
             >
               <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -142,7 +142,7 @@ export default function DreamListSection({
                     <button
                       type="button"
                       onClick={() => setCalBase(new Date(year, month - 1, 1))}
-                      className="rounded px-2 py-1 text-sm text-[#555555] hover:bg-gray-100"
+                      className="rounded px-2 py-1 text-sm text-[#6B605A] hover:bg-gray-100"
                     >
                       ‹
                     </button>
@@ -152,7 +152,7 @@ export default function DreamListSection({
                     <button
                       type="button"
                       onClick={() => setCalBase(new Date(year, month + 1, 1))}
-                      className="rounded px-2 py-1 text-sm text-[#555555] hover:bg-gray-100"
+                      className="rounded px-2 py-1 text-sm text-[#6B605A] hover:bg-gray-100"
                     >
                       ›
                     </button>
@@ -210,7 +210,7 @@ export default function DreamListSection({
                     <button
                       type="button"
                       onClick={() => { setSelectedDate(null); setPage(1); setCalendarOpen(false) }}
-                      className="mt-3 w-full rounded border border-gray-200 py-1.5 text-xs text-[#777777] hover:bg-gray-50"
+                      className="mt-3 w-full rounded border border-gray-200 py-1.5 text-xs text-[#6B605A] hover:bg-gray-50"
                     >
                       필터 초기화
                     </button>
@@ -224,7 +224,7 @@ export default function DreamListSection({
 
       {/* 리스트 */}
       {filtered.length === 0 ? (
-        <p className="py-8 text-center text-sm text-[#555555]">
+        <p className="py-8 text-center text-sm text-[#6B605A]">
           {selectedDate ? `${selectedDate}에 내역이 없습니다` : '내역이 없습니다'}
         </p>
       ) : (
@@ -232,7 +232,7 @@ export default function DreamListSection({
           {pageItems.map((item, idx) => (
             <li key={`${item.id}-${idx}`} className="flex items-center gap-3 py-4">
               {/* 날짜 */}
-              <span className="w-[88px] shrink-0 text-xs tabular-nums text-[#666666]">
+              <span className="w-[88px] shrink-0 text-xs tabular-nums text-[#6B605A]">
                 {item.date.slice(0, 10)}
               </span>
               {/* 등급 + 제목 */}
@@ -245,12 +245,12 @@ export default function DreamListSection({
                 <div className="min-w-0">
                   <Link
                     href={item.href}
-                    className="block truncate text-base font-medium text-[#333333] hover:text-[#231C17] hover:underline"
+                    className="block truncate text-base font-medium text-[#3A322C] hover:text-[#231C17] hover:underline"
                   >
                     {item.title}
                   </Link>
                   {item.subText && (
-                    <p className="text-xs text-[#666666]">{item.subText}</p>
+                    <p className="text-xs text-[#6B605A]">{item.subText}</p>
                   )}
                 </div>
               </div>
@@ -260,7 +260,7 @@ export default function DreamListSection({
                   <p className="text-base font-bold text-[#C23A18]">
                     {item.price.toLocaleString()}원
                     {item.priceLabel && (
-                      <span className="ml-0.5 text-xs font-normal text-[#666666]">{item.priceLabel}</span>
+                      <span className="ml-0.5 text-xs font-normal text-[#6B605A]">{item.priceLabel}</span>
                     )}
                   </p>
                 </div>
@@ -277,7 +277,7 @@ export default function DreamListSection({
             <button
               type="button"
               onClick={() => handlePageChange(currentPage - 1)}
-              className="flex h-8 w-8 items-center justify-center rounded text-sm text-[#555555] hover:bg-gray-100"
+              className="flex h-8 w-8 items-center justify-center rounded text-sm text-[#6B605A] hover:bg-gray-100"
             >
               ‹
             </button>
@@ -287,12 +287,12 @@ export default function DreamListSection({
               <button
                 type="button"
                 onClick={() => handlePageChange(1)}
-                className="flex h-8 w-8 items-center justify-center rounded text-sm text-[#555555] hover:bg-gray-100"
+                className="flex h-8 w-8 items-center justify-center rounded text-sm text-[#6B605A] hover:bg-gray-100"
               >
                 1
               </button>
               {pageRange[0] > 2 && (
-                <span className="flex h-8 w-6 items-center justify-center text-sm text-[#bbb]">…</span>
+                <span className="flex h-8 w-6 items-center justify-center text-sm text-[#B8ADA6]">…</span>
               )}
             </>
           )}
@@ -304,7 +304,7 @@ export default function DreamListSection({
               className={`flex h-8 w-8 items-center justify-center rounded text-sm transition-colors ${
                 p === currentPage
                   ? 'bg-[#231C17] font-semibold text-white'
-                  : 'text-[#555555] hover:bg-gray-100'
+                  : 'text-[#6B605A] hover:bg-gray-100'
               }`}
             >
               {p}
@@ -313,12 +313,12 @@ export default function DreamListSection({
           {pageRange[pageRange.length - 1] < totalPages && (
             <>
               {pageRange[pageRange.length - 1] < totalPages - 1 && (
-                <span className="flex h-8 w-6 items-center justify-center text-sm text-[#bbb]">…</span>
+                <span className="flex h-8 w-6 items-center justify-center text-sm text-[#B8ADA6]">…</span>
               )}
               <button
                 type="button"
                 onClick={() => handlePageChange(totalPages)}
-                className="flex h-8 w-8 items-center justify-center rounded text-sm text-[#555555] hover:bg-gray-100"
+                className="flex h-8 w-8 items-center justify-center rounded text-sm text-[#6B605A] hover:bg-gray-100"
               >
                 {totalPages}
               </button>
@@ -328,7 +328,7 @@ export default function DreamListSection({
             <button
               type="button"
               onClick={() => handlePageChange(currentPage + 1)}
-              className="flex h-8 w-8 items-center justify-center rounded text-sm text-[#555555] hover:bg-gray-100"
+              className="flex h-8 w-8 items-center justify-center rounded text-sm text-[#6B605A] hover:bg-gray-100"
             >
               ›
             </button>

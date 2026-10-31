@@ -58,7 +58,7 @@ export default function ReportModal({ dreamId, onClose }: Props) {
               </div>
             </div>
             <h2 className="mb-3 text-center text-xl text-[#231C17]">신고 완료</h2>
-            <p className="mb-6 text-center text-sm text-[#555555]">
+            <p className="mb-6 text-center text-sm text-[#6B605A]">
               신고가 접수되었습니다.<br />검토 후 신속하게 조치하겠습니다.
             </p>
             <button
@@ -73,7 +73,7 @@ export default function ReportModal({ dreamId, onClose }: Props) {
             <h2 className="mb-6 text-center text-xl text-[#231C17]">신고하기</h2>
 
             <div className="mb-5">
-              <p className="mb-3 text-sm font-semibold text-[#333333]">신고 이유</p>
+              <p className="mb-3 text-sm font-semibold text-[#3A322C]">신고 이유</p>
               <div className="flex flex-col gap-2.5">
                 {REASONS.map((r) => (
                   <label key={r} className="flex cursor-pointer items-center gap-3">
@@ -85,14 +85,14 @@ export default function ReportModal({ dreamId, onClose }: Props) {
                       onChange={() => setReason(r)}
                       className="h-4 w-4 accent-[#231C17]"
                     />
-                    <span className="text-sm text-[#333333]">{r}</span>
+                    <span className="text-sm text-[#3A322C]">{r}</span>
                   </label>
                 ))}
               </div>
             </div>
 
             <div className="mb-6">
-              <label className="mb-1.5 block text-sm font-semibold text-[#333333]">
+              <label className="mb-1.5 block text-sm font-semibold text-[#3A322C]">
                 상세 내용{' '}
                 <span className="font-normal text-gray-400">(선택)</span>
               </label>
@@ -114,7 +114,7 @@ export default function ReportModal({ dreamId, onClose }: Props) {
               <button
                 onClick={onClose}
                 disabled={submitting}
-                className="flex-1 border border-gray-300 py-3 text-sm text-[#555555] transition-colors hover:border-[#231C17] hover:text-[#231C17]"
+                className="flex-1 border border-gray-300 py-3 text-sm text-[#6B605A] transition-colors hover:border-[#231C17] hover:text-[#231C17]"
               >
                 취소
               </button>

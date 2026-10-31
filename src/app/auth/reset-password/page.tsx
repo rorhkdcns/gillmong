@@ -45,9 +45,9 @@ export default function ResetPasswordPage() {
             </div>
           </div>
           <h2 className="mb-3 text-2xl text-[#231C17]">비밀번호 재설정 링크</h2>
-          <p className="mb-8 text-sm text-[#777777]">
+          <p className="mb-8 text-sm text-[#6B605A]">
             아래 버튼을 클릭해 새 비밀번호를 설정해주세요.<br />
-            <span className="font-semibold text-[#555555]">링크는 1시간 내에 사용해야 합니다.</span>
+            <span className="font-semibold text-[#6B605A]">링크는 1시간 내에 사용해야 합니다.</span>
           </p>
           <a
             href={resetLink}
@@ -55,7 +55,7 @@ export default function ResetPasswordPage() {
           >
             비밀번호 재설정하기
           </a>
-          <p className="mt-6 text-center text-sm text-[#777777]">
+          <p className="mt-6 text-center text-sm text-[#6B605A]">
             <a href="/auth/login" className="text-[#231C17] underline underline-offset-2 hover:brightness-75">
               로그인으로 돌아가기
             </a>
@@ -79,30 +79,30 @@ export default function ResetPasswordPage() {
       <main className="flex flex-1 items-center justify-center px-6 py-16">
         <div className="w-full max-w-sm">
           <h1 className="mb-2 text-center text-2xl text-[#231C17]">비밀번호 찾기</h1>
-          <p className="mb-10 text-center text-sm text-[#777777]">가입 시 등록한 아이디와 이메일을 입력해주세요</p>
+          <p className="mb-10 text-center text-sm text-[#6B605A]">가입 시 등록한 아이디와 이메일을 입력해주세요</p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
-              <label className="mb-1 block text-sm text-[#555555]">아이디</label>
+              <label className="mb-1 block text-sm text-[#6B605A]">아이디</label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="가입한 아이디"
                 required
-                className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
+                className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#3A322C] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-sm text-[#555555]">이메일</label>
+              <label className="mb-1 block text-sm text-[#6B605A]">이메일</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="가입 시 등록한 이메일"
                 required
-                className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
+                className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#3A322C] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
               />
             </div>
 
@@ -119,7 +119,7 @@ export default function ResetPasswordPage() {
             </button>
           </form>
 
-          <p className="mt-8 text-center text-sm text-[#777777]">
+          <p className="mt-8 text-center text-sm text-[#6B605A]">
             <a href="/auth/login" className="text-[#231C17] underline underline-offset-2 hover:brightness-75">
               로그인으로 돌아가기
             </a>

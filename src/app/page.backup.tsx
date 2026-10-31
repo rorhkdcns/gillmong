@@ -99,7 +99,7 @@ export default function Home() {
       <section
         className="relative px-6 py-14 text-center"
         style={{
-          backgroundColor: '#333333',
+          backgroundColor: '#3A322C',
           backgroundImage: "url('/hero.jpg')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
@@ -109,7 +109,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-black/40" />
 
         <div className="relative z-10 mx-auto max-w-3xl">
-          <span className="mb-6 inline-block rounded-full bg-white/20 px-5 py-2 text-base font-semibold text-white ring-1 ring-white/40">
+          <span className="mb-6 inline-block rounded-[3px] bg-white/20 px-5 py-2 text-base font-semibold text-white ring-1 ring-white/40">
             우리의 모든 꿈은 가치가 있습니다
           </span>
           <h1 className="mb-6 text-3xl font-black leading-tight tracking-wide text-white md:text-5xl">
@@ -180,7 +180,7 @@ export default function Home() {
           </div>
 
           <div className="mt-12 text-center">
-            <button className="rounded-full border-2 border-brand-primary px-10 py-3 text-base font-bold text-brand-primary transition-colors hover:bg-brand-primary hover:text-white">
+            <button className="rounded-[3px] border-2 border-brand-primary px-10 py-3 text-base font-bold text-brand-primary transition-colors hover:bg-brand-primary hover:text-white">
               꿈 이야기 더 보기
             </button>
           </div>

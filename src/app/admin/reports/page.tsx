@@ -109,7 +109,7 @@ export default function AdminReportsPage() {
         </div>
       )}
       <h1 className="mb-2 text-xl font-bold text-[#231C17] sm:text-2xl">신고 관리</h1>
-      <p className="mb-6 text-sm text-[#999] sm:mb-8">
+      <p className="mb-6 text-sm text-[#9A8F88] sm:mb-8">
         사용자 신고 내역을 확인하고 처리합니다.
       </p>
 
@@ -157,7 +157,7 @@ export default function AdminReportsPage() {
                     {r.detail ?? <span className="text-gray-300">-</span>}
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_COLOR[r.status] ?? 'bg-gray-100 text-gray-500'}`}>
+                    <span className={`rounded-[3px] px-2.5 py-1 text-xs font-semibold ${STATUS_COLOR[r.status] ?? 'bg-gray-100 text-gray-500'}`}>
                       {STATUS_LABEL[r.status] ?? r.status}
                     </span>
                   </td>
@@ -191,13 +191,13 @@ export default function AdminReportsPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-2xl">
             <h3 className="mb-2 text-center text-lg font-black text-[#231C17]">꿈 삭제 확인</h3>
-            <p className="mb-1 text-center text-sm text-[#555555]">
+            <p className="mb-1 text-center text-sm text-[#6B605A]">
               아래 꿈을 삭제하시겠습니까?
             </p>
             <p className="mb-6 text-center text-sm font-semibold text-red-500">
               &ldquo;{deleteTarget.dreamTitle}&rdquo;
             </p>
-            <p className="mb-6 text-center text-xs text-[#999]">
+            <p className="mb-6 text-center text-xs text-[#9A8F88]">
               해당 꿈의 구매자에게 포인트가 자동 환불되며, 관련 신고는 처리완료로 변경됩니다.
               삭제 후 복구할 수 없습니다.
             </p>
@@ -206,7 +206,7 @@ export default function AdminReportsPage() {
                 type="button"
                 onClick={() => setDeleteTarget(null)}
                 disabled={deleting}
-                className="flex-1 rounded-xl border border-gray-300 py-3 text-sm font-semibold text-[#555555] transition hover:bg-gray-50 disabled:opacity-50"
+                className="flex-1 rounded-xl border border-gray-300 py-3 text-sm font-semibold text-[#6B605A] transition hover:bg-gray-50 disabled:opacity-50"
               >
                 취소
               </button>

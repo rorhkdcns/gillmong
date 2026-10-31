@@ -197,7 +197,7 @@ async function CategoryView({
                   <Link
                     key={s.slug}
                     href={`/dictionary/${category.slug}/${s.slug}`}
-                    className="rounded-full border border-[#EADFD8] bg-white px-4 py-2 text-sm font-medium text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F]"
+                    className="rounded-[3px] border border-[#EADFD8] bg-white px-4 py-2 text-sm font-medium text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F]"
                   >
                     {s.name}
                   </Link>
@@ -218,14 +218,14 @@ async function CategoryView({
                   <Link
                     key={c.slug}
                     href={`/dictionary/${c.slug}`}
-                    className="rounded-full border border-[#EADFD8] bg-white px-4 py-2 text-sm font-medium text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F]"
+                    className="rounded-[3px] border border-[#EADFD8] bg-white px-4 py-2 text-sm font-medium text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F]"
                   >
                     {c.name} 해몽
                   </Link>
                 ))}
                 <Link
                   href="/dictionary"
-                  className="rounded-full border border-[#EADFD8] bg-white px-4 py-2 text-sm font-medium text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F]"
+                  className="rounded-[3px] border border-[#EADFD8] bg-white px-4 py-2 text-sm font-medium text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F]"
                 >
                   전체 사전 보기
                 </Link>
@@ -383,7 +383,7 @@ async function EntryView({
                       </span>
                       <span className="truncate">{d.title}</span>
                     </span>
-                    <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${d.is_sold ? 'bg-gray-400 text-white' : 'bg-emerald-50 text-emerald-600'}`}>
+                    <span className={`shrink-0 rounded-[3px] px-2.5 py-1 text-xs font-bold ${d.is_sold ? 'bg-gray-400 text-white' : 'bg-emerald-50 text-emerald-600'}`}>
                       {d.is_sold ? '판매완료' : '구매가능'}
                     </span>
                   </Link>

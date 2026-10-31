@@ -17,7 +17,7 @@ export default async function WithdrawPage() {
         <div className="mx-auto w-full max-w-lg space-y-6">
 
           <div className="flex items-center gap-3">
-            <Link href="/mypage" className="text-[#777777] hover:text-[#231C17]">
+            <Link href="/mypage" className="text-[#6B605A] hover:text-[#231C17]">
               <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
@@ -33,10 +33,10 @@ export default async function WithdrawPage() {
                 </svg>
               </div>
               <h2 className="text-lg font-black text-[#231C17]">정말로 탈퇴하시겠습니까?</h2>
-              <p className="text-sm text-[#777777]">탈퇴 시 아래의 모든 데이터가 <span className="font-semibold text-red-500">영구 삭제</span>됩니다.</p>
+              <p className="text-sm text-[#6B605A]">탈퇴 시 아래의 모든 데이터가 <span className="font-semibold text-red-500">영구 삭제</span>됩니다.</p>
             </div>
 
-            <ul className="mb-8 space-y-2.5 rounded-xl bg-red-50 p-5 text-sm text-[#555555]">
+            <ul className="mb-8 space-y-2.5 rounded-xl bg-red-50 p-5 text-sm text-[#6B605A]">
               <li className="flex items-start gap-2">
                 <span className="mt-0.5 text-red-400">•</span>
                 <span>등록한 꿈 및 개인 저장 꿈 전체</span>

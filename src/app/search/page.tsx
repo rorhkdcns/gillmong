@@ -41,7 +41,7 @@ function SearchResults() {
   if (loading) {
     return (
       <main className="flex flex-1 items-center justify-center">
-        <p className="text-[#777777]">검색 중...</p>
+        <p className="text-[#6B605A]">검색 중...</p>
       </main>
     )
   }
@@ -54,11 +54,11 @@ function SearchResults() {
         <div className="mb-10 border-b border-gray-200 pb-6">
           {q ? (
             <>
-              <p className="mb-1 text-sm text-[#777777]">검색어</p>
+              <p className="mb-1 text-sm text-[#6B605A]">검색어</p>
               <h1 className="text-3xl text-[#231C17]">
                 <span className="text-[#C23A18]">&ldquo;{q}&rdquo;</span> 검색 결과
               </h1>
-              <p className="mt-2 text-sm text-[#777777]">
+              <p className="mt-2 text-sm text-[#6B605A]">
                 {results.length > 0 ? `총 ${results.length}건의 꿈이 검색되었습니다` : '검색 결과가 없습니다'}
               </p>
             </>
@@ -73,10 +73,10 @@ function SearchResults() {
             <svg className="mb-5 h-14 w-14 text-gray-300" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
             </svg>
-            <p className="text-lg text-[#555555]">
+            <p className="text-lg text-[#6B605A]">
               <span className="font-semibold text-[#231C17]">&ldquo;{q}&rdquo;</span>에 대한 검색 결과가 없습니다
             </p>
-            <p className="mt-2 text-sm text-[#777777]">다른 검색어로 시도해보세요</p>
+            <p className="mt-2 text-sm text-[#6B605A]">다른 검색어로 시도해보세요</p>
           </div>
         )}
 
@@ -98,17 +98,17 @@ function SearchResults() {
                     {card.grade}
                   </span>
                   {card.is_sold && (
-                    <span className="rounded-full bg-gray-400 px-2.5 py-0.5 text-xs font-bold text-white">
+                    <span className="rounded-[3px] bg-gray-400 px-2.5 py-0.5 text-xs font-bold text-white">
                       판매완료
                     </span>
                   )}
                 </div>
 
                 {/* 제목 */}
-                <h3 className="mb-3 text-lg font-semibold leading-snug text-[#555555]">{card.title}</h3>
+                <h3 className="mb-3 text-lg font-semibold leading-snug text-[#6B605A]">{card.title}</h3>
 
                 {/* 요약 */}
-                <p className="mb-5 flex-1 text-sm leading-relaxed text-[#555555] line-clamp-3">{card.summary}</p>
+                <p className="mb-5 flex-1 text-sm leading-relaxed text-[#6B605A] line-clamp-3">{card.summary}</p>
 
                 {/* 감정가 + 버튼 */}
                 <div className="flex items-center justify-between border-t border-gray-100 pt-4">
@@ -119,13 +119,13 @@ function SearchResults() {
                     </p>
                   </div>
                   {card.is_sold ? (
-                    <span className="rounded-full border border-gray-300 px-5 py-2 text-sm font-semibold text-gray-400">
+                    <span className="rounded-[3px] border border-gray-300 px-5 py-2 text-sm font-semibold text-gray-400">
                       판매완료
                     </span>
                   ) : (
                     <a
                       href={`/dream/${card.id}`}
-                      className="rounded-full bg-brand-primary-light px-5 py-2 text-sm font-semibold text-brand-primary-hover transition-colors hover:bg-brand-primary hover:text-white"
+                      className="rounded-[3px] bg-brand-primary-light px-5 py-2 text-sm font-semibold text-brand-primary-hover transition-colors hover:bg-brand-primary hover:text-white"
                     >
                       자세히 보기
                     </a>
@@ -147,7 +147,7 @@ export default function SearchPage() {
 
       <Suspense fallback={
         <main className="flex flex-1 items-center justify-center">
-          <p className="text-[#777777]">검색 중...</p>
+          <p className="text-[#6B605A]">검색 중...</p>
         </main>
       }>
         <SearchResults />

@@ -131,7 +131,7 @@ export default function DictionaryFilterList({ entries }: Props) {
               <button
                 type="button"
                 onClick={resetFilters}
-                className="rounded-full border border-[#EADFD8] px-4 py-1.5 text-xs font-semibold text-[#6B605A] hover:border-[#E5421F] hover:text-[#E5421F]"
+                className="rounded-[3px] border border-[#EADFD8] px-4 py-1.5 text-xs font-semibold text-[#6B605A] hover:border-[#E5421F] hover:text-[#E5421F]"
               >
                 필터 초기화
               </button>

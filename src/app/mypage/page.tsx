@@ -115,7 +115,7 @@ export default async function MyPage() {
                 </div>
                 <div className="min-w-0">
                   <p className="truncate text-xl font-bold text-[#231C17] md:text-2xl">{nickname}</p>
-                  <p className="mt-0.5 truncate text-sm text-[#555555]">@{username}</p>
+                  <p className="mt-0.5 truncate text-sm text-[#6B605A]">@{username}</p>
                 </div>
               </div>
               {/* 2줄(모바일) / 오른쪽(데스크탑): 버튼들 */}
@@ -146,7 +146,7 @@ export default async function MyPage() {
               <h2 className="text-xl font-black text-[#231C17]">판매금액</h2>
               <div className="flex items-baseline gap-1">
                 <span className="text-2xl font-bold text-[#C23A18]">{pointBalance.toLocaleString()}</span>
-                <span className="text-base font-medium text-[#555555]">원</span>
+                <span className="text-base font-medium text-[#6B605A]">원</span>
               </div>
             </div>
 
@@ -188,27 +188,27 @@ export default async function MyPage() {
           <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm md:p-8">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="text-xl font-black text-[#231C17]">1:1 문의 내역</h2>
-              <a href="/inquiry" className="text-sm font-medium text-[#6B96A8] hover:underline">+ 문의하기</a>
+              <a href="/inquiry" className="text-sm font-medium text-[#9A8F88] hover:underline">+ 문의하기</a>
             </div>
             {myInquiries.length === 0 ? (
-              <p className="py-8 text-center text-sm text-[#555555]">문의 내역이 없습니다</p>
+              <p className="py-8 text-center text-sm text-[#6B605A]">문의 내역이 없습니다</p>
             ) : (
               <ul className="divide-y divide-gray-200">
                 {myInquiries.map((inq) => (
                   <li key={inq.id} className="py-4">
                     <div className="flex items-center justify-between">
-                      <span className="mr-3 truncate text-base font-medium text-[#333333]">{inq.title}</span>
+                      <span className="mr-3 truncate text-base font-medium text-[#3A322C]">{inq.title}</span>
                       <div className="flex shrink-0 items-center gap-3">
-                        <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${inq.status === 'answered' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                        <span className={`rounded-[3px] px-2.5 py-0.5 text-xs font-semibold ${inq.status === 'answered' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
                           {inq.status === 'answered' ? '답변완료' : '대기중'}
                         </span>
-                        <span className="text-xs text-[#666666]">{formatDate(inq.created_at)}</span>
+                        <span className="text-xs text-[#6B605A]">{formatDate(inq.created_at)}</span>
                       </div>
                     </div>
                     {inq.status === 'answered' && inq.answer && (
                       <div className="mt-2 rounded-lg border border-gray-200 bg-gray-50 px-3 py-2.5">
-                        <p className="mb-1 text-xs font-bold text-[#6B96A8]">관리자 답변</p>
-                        <p className="text-sm text-[#444444] whitespace-pre-wrap">{inq.answer}</p>
+                        <p className="mb-1 text-xs font-bold text-[#9A8F88]">관리자 답변</p>
+                        <p className="text-sm text-[#3A322C] whitespace-pre-wrap">{inq.answer}</p>
                       </div>
                     )}
                   </li>
@@ -218,7 +218,7 @@ export default async function MyPage() {
           </section>
 
           {/* 8. 하단 링크 */}
-          <div className="flex items-center justify-center gap-6 pb-4 text-sm text-[#555555]">
+          <div className="flex items-center justify-center gap-6 pb-4 text-sm text-[#6B605A]">
             <a href="/mypage/withdraw" className="hover:text-red-400 hover:underline">탈퇴하기</a>
           </div>
 

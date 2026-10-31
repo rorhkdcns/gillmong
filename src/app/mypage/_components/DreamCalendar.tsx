@@ -86,28 +86,28 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
     <div>
       {/* 날짜 범위 검색 */}
       <div className="mb-5 rounded-lg border border-gray-200 bg-gray-50 p-3">
-        <p className="mb-2 text-xs font-medium text-[#777777]">기간 검색</p>
+        <p className="mb-2 text-xs font-medium text-[#6B605A]">기간 검색</p>
         <div className="flex flex-wrap items-center gap-2">
           <input
             type="date"
             value={startDate}
             onChange={handleStartDate}
             max={endDate || undefined}
-            className="flex-1 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-[#333333] outline-none focus:border-[#231C17]"
+            className="flex-1 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-[#3A322C] outline-none focus:border-[#231C17]"
           />
-          <span className="text-sm text-[#777777]">~</span>
+          <span className="text-sm text-[#6B605A]">~</span>
           <input
             type="date"
             value={endDate}
             onChange={handleEndDate}
             min={startDate || undefined}
-            className="flex-1 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-[#333333] outline-none focus:border-[#231C17]"
+            className="flex-1 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-[#3A322C] outline-none focus:border-[#231C17]"
           />
           {hasFilter && (
             <button
               type="button"
               onClick={clearSearch}
-              className="shrink-0 rounded border border-gray-300 bg-white px-3 py-2 text-xs text-[#777777] hover:border-red-300 hover:text-red-400"
+              className="shrink-0 rounded border border-gray-300 bg-white px-3 py-2 text-xs text-[#6B605A] hover:border-red-300 hover:text-red-400"
             >
               초기화
             </button>
@@ -125,7 +125,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
         <button
           type="button"
           onClick={() => { setBase(new Date(year, month - 1, 1)); setSelected(null) }}
-          className="rounded px-3 py-1.5 text-sm text-[#555555] hover:bg-gray-100"
+          className="rounded px-3 py-1.5 text-sm text-[#6B605A] hover:bg-gray-100"
         >
           ‹ 이전
         </button>
@@ -133,7 +133,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
         <button
           type="button"
           onClick={() => { setBase(new Date(year, month + 1, 1)); setSelected(null) }}
-          className="rounded px-3 py-1.5 text-sm text-[#555555] hover:bg-gray-100"
+          className="rounded px-3 py-1.5 text-sm text-[#6B605A] hover:bg-gray-100"
         >
           다음 ›
         </button>
@@ -188,9 +188,9 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
       {/* 선택 날짜 상세 */}
       {selected && (
         <div className="mt-4 border-t border-gray-100 pt-4">
-          <p className="mb-3 text-xs font-medium text-[#777777]">{selected}</p>
+          <p className="mb-3 text-xs font-medium text-[#6B605A]">{selected}</p>
           {(byDate[selected] ?? []).length === 0 ? (
-            <p className="py-2 text-center text-sm text-[#999]">이 날 꿈이 없어요</p>
+            <p className="py-2 text-center text-sm text-[#9A8F88]">이 날 꿈이 없어요</p>
           ) : (
             <ul className="divide-y divide-gray-100">
               {(byDate[selected] ?? []).map(item => (
@@ -199,7 +199,7 @@ export default function DreamCalendar({ items }: { items: CalendarItem[] }) {
                     <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-[3px] text-xs font-bold ${GRADE_INFO[item.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
                       {item.grade}
                     </span>
-                    <Link href={item.href} className="truncate text-sm text-[#333333] hover:underline">
+                    <Link href={item.href} className="truncate text-sm text-[#3A322C] hover:underline">
                       {item.title}
                     </Link>
                   </div>

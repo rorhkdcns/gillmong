@@ -144,7 +144,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
       {/* 뒤로가기 */}
       <div className="border-b border-gray-100 bg-white px-6 py-3">
         <div className="mx-auto max-w-[800px]">
-          <a href={categoryPath} className="inline-flex items-center gap-1 text-sm text-[#777777] hover:text-[#231C17]">
+          <a href={categoryPath} className="inline-flex items-center gap-1 text-sm text-[#6B605A] hover:text-[#231C17]">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
@@ -163,7 +163,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                 <span className="font-display text-5xl font-extrabold">{dream.grade}</span>
               </div>
               <span className={`text-base font-bold ${gradeStyle.text}`}>{gradeStyle.label}</span>
-              <span className={`rounded-full border px-3 py-0.5 text-sm font-semibold ${TYPE_STYLE[dream.dream_type] ?? TYPE_STYLE['중립']}`}>
+              <span className={`rounded-[3px] border px-3 py-0.5 text-sm font-semibold ${TYPE_STYLE[dream.dream_type] ?? TYPE_STYLE['중립']}`}>
                 {dream.dream_type || '중립'}
               </span>
             </div>
@@ -192,7 +192,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                           <button
                             onClick={openPurchaseModal}
                             disabled={loadingPoints}
-                            className="rounded-full bg-[#C23A18] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
+                            className="rounded-[3px] bg-[#C23A18] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
                           >
                             {loadingPoints ? '잠시만요...' : `${dream.price.toLocaleString()}원 구매하기`}
                           </button>
@@ -203,7 +203,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                     ) : (
                       <>
                         <p className="text-sm font-semibold text-[#231C17]">로그인 후 구매 가능합니다</p>
-                        <a href="/auth/login" className="rounded-full bg-[#231C17] px-5 py-2 text-sm font-bold text-white hover:brightness-90">
+                        <a href="/auth/login" className="rounded-[3px] bg-[#231C17] px-5 py-2 text-sm font-bold text-white hover:brightness-90">
                           로그인하기
                         </a>
                       </>
@@ -217,7 +217,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
             {dream.summary && (
               <section className="mb-5">
                 <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">해몽 요약</h3>
-                <div className="rounded-xl border border-[#CCCCCC] bg-amber-50/30 p-4 text-sm leading-relaxed text-brand-body">
+                <div className="rounded-xl border border-[#EADFD8] bg-amber-50/30 p-4 text-sm leading-relaxed text-brand-body">
                   {dream.summary}
                 </div>
               </section>
@@ -228,7 +228,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
               <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">상세 해몽</h3>
               {hasAnalysis && dream.interpretation ? (
                 <div className="relative">
-                  <div className={`rounded-xl border border-[#CCCCCC] overflow-hidden ${!purchased ? 'select-none blur-sm' : ''}`}>
+                  <div className={`rounded-xl border border-[#EADFD8] overflow-hidden ${!purchased ? 'select-none blur-sm' : ''}`}>
                     {sections.length > 0 ? sections.map((sec, i) => (
                       <div key={i}>
                         {i > 0 && <hr style={{ borderColor: '#EEEEEE' }} />}
@@ -252,7 +252,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                             <button
                               onClick={openPurchaseModal}
                               disabled={loadingPoints}
-                              className="rounded-full bg-[#C23A18] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
+                              className="rounded-[3px] bg-[#C23A18] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
                             >
                               {loadingPoints ? '잠시만요...' : `${dream.price.toLocaleString()}원 구매하기`}
                             </button>
@@ -263,7 +263,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                       ) : (
                         <>
                           <p className="text-sm font-semibold text-[#231C17]">로그인 후 구매 가능합니다</p>
-                          <a href="/auth/login" className="rounded-full bg-[#231C17] px-5 py-2 text-sm font-bold text-white hover:brightness-90">
+                          <a href="/auth/login" className="rounded-[3px] bg-[#231C17] px-5 py-2 text-sm font-bold text-white hover:brightness-90">
                             로그인하기
                           </a>
                         </>
@@ -293,7 +293,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                             <button
                               onClick={openPurchaseModal}
                               disabled={loadingPoints}
-                              className="rounded-full bg-[#C23A18] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
+                              className="rounded-[3px] bg-[#C23A18] px-5 py-2 text-sm font-bold text-white hover:brightness-90 disabled:opacity-60"
                             >
                               {loadingPoints ? '잠시만요...' : `${dream.price.toLocaleString()}원 구매하기`}
                             </button>
@@ -304,7 +304,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                       ) : (
                         <>
                           <p className="text-sm font-semibold text-[#231C17]">로그인 후 구매 가능합니다</p>
-                          <a href="/auth/login" className="rounded-full bg-[#231C17] px-5 py-2 text-sm font-bold text-white hover:brightness-90">
+                          <a href="/auth/login" className="rounded-[3px] bg-[#231C17] px-5 py-2 text-sm font-bold text-white hover:brightness-90">
                             로그인하기
                           </a>
                         </>
@@ -336,23 +336,23 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
             {/* 8. 감정가 */}
             <div className="mb-6 flex flex-col items-center gap-4 rounded-xl bg-brand-page px-6 py-6">
               <div className="flex flex-col items-center">
-                <span className="mb-1 text-sm font-semibold text-[#555555]">감정가</span>
+                <span className="mb-1 text-sm font-semibold text-[#6B605A]">감정가</span>
                 <span className="text-3xl font-black text-[#C23A18]">{dream.price.toLocaleString()}원</span>
               </div>
               {dream.is_sold && !purchased && (
-                <span className="rounded-full bg-gray-400 px-5 py-1.5 text-sm font-bold text-white">판매완료</span>
+                <span className="rounded-[3px] bg-gray-400 px-5 py-1.5 text-sm font-bold text-white">판매완료</span>
               )}
               {!purchased && !dream.is_sold && isLoggedIn && (
                 <button
                   onClick={openPurchaseModal}
                   disabled={loadingPoints}
-                  className="rounded-full bg-[#C23A18] px-8 py-2.5 text-base font-bold text-white hover:brightness-90 disabled:opacity-60"
+                  className="rounded-[3px] bg-[#C23A18] px-8 py-2.5 text-base font-bold text-white hover:brightness-90 disabled:opacity-60"
                 >
                   {loadingPoints ? '잠시만요...' : '구매하기'}
                 </button>
               )}
               {!purchased && !dream.is_sold && !isLoggedIn && (
-                <a href="/auth/login" className="rounded-full bg-[#231C17] px-8 py-2.5 text-base font-bold text-white hover:brightness-90">
+                <a href="/auth/login" className="rounded-[3px] bg-[#231C17] px-8 py-2.5 text-base font-bold text-white hover:brightness-90">
                   로그인 후 구매하기
                 </a>
               )}
@@ -363,14 +363,14 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
               <div className="flex items-center justify-end gap-4 border-t border-gray-100 pt-4">
                 <button
                   onClick={() => router.push(`/dream/${dream.id}/edit`)}
-                  className="text-sm text-[#777777] transition-colors hover:text-[#333333]"
+                  className="text-sm text-[#6B605A] transition-colors hover:text-[#3A322C]"
                 >
                   수정
                 </button>
                 <span className="text-gray-300">|</span>
                 <button
                   onClick={() => { setShowDeleteModal(true); setDeleteError('') }}
-                  className="text-sm text-[#777777] transition-colors hover:text-red-400"
+                  className="text-sm text-[#6B605A] transition-colors hover:text-red-400"
                 >
                   삭제
                 </button>
@@ -403,17 +403,17 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
         >
           <div className="w-full max-w-sm rounded-xl bg-white p-8 shadow-2xl">
             <h2 className="mb-4 text-center text-xl text-[#231C17]">꿈 삭제</h2>
-            <p className="mb-6 text-center text-[#555555]">
+            <p className="mb-6 text-center text-[#6B605A]">
               <span className="font-semibold text-[#231C17]">"{dream.title}"</span>을(를)<br />
               정말 삭제하시겠습니까?<br />
-              <span className="text-sm text-[#999]">삭제 후에는 복구할 수 없습니다.</span>
+              <span className="text-sm text-[#9A8F88]">삭제 후에는 복구할 수 없습니다.</span>
             </p>
             {deleteError && <p className="mb-4 text-center text-sm text-red-500">{deleteError}</p>}
             <div className="flex gap-3">
               <button
                 onClick={() => { setShowDeleteModal(false); setDeleteError('') }}
                 disabled={deleting}
-                className="flex-1 border border-gray-300 py-3 text-[#555555] transition-colors hover:border-[#231C17] hover:text-[#231C17]"
+                className="flex-1 border border-gray-300 py-3 text-[#6B605A] transition-colors hover:border-[#231C17] hover:text-[#231C17]"
               >
                 취소
               </button>
@@ -443,10 +443,10 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
           <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-2xl">
             {/* 꿈 정보 요약 */}
             <div className="mb-4 rounded-xl bg-[#FAF6F2] p-4">
-              <p className="mb-0.5 text-xs text-[#777777]">구매할 꿈</p>
+              <p className="mb-0.5 text-xs text-[#6B605A]">구매할 꿈</p>
               <p className="mb-2 font-semibold text-[#231C17] text-sm">{dream.title}</p>
               <div className="flex items-center justify-between">
-                <span className="text-xs text-[#777777]">결제금액</span>
+                <span className="text-xs text-[#6B605A]">결제금액</span>
                 <span className="text-base font-bold text-[#C23A18]">₩{dream.price.toLocaleString()}</span>
               </div>
             </div>
@@ -467,7 +467,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                           <p className="text-sm font-bold text-[#C23A18]">포인트로 결제</p>
                           <p className="text-xs text-gray-500">보유: {myPoints.toLocaleString()}원 (즉시 확정)</p>
                         </div>
-                        <span className="text-xs bg-[#C23A18] text-white rounded-full px-2 py-0.5">추천</span>
+                        <span className="text-xs bg-[#C23A18] text-white rounded-[3px] px-2 py-0.5">추천</span>
                       </div>
                     </button>
                     <div className="my-3 flex items-center gap-2">
@@ -515,7 +515,7 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                   <button
                     onClick={() => { setShowModal(false); setBuyError('') }}
                     disabled={buying}
-                    className="flex-1 border border-gray-300 py-3 text-sm text-[#555555] transition-colors hover:border-[#231C17] hover:text-[#231C17]"
+                    className="flex-1 border border-gray-300 py-3 text-sm text-[#6B605A] transition-colors hover:border-[#231C17] hover:text-[#231C17]"
                   >
                     취소
                   </button>
@@ -534,23 +534,23 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                 <h2 className="mb-4 text-center text-base font-bold text-[#231C17]">포인트 결제 확인</h2>
                 <div className="mb-4 space-y-2 rounded-xl border border-gray-100 p-4 text-sm">
                   <div className="flex items-center justify-between">
-                    <span className="text-[#777777]">내 포인트 잔액</span>
-                    <span className="font-semibold text-[#333333]">{myPoints?.toLocaleString() ?? '-'}원</span>
+                    <span className="text-[#6B605A]">내 포인트 잔액</span>
+                    <span className="font-semibold text-[#3A322C]">{myPoints?.toLocaleString() ?? '-'}원</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-[#777777]">결제 후 잔액</span>
-                    <span className="font-semibold text-[#333333]">
+                    <span className="text-[#6B605A]">결제 후 잔액</span>
+                    <span className="font-semibold text-[#3A322C]">
                       {afterBalance !== null ? afterBalance.toLocaleString() : '-'}원
                     </span>
                   </div>
                 </div>
-                <p className="mb-4 text-center text-xs text-[#999]">포인트 결제는 즉시 구매확정 처리됩니다.</p>
+                <p className="mb-4 text-center text-xs text-[#9A8F88]">포인트 결제는 즉시 구매확정 처리됩니다.</p>
                 {buyError && <p className="mb-3 text-center text-sm text-red-500">{buyError}</p>}
                 <div className="flex gap-3">
                   <button
                     onClick={() => { setPayStep('method'); setBuyError('') }}
                     disabled={buying}
-                    className="flex-1 border border-gray-300 py-3 text-sm text-[#555555] transition-colors hover:border-[#231C17] hover:text-[#231C17]"
+                    className="flex-1 border border-gray-300 py-3 text-sm text-[#6B605A] transition-colors hover:border-[#231C17] hover:text-[#231C17]"
                   >
                     뒤로
                   </button>

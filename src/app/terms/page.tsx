@@ -8,9 +8,9 @@ export default function TermsPage() {
         <div className="mx-auto max-w-3xl">
           <div className="border border-gray-200 bg-white p-10 shadow-sm">
             <h1 className="mb-2 text-3xl font-bold text-[#231C17]">이용약관</h1>
-            <p className="mb-10 text-sm text-[#999]">시행일: 2026년 6월 15일</p>
+            <p className="mb-10 text-sm text-[#9A8F88]">시행일: 2026년 6월 15일</p>
 
-            <div className="space-y-10 text-sm leading-relaxed text-[#444]">
+            <div className="space-y-10 text-sm leading-relaxed text-[#3A322C]">
 
               <section>
                 <h2 className="mb-3 text-lg font-bold text-[#231C17]">제1조 (목적)</h2>

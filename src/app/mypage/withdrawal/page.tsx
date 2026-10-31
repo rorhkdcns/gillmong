@@ -48,7 +48,7 @@ export default async function WithdrawalPage() {
 
           {/* 헤더 */}
           <div className="flex items-center gap-3">
-            <Link href="/mypage" className="text-[#777777] hover:text-[#231C17]">
+            <Link href="/mypage" className="text-[#6B605A] hover:text-[#231C17]">
               <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
@@ -58,10 +58,10 @@ export default async function WithdrawalPage() {
 
           {/* 현재 잔액 */}
           <section className="border border-gray-200 bg-white p-5">
-            <p className="mb-1 text-sm text-[#777777]">출금 가능 잔액</p>
+            <p className="mb-1 text-sm text-[#6B605A]">출금 가능 잔액</p>
             <div className="flex items-baseline gap-1">
               <span className="text-3xl font-bold text-[#C23A18]">{balance.toLocaleString()}</span>
-              <span className="text-base text-[#777777]">원</span>
+              <span className="text-base text-[#6B605A]">원</span>
             </div>
           </section>
 
@@ -88,8 +88,8 @@ export default async function WithdrawalPage() {
                   return (
                     <li key={row.id} className="flex items-center justify-between py-3">
                       <div>
-                        <p className="text-sm font-semibold text-[#333333]">{row.amount.toLocaleString()}원</p>
-                        <p className="mt-0.5 text-xs text-[#999]">{row.bank_name} · {row.account_number} · {date}</p>
+                        <p className="text-sm font-semibold text-[#3A322C]">{row.amount.toLocaleString()}원</p>
+                        <p className="mt-0.5 text-xs text-[#9A8F88]">{row.bank_name} · {row.account_number} · {date}</p>
                       </div>
                       <span className={`text-sm font-semibold ${st.color}`}>{st.label}</span>
                     </li>

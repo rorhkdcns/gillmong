@@ -67,7 +67,7 @@ export default function AdminInquiriesPage() {
                   <span className={`shrink-0 rounded px-2 py-0.5 text-xs font-bold ${inq.status === 'answered' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
                     {inq.status === 'answered' ? '답변완료' : '대기중'}
                   </span>
-                  <span className="truncate text-sm font-medium text-[#333]">{inq.title}</span>
+                  <span className="truncate text-sm font-medium text-[#3A322C]">{inq.title}</span>
                   <span className="shrink-0 text-xs text-gray-400">
                     {inq.profiles?.nickname ?? '?'} (@{inq.profiles?.username ?? '?'})
                   </span>
@@ -79,12 +79,12 @@ export default function AdminInquiriesPage() {
                 <div className="border-t border-gray-100 px-6 py-5">
                   <div className="mb-4 rounded-lg bg-gray-50 p-4">
                     <p className="mb-1 text-xs font-semibold text-gray-400">문의 내용</p>
-                    <p className="text-sm text-[#333] whitespace-pre-line">{inq.content}</p>
+                    <p className="text-sm text-[#3A322C] whitespace-pre-line">{inq.content}</p>
                   </div>
                   {inq.status === 'answered' && inq.answer && (
                     <div className="mb-4 rounded-lg bg-emerald-50 p-4">
                       <p className="mb-1 text-xs font-semibold text-emerald-600">기존 답변</p>
-                      <p className="text-sm text-[#333] whitespace-pre-line">{inq.answer}</p>
+                      <p className="text-sm text-[#3A322C] whitespace-pre-line">{inq.answer}</p>
                     </div>
                   )}
                   <div>

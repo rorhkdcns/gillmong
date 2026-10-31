@@ -72,7 +72,7 @@ export default function AdminWithdrawals() {
       <div className="overflow-x-auto rounded border border-gray-200 bg-white">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+            <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
               <th className="px-6 py-3">신청일</th>
               <th className="px-6 py-3">금액</th>
               <th className="px-6 py-3">은행</th>
@@ -84,20 +84,20 @@ export default function AdminWithdrawals() {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {loading ? (
-              <tr><td colSpan={7} className="py-12 text-center text-sm text-[#999]">불러오는 중...</td></tr>
+              <tr><td colSpan={7} className="py-12 text-center text-sm text-[#9A8F88]">불러오는 중...</td></tr>
             ) : items.length === 0 ? (
-              <tr><td colSpan={7} className="py-12 text-center text-sm text-[#999]">출금 신청이 없습니다</td></tr>
+              <tr><td colSpan={7} className="py-12 text-center text-sm text-[#9A8F88]">출금 신청이 없습니다</td></tr>
             ) : items.map((w) => {
               const st = STATUS_LABEL[w.status] ?? { label: w.status, cls: 'bg-gray-100 text-gray-500' }
               return (
                 <tr key={w.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-3 text-[#999]">{formatDate(w.created_at)}</td>
+                  <td className="px-6 py-3 text-[#9A8F88]">{formatDate(w.created_at)}</td>
                   <td className="px-6 py-3 font-semibold text-[#C23A18]">{w.amount.toLocaleString()}원</td>
-                  <td className="px-6 py-3 text-[#555]">{w.bank_name ?? '-'}</td>
-                  <td className="px-6 py-3 text-[#555]">{w.account_number ?? '-'}</td>
-                  <td className="px-6 py-3 text-[#555]">{w.account_holder ?? '-'}</td>
+                  <td className="px-6 py-3 text-[#6B605A]">{w.bank_name ?? '-'}</td>
+                  <td className="px-6 py-3 text-[#6B605A]">{w.account_number ?? '-'}</td>
+                  <td className="px-6 py-3 text-[#6B605A]">{w.account_holder ?? '-'}</td>
                   <td className="px-6 py-3">
-                    <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${st.cls}`}>{st.label}</span>
+                    <span className={`rounded-[3px] px-2 py-0.5 text-xs font-semibold ${st.cls}`}>{st.label}</span>
                   </td>
                   <td className="px-6 py-3">
                     {w.status === 'pending' && (

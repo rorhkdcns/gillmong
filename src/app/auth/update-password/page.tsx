@@ -57,11 +57,11 @@ export default function UpdatePasswordPage() {
       <main className="flex flex-1 items-center justify-center px-6 py-16">
         <div className="w-full max-w-sm">
           <h1 className="mb-2 text-center text-2xl text-[#231C17]">새 비밀번호 설정</h1>
-          <p className="mb-10 text-center text-sm text-[#777777]">사용할 새 비밀번호를 입력해주세요</p>
+          <p className="mb-10 text-center text-sm text-[#6B605A]">사용할 새 비밀번호를 입력해주세요</p>
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
-              <label className="mb-1 block text-sm text-[#555555]">새 비밀번호</label>
+              <label className="mb-1 block text-sm text-[#6B605A]">새 비밀번호</label>
               <input
                 type="password"
                 value={password}
@@ -69,19 +69,19 @@ export default function UpdatePasswordPage() {
                 placeholder="6자리 이상"
                 required
                 minLength={6}
-                className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
+                className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#3A322C] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-sm text-[#555555]">비밀번호 확인</label>
+              <label className="mb-1 block text-sm text-[#6B605A]">비밀번호 확인</label>
               <input
                 type="password"
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
                 placeholder="비밀번호 재입력"
                 required
-                className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
+                className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#3A322C] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
               />
             </div>
 

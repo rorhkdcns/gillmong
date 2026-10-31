@@ -55,7 +55,7 @@ export default function AdminPartnershipsPage() {
   return (
     <div className="p-4 sm:p-8">
       <h1 className="mb-2 text-xl font-bold text-[#231C17] sm:text-2xl">제휴문의 관리</h1>
-      <p className="mb-6 text-sm text-[#999] sm:mb-8">고객사의 제휴 문의 내역을 확인하고 처리합니다.</p>
+      <p className="mb-6 text-sm text-[#9A8F88] sm:mb-8">고객사의 제휴 문의 내역을 확인하고 처리합니다.</p>
 
       {loading ? (
         <div className="py-16 text-center text-sm text-gray-400">불러오는 중...</div>
@@ -76,7 +76,7 @@ export default function AdminPartnershipsPage() {
                   <span className={`shrink-0 rounded px-2 py-0.5 text-xs font-bold ${STATUS_COLOR[item.status] ?? 'bg-gray-100 text-gray-500'}`}>
                     {STATUS_LABEL[item.status] ?? item.status}
                   </span>
-                  <span className="truncate text-sm font-medium text-[#333]">{item.title}</span>
+                  <span className="truncate text-sm font-medium text-[#3A322C]">{item.title}</span>
                   <span className="hidden shrink-0 text-xs text-gray-400 sm:block">
                     {item.name}{item.company ? ` · ${item.company}` : ''}
                   </span>
@@ -89,16 +89,16 @@ export default function AdminPartnershipsPage() {
                 <div className="border-t border-gray-100 px-5 py-5">
                   {/* 문의자 정보 */}
                   <div className="mb-4 grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-4">
-                    <div><span className="text-xs text-gray-400">이름</span><p className="font-medium text-[#333]">{item.name}</p></div>
-                    <div><span className="text-xs text-gray-400">이메일</span><p className="font-medium text-[#333]">{item.email}</p></div>
-                    {item.company && <div><span className="text-xs text-gray-400">회사명</span><p className="font-medium text-[#333]">{item.company}</p></div>}
-                    {item.phone   && <div><span className="text-xs text-gray-400">연락처</span><p className="font-medium text-[#333]">{item.phone}</p></div>}
+                    <div><span className="text-xs text-gray-400">이름</span><p className="font-medium text-[#3A322C]">{item.name}</p></div>
+                    <div><span className="text-xs text-gray-400">이메일</span><p className="font-medium text-[#3A322C]">{item.email}</p></div>
+                    {item.company && <div><span className="text-xs text-gray-400">회사명</span><p className="font-medium text-[#3A322C]">{item.company}</p></div>}
+                    {item.phone   && <div><span className="text-xs text-gray-400">연락처</span><p className="font-medium text-[#3A322C]">{item.phone}</p></div>}
                   </div>
 
                   {/* 문의 내용 */}
                   <div className="mb-4 rounded-lg bg-gray-50 p-4">
                     <p className="mb-1 text-xs font-semibold text-gray-400">문의 내용</p>
-                    <p className="whitespace-pre-line text-sm text-[#333]">{item.content}</p>
+                    <p className="whitespace-pre-line text-sm text-[#3A322C]">{item.content}</p>
                   </div>
 
                   {/* 처리 영역 */}

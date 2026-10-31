@@ -11,7 +11,7 @@ type PendingPartnership = Awaited<ReturnType<typeof getPendingPartnerships>>[num
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="rounded border border-gray-200 bg-white p-4 sm:p-6">
-      <p className="text-sm text-[#777777]">{label}</p>
+      <p className="text-sm text-[#6B605A]">{label}</p>
       <p className="mt-2 text-2xl font-bold text-[#231C17] sm:text-3xl">
         {typeof value === 'number' ? value.toLocaleString() : value}
       </p>
@@ -43,7 +43,7 @@ export default function AdminDashboard() {
     getPendingPartnerships().then((data) => { setPartnerships(data); setPLoading(false) })
   }, [])
 
-  if (loading) return <div className="flex h-full items-center justify-center text-sm text-[#999]">불러오는 중...</div>
+  if (loading) return <div className="flex h-full items-center justify-center text-sm text-[#9A8F88]">불러오는 중...</div>
   if (!stats) return null
 
   return (
@@ -67,7 +67,7 @@ export default function AdminDashboard() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+                <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
                   <th className="px-6 py-3">닉네임</th>
                   <th className="px-6 py-3">아이디</th>
                   <th className="px-6 py-3">잔액</th>
@@ -77,10 +77,10 @@ export default function AdminDashboard() {
               <tbody className="divide-y divide-gray-100">
                 {(stats.recentUsers as Array<{ id: string; nickname: string; username: string; points: number; created_at: string }>).map((u) => (
                   <tr key={u.id}>
-                    <td className="px-6 py-3 text-[#333]">{u.nickname}</td>
-                    <td className="px-6 py-3 text-[#777]">@{u.username}</td>
+                    <td className="px-6 py-3 text-[#3A322C]">{u.nickname}</td>
+                    <td className="px-6 py-3 text-[#6B605A]">@{u.username}</td>
                     <td className="px-6 py-3 text-[#C23A18]">{u.points.toLocaleString()}원</td>
-                    <td className="px-6 py-3 text-[#999]">{formatDate(u.created_at)}</td>
+                    <td className="px-6 py-3 text-[#9A8F88]">{formatDate(u.created_at)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+                <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
                   <th className="px-6 py-3">구매자</th>
                   <th className="px-6 py-3">꿈 제목</th>
                   <th className="px-6 py-3">금액</th>
@@ -106,10 +106,10 @@ export default function AdminDashboard() {
               <tbody className="divide-y divide-gray-100">
                 {(stats.recentTx as unknown as Array<{ id: number; price: number; created_at: string; dreams: { title: string } | null; profiles: { nickname: string } | null }>).map((tx) => (
                   <tr key={tx.id}>
-                    <td className="px-6 py-3 text-[#333]">{tx.profiles?.nickname ?? '-'}</td>
-                    <td className="max-w-[160px] truncate px-6 py-3 text-[#777]">{tx.dreams?.title ?? '-'}</td>
+                    <td className="px-6 py-3 text-[#3A322C]">{tx.profiles?.nickname ?? '-'}</td>
+                    <td className="max-w-[160px] truncate px-6 py-3 text-[#6B605A]">{tx.dreams?.title ?? '-'}</td>
                     <td className="px-6 py-3 text-[#C23A18]">{tx.price.toLocaleString()}원</td>
-                    <td className="px-6 py-3 text-[#999]">{formatDate(tx.created_at)}</td>
+                    <td className="px-6 py-3 text-[#9A8F88]">{formatDate(tx.created_at)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -138,14 +138,14 @@ export default function AdminDashboard() {
         </div>
 
         {wLoading ? (
-          <div className="py-10 text-center text-sm text-[#999]">불러오는 중...</div>
+          <div className="py-10 text-center text-sm text-[#9A8F88]">불러오는 중...</div>
         ) : withdrawals.length === 0 ? (
-          <div className="py-10 text-center text-sm text-[#999]">대기 중인 출금신청이 없습니다</div>
+          <div className="py-10 text-center text-sm text-[#9A8F88]">대기 중인 출금신청이 없습니다</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+                <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
                   <th className="px-4 py-3 sm:px-6">신청자</th>
                   <th className="px-4 py-3 sm:px-6">금액</th>
                   <th className="px-4 py-3 sm:px-6">은행 / 예금주</th>
@@ -157,17 +157,17 @@ export default function AdminDashboard() {
                 {withdrawals.map((w) => (
                   <tr key={w.id} className="hover:bg-amber-50/40">
                     <td className="px-4 py-3 sm:px-6">
-                      <p className="font-medium text-[#333]">{w.profiles?.nickname ?? '-'}</p>
-                      <p className="text-xs text-[#999]">@{w.profiles?.username ?? '-'}</p>
+                      <p className="font-medium text-[#3A322C]">{w.profiles?.nickname ?? '-'}</p>
+                      <p className="text-xs text-[#9A8F88]">@{w.profiles?.username ?? '-'}</p>
                     </td>
                     <td className="px-4 py-3 font-semibold text-[#C23A18] sm:px-6">
                       {w.amount.toLocaleString()}원
                     </td>
-                    <td className="px-4 py-3 text-[#555] sm:px-6">
+                    <td className="px-4 py-3 text-[#6B605A] sm:px-6">
                       <p>{w.bank_name ?? '-'}</p>
-                      <p className="text-xs text-[#999]">{w.account_holder ?? '-'}</p>
+                      <p className="text-xs text-[#9A8F88]">{w.account_holder ?? '-'}</p>
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-[#999] sm:px-6">
+                    <td className="whitespace-nowrap px-4 py-3 text-[#9A8F88] sm:px-6">
                       {formatDateTime(w.created_at)}
                     </td>
                     <td className="px-4 py-3 sm:px-6">
@@ -203,14 +203,14 @@ export default function AdminDashboard() {
         </div>
 
         {pLoading ? (
-          <div className="py-10 text-center text-sm text-[#999]">불러오는 중...</div>
+          <div className="py-10 text-center text-sm text-[#9A8F88]">불러오는 중...</div>
         ) : partnerships.length === 0 ? (
-          <div className="py-10 text-center text-sm text-[#999]">대기 중인 제휴문의가 없습니다</div>
+          <div className="py-10 text-center text-sm text-[#9A8F88]">대기 중인 제휴문의가 없습니다</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+                <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
                   <th className="px-4 py-3 sm:px-6">신청자</th>
                   <th className="px-4 py-3 sm:px-6">회사명</th>
                   <th className="px-4 py-3 sm:px-6">제목</th>
@@ -221,10 +221,10 @@ export default function AdminDashboard() {
               <tbody className="divide-y divide-gray-100">
                 {partnerships.map((p) => (
                   <tr key={p.id} className="hover:bg-brand-primary-light/30">
-                    <td className="px-4 py-3 font-medium text-[#333] sm:px-6">{p.name}</td>
-                    <td className="px-4 py-3 text-[#777] sm:px-6">{p.company ?? '-'}</td>
-                    <td className="max-w-[200px] truncate px-4 py-3 text-[#555] sm:px-6">{p.title}</td>
-                    <td className="whitespace-nowrap px-4 py-3 text-[#999] sm:px-6">
+                    <td className="px-4 py-3 font-medium text-[#3A322C] sm:px-6">{p.name}</td>
+                    <td className="px-4 py-3 text-[#6B605A] sm:px-6">{p.company ?? '-'}</td>
+                    <td className="max-w-[200px] truncate px-4 py-3 text-[#6B605A] sm:px-6">{p.title}</td>
+                    <td className="whitespace-nowrap px-4 py-3 text-[#9A8F88] sm:px-6">
                       {formatDateTime(p.created_at)}
                     </td>
                     <td className="px-4 py-3 sm:px-6">

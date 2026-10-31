@@ -21,7 +21,7 @@ export default function ToggleDreamSection({
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <h2 className="text-lg text-[#231C17]">{title}</h2>
-          <span className="text-sm text-[#777777]">{count}건</span>
+          <span className="text-sm text-[#6B605A]">{count}건</span>
         </div>
         <button
           type="button"
@@ -29,7 +29,7 @@ export default function ToggleDreamSection({
           className={`flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors ${
             view === 'calendar'
               ? 'border-[#231C17] bg-[#231C17] text-white'
-              : 'border-gray-300 text-[#555555] hover:border-[#231C17] hover:text-[#231C17]'
+              : 'border-gray-300 text-[#6B605A] hover:border-[#231C17] hover:text-[#231C17]'
           }`}
         >
           {view === 'list' ? (
@@ -52,7 +52,7 @@ export default function ToggleDreamSection({
 
       {view === 'list' ? (
         count === 0 ? (
-          <p className="py-6 text-center text-sm text-[#999]">내역이 없습니다</p>
+          <p className="py-6 text-center text-sm text-[#9A8F88]">내역이 없습니다</p>
         ) : (
           <ul className="divide-y divide-gray-100">{children}</ul>
         )

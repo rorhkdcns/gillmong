@@ -35,7 +35,7 @@ const CHART_COLORS = [
 function StatCard({ label, value }: { label: string; value: string | number }) {
   return (
     <div className="rounded border border-gray-200 bg-white p-4 sm:p-6">
-      <p className="text-sm text-[#777777]">{label}</p>
+      <p className="text-sm text-[#6B605A]">{label}</p>
       <p className="mt-2 text-2xl font-bold text-[#231C17] sm:text-3xl">
         {typeof value === 'number' ? value.toLocaleString() : value}
       </p>
@@ -67,7 +67,7 @@ export default function AdminStatsPage() {
     getAdminStatsSummary().then((s) => { setStats(s); setLoading(false) })
   }, [])
 
-  if (loading) return <div className="flex h-full items-center justify-center text-sm text-[#999]">불러오는 중...</div>
+  if (loading) return <div className="flex h-full items-center justify-center text-sm text-[#9A8F88]">불러오는 중...</div>
   if (!stats) return null
 
   return (
@@ -87,7 +87,7 @@ export default function AdminStatsPage() {
         <div className="xl:col-span-2">
           <Panel title="매출 추이 (최근 30일)">
             {stats.dailyRevenue.every((d) => d.amount === 0) ? (
-              <div className="py-10 text-center text-sm text-[#999]">최근 30일간 매출 데이터가 없습니다</div>
+              <div className="py-10 text-center text-sm text-[#9A8F88]">최근 30일간 매출 데이터가 없습니다</div>
             ) : (
               <ResponsiveContainer width="100%" height={280}>
                 <LineChart data={stats.dailyRevenue} margin={{ top: 8, right: 16, left: 8, bottom: 0 }}>
@@ -105,7 +105,7 @@ export default function AdminStatsPage() {
         {/* 결제수단별 비중 */}
         <Panel title="결제수단별 비중">
           {stats.byPaymentMethod.length === 0 ? (
-            <div className="py-10 text-center text-sm text-[#999]">데이터가 없습니다</div>
+            <div className="py-10 text-center text-sm text-[#9A8F88]">데이터가 없습니다</div>
           ) : (
             <ResponsiveContainer width="100%" height={260}>
               <PieChart>
@@ -139,7 +139,7 @@ export default function AdminStatsPage() {
         {/* 주문 상태별 현황 */}
         <Panel title="주문 상태별 현황">
           {stats.byStatus.length === 0 ? (
-            <div className="py-10 text-center text-sm text-[#999]">데이터가 없습니다</div>
+            <div className="py-10 text-center text-sm text-[#9A8F88]">데이터가 없습니다</div>
           ) : (
             <ResponsiveContainer width="100%" height={260}>
               <BarChart data={stats.byStatus} margin={{ top: 8, right: 16, left: 8, bottom: 0 }}>
@@ -165,12 +165,12 @@ export default function AdminStatsPage() {
         {/* 인기 판매 꿈 TOP10 */}
         <Panel title="인기 판매 꿈 TOP 10">
           {stats.topDreams.length === 0 ? (
-            <div className="py-6 text-center text-sm text-[#999]">데이터가 없습니다</div>
+            <div className="py-6 text-center text-sm text-[#9A8F88]">데이터가 없습니다</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-100 text-left text-xs text-[#999]">
+                  <tr className="border-b border-gray-100 text-left text-xs text-[#9A8F88]">
                     <th className="py-2 pr-3">꿈 제목</th>
                     <th className="py-2 pr-3">판매건수</th>
                     <th className="py-2">매출합계</th>
@@ -180,11 +180,11 @@ export default function AdminStatsPage() {
                   {stats.topDreams.map((d) => (
                     <tr key={d.dreamId}>
                       <td className="max-w-[160px] truncate py-2 pr-3">
-                        <Link href={`/dream/${d.dreamId}`} className="text-[#333] hover:text-brand-primary hover:underline">
+                        <Link href={`/dream/${d.dreamId}`} className="text-[#3A322C] hover:text-brand-primary hover:underline">
                           {d.title}
                         </Link>
                       </td>
-                      <td className="py-2 pr-3 text-[#555]">{d.salesCount.toLocaleString()}건</td>
+                      <td className="py-2 pr-3 text-[#6B605A]">{d.salesCount.toLocaleString()}건</td>
                       <td className="py-2 text-[#C23A18]">{d.revenue.toLocaleString()}원</td>
                     </tr>
                   ))}
@@ -197,12 +197,12 @@ export default function AdminStatsPage() {
         {/* 해몽사전 조회수 TOP10 */}
         <Panel title="해몽사전 조회수 TOP 10">
           {stats.topDictionary.length === 0 ? (
-            <div className="py-6 text-center text-sm text-[#999]">데이터가 없습니다</div>
+            <div className="py-6 text-center text-sm text-[#9A8F88]">데이터가 없습니다</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-100 text-left text-xs text-[#999]">
+                  <tr className="border-b border-gray-100 text-left text-xs text-[#9A8F88]">
                     <th className="py-2 pr-3">표제어</th>
                     <th className="py-2">조회수</th>
                   </tr>
@@ -211,11 +211,11 @@ export default function AdminStatsPage() {
                   {stats.topDictionary.map((d) => (
                     <tr key={d.slug}>
                       <td className="max-w-[160px] truncate py-2 pr-3">
-                        <Link href={`/dictionary/${d.slug}`} className="text-[#333] hover:text-brand-primary hover:underline">
+                        <Link href={`/dictionary/${d.slug}`} className="text-[#3A322C] hover:text-brand-primary hover:underline">
                           {d.keyword}
                         </Link>
                       </td>
-                      <td className="py-2 text-[#555]">{d.viewCount.toLocaleString()}회</td>
+                      <td className="py-2 text-[#6B605A]">{d.viewCount.toLocaleString()}회</td>
                     </tr>
                   ))}
                 </tbody>
@@ -227,12 +227,12 @@ export default function AdminStatsPage() {
         {/* 굿즈샵 상품 클릭수 TOP10 */}
         <Panel title="굿즈샵 상품 클릭수 TOP 10">
           {stats.topProducts.length === 0 ? (
-            <div className="py-6 text-center text-sm text-[#999]">데이터가 없습니다</div>
+            <div className="py-6 text-center text-sm text-[#9A8F88]">데이터가 없습니다</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-100 text-left text-xs text-[#999]">
+                  <tr className="border-b border-gray-100 text-left text-xs text-[#9A8F88]">
                     <th className="py-2 pr-3">상품명</th>
                     <th className="py-2">클릭수</th>
                   </tr>
@@ -240,8 +240,8 @@ export default function AdminStatsPage() {
                 <tbody className="divide-y divide-gray-100">
                   {stats.topProducts.map((p, i) => (
                     <tr key={`${p.title}-${i}`}>
-                      <td className="max-w-[160px] truncate py-2 pr-3 text-[#333]">{p.title}</td>
-                      <td className="py-2 text-[#555]">{p.clickCount.toLocaleString()}회</td>
+                      <td className="max-w-[160px] truncate py-2 pr-3 text-[#3A322C]">{p.title}</td>
+                      <td className="py-2 text-[#6B605A]">{p.clickCount.toLocaleString()}회</td>
                     </tr>
                   ))}
                 </tbody>

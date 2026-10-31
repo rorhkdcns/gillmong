@@ -101,7 +101,7 @@ export default function AdminOrdersPage() {
       <div className="overflow-x-auto rounded border border-gray-200 bg-white">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+            <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
               <th className="px-4 py-3">결제일</th>
               <th className="px-4 py-3">꿈 제목</th>
               <th className="px-4 py-3">구매자</th>
@@ -115,33 +115,33 @@ export default function AdminOrdersPage() {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {loading ? (
-              <tr><td colSpan={8} className="py-12 text-center text-sm text-[#999]">불러오는 중...</td></tr>
+              <tr><td colSpan={8} className="py-12 text-center text-sm text-[#9A8F88]">불러오는 중...</td></tr>
             ) : orders.length === 0 ? (
-              <tr><td colSpan={8} className="py-12 text-center text-sm text-[#999]">주문이 없습니다</td></tr>
+              <tr><td colSpan={8} className="py-12 text-center text-sm text-[#9A8F88]">주문이 없습니다</td></tr>
             ) : orders.map((o) => {
               const st   = STATUS_META[o.status] ?? { label: o.status, cls: 'bg-gray-100 text-gray-500' }
               const days = daysLeft(o.confirm_deadline)
               return (
                 <tr key={o.id} className="hover:bg-gray-50">
-                  <td className="px-4 py-3 text-[#999] whitespace-nowrap">{formatDate(o.paid_at)}</td>
-                  <td className="max-w-[160px] truncate px-4 py-3 text-[#555]">{o.dream_title ?? '-'}</td>
+                  <td className="px-4 py-3 text-[#9A8F88] whitespace-nowrap">{formatDate(o.paid_at)}</td>
+                  <td className="max-w-[160px] truncate px-4 py-3 text-[#6B605A]">{o.dream_title ?? '-'}</td>
                   <td className="px-4 py-3">
-                    <p className="font-medium text-[#333]">{o.buyer_profile?.nickname ?? '-'}</p>
-                    <p className="text-xs text-[#999]">@{o.buyer_profile?.username ?? '-'}</p>
+                    <p className="font-medium text-[#3A322C]">{o.buyer_profile?.nickname ?? '-'}</p>
+                    <p className="text-xs text-[#9A8F88]">@{o.buyer_profile?.username ?? '-'}</p>
                   </td>
                   <td className="px-4 py-3">
-                    <p className="font-medium text-[#333]">{o.seller_profile?.nickname ?? '-'}</p>
-                    <p className="text-xs text-[#999]">@{o.seller_profile?.username ?? '-'}</p>
+                    <p className="font-medium text-[#3A322C]">{o.seller_profile?.nickname ?? '-'}</p>
+                    <p className="text-xs text-[#9A8F88]">@{o.seller_profile?.username ?? '-'}</p>
                   </td>
                   <td className="px-4 py-3">
                     <p className="font-semibold text-[#C23A18]">₩{o.amount.toLocaleString()}</p>
-                    <p className="text-xs text-[#999]">판매자 {o.seller_amount.toLocaleString()}원</p>
+                    <p className="text-xs text-[#9A8F88]">판매자 {o.seller_amount.toLocaleString()}원</p>
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${st.cls}`}>{st.label}</span>
+                    <span className={`rounded-[3px] px-2 py-0.5 text-xs font-semibold ${st.cls}`}>{st.label}</span>
                   </td>
                   {tab === 'paid_escrow' && (
-                    <td className="px-4 py-3 text-xs text-[#777]">
+                    <td className="px-4 py-3 text-xs text-[#6B605A]">
                       {days !== null ? (
                         days <= 0
                           ? <span className="text-red-500 font-semibold">오늘 자동정산</span>

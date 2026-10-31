@@ -64,10 +64,10 @@ export default function AllCategoriesPage({ cards, categories }: Props) {
           <button
             type="button"
             onClick={() => handleCategoryClick(ALL_FILTER)}
-            className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+            className={`rounded-[3px] px-4 py-1.5 text-sm font-semibold transition-colors ${
               activeCategory === ALL_FILTER
                 ? 'bg-brand-ink text-white'
-                : 'border border-brand-line text-brand-ink-soft hover:border-brand-violet hover:text-brand-violet-deep'
+                : 'border border-brand-line text-brand-ink-soft hover:border-brand-primary hover:text-brand-primary-hover'
             }`}
           >
             전체
@@ -77,10 +77,10 @@ export default function AllCategoriesPage({ cards, categories }: Props) {
               key={c.slug}
               type="button"
               onClick={() => handleCategoryClick(c.slug)}
-              className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+              className={`rounded-[3px] px-4 py-1.5 text-sm font-semibold transition-colors ${
                 activeCategory === c.slug
                   ? 'bg-brand-ink text-white'
-                  : 'border border-brand-line text-brand-ink-soft hover:border-brand-violet hover:text-brand-violet-deep'
+                  : 'border border-brand-line text-brand-ink-soft hover:border-brand-primary hover:text-brand-primary-hover'
               }`}
             >
               {c.name}
@@ -104,10 +104,10 @@ export default function AllCategoriesPage({ cards, categories }: Props) {
                 <button
                   key={key}
                   onClick={() => setSort(key)}
-                  className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                  className={`rounded-[3px] px-4 py-1.5 text-sm font-medium transition-colors ${
                     sort === key
                       ? 'bg-brand-ink text-white'
-                      : 'border border-brand-line text-brand-ink-soft hover:border-brand-violet hover:text-brand-violet-deep'
+                      : 'border border-brand-line text-brand-ink-soft hover:border-brand-primary hover:text-brand-primary-hover'
                   }`}
                 >
                   {label}
@@ -137,9 +137,9 @@ export default function AllCategoriesPage({ cards, categories }: Props) {
               <button
                 onClick={() => hasMore && setVisibleCount((v) => v + 6)}
                 disabled={!hasMore}
-                className={`rounded-full px-10 py-3 text-base font-semibold transition-all ${
+                className={`rounded-[3px] px-10 py-3 text-base font-semibold transition-all ${
                   hasMore
-                    ? 'bg-gradient-to-r from-brand-violet to-brand-pink text-white hover:brightness-95'
+                    ? 'bg-brand-primary text-white hover:bg-brand-primary-hover'
                     : 'cursor-not-allowed border border-gray-300 text-gray-400'
                 }`}
               >

@@ -446,7 +446,7 @@ export default function AdminCategoriesPage() {
 
         {isShop && (
           <div>
-            <label className="mb-1 block text-sm font-semibold text-[#333]">단계</label>
+            <label className="mb-1 block text-sm font-semibold text-[#3A322C]">단계</label>
             <select
               value={createLevel}
               onChange={(e) => {
@@ -455,7 +455,7 @@ export default function AdminCategoriesPage() {
                 setCreateRootId(''); setCreateMidId('')
                 setCreateError('')
               }}
-              className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-violet"
+              className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-primary"
             >
               <option value="root">대분류로 추가</option>
               <option value="mid">중분류로 추가</option>
@@ -466,14 +466,14 @@ export default function AdminCategoriesPage() {
 
         {isShop && createLevel === 'mid' && (
           <div>
-            <label className="mb-1 block text-sm font-semibold text-[#333]">어느 대분류 밑에?</label>
+            <label className="mb-1 block text-sm font-semibold text-[#3A322C]">어느 대분류 밑에?</label>
             {rootOptions.length === 0 ? (
               <p className="text-sm text-red-500">먼저 대분류를 하나 이상 만들어주세요.</p>
             ) : (
               <select
                 value={createRootId}
                 onChange={(e) => setCreateRootId(e.target.value)}
-                className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-violet"
+                className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-primary"
               >
                 <option value="">선택해주세요</option>
                 {rootOptions.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -485,14 +485,14 @@ export default function AdminCategoriesPage() {
         {isShop && createLevel === 'leaf' && (
           <>
             <div>
-              <label className="mb-1 block text-sm font-semibold text-[#333]">어느 대분류 밑에?</label>
+              <label className="mb-1 block text-sm font-semibold text-[#3A322C]">어느 대분류 밑에?</label>
               {rootOptions.length === 0 ? (
                 <p className="text-sm text-red-500">먼저 대분류를 하나 이상 만들어주세요.</p>
               ) : (
                 <select
                   value={createRootId}
                   onChange={(e) => { setCreateRootId(e.target.value); setCreateMidId('') }}
-                  className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-violet"
+                  className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-primary"
                 >
                   <option value="">선택해주세요</option>
                   {rootOptions.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -501,14 +501,14 @@ export default function AdminCategoriesPage() {
             </div>
             {createRootId && (
               <div>
-                <label className="mb-1 block text-sm font-semibold text-[#333]">어느 중분류 밑에?</label>
+                <label className="mb-1 block text-sm font-semibold text-[#3A322C]">어느 중분류 밑에?</label>
                 {midOptionsFor(createRootId).length === 0 ? (
                   <p className="text-sm text-red-500">이 대분류 밑에 중분류를 먼저 만들어주세요.</p>
                 ) : (
                   <select
                     value={createMidId}
                     onChange={(e) => setCreateMidId(e.target.value)}
-                    className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-violet"
+                    className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-primary"
                   >
                     <option value="">선택해주세요</option>
                     {midOptionsFor(createRootId).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -520,31 +520,31 @@ export default function AdminCategoriesPage() {
         )}
 
         <div>
-          <label className="mb-1 block text-sm font-semibold text-[#333]">이름</label>
+          <label className="mb-1 block text-sm font-semibold text-[#3A322C]">이름</label>
           <input
             type="text"
             value={name}
             onChange={(e) => handleNameChange(e.target.value)}
             placeholder="예: 인물·신체"
-            className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-violet"
+            className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-primary"
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-semibold text-[#333]">slug (URL용)</label>
+          <label className="mb-1 block text-sm font-semibold text-[#3A322C]">slug (URL용)</label>
           <input
             type="text"
             value={slug}
             onChange={(e) => { setSlug(e.target.value); setSlugTouched(true) }}
             placeholder="이름 입력 시 자동 생성됩니다"
-            className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-violet"
+            className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-primary"
           />
           <p className="mt-1 text-xs text-gray-400">직접 수정할 수 있습니다.</p>
         </div>
 
         {isShop && (
           <div>
-            <label className="mb-1 block text-sm font-semibold text-[#333]">썸네일 이미지 (선택)</label>
+            <label className="mb-1 block text-sm font-semibold text-[#3A322C]">썸네일 이미지 (선택)</label>
             <input
               ref={fileRef}
               type="file"
@@ -588,7 +588,7 @@ export default function AdminCategoriesPage() {
           <div className="overflow-x-auto rounded border border-gray-200 bg-white">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+                <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
                   <th className="px-4 py-3">순서</th>
                   <th className="px-4 py-3">이름</th>
                   <th className="px-4 py-3">slug</th>
@@ -614,7 +614,7 @@ export default function AdminCategoriesPage() {
                             onClick={() => move(node, 'up')}
                             disabled={siblingIdx === 0}
                             aria-label="위로"
-                            className="flex h-6 w-6 items-center justify-center rounded text-[#555] hover:bg-gray-100 disabled:opacity-30"
+                            className="flex h-6 w-6 items-center justify-center rounded text-[#6B605A] hover:bg-gray-100 disabled:opacity-30"
                           >
                             ▲
                           </button>
@@ -622,7 +622,7 @@ export default function AdminCategoriesPage() {
                             onClick={() => move(node, 'down')}
                             disabled={siblingIdx === siblings.length - 1}
                             aria-label="아래로"
-                            className="flex h-6 w-6 items-center justify-center rounded text-[#555] hover:bg-gray-100 disabled:opacity-30"
+                            className="flex h-6 w-6 items-center justify-center rounded text-[#6B605A] hover:bg-gray-100 disabled:opacity-30"
                           >
                             ▼
                           </button>
@@ -634,14 +634,14 @@ export default function AdminCategoriesPage() {
                             <button
                               onClick={() => toggleExpand(node.id)}
                               aria-label={isExpanded ? '접기' : '펼치기'}
-                              className="flex h-5 w-5 shrink-0 items-center justify-center text-[#999] hover:text-[#555]"
+                              className="flex h-5 w-5 shrink-0 items-center justify-center text-[#9A8F88] hover:text-[#6B605A]"
                             >
                               {isExpanded ? '▾' : '▸'}
                             </button>
                           ) : (
                             <span className="inline-block w-5 shrink-0" />
                           )}
-                          <span className="font-medium text-[#333]">{node.name}</span>
+                          <span className="font-medium text-[#3A322C]">{node.name}</span>
                           <span className="rounded bg-gray-100 px-1.5 py-0.5 text-xs text-gray-500">
                             {LEVEL_LABEL[node.depth]}
                           </span>
@@ -652,12 +652,12 @@ export default function AdminCategoriesPage() {
                           )}
                         </div>
                       </td>
-                      <td className="px-4 py-3 font-mono text-[#777]">{node.slug}</td>
-                      <td className="px-4 py-3 text-[#777]">0개</td>
+                      <td className="px-4 py-3 font-mono text-[#6B605A]">{node.slug}</td>
+                      <td className="px-4 py-3 text-[#6B605A]">0개</td>
                       <td className="px-4 py-3">
                         <button
                           onClick={() => toggleActive(node)}
-                          className={`rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors ${
+                          className={`rounded-[3px] px-2.5 py-0.5 text-xs font-semibold transition-colors ${
                             node.is_active
                               ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'
                               : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
@@ -670,7 +670,7 @@ export default function AdminCategoriesPage() {
                         <div className="flex gap-2">
                           <button
                             onClick={() => startShopEdit(node)}
-                            className="rounded border border-gray-300 px-3 py-1 text-xs text-[#555] hover:border-gray-400"
+                            className="rounded border border-gray-300 px-3 py-1 text-xs text-[#6B605A] hover:border-gray-400"
                           >
                             수정
                           </button>
@@ -693,7 +693,7 @@ export default function AdminCategoriesPage() {
           <div className="overflow-x-auto rounded border border-gray-200 bg-white">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+                <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
                   <th className="px-4 py-3">순서</th>
                   <th className="px-4 py-3">이름</th>
                   <th className="px-4 py-3">slug</th>
@@ -707,24 +707,24 @@ export default function AdminCategoriesPage() {
                   <tr key={cat.id} className="hover:bg-gray-50">
                     {editingId === cat.id ? (
                       <>
-                        <td className="px-4 py-3 text-[#999]">{cat.sort_order}</td>
+                        <td className="px-4 py-3 text-[#9A8F88]">{cat.sort_order}</td>
                         <td className="px-4 py-3">
                           <input
                             value={editName}
                             onChange={(e) => setEditName(e.target.value)}
-                            className="w-28 border border-gray-300 px-2 py-1 text-sm outline-none focus:border-brand-violet"
+                            className="w-28 border border-gray-300 px-2 py-1 text-sm outline-none focus:border-brand-primary"
                           />
                         </td>
                         <td className="px-4 py-3">
                           <input
                             value={editSlug}
                             onChange={(e) => setEditSlug(e.target.value)}
-                            className="w-28 border border-gray-300 px-2 py-1 text-sm outline-none focus:border-brand-violet"
+                            className="w-28 border border-gray-300 px-2 py-1 text-sm outline-none focus:border-brand-primary"
                           />
                         </td>
-                        <td className="px-4 py-3 text-[#777]">{dreamCounts[cat.id] ?? 0}개</td>
+                        <td className="px-4 py-3 text-[#6B605A]">{dreamCounts[cat.id] ?? 0}개</td>
                         <td className="px-4 py-3">
-                          <span className={`rounded-full px-2 py-0.5 text-xs font-semibold ${cat.is_active ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500'}`}>
+                          <span className={`rounded-[3px] px-2 py-0.5 text-xs font-semibold ${cat.is_active ? 'bg-emerald-50 text-emerald-600' : 'bg-gray-100 text-gray-500'}`}>
                             {cat.is_active ? '활성' : '비활성'}
                           </span>
                         </td>
@@ -741,7 +741,7 @@ export default function AdminCategoriesPage() {
                               </button>
                               <button
                                 onClick={() => setEditingId(null)}
-                                className="rounded border border-gray-300 px-3 py-1 text-xs text-[#555] hover:border-gray-400"
+                                className="rounded border border-gray-300 px-3 py-1 text-xs text-[#6B605A] hover:border-gray-400"
                               >
                                 취소
                               </button>
@@ -757,7 +757,7 @@ export default function AdminCategoriesPage() {
                               onClick={() => move(cat, 'up')}
                               disabled={idx === 0}
                               aria-label="위로"
-                              className="flex h-6 w-6 items-center justify-center rounded text-[#555] hover:bg-gray-100 disabled:opacity-30"
+                              className="flex h-6 w-6 items-center justify-center rounded text-[#6B605A] hover:bg-gray-100 disabled:opacity-30"
                             >
                               ▲
                             </button>
@@ -765,19 +765,19 @@ export default function AdminCategoriesPage() {
                               onClick={() => move(cat, 'down')}
                               disabled={idx === categories.length - 1}
                               aria-label="아래로"
-                              className="flex h-6 w-6 items-center justify-center rounded text-[#555] hover:bg-gray-100 disabled:opacity-30"
+                              className="flex h-6 w-6 items-center justify-center rounded text-[#6B605A] hover:bg-gray-100 disabled:opacity-30"
                             >
                               ▼
                             </button>
                           </div>
                         </td>
-                        <td className="px-4 py-3 font-medium text-[#333]">{cat.name}</td>
-                        <td className="px-4 py-3 font-mono text-[#777]">{cat.slug}</td>
-                        <td className="px-4 py-3 text-[#777]">{dreamCounts[cat.id] ?? 0}개</td>
+                        <td className="px-4 py-3 font-medium text-[#3A322C]">{cat.name}</td>
+                        <td className="px-4 py-3 font-mono text-[#6B605A]">{cat.slug}</td>
+                        <td className="px-4 py-3 text-[#6B605A]">{dreamCounts[cat.id] ?? 0}개</td>
                         <td className="px-4 py-3">
                           <button
                             onClick={() => toggleActive(cat)}
-                            className={`rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors ${
+                            className={`rounded-[3px] px-2.5 py-0.5 text-xs font-semibold transition-colors ${
                               cat.is_active
                                 ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'
                                 : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
@@ -790,7 +790,7 @@ export default function AdminCategoriesPage() {
                           <div className="flex gap-2">
                             <button
                               onClick={() => startEdit(cat)}
-                              className="rounded border border-gray-300 px-3 py-1 text-xs text-[#555] hover:border-gray-400"
+                              className="rounded border border-gray-300 px-3 py-1 text-xs text-[#6B605A] hover:border-gray-400"
                             >
                               수정
                             </button>
@@ -822,30 +822,30 @@ export default function AdminCategoriesPage() {
             </h2>
 
             <div>
-              <label className="mb-1 block text-sm font-semibold text-[#333]">이름</label>
+              <label className="mb-1 block text-sm font-semibold text-[#3A322C]">이름</label>
               <input
                 value={shopEditName}
                 onChange={(e) => setShopEditName(e.target.value)}
-                className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-violet"
+                className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-primary"
               />
             </div>
 
             <div>
-              <label className="mb-1 block text-sm font-semibold text-[#333]">slug</label>
+              <label className="mb-1 block text-sm font-semibold text-[#3A322C]">slug</label>
               <input
                 value={shopEditSlug}
                 onChange={(e) => setShopEditSlug(e.target.value)}
-                className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-violet"
+                className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-primary"
               />
             </div>
 
             {depthOf(editTarget, categories) === 1 && (
               <div>
-                <label className="mb-1 block text-sm font-semibold text-[#333]">상위 대분류</label>
+                <label className="mb-1 block text-sm font-semibold text-[#3A322C]">상위 대분류</label>
                 <select
                   value={shopEditRootId}
                   onChange={(e) => setShopEditRootId(e.target.value)}
-                  className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-violet"
+                  className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-primary"
                 >
                   <option value="">선택해주세요</option>
                   {rootOptions.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -856,18 +856,18 @@ export default function AdminCategoriesPage() {
             {depthOf(editTarget, categories) === 2 && (
               <>
                 <div>
-                  <label className="mb-1 block text-sm font-semibold text-[#333]">상위 대분류</label>
+                  <label className="mb-1 block text-sm font-semibold text-[#3A322C]">상위 대분류</label>
                   <select
                     value={shopEditRootId}
                     onChange={(e) => { setShopEditRootId(e.target.value); setShopEditMidId('') }}
-                    className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-violet"
+                    className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-primary"
                   >
                     <option value="">선택해주세요</option>
                     {rootOptions.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-semibold text-[#333]">상위 중분류</label>
+                  <label className="mb-1 block text-sm font-semibold text-[#3A322C]">상위 중분류</label>
                   {!shopEditRootId ? (
                     <p className="text-sm text-gray-400">먼저 대분류를 선택해주세요.</p>
                   ) : midOptionsFor(shopEditRootId).length === 0 ? (
@@ -876,7 +876,7 @@ export default function AdminCategoriesPage() {
                     <select
                       value={shopEditMidId}
                       onChange={(e) => setShopEditMidId(e.target.value)}
-                      className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-violet"
+                      className="w-full border border-gray-300 px-4 py-2 text-sm outline-none focus:border-brand-primary"
                     >
                       <option value="">선택해주세요</option>
                       {midOptionsFor(shopEditRootId).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -887,7 +887,7 @@ export default function AdminCategoriesPage() {
             )}
 
             <div>
-              <label className="mb-1 block text-sm font-semibold text-[#333]">썸네일 이미지</label>
+              <label className="mb-1 block text-sm font-semibold text-[#3A322C]">썸네일 이미지</label>
               <input type="file" accept="image/*" onChange={handleShopEditImageChange}
                 className="w-full text-sm text-gray-600 file:mr-3 file:border-0 file:bg-brand-ink file:px-4 file:py-2 file:text-white file:text-sm file:cursor-pointer hover:file:brightness-90" />
               {shopEditImagePreview && (
@@ -900,7 +900,7 @@ export default function AdminCategoriesPage() {
             )}
 
             <div className="flex gap-3">
-              <button onClick={() => setEditTarget(null)} className="flex-1 border border-gray-300 py-2 text-sm text-[#555]">취소</button>
+              <button onClick={() => setEditTarget(null)} className="flex-1 border border-gray-300 py-2 text-sm text-[#6B605A]">취소</button>
               <button
                 onClick={handleSaveShopEdit}
                 disabled={shopSaving}
@@ -919,8 +919,8 @@ export default function AdminCategoriesPage() {
           onClick={(e) => { if (e.target === e.currentTarget) setBlockMsg('') }}>
           <div className="w-full max-w-sm bg-white p-8 shadow-xl">
             <h2 className="mb-3 text-lg font-bold text-brand-ink">삭제할 수 없습니다</h2>
-            <p className="mb-5 text-sm text-[#555]">{blockMsg}</p>
-            <button onClick={() => setBlockMsg('')} className="w-full rounded border border-gray-300 py-2 text-sm text-[#555] hover:border-gray-400">
+            <p className="mb-5 text-sm text-[#6B605A]">{blockMsg}</p>
+            <button onClick={() => setBlockMsg('')} className="w-full rounded border border-gray-300 py-2 text-sm text-[#6B605A] hover:border-gray-400">
               확인
             </button>
           </div>
@@ -933,12 +933,12 @@ export default function AdminCategoriesPage() {
           onClick={(e) => { if (e.target === e.currentTarget) setDeleteTarget(null) }}>
           <div className="w-full max-w-sm bg-white p-8 shadow-xl">
             <h2 className="mb-3 text-lg font-bold text-red-600">카테고리 삭제</h2>
-            <p className="mb-5 text-sm text-[#777]">
-              <span className="font-semibold text-[#333]">&ldquo;{deleteTarget.name}&rdquo;</span>을(를) 삭제합니다.<br />
+            <p className="mb-5 text-sm text-[#6B605A]">
+              <span className="font-semibold text-[#3A322C]">&ldquo;{deleteTarget.name}&rdquo;</span>을(를) 삭제합니다.<br />
               이 작업은 되돌릴 수 없습니다.
             </p>
             <div className="flex gap-3">
-              <button onClick={() => setDeleteTarget(null)} className="flex-1 border border-gray-300 py-2 text-sm text-[#555]">취소</button>
+              <button onClick={() => setDeleteTarget(null)} className="flex-1 border border-gray-300 py-2 text-sm text-[#6B605A]">취소</button>
               <button onClick={confirmDelete} disabled={deleting} className="flex-1 bg-red-500 py-2 text-sm font-semibold text-white hover:bg-red-600 disabled:opacity-60">
                 {deleting ? '삭제 중...' : '삭제'}
               </button>

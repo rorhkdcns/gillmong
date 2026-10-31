@@ -98,8 +98,8 @@ function FaqItem({ q, a }: { q: string; a: string }) {
       </button>
       {open && (
         <div className="border-t border-gray-100 bg-gray-50 px-6 py-5">
-          <p className="text-sm leading-relaxed text-[#555555]">
-            <span className="mr-2 font-bold text-[#6B96A8]">A.</span>{a}
+          <p className="text-sm leading-relaxed text-[#6B605A]">
+            <span className="mr-2 font-bold text-[#9A8F88]">A.</span>{a}
           </p>
         </div>
       )}
@@ -129,7 +129,7 @@ export default function FaqPage() {
             ))}
           </div>
           <div className="mt-10 rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
-            <p className="text-base text-[#555555]">원하는 답변을 찾지 못하셨나요?</p>
+            <p className="text-base text-[#6B605A]">원하는 답변을 찾지 못하셨나요?</p>
             <div className="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
               <a href="/support" className="rounded-xl border border-[#231C17] px-6 py-2.5 text-sm font-semibold text-[#231C17] hover:bg-[#231C17] hover:text-white transition-colors">
                 고객센터 안내

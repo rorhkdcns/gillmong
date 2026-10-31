@@ -94,14 +94,14 @@ export default async function DictionarySubcategoryPage({
                   <Link
                     key={s.slug}
                     href={`/dictionary/${category}/${s.slug}`}
-                    className="rounded-full border border-[#EADFD8] bg-white px-4 py-2 text-sm font-medium text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F]"
+                    className="rounded-[3px] border border-[#EADFD8] bg-white px-4 py-2 text-sm font-medium text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F]"
                   >
                     {s.name}
                   </Link>
                 ))}
                 <Link
                   href={`/dictionary/${category}`}
-                  className="rounded-full border border-[#EADFD8] bg-white px-4 py-2 text-sm font-medium text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F]"
+                  className="rounded-[3px] border border-[#EADFD8] bg-white px-4 py-2 text-sm font-medium text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F]"
                 >
                   {parentCategory.name} 전체 보기
                 </Link>

@@ -65,7 +65,7 @@ function LoginForm() {
   return (
     <div className="w-full max-w-sm">
       <h1 className="mb-2 text-center text-2xl text-[#231C17]">로그인</h1>
-      <p className="mb-6 text-center text-sm text-[#777777]">길몽상점에 오신 것을 환영합니다</p>
+      <p className="mb-6 text-center text-sm text-[#6B605A]">길몽상점에 오신 것을 환영합니다</p>
 
       {resetDone && (
         <div className="mb-6 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
@@ -75,7 +75,7 @@ function LoginForm() {
 
       <form action={formAction} onSubmit={handleBeforeSubmit} className="flex flex-col gap-4">
         <div>
-          <label className="mb-1 block text-sm text-[#555555]">아이디</label>
+          <label className="mb-1 block text-sm text-[#6B605A]">아이디</label>
           <input
             type="text"
             name="username"
@@ -83,18 +83,18 @@ function LoginForm() {
             onChange={(e) => setUsername(e.target.value)}
             placeholder="아이디 입력"
             required
-            className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
+            className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#3A322C] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-sm text-[#555555]">비밀번호</label>
+          <label className="mb-1 block text-sm text-[#6B605A]">비밀번호</label>
           <input
             type="password"
             name="password"
             placeholder="비밀번호 입력"
             required
-            className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#333333] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
+            className="w-full border border-gray-300 bg-white px-4 py-3 text-base text-[#3A322C] placeholder:text-gray-300 outline-none focus:border-[#231C17]"
           />
         </div>
 
@@ -105,7 +105,7 @@ function LoginForm() {
             onChange={(e) => setSaveId(e.target.checked)}
             className="h-4 w-4 accent-[#231C17]"
           />
-          <span className="text-sm text-[#555555]">아이디 저장</span>
+          <span className="text-sm text-[#6B605A]">아이디 저장</span>
         </label>
 
         {state?.error && (
@@ -123,7 +123,7 @@ function LoginForm() {
 
       <div className="my-6 flex items-center gap-3">
         <div className="h-px flex-1 bg-gray-200" />
-        <span className="text-xs text-[#999999]">또는</span>
+        <span className="text-xs text-[#9A8F88]">또는</span>
         <div className="h-px flex-1 bg-gray-200" />
       </div>
 
@@ -150,12 +150,12 @@ function LoginForm() {
       </div>
 
       <div className="mt-6 text-center">
-        <a href="/auth/reset-password" className="text-sm text-[#777777] underline underline-offset-2 hover:text-[#231C17]">
+        <a href="/auth/reset-password" className="text-sm text-[#6B605A] underline underline-offset-2 hover:text-[#231C17]">
           비밀번호를 잊으셨나요?
         </a>
       </div>
 
-      <p className="mt-4 text-center text-sm text-[#777777]">
+      <p className="mt-4 text-center text-sm text-[#6B605A]">
         아직 계정이 없으신가요?{' '}
         <a href="/auth/signup" className="text-[#231C17] underline underline-offset-2 hover:brightness-75">
           회원가입

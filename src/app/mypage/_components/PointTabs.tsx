@@ -89,7 +89,7 @@ export default function PointTabs() {
             className={`flex-1 whitespace-nowrap py-3 text-center text-sm font-medium transition-colors ${
               active === key
                 ? 'border-b-2 border-[#231C17] font-bold text-[#231C17]'
-                : 'text-[#555555] hover:text-[#333333]'
+                : 'text-[#6B605A] hover:text-[#3A322C]'
             }`}
           >
             {TAB_LABELS[key]}
@@ -99,10 +99,10 @@ export default function PointTabs() {
 
       {/* 내역 */}
       {loading ? (
-        <p className="py-8 text-center text-sm text-[#555555]">불러오는 중...</p>
+        <p className="py-8 text-center text-sm text-[#6B605A]">불러오는 중...</p>
       ) : active === 'withdrawal' ? (
         withdrawals.length === 0 ? (
-          <p className="py-8 text-center text-sm text-[#555555]">출금 내역이 없습니다</p>
+          <p className="py-8 text-center text-sm text-[#6B605A]">출금 내역이 없습니다</p>
         ) : (
           <ul className="divide-y divide-gray-200">
             {withdrawals.map((w) => {
@@ -110,8 +110,8 @@ export default function PointTabs() {
               return (
                 <li key={w.id} className="flex items-center justify-between py-4">
                   <div>
-                    <p className="text-base font-medium text-[#333333]">{w.bankName} 출금 신청</p>
-                    <p className="mt-0.5 text-xs text-[#666666]">{w.date}</p>
+                    <p className="text-base font-medium text-[#3A322C]">{w.bankName} 출금 신청</p>
+                    <p className="mt-0.5 text-xs text-[#6B605A]">{w.date}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-base font-bold text-red-400">-{w.amount.toLocaleString()}원</p>
@@ -123,14 +123,14 @@ export default function PointTabs() {
           </ul>
         )
       ) : revenue.length === 0 ? (
-        <p className="py-8 text-center text-sm text-[#555555]">내역이 없습니다</p>
+        <p className="py-8 text-center text-sm text-[#6B605A]">내역이 없습니다</p>
       ) : (
         <ul className="divide-y divide-gray-200">
           {revenue.map((row, i) => (
             <li key={i} className="flex items-center justify-between py-4">
               <div>
-                <p className="text-base font-medium text-[#333333]">{row.description}</p>
-                <p className="mt-0.5 text-xs text-[#666666]">{row.date}</p>
+                <p className="text-base font-medium text-[#3A322C]">{row.description}</p>
+                <p className="mt-0.5 text-xs text-[#6B605A]">{row.date}</p>
               </div>
               <span className="text-base font-bold text-emerald-600">
                 +{row.amount.toLocaleString()}원

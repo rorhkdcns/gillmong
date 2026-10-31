@@ -88,18 +88,18 @@ export default function EscrowOrders({ orders }: { orders: Order[] }) {
                 <div className="min-w-0 flex-1">
                   <a
                     href={`/dream/${o.dream_id}`}
-                    className="block truncate text-base font-semibold text-[#333] hover:text-[#C23A18]"
+                    className="block truncate text-base font-semibold text-[#3A322C] hover:text-[#C23A18]"
                   >
                     {o.dream_title ?? `꿈 #${o.dream_id}`}
                   </a>
-                  <p className="mt-0.5 text-xs text-[#999]">{formatDate(o.paid_at)} · ₩{o.amount.toLocaleString()}</p>
+                  <p className="mt-0.5 text-xs text-[#9A8F88]">{formatDate(o.paid_at)} · ₩{o.amount.toLocaleString()}</p>
                   {o.status === 'paid_escrow' && days !== null && (
                     <p className="mt-0.5 text-xs text-amber-500">
                       {days <= 0 ? '오늘 자동 구매확정' : `${days}일 후 자동 구매확정`}
                     </p>
                   )}
                 </div>
-                <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold ${st.cls}`}>
+                <span className={`shrink-0 rounded-[3px] px-2.5 py-0.5 text-xs font-semibold ${st.cls}`}>
                   {st.label}
                 </span>
               </div>
@@ -131,7 +131,7 @@ export default function EscrowOrders({ orders }: { orders: Order[] }) {
                     value={disputeReason}
                     onChange={(e) => setDisputeReason(e.target.value)}
                     placeholder="환불 사유를 5자 이상 입력해주세요"
-                    className="mb-3 w-full resize-none rounded-lg border border-red-200 bg-white px-3 py-2 text-sm text-[#333] outline-none focus:border-red-400"
+                    className="mb-3 w-full resize-none rounded-lg border border-red-200 bg-white px-3 py-2 text-sm text-[#3A322C] outline-none focus:border-red-400"
                     rows={3}
                   />
                   {error && <p className="mb-2 text-xs text-red-600">{error}</p>}

@@ -33,7 +33,7 @@ export default async function SavedDreamPage({
 
       <div className="border-b border-gray-100 bg-white px-6 py-3">
         <div className="mx-auto max-w-[800px]">
-          <a href="/mypage" className="inline-flex items-center gap-1 text-sm text-[#777777] hover:text-[#231C17]">
+          <a href="/mypage" className="inline-flex items-center gap-1 text-sm text-[#6B605A] hover:text-[#231C17]">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
@@ -47,7 +47,7 @@ export default async function SavedDreamPage({
           <div className="rounded-2xl border border-gray-200 bg-white p-7 shadow-sm">
 
             <div className="mb-2 flex justify-center">
-              <span className="rounded-full bg-gray-100 px-3 py-0.5 text-xs font-semibold text-gray-500">개인 저장</span>
+              <span className="rounded-[3px] bg-gray-100 px-3 py-0.5 text-xs font-semibold text-gray-500">개인 저장</span>
             </div>
 
             {/* 등급 + 유형 */}
@@ -57,7 +57,7 @@ export default async function SavedDreamPage({
               </div>
               <span className={`text-base font-bold ${gradeStyle.text}`}>{gradeStyle.label}</span>
               {d.type && (
-                <span className={`rounded-full border px-3 py-0.5 text-sm font-semibold ${TYPE_STYLE[d.type] ?? TYPE_STYLE['중립']}`}>
+                <span className={`rounded-[3px] border px-3 py-0.5 text-sm font-semibold ${TYPE_STYLE[d.type] ?? TYPE_STYLE['중립']}`}>
                   {d.type}
                 </span>
               )}
@@ -71,7 +71,7 @@ export default async function SavedDreamPage({
             {d.summary && (
               <section className="mb-5">
                 <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">해몽 요약</h3>
-                <div className="rounded-xl border border-[#CCCCCC] bg-amber-50/30 p-4 text-sm leading-relaxed text-brand-body">
+                <div className="rounded-xl border border-[#EADFD8] bg-amber-50/30 p-4 text-sm leading-relaxed text-brand-body">
                   {d.summary}
                 </div>
               </section>
@@ -81,7 +81,7 @@ export default async function SavedDreamPage({
             {sections.length > 0 && (
               <section className="mb-5">
                 <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">상세 해몽</h3>
-                <div className="rounded-xl border border-[#CCCCCC] overflow-hidden">
+                <div className="rounded-xl border border-[#EADFD8] overflow-hidden">
                   {sections.map((sec, i) => (
                     <div key={i}>
                       {i > 0 && <hr style={{ borderColor: '#EEEEEE' }} />}
@@ -124,7 +124,7 @@ export default async function SavedDreamPage({
             {/* 꿈 원문 */}
             <section>
               <h3 className="mb-2 text-base font-bold uppercase tracking-wider text-brand-muted">꿈 원문</h3>
-              <div className="min-h-32 rounded-xl border border-gray-200 p-5 text-sm leading-relaxed text-[#555555]">
+              <div className="min-h-32 rounded-xl border border-gray-200 p-5 text-sm leading-relaxed text-[#6B605A]">
                 {d.content}
               </div>
             </section>

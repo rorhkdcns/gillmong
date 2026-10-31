@@ -22,13 +22,13 @@ const STATUS_TABS = [
   { key: 'pending',  label: '대기중',  cls: 'text-amber-600 bg-amber-50 border-amber-200' },
   { key: 'approved', label: '승인됨',  cls: 'text-emerald-600 bg-emerald-50 border-emerald-200' },
   { key: 'rejected', label: '거절됨',  cls: 'text-red-500 bg-red-50 border-red-200' },
-  { key: 'all',      label: '전체',    cls: 'text-[#555] bg-gray-50 border-gray-200' },
+  { key: 'all',      label: '전체',    cls: 'text-[#6B605A] bg-gray-50 border-gray-200' },
 ]
 
 function statusBadge(status: string | null) {
-  if (status === 'pending')  return <span className="rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-600">대기중</span>
-  if (status === 'approved') return <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-600">승인됨</span>
-  if (status === 'rejected') return <span className="rounded-full border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-medium text-red-500">거절됨</span>
+  if (status === 'pending')  return <span className="rounded-[3px] border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-600">대기중</span>
+  if (status === 'approved') return <span className="rounded-[3px] border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-600">승인됨</span>
+  if (status === 'rejected') return <span className="rounded-[3px] border border-red-200 bg-red-50 px-2.5 py-0.5 text-xs font-medium text-red-500">거절됨</span>
   return <span className="text-xs text-gray-400">-</span>
 }
 
@@ -82,7 +82,7 @@ export default function AdminBusinessPage() {
       <div className="mb-6 flex items-center gap-3">
         <h1 className="text-xl font-bold text-[#231C17] sm:text-2xl">사업자회원 승인</h1>
         {pendingCount > 0 && (
-          <span className="rounded-full bg-amber-500 px-2 py-0.5 text-xs font-bold text-white">
+          <span className="rounded-[3px] bg-amber-500 px-2 py-0.5 text-xs font-bold text-white">
             {pendingCount}
           </span>
         )}
@@ -94,8 +94,8 @@ export default function AdminBusinessPage() {
           <button
             key={t.key}
             onClick={() => { setTab(t.key); setMsg(null) }}
-            className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-all ${
-              tab === t.key ? t.cls : 'border-gray-200 bg-white text-[#777] hover:border-gray-300'
+            className={`rounded-[3px] border px-4 py-1.5 text-sm font-medium transition-all ${
+              tab === t.key ? t.cls : 'border-gray-200 bg-white text-[#6B605A] hover:border-gray-300'
             }`}
           >
             {t.label}
@@ -107,7 +107,7 @@ export default function AdminBusinessPage() {
       <div className="overflow-x-auto rounded border border-gray-200 bg-white">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+            <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
               <th className="px-4 py-3">회원정보</th>
               <th className="px-4 py-3">상호명</th>
               <th className="px-4 py-3">사업자번호</th>
@@ -119,19 +119,19 @@ export default function AdminBusinessPage() {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {loading ? (
-              <tr><td colSpan={7} className="py-12 text-center text-sm text-[#999]">불러오는 중...</td></tr>
+              <tr><td colSpan={7} className="py-12 text-center text-sm text-[#9A8F88]">불러오는 중...</td></tr>
             ) : users.length === 0 ? (
-              <tr><td colSpan={7} className="py-12 text-center text-sm text-[#999]">해당 항목이 없습니다</td></tr>
+              <tr><td colSpan={7} className="py-12 text-center text-sm text-[#9A8F88]">해당 항목이 없습니다</td></tr>
             ) : users.map(u => (
               <tr key={u.id} className="hover:bg-gray-50">
                 <td className="px-4 py-3">
-                  <p className="font-medium text-[#333]">{u.nickname}</p>
-                  <p className="text-xs text-[#999]">@{u.username}</p>
+                  <p className="font-medium text-[#3A322C]">{u.nickname}</p>
+                  <p className="text-xs text-[#9A8F88]">@{u.username}</p>
                 </td>
-                <td className="px-4 py-3 font-medium text-[#333]">{u.business_name || <span className="text-gray-300">-</span>}</td>
-                <td className="px-4 py-3 font-mono text-[#555]">{fmtBizNo(u.business_number)}</td>
-                <td className="px-4 py-3 text-[#555]">{u.representative_name || <span className="text-gray-300">-</span>}</td>
-                <td className="px-4 py-3 text-[#999]">{fmt(u.created_at)}</td>
+                <td className="px-4 py-3 font-medium text-[#3A322C]">{u.business_name || <span className="text-gray-300">-</span>}</td>
+                <td className="px-4 py-3 font-mono text-[#6B605A]">{fmtBizNo(u.business_number)}</td>
+                <td className="px-4 py-3 text-[#6B605A]">{u.representative_name || <span className="text-gray-300">-</span>}</td>
+                <td className="px-4 py-3 text-[#9A8F88]">{fmt(u.created_at)}</td>
                 <td className="px-4 py-3">{statusBadge(u.verification_status)}</td>
                 <td className="px-4 py-3">
                   {msg?.id === u.id ? (
@@ -158,7 +158,7 @@ export default function AdminBusinessPage() {
                       <button
                         onClick={() => handleAction(u.id, 'reject')}
                         disabled={working === u.id}
-                        className="rounded border border-gray-300 px-3 py-1 text-xs text-[#777] hover:border-red-300 hover:text-red-500 disabled:opacity-50"
+                        className="rounded border border-gray-300 px-3 py-1 text-xs text-[#6B605A] hover:border-red-300 hover:text-red-500 disabled:opacity-50"
                       >
                         승인 취소
                       </button>
@@ -166,7 +166,7 @@ export default function AdminBusinessPage() {
                       <button
                         onClick={() => handleAction(u.id, 'approve')}
                         disabled={working === u.id}
-                        className="rounded border border-gray-300 px-3 py-1 text-xs text-[#777] hover:border-emerald-500 hover:text-emerald-600 disabled:opacity-50"
+                        className="rounded border border-gray-300 px-3 py-1 text-xs text-[#6B605A] hover:border-emerald-500 hover:text-emerald-600 disabled:opacity-50"
                       >
                         재승인
                       </button>
@@ -180,7 +180,7 @@ export default function AdminBusinessPage() {
       </div>
 
       {/* 안내 */}
-      <p className="mt-4 text-xs text-[#999]">
+      <p className="mt-4 text-xs text-[#9A8F88]">
         승인 시 사업자회원으로 전환되어 판매 한도 제한이 해제됩니다. 거절 시 일반회원 한도가 적용됩니다.
       </p>
     </div>

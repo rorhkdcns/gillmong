@@ -116,7 +116,7 @@ export default function AdminNoticePage() {
             {formMode === 'edit' ? '공지사항 수정' : '새 공지사항'}
           </h2>
           <div className="mb-3">
-            <label className="mb-1 block text-sm text-[#555]">제목</label>
+            <label className="mb-1 block text-sm text-[#6B605A]">제목</label>
             <input
               type="text"
               value={title}
@@ -126,7 +126,7 @@ export default function AdminNoticePage() {
             />
           </div>
           <div className="mb-3">
-            <label className="mb-1 block text-sm text-[#555]">내용</label>
+            <label className="mb-1 block text-sm text-[#6B605A]">내용</label>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
@@ -135,7 +135,7 @@ export default function AdminNoticePage() {
               className="w-full resize-none rounded border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#231C17]"
             />
           </div>
-          <label className="mb-4 flex items-center gap-2 text-sm text-[#555]">
+          <label className="mb-4 flex items-center gap-2 text-sm text-[#6B605A]">
             <input type="checkbox" checked={isPinned} onChange={(e) => setIsPinned(e.target.checked)} className="accent-[#231C17]" />
             상단 고정 (공지)
           </label>
@@ -151,7 +151,7 @@ export default function AdminNoticePage() {
             <button
               type="button"
               onClick={closeForm}
-              className="rounded border border-gray-300 px-5 py-2 text-sm font-semibold text-[#555] hover:bg-gray-50"
+              className="rounded border border-gray-300 px-5 py-2 text-sm font-semibold text-[#6B605A] hover:bg-gray-50"
             >
               취소
             </button>
@@ -170,7 +170,7 @@ export default function AdminNoticePage() {
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+              <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
                 <th className="px-6 py-3">제목</th>
                 <th className="px-6 py-3">고정</th>
                 <th className="px-6 py-3">날짜</th>
@@ -181,14 +181,14 @@ export default function AdminNoticePage() {
               {notices.map((n) => (
                 <tr key={n.id}>
                   <td className="px-6 py-3">
-                    <a href={`/notice/${n.id}`} target="_blank" rel="noopener noreferrer" className="text-[#333] hover:underline">
+                    <a href={`/notice/${n.id}`} target="_blank" rel="noopener noreferrer" className="text-[#3A322C] hover:underline">
                       {n.title}
                     </a>
                   </td>
                   <td className="px-6 py-3">
                     {n.is_pinned && <span className="rounded bg-[#231C17] px-2 py-0.5 text-xs font-bold text-white">고정</span>}
                   </td>
-                  <td className="px-6 py-3 text-[#999]">{formatDate(n.created_at)}</td>
+                  <td className="px-6 py-3 text-[#9A8F88]">{formatDate(n.created_at)}</td>
                   <td className="px-6 py-3">
                     <div className="flex items-center gap-3">
                       <button
@@ -216,13 +216,13 @@ export default function AdminNoticePage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
           <div className="w-full max-w-sm rounded-2xl bg-white p-7 shadow-2xl">
             <h3 className="mb-2 text-center text-lg font-black text-[#231C17]">공지사항 삭제</h3>
-            <p className="mb-6 text-center text-sm text-[#555]">이 공지사항을 삭제하시겠습니까?<br />삭제 후 복구할 수 없습니다.</p>
+            <p className="mb-6 text-center text-sm text-[#6B605A]">이 공지사항을 삭제하시겠습니까?<br />삭제 후 복구할 수 없습니다.</p>
             <div className="flex gap-3">
               <button
                 type="button"
                 onClick={() => setDeleteTarget(null)}
                 disabled={deleting}
-                className="flex-1 rounded-xl border border-gray-300 py-3 text-sm font-semibold text-[#555] hover:bg-gray-50 disabled:opacity-50"
+                className="flex-1 rounded-xl border border-gray-300 py-3 text-sm font-semibold text-[#6B605A] hover:bg-gray-50 disabled:opacity-50"
               >
                 취소
               </button>

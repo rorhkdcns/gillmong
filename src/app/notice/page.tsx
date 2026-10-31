@@ -42,7 +42,7 @@ export default async function NoticePage() {
                         {n.is_pinned && (
                           <span className="shrink-0 rounded bg-[#231C17] px-2 py-0.5 text-xs font-bold text-white">공지</span>
                         )}
-                        <span className="truncate text-base text-[#333333]">{n.title}</span>
+                        <span className="truncate text-base text-[#3A322C]">{n.title}</span>
                       </div>
                       <span className="shrink-0 text-sm text-gray-400">{formatDate(n.created_at)}</span>
                     </a>

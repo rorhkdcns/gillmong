@@ -17,7 +17,7 @@ function Section({ title, color, children }: { title: string; color: string; chi
 function Row({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
     <div className="flex items-start justify-between gap-4 border-b border-gray-100 py-3 last:border-0">
-      <span className="text-sm text-[#555555]">{label}</span>
+      <span className="text-sm text-[#6B605A]">{label}</span>
       <span className={`text-right text-sm font-semibold ${highlight ? 'text-[#C23A18]' : 'text-[#231C17]'}`}>
         {value}
       </span>
@@ -44,7 +44,7 @@ export default function UsageGuidePage() {
               <Row label="1회 최대 판매액" value="10만원" />
               <Row label="반기(6개월) 최대 판매액" value="600만원" highlight />
               <Row label="반기 최대 거래건수" value="50건" />
-              <p className="mt-5 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-[#777777]">
+              <p className="mt-5 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-[#6B605A]">
                 일반회원은 전자금융거래법 및 소득세법에 따른 거래 한도가 적용됩니다.
                 한도 초과 시 판매가 자동 제한됩니다.
               </p>
@@ -72,21 +72,21 @@ export default function UsageGuidePage() {
             <div className="px-6 py-6">
               <div className="flex items-center justify-between gap-6 sm:gap-12">
                 <div className="text-center">
-                  <p className="text-xs text-[#999]">판매금액</p>
+                  <p className="text-xs text-[#9A8F88]">판매금액</p>
                   <p className="mt-1 text-2xl font-black text-[#231C17]">100%</p>
                 </div>
                 <div className="flex-1 border-t-2 border-dashed border-gray-200" />
                 <div className="text-center">
-                  <p className="text-xs text-[#999]">서비스 수수료</p>
+                  <p className="text-xs text-[#9A8F88]">서비스 수수료</p>
                   <p className="mt-1 text-2xl font-black text-red-400">– 20%</p>
                 </div>
                 <div className="flex-1 border-t-2 border-dashed border-gray-200" />
                 <div className="text-center">
-                  <p className="text-xs text-[#999]">판매자 수령</p>
+                  <p className="text-xs text-[#9A8F88]">판매자 수령</p>
                   <p className="mt-1 text-2xl font-black text-[#C23A18]">80%</p>
                 </div>
               </div>
-              <p className="mt-5 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-[#777777]">
+              <p className="mt-5 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-[#6B605A]">
                 예시: 10,000원 판매 시 → 수수료 2,000원 공제 → 판매자 정산금액 <strong className="text-[#231C17]">8,000원</strong><br />
                 구매자 확정 또는 결제 후 7일 경과 시 자동 정산됩니다.
               </p>
@@ -104,7 +104,7 @@ export default function UsageGuidePage() {
                 <div className="flex flex-1 flex-col items-center text-center">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#231C17] text-sm font-bold text-white">1</div>
                   <p className="mt-2 text-xs font-semibold text-[#231C17]">구매자 결제</p>
-                  <p className="mt-1 text-xs leading-relaxed text-[#777]">카드·간편결제<br />결제금 에스크로 보관</p>
+                  <p className="mt-1 text-xs leading-relaxed text-[#6B605A]">카드·간편결제<br />결제금 에스크로 보관</p>
                 </div>
                 <div className="hidden flex-1 items-center sm:flex">
                   <div className="w-full border-t-2 border-dashed border-gray-200" />
@@ -113,7 +113,7 @@ export default function UsageGuidePage() {
                 <div className="flex flex-1 flex-col items-center text-center">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#C23A18] text-sm font-bold text-white">2</div>
                   <p className="mt-2 text-xs font-semibold text-[#C23A18]">구매확정</p>
-                  <p className="mt-1 text-xs leading-relaxed text-[#777]">7일 이내 확정 버튼<br />클릭 시 즉시 정산</p>
+                  <p className="mt-1 text-xs leading-relaxed text-[#6B605A]">7일 이내 확정 버튼<br />클릭 시 즉시 정산</p>
                 </div>
                 <div className="hidden flex-1 items-center sm:flex">
                   <div className="w-full border-t-2 border-dashed border-gray-200" />
@@ -122,7 +122,7 @@ export default function UsageGuidePage() {
                 <div className="flex flex-1 flex-col items-center text-center">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-sm font-bold text-white">3</div>
                   <p className="mt-2 text-xs font-semibold text-emerald-600">자동 정산</p>
-                  <p className="mt-1 text-xs leading-relaxed text-[#777]">결제 후 7일 경과 시<br />판매금의 80% 자동 지급</p>
+                  <p className="mt-1 text-xs leading-relaxed text-[#6B605A]">결제 후 7일 경과 시<br />판매금의 80% 자동 지급</p>
                 </div>
                 <div className="hidden flex-1 items-center sm:flex">
                   <div className="w-full border-t-2 border-dashed border-gray-200" />
@@ -131,10 +131,10 @@ export default function UsageGuidePage() {
                 <div className="flex flex-1 flex-col items-center text-center">
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-300 text-sm font-bold text-white">4</div>
                   <p className="mt-2 text-xs font-semibold text-gray-500">분쟁 신청</p>
-                  <p className="mt-1 text-xs leading-relaxed text-[#777]">7일 내 환불 요청 시<br />관리자 검토 후 처리</p>
+                  <p className="mt-1 text-xs leading-relaxed text-[#6B605A]">7일 내 환불 요청 시<br />관리자 검토 후 처리</p>
                 </div>
               </div>
-              <p className="mt-6 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-[#777777]">
+              <p className="mt-6 rounded-xl bg-gray-50 px-4 py-3 text-xs leading-relaxed text-[#6B605A]">
                 정산된 금액은 마이페이지 → <strong className="text-[#231C17]">출금 신청</strong>을 통해 현금으로 받을 수 있습니다. (최소 5,000원 · 1,000원 단위)
               </p>
             </div>
@@ -164,8 +164,8 @@ export default function UsageGuidePage() {
                     ['가입 승인',         '즉시',           '관리자 검토 후'],
                   ].map(([label, general, business]) => (
                     <tr key={label} className="hover:bg-gray-50">
-                      <td className="px-6 py-3.5 text-[#555555]">{label}</td>
-                      <td className="px-6 py-3.5 text-center text-[#333333]">{general}</td>
+                      <td className="px-6 py-3.5 text-[#6B605A]">{label}</td>
+                      <td className="px-6 py-3.5 text-center text-[#3A322C]">{general}</td>
                       <td className="px-6 py-3.5 text-center font-semibold text-[#C23A18]">{business}</td>
                     </tr>
                   ))}
@@ -177,7 +177,7 @@ export default function UsageGuidePage() {
           {/* 안내 */}
           <div className="mt-6 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
             <h2 className="mb-3 text-base font-bold text-[#231C17]">이용 관련 문의</h2>
-            <p className="text-sm leading-relaxed text-[#555555]">
+            <p className="text-sm leading-relaxed text-[#6B605A]">
               회원 유형 변경 또는 이용한도 관련 문의는{' '}
               <a href="/inquiry" className="font-semibold text-[#231C17] underline underline-offset-2 hover:brightness-75">1:1 문의</a>
               를 통해 연락해주세요.

@@ -88,7 +88,7 @@ export default async function AffiliateProducts({ tags }: Props) {
             <div className="flex flex-1 flex-col gap-1 p-3">
               <p className="line-clamp-2 text-sm font-medium text-[#3A322C]">{p.title}</p>
               {p.price_text && (
-                <p className="mt-auto text-sm font-bold text-brand-violet-deep">{p.price_text}</p>
+                <p className="mt-auto text-sm font-bold text-brand-primary-hover">{p.price_text}</p>
               )}
             </div>
           </AffiliateProductLink>

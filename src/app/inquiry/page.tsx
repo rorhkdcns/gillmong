@@ -47,7 +47,7 @@ export default function InquiryPage() {
               </div>
             </div>
             <h2 className="mb-3 text-2xl font-bold text-[#231C17]">문의가 접수되었습니다</h2>
-            <p className="mb-8 text-sm text-[#777777]">영업일 기준 1~2일 내 답변드립니다.<br />마이페이지에서 답변 상태를 확인하실 수 있습니다.</p>
+            <p className="mb-8 text-sm text-[#6B605A]">영업일 기준 1~2일 내 답변드립니다.<br />마이페이지에서 답변 상태를 확인하실 수 있습니다.</p>
             <div className="flex gap-3">
               <a href="/mypage" className="flex-1 rounded-xl border border-[#231C17] py-3 text-sm font-semibold text-[#231C17] hover:bg-[#231C17] hover:text-white transition-colors text-center">
                 마이페이지
@@ -77,7 +77,7 @@ export default function InquiryPage() {
           <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
               <div>
-                <label className="mb-1.5 block text-sm font-semibold text-[#333333]">
+                <label className="mb-1.5 block text-sm font-semibold text-[#3A322C]">
                   제목 <span className="text-red-400">*</span>
                 </label>
                 <input
@@ -86,12 +86,12 @@ export default function InquiryPage() {
                   onChange={(e) => { setTitle(e.target.value); setError('') }}
                   placeholder="문의 제목을 입력해주세요"
                   maxLength={100}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#333333] outline-none focus:border-[#231C17] placeholder:text-gray-300"
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#3A322C] outline-none focus:border-[#231C17] placeholder:text-gray-300"
                 />
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-semibold text-[#333333]">
+                <label className="mb-1.5 block text-sm font-semibold text-[#3A322C]">
                   내용 <span className="text-red-400">*</span>
                 </label>
                 <textarea
@@ -100,7 +100,7 @@ export default function InquiryPage() {
                   placeholder="문의 내용을 자세히 적어주세요"
                   rows={8}
                   maxLength={2000}
-                  className="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#333333] outline-none focus:border-[#231C17] placeholder:text-gray-300"
+                  className="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-[#3A322C] outline-none focus:border-[#231C17] placeholder:text-gray-300"
                 />
                 <p className="mt-1 text-right text-xs text-gray-400">{content.length}/2000</p>
               </div>

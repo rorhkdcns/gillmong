@@ -64,10 +64,10 @@ export default function CategoryPage({ title, description, activePath, cards, ot
                 <button
                   key={key}
                   onClick={() => setSort(key)}
-                  className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                  className={`rounded-[3px] px-4 py-1.5 text-sm font-medium transition-colors ${
                     sort === key
                       ? 'bg-brand-ink text-white'
-                      : 'border border-brand-line text-brand-ink-soft hover:border-brand-violet hover:text-brand-violet-deep'
+                      : 'border border-brand-line text-brand-ink-soft hover:border-brand-primary hover:text-brand-primary-hover'
                   }`}
                 >
                   {label}
@@ -92,9 +92,9 @@ export default function CategoryPage({ title, description, activePath, cards, ot
             <button
               onClick={() => hasMore && setVisibleCount((v) => v + 6)}
               disabled={!hasMore}
-              className={`rounded-full px-10 py-3 text-base font-semibold transition-all ${
+              className={`rounded-[3px] px-10 py-3 text-base font-semibold transition-all ${
                 hasMore
-                  ? 'bg-gradient-to-r from-brand-violet to-brand-pink text-white hover:brightness-95'
+                  ? 'bg-brand-primary text-white hover:bg-brand-primary-hover'
                   : 'cursor-not-allowed border border-gray-300 text-gray-400'
               }`}
             >
@@ -112,14 +112,14 @@ export default function CategoryPage({ title, description, activePath, cards, ot
                 <Link
                   key={c.slug}
                   href={`/category/${c.slug}`}
-                  className="rounded-full border border-brand-line bg-white px-4 py-2 text-sm font-medium text-brand-ink-soft transition-colors hover:border-brand-violet hover:text-brand-violet-deep"
+                  className="rounded-[3px] border border-brand-line bg-white px-4 py-2 text-sm font-medium text-brand-ink-soft transition-colors hover:border-brand-primary hover:text-brand-primary-hover"
                 >
                   {c.name}
                 </Link>
               ))}
               <Link
                 href="/category/all"
-                className="rounded-full border border-brand-line bg-white px-4 py-2 text-sm font-medium text-brand-ink-soft transition-colors hover:border-brand-violet hover:text-brand-violet-deep"
+                className="rounded-[3px] border border-brand-line bg-white px-4 py-2 text-sm font-medium text-brand-ink-soft transition-colors hover:border-brand-primary hover:text-brand-primary-hover"
               >
                 전체 보기
               </Link>

@@ -30,7 +30,7 @@ export default function AdminTransactions() {
       <div className="overflow-x-auto rounded border border-gray-200 bg-white">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#999]">
+            <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs text-[#9A8F88]">
               <th className="px-6 py-3">#</th>
               <th className="px-6 py-3">구매자</th>
               <th className="px-6 py-3">꿈 제목</th>
@@ -41,17 +41,17 @@ export default function AdminTransactions() {
           </thead>
           <tbody className="divide-y divide-gray-100">
             {loading ? (
-              <tr><td colSpan={6} className="py-12 text-center text-sm text-[#999]">불러오는 중...</td></tr>
+              <tr><td colSpan={6} className="py-12 text-center text-sm text-[#9A8F88]">불러오는 중...</td></tr>
             ) : txs.length === 0 ? (
-              <tr><td colSpan={6} className="py-12 text-center text-sm text-[#999]">거래 내역이 없습니다</td></tr>
+              <tr><td colSpan={6} className="py-12 text-center text-sm text-[#9A8F88]">거래 내역이 없습니다</td></tr>
             ) : txs.map((tx, i) => (
               <tr key={tx.id} className="hover:bg-gray-50">
-                <td className="px-6 py-3 text-[#999]">{i + 1}</td>
+                <td className="px-6 py-3 text-[#9A8F88]">{i + 1}</td>
                 <td className="px-6 py-3">
-                  <p className="text-[#333]">{tx.profiles?.nickname ?? '-'}</p>
-                  <p className="text-xs text-[#999]">@{tx.profiles?.username ?? '-'}</p>
+                  <p className="text-[#3A322C]">{tx.profiles?.nickname ?? '-'}</p>
+                  <p className="text-xs text-[#9A8F88]">@{tx.profiles?.username ?? '-'}</p>
                 </td>
-                <td className="max-w-[220px] truncate px-6 py-3 text-[#555]">
+                <td className="max-w-[220px] truncate px-6 py-3 text-[#6B605A]">
                   {tx.dreams ? (
                     <a href={`/dream/${tx.dreams.id}`} target="_blank" rel="noreferrer" className="hover:underline">
                       {tx.dreams.title}
@@ -66,7 +66,7 @@ export default function AdminTransactions() {
                   )}
                 </td>
                 <td className="px-6 py-3 font-semibold text-[#C23A18]">{tx.price.toLocaleString()}원</td>
-                <td className="px-6 py-3 text-[#999]">{formatDate(tx.created_at)}</td>
+                <td className="px-6 py-3 text-[#9A8F88]">{formatDate(tx.created_at)}</td>
               </tr>
             ))}
           </tbody>
@@ -74,7 +74,7 @@ export default function AdminTransactions() {
       </div>
 
       {!loading && (
-        <p className="mt-4 text-right text-sm text-[#999]">총 {txs.length}건 · 합계 {txs.reduce((s, t) => s + t.price, 0).toLocaleString()}원</p>
+        <p className="mt-4 text-right text-sm text-[#9A8F88]">총 {txs.length}건 · 합계 {txs.reduce((s, t) => s + t.price, 0).toLocaleString()}원</p>
       )}
     </div>
   )

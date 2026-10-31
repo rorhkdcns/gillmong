@@ -55,11 +55,11 @@ export default function PartnershipsPage() {
               {/* 이름 · 이메일 */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1 block text-sm font-semibold text-[#333]">이름 <span className="text-red-400">*</span></label>
+                  <label className="mb-1 block text-sm font-semibold text-[#3A322C]">이름 <span className="text-red-400">*</span></label>
                   <input name="name" value={form.name} onChange={change} placeholder="홍길동" className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#231C17]" />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-semibold text-[#333]">이메일 <span className="text-red-400">*</span></label>
+                  <label className="mb-1 block text-sm font-semibold text-[#3A322C]">이메일 <span className="text-red-400">*</span></label>
                   <input name="email" value={form.email} onChange={change} type="email" placeholder="example@company.com" className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#231C17]" />
                 </div>
               </div>
@@ -67,24 +67,24 @@ export default function PartnershipsPage() {
               {/* 회사명 · 연락처 */}
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1 block text-sm font-semibold text-[#333]">회사명 <span className="text-xs font-normal text-gray-400">(선택)</span></label>
+                  <label className="mb-1 block text-sm font-semibold text-[#3A322C]">회사명 <span className="text-xs font-normal text-gray-400">(선택)</span></label>
                   <input name="company" value={form.company} onChange={change} placeholder="(주)회사명" className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#231C17]" />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-semibold text-[#333]">연락처 <span className="text-xs font-normal text-gray-400">(선택)</span></label>
+                  <label className="mb-1 block text-sm font-semibold text-[#3A322C]">연락처 <span className="text-xs font-normal text-gray-400">(선택)</span></label>
                   <input name="phone" value={form.phone} onChange={change} placeholder="010-0000-0000" className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#231C17]" />
                 </div>
               </div>
 
               {/* 제목 */}
               <div>
-                <label className="mb-1 block text-sm font-semibold text-[#333]">제목 <span className="text-red-400">*</span></label>
+                <label className="mb-1 block text-sm font-semibold text-[#3A322C]">제목 <span className="text-red-400">*</span></label>
                 <input name="title" value={form.title} onChange={change} placeholder="문의 제목을 입력하세요" className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#231C17]" />
               </div>
 
               {/* 내용 */}
               <div>
-                <label className="mb-1 block text-sm font-semibold text-[#333]">내용 <span className="text-red-400">*</span></label>
+                <label className="mb-1 block text-sm font-semibold text-[#3A322C]">내용 <span className="text-red-400">*</span></label>
                 <textarea name="content" value={form.content} onChange={change} rows={6} placeholder="제휴 목적 및 문의 내용을 자세히 작성해주세요." className="w-full resize-none rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-[#231C17]" />
               </div>
 
