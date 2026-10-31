@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { DbDream } from '@/lib/supabase/types'
@@ -61,7 +62,7 @@ export default function DreamEditForm({ dream }: Props) {
 
       <div className="border-b border-gray-100 bg-white px-6 py-3">
         <div className="mx-auto max-w-2xl">
-          <a
+          <Link
             href={`/dream/${dream.id}`}
             className="inline-flex items-center gap-1 text-sm text-[#6B605A] hover:text-[#231C17]"
           >
@@ -69,7 +70,7 @@ export default function DreamEditForm({ dream }: Props) {
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
             상세 페이지로
-          </a>
+          </Link>
         </div>
       </div>
 

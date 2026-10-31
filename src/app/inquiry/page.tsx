@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import SiteFooter from '@/components/SiteFooter'
@@ -49,9 +50,9 @@ export default function InquiryPage() {
             <h2 className="mb-3 text-2xl font-bold text-[#231C17]">문의가 접수되었습니다</h2>
             <p className="mb-8 text-sm text-[#6B605A]">영업일 기준 1~2일 내 답변드립니다.<br />마이페이지에서 답변 상태를 확인하실 수 있습니다.</p>
             <div className="flex gap-3">
-              <a href="/mypage" className="flex-1 rounded-xl border border-[#231C17] py-3 text-sm font-semibold text-[#231C17] hover:bg-[#231C17] hover:text-white transition-colors text-center">
+              <Link href="/mypage" className="flex-1 rounded-xl border border-[#231C17] py-3 text-sm font-semibold text-[#231C17] hover:bg-[#231C17] hover:text-white transition-colors text-center">
                 마이페이지
-              </a>
+              </Link>
               <button
                 onClick={() => { setDone(false); setTitle(''); setContent('') }}
                 className="flex-1 rounded-xl bg-[#231C17] py-3 text-sm font-semibold text-white hover:brightness-90 transition-all"

@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { Suspense, useActionState, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
@@ -150,16 +151,16 @@ function LoginForm() {
       </div>
 
       <div className="mt-6 text-center">
-        <a href="/auth/reset-password" className="text-sm text-[#6B605A] underline underline-offset-2 hover:text-[#231C17]">
+        <Link href="/auth/reset-password" className="text-sm text-[#6B605A] underline underline-offset-2 hover:text-[#231C17]">
           비밀번호를 잊으셨나요?
-        </a>
+        </Link>
       </div>
 
       <p className="mt-4 text-center text-sm text-[#6B605A]">
         아직 계정이 없으신가요?{' '}
-        <a href="/auth/signup" className="text-[#231C17] underline underline-offset-2 hover:brightness-75">
+        <Link href="/auth/signup" className="text-[#231C17] underline underline-offset-2 hover:brightness-75">
           회원가입
-        </a>
+        </Link>
       </p>
     </div>
   )
@@ -170,9 +171,9 @@ export default function LoginPage() {
     <div className="flex min-h-screen flex-col bg-[#FAF6F2]">
       <header className="border-b border-gray-200 bg-white px-6 py-4">
         <div className="mx-auto max-w-6xl">
-          <a href="/">
+          <Link href="/">
             <Image src="/logo_1.jpg" alt="길몽상점" height={50} width={160} className="h-[50px] w-auto object-contain" priority />
-          </a>
+          </Link>
         </div>
       </header>
 

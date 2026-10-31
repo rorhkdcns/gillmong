@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
 import SiteFooter from '@/components/SiteFooter'
@@ -29,7 +30,7 @@ export default async function NoticeDetailPage({
       <main className="flex-1 px-6 py-12">
         <div className="mx-auto max-w-3xl">
           <div className="mb-4">
-            <a href="/notice" className="text-sm text-gray-400 hover:text-[#231C17]">← 공지사항 목록</a>
+            <Link href="/notice" className="text-sm text-gray-400 hover:text-[#231C17]">← 공지사항 목록</Link>
           </div>
           <article className="rounded-2xl border border-gray-200 bg-white p-8">
             <div className="mb-6 border-b border-gray-100 pb-6">

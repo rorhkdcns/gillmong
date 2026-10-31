@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -203,9 +204,9 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                     ) : (
                       <>
                         <p className="text-sm font-semibold text-[#231C17]">로그인 후 구매 가능합니다</p>
-                        <a href="/auth/login" className="rounded-[3px] bg-[#231C17] px-5 py-2 text-sm font-bold text-white hover:brightness-90">
+                        <Link href="/auth/login" className="rounded-[3px] bg-[#231C17] px-5 py-2 text-sm font-bold text-white hover:brightness-90">
                           로그인하기
-                        </a>
+                        </Link>
                       </>
                     )}
                   </div>
@@ -263,9 +264,9 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                       ) : (
                         <>
                           <p className="text-sm font-semibold text-[#231C17]">로그인 후 구매 가능합니다</p>
-                          <a href="/auth/login" className="rounded-[3px] bg-[#231C17] px-5 py-2 text-sm font-bold text-white hover:brightness-90">
+                          <Link href="/auth/login" className="rounded-[3px] bg-[#231C17] px-5 py-2 text-sm font-bold text-white hover:brightness-90">
                             로그인하기
-                          </a>
+                          </Link>
                         </>
                       )}
                     </div>
@@ -304,9 +305,9 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                       ) : (
                         <>
                           <p className="text-sm font-semibold text-[#231C17]">로그인 후 구매 가능합니다</p>
-                          <a href="/auth/login" className="rounded-[3px] bg-[#231C17] px-5 py-2 text-sm font-bold text-white hover:brightness-90">
+                          <Link href="/auth/login" className="rounded-[3px] bg-[#231C17] px-5 py-2 text-sm font-bold text-white hover:brightness-90">
                             로그인하기
-                          </a>
+                          </Link>
                         </>
                       )}
                     </div>
@@ -352,9 +353,9 @@ export default function DreamDetail({ dream, isOwner, isPurchased: initialPurcha
                 </button>
               )}
               {!purchased && !dream.is_sold && !isLoggedIn && (
-                <a href="/auth/login" className="rounded-[3px] bg-[#231C17] px-8 py-2.5 text-base font-bold text-white hover:brightness-90">
+                <Link href="/auth/login" className="rounded-[3px] bg-[#231C17] px-8 py-2.5 text-base font-bold text-white hover:brightness-90">
                   로그인 후 구매하기
-                </a>
+                </Link>
               )}
             </div>
 

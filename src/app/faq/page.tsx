@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 import SiteFooter from '@/components/SiteFooter'
 
@@ -131,12 +132,12 @@ export default function FaqPage() {
           <div className="mt-10 rounded-2xl border border-gray-200 bg-white p-8 text-center">
             <p className="text-base text-[#6B605A]">원하는 답변을 찾지 못하셨나요?</p>
             <div className="mt-4 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-              <a href="/support" className="rounded-xl border border-[#231C17] px-6 py-2.5 text-sm font-semibold text-[#231C17] hover:bg-[#231C17] hover:text-white transition-colors">
+              <Link href="/support" className="rounded-xl border border-[#231C17] px-6 py-2.5 text-sm font-semibold text-[#231C17] hover:bg-[#231C17] hover:text-white transition-colors">
                 고객센터 안내
-              </a>
-              <a href="/inquiry" className="rounded-xl bg-[#231C17] px-6 py-2.5 text-sm font-semibold text-white hover:brightness-90 transition-all">
+              </Link>
+              <Link href="/inquiry" className="rounded-xl bg-[#231C17] px-6 py-2.5 text-sm font-semibold text-white hover:brightness-90 transition-all">
                 1:1 문의하기
-              </a>
+              </Link>
             </div>
           </div>
         </div>

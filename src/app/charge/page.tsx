@@ -45,12 +45,12 @@ export default function ChargePage() {
           <p className="mb-2 text-gray-600">포인트 충전 서비스가 종료되었습니다.</p>
           <p className="mb-6 text-gray-600">이제 꿈 게시물을 <strong>건별 직접 결제</strong>로 구매하실 수 있습니다.</p>
           <p className="mb-8 text-sm text-gray-400">보유하신 포인트 잔액은 소멸 시까지 기존 방식으로 사용 가능합니다.</p>
-          <a
+          <Link
             href="/mypage"
             className="inline-block rounded-lg bg-[#231C17] px-8 py-3 font-semibold text-white transition hover:brightness-90"
           >
             마이페이지로 이동
-          </a>
+          </Link>
         </div>
         <SiteFooter />
       </>

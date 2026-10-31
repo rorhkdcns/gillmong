@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import SiteFooter from '@/components/SiteFooter'
@@ -127,9 +128,9 @@ export default async function MyPage() {
                 </div>
               </div>
               <div className="flex shrink-0 flex-wrap items-center gap-2">
-                <a href="/mypage/edit" className="rounded-[3px] bg-white px-4 py-2 text-sm font-semibold text-brand-ink transition-opacity hover:opacity-90">정보 변경</a>
+                <Link href="/mypage/edit" className="rounded-[3px] bg-white px-4 py-2 text-sm font-semibold text-brand-ink transition-opacity hover:opacity-90">정보 변경</Link>
                 {showAdminBtn && (
-                  <a href="/admin" className="rounded-[3px] bg-brand-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-primary-hover">관리자 페이지</a>
+                  <Link href="/admin" className="rounded-[3px] bg-brand-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-primary-hover">관리자 페이지</Link>
                 )}
                 <LogoutButton />
               </div>
@@ -166,9 +167,9 @@ export default async function MyPage() {
             )}
 
             <div className="mb-5">
-              <a href="/mypage/withdrawal" className="block w-full rounded-[3px] border-2 border-brand-ink bg-white py-2.5 text-center text-sm font-bold text-brand-ink transition-colors hover:bg-brand-ink hover:text-white">
+              <Link href="/mypage/withdrawal" className="block w-full rounded-[3px] border-2 border-brand-ink bg-white py-2.5 text-center text-sm font-bold text-brand-ink transition-colors hover:bg-brand-ink hover:text-white">
                 출금 신청
-              </a>
+              </Link>
             </div>
 
             <PointTabs />
@@ -194,7 +195,7 @@ export default async function MyPage() {
           <section className="rounded-[4px] border border-brand-line bg-white p-5 md:p-8">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="text-lg font-bold text-brand-ink">1:1 문의 내역</h2>
-              <a href="/inquiry" className="text-sm font-medium text-[#9A8F88] hover:underline">+ 문의하기</a>
+              <Link href="/inquiry" className="text-sm font-medium text-[#9A8F88] hover:underline">+ 문의하기</Link>
             </div>
             {myInquiries.length === 0 ? (
               <p className="py-8 text-center text-sm text-[#6B605A]">문의 내역이 없습니다</p>
@@ -225,7 +226,7 @@ export default async function MyPage() {
 
           {/* 8. 하단 링크 */}
           <div className="flex items-center justify-center gap-6 pb-4 text-sm text-[#6B605A]">
-            <a href="/mypage/withdraw" className="hover:text-red-400 hover:underline">탈퇴하기</a>
+            <Link href="/mypage/withdraw" className="hover:text-red-400 hover:underline">탈퇴하기</Link>
           </div>
 
         </div>

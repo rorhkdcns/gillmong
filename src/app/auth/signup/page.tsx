@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 import Image from 'next/image'
 import SiteFooter from '@/components/SiteFooter'
@@ -224,12 +225,12 @@ export default function SignupPage() {
             </p>
           )}
           <p className="mb-8 text-sm text-[#6B605A]">바로 로그인하실 수 있습니다.</p>
-          <a
+          <Link
             href="/auth/login"
             className="inline-block w-full bg-[#231C17] py-3 text-base font-semibold text-white transition-all hover:brightness-90"
           >
             로그인하러 가기
-          </a>
+          </Link>
         </div>
       </div>
     )
@@ -238,9 +239,9 @@ export default function SignupPage() {
   const Logo = (
     <header className="border-b border-gray-200 bg-white px-6 py-4">
       <div className="mx-auto max-w-6xl">
-        <a href="/">
+        <Link href="/">
           <Image src="/logo_1.jpg" alt="길몽상점" height={50} width={160} className="h-[50px] w-auto object-contain" priority />
-        </a>
+        </Link>
       </div>
     </header>
   )
@@ -299,9 +300,9 @@ export default function SignupPage() {
             </div>
             <p className="mt-8 text-center text-sm text-[#6B605A]">
               이미 계정이 있으신가요?{' '}
-              <a href="/auth/login" className="text-[#231C17] underline underline-offset-2 hover:brightness-75">
+              <Link href="/auth/login" className="text-[#231C17] underline underline-offset-2 hover:brightness-75">
                 로그인
-              </a>
+              </Link>
             </p>
           </div>
         </main>
@@ -570,7 +571,7 @@ export default function SignupPage() {
 
           <p className="mt-8 text-center text-sm text-[#6B605A]">
             이미 계정이 있으신가요?{' '}
-            <a href="/auth/login" className="text-[#231C17] underline underline-offset-2 hover:brightness-75">로그인</a>
+            <Link href="/auth/login" className="text-[#231C17] underline underline-offset-2 hover:brightness-75">로그인</Link>
           </p>
         </div>
       </main>

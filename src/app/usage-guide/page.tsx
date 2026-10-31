@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import SiteFooter from '@/components/SiteFooter'
 
 export const metadata = {
@@ -179,7 +180,7 @@ export default function UsageGuidePage() {
             <h2 className="mb-3 text-base font-bold text-[#231C17]">이용 관련 문의</h2>
             <p className="text-sm leading-relaxed text-[#6B605A]">
               회원 유형 변경 또는 이용한도 관련 문의는{' '}
-              <a href="/inquiry" className="font-semibold text-[#231C17] underline underline-offset-2 hover:brightness-75">1:1 문의</a>
+              <Link href="/inquiry" className="font-semibold text-[#231C17] underline underline-offset-2 hover:brightness-75">1:1 문의</Link>
               를 통해 연락해주세요.
             </p>
           </div>

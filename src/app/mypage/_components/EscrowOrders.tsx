@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -86,12 +87,12 @@ export default function EscrowOrders({ orders }: { orders: Order[] }) {
             <li key={o.id} className="py-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
-                  <a
+                  <Link
                     href={`/dream/${o.dream_id}`}
                     className="block truncate text-base font-semibold text-[#3A322C] hover:text-[#C23A18]"
                   >
                     {o.dream_title ?? `꿈 #${o.dream_id}`}
-                  </a>
+                  </Link>
                   <p className="mt-0.5 text-xs text-[#9A8F88]">{formatDate(o.paid_at)} · ₩{o.amount.toLocaleString()}</p>
                   {o.status === 'paid_escrow' && days !== null && (
                     <p className="mt-0.5 text-xs text-amber-500">

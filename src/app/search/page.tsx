@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -123,12 +124,12 @@ function SearchResults() {
                       판매완료
                     </span>
                   ) : (
-                    <a
+                    <Link
                       href={`/dream/${card.id}`}
                       className="rounded-[3px] bg-brand-primary-light px-5 py-2 text-sm font-semibold text-brand-primary-hover transition-colors hover:bg-brand-primary hover:text-white"
                     >
                       자세히 보기
-                    </a>
+                    </Link>
                   )}
                 </div>
               </article>

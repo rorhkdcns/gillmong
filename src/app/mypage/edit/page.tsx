@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
@@ -78,7 +79,7 @@ export default function MyPageEdit() {
       <main className="flex-1 px-6 py-12">
         <div className="mx-auto max-w-md">
           <div className="mb-6 flex items-center gap-3">
-            <a href="/mypage" className="text-sm text-gray-400 hover:text-[#231C17]">← 마이페이지</a>
+            <Link href="/mypage" className="text-sm text-gray-400 hover:text-[#231C17]">← 마이페이지</Link>
           </div>
           <h1 className="mb-8 text-2xl font-extrabold text-[#231C17]">정보 변경</h1>
 

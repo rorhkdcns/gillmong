@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
@@ -47,9 +48,9 @@ export default function UpdatePasswordPage() {
       {/* 헤더 */}
       <header className="border-b border-gray-200 bg-white px-6 py-4">
         <div className="mx-auto max-w-6xl">
-          <a href="/">
+          <Link href="/">
             <Image src="/logo_1.jpg" alt="길몽상점" height={50} width={160} className="h-[50px] w-auto object-contain" priority />
-          </a>
+          </Link>
         </div>
       </header>
 

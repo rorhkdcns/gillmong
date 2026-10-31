@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase/admin'
 import SiteFooter from '@/components/SiteFooter'
 
@@ -34,7 +35,7 @@ export default async function NoticePage() {
               <ul className="divide-y divide-gray-100">
                 {list.map((n) => (
                   <li key={n.id}>
-                    <a
+                    <Link
                       href={`/notice/${n.id}`}
                       className="flex items-center justify-between gap-4 px-6 py-5 transition-colors hover:bg-gray-50"
                     >
@@ -45,7 +46,7 @@ export default async function NoticePage() {
                         <span className="truncate text-base text-[#3A322C]">{n.title}</span>
                       </div>
                       <span className="shrink-0 text-sm text-gray-400">{formatDate(n.created_at)}</span>
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>

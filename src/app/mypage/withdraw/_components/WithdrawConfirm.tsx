@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useState, useTransition } from 'react'
 import { deleteMyAccountAction } from '@/app/actions'
 
@@ -19,12 +20,12 @@ export default function WithdrawConfirm() {
   return (
     <>
       <div className="flex flex-col gap-3 sm:flex-row">
-        <a
+        <Link
           href="/mypage"
           className="flex-1 rounded-xl border border-gray-300 py-3.5 text-center text-sm font-semibold text-[#6B605A] transition hover:bg-gray-50"
         >
           취소
-        </a>
+        </Link>
         <button
           type="button"
           onClick={() => setShowModal(true)}

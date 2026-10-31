@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import SiteFooter from '@/components/SiteFooter'
@@ -33,12 +34,12 @@ export default async function SavedDreamPage({
 
       <div className="border-b border-gray-100 bg-white px-6 py-3">
         <div className="mx-auto max-w-[800px]">
-          <a href="/mypage" className="inline-flex items-center gap-1 text-sm text-[#6B605A] hover:text-[#231C17]">
+          <Link href="/mypage" className="inline-flex items-center gap-1 text-sm text-[#6B605A] hover:text-[#231C17]">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
             </svg>
             마이페이지로
-          </a>
+          </Link>
         </div>
       </div>
 
