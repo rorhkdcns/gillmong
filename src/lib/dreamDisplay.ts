@@ -16,7 +16,7 @@ interface GradeInfo {
 }
 
 export const GRADE_INFO: Record<Grade, GradeInfo> = {
-  A: { badgeBg: 'bg-grade-a-bg text-grade-a-fg', text: 'text-brand-ink', label: '최고의 길몽',     rank: '최상위 등급', desc: '드물게 나타나는 최고의 길몽' },
+  A: { badgeBg: 'bg-grade-a-bg text-grade-a-fg', text: 'text-grade-a-bg', label: '최고의 길몽',     rank: '최상위 등급', desc: '드물게 나타나는 최고의 길몽' },
   B: { badgeBg: 'bg-grade-b-bg text-grade-b-fg', text: 'text-grade-b-fg', label: '좋은 길몽',       rank: '상위 등급',   desc: '뚜렷한 행운의 전조가 보이는 꿈' },
   C: { badgeBg: 'bg-grade-c-bg text-grade-c-fg', text: 'text-grade-c-fg', label: '평범한 꿈',       rank: '일반 등급',   desc: '긍정적인 의미를 담은 좋은 꿈' },
   D: { badgeBg: 'bg-grade-d-bg text-grade-d-fg', text: 'text-grade-d-fg', label: '주의가 필요한 꿈', rank: '주의 등급',   desc: '경고·부담·위험을 암시하는 꿈' },

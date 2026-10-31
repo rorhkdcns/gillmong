@@ -70,7 +70,7 @@ body {
   --color-brand-slate:        #6B96A8;
 
   /* 꿈 등급 5단계 (A~E) — 배경 / 글자. 모든 화면은 이 토큰만 사용 */
-  --color-grade-a-bg: #231C17;  --color-grade-a-fg: #FFE14D;
+  --color-grade-a-bg: #072638;  --color-grade-a-fg: #FFE14D;
   --color-grade-b-bg: #D3F0DE;  --color-grade-b-fg: #0B6A36;
   --color-grade-c-bg: #D6E6FF;  --color-grade-c-fg: #1B4DB3;
   --color-grade-d-bg: #FFE9A8;  --color-grade-d-fg: #7A4B00;
