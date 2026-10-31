@@ -21,6 +21,7 @@ import {
   bulkReactivateAdminProducts,
   bulkAddAdminProductTags,
   bulkDeleteAdminProducts,
+  removeDuplicateAffiliateProducts,
   generateShopProducts,
   type AdminAffiliateFields,
 } from '../actions'
@@ -117,6 +118,16 @@ export default function AdminShopProductsPage() {
 
   function markImageBroken(id: string) {
     setBrokenImageIds((prev) => (prev.has(id) ? prev : new Set(prev).add(id)))
+  }
+
+  const [dedupBusy, setDedupBusy] = useState(false)
+  async function handleRemoveDuplicates() {
+    if (!window.confirm('같은 상품이 여러 번 등록된 것을 찾아, 가장 먼저 등록된 1개만 남기고 나머지를 삭제할까요?\n삭제 후에는 복구할 수 없어요.')) return
+    setDedupBusy(true)
+    const r = await removeDuplicateAffiliateProducts()
+    setDedupBusy(false)
+    window.alert(r.error ? `실패: ${r.error}` : `중복 상품 ${r.removed ?? 0}개를 정리했어요.`)
+    await load()
   }
 
   async function load() {
@@ -950,6 +961,9 @@ export default function AdminShopProductsPage() {
     <div className="p-4 sm:p-8">
       <div className="mb-6 flex items-center justify-between sm:mb-8">
         <h1 className="text-xl font-bold text-brand-ink sm:text-2xl">상품관리</h1>
+        <button type="button" disabled={dedupBusy} onClick={handleRemoveDuplicates} className="rounded-[3px] border border-brand-ink px-3.5 py-2 text-xs font-bold text-brand-ink hover:bg-brand-ink hover:text-white disabled:opacity-60">
+          {dedupBusy ? '정리 중...' : '중복 상품 정리'}
+        </button>
       </div>
 
       {/* ── 카테고리 표(아코디언) ── */}

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { dedupeProducts } from '@/lib/dedupeProducts'
 import ShopProductGrid from '@/components/ShopProductGrid'
 
 export const metadata: Metadata = {
@@ -31,7 +32,7 @@ export default async function ShopPage() {
         </p>
       </div>
 
-      <ShopProductGrid products={products ?? []} />
+      <ShopProductGrid products={dedupeProducts(products ?? [])} />
     </>
   )
 }

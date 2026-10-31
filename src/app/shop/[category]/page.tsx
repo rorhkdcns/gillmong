@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { dedupeProducts } from '@/lib/dedupeProducts'
 import ShopProductGrid from '@/components/ShopProductGrid'
 
 interface ShopCategory {
@@ -68,7 +69,7 @@ export default async function ShopCategoryPage({
       </div>
 
       {/* 상품 그리드 (하위카테고리 무관 이 카테고리 전체) */}
-      <ShopProductGrid products={products ?? []} />
+      <ShopProductGrid products={dedupeProducts(products ?? [])} />
     </>
   )
 }

@@ -1697,3 +1697,37 @@ export async function bulkDeleteAdminNotices(ids: number[]): Promise<{ success?:
   for (const id of ids) { const r = await deleteAdminNotice(id); if (r.success) deleted++ ; else if (r.error) return { deleted, error: r.error } }
   return { success: true, deleted }
 }
+
+/** 같은 상품(쿠팡 상품번호 또는 제목이 같은 것)이 여러 번 등록된 경우, 먼저 등록된 1개만 남기고 삭제 */
+export async function removeDuplicateAffiliateProducts(): Promise<{ success?: boolean; removed?: number; error?: string }> {
+  const auth = await requireAdminAction()
+  if (!auth.ok) return { error: auth.error }
+  const { productKey } = await import('@/lib/dedupeProducts')
+  const admin = createAdminClient()
+
+  const all: { id: string; title: string; link_url: string }[] = []
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await admin
+      .from('affiliate_products')
+      .select('id, title, link_url')
+      .order('created_at', { ascending: true })
+      .range(from, from + 999)
+    if (error) return { error: error.message }
+    all.push(...(data ?? []))
+    if (!data || data.length < 1000) break
+  }
+  const seen = new Set<string>()
+  const dupIds: string[] = []
+  for (const p of all) {
+    const k = productKey(p)
+    if (seen.has(k)) dupIds.push(p.id); else seen.add(k)
+  }
+  for (let i = 0; i < dupIds.length; i += 200) {
+    const { error } = await admin.from('affiliate_products').delete().in('id', dupIds.slice(i, i + 200))
+    if (error) return { error: error.message, removed: i }
+  }
+  revalidatePath('/shop')
+  revalidatePath('/shop/[category]', 'page')
+  revalidatePath('/shop/[category]/[sub]', 'page')
+  return { success: true, removed: dupIds.length }
+}
