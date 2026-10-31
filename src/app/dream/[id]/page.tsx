@@ -48,9 +48,18 @@ export default async function DreamDetailPage({
     isPurchased = !!purchase
   }
 
+  // 구매 전(작성자·구매자·관리자가 아닌 경우)에는 블러 처리되는 본문을 서버에서 아예 비워서 보낸다.
+  // CSS 블러만으로는 개발자도구로 원문이 그대로 보이기 때문. 길이만 비슷한 자리표시 글자로 대체한다.
+  const canView = isOwner || isPurchased || isAdmin
+  const mask = (text: string | null | undefined) =>
+    text ? '꿈 내용은 구매 후 열람할 수 있어요. '.repeat(Math.max(1, Math.min(8, Math.ceil(text.length / 60)))).trim() : ''
+  const safeDream = canView
+    ? (dream as DbDream)
+    : ({ ...dream, content: mask(dream.content), interpretation: mask(dream.interpretation), advice: mask(dream.advice) } as DbDream)
+
   return (
     <DreamDetail
-      dream={dream as DbDream}
+      dream={safeDream}
       isOwner={isOwner}
       isPurchased={isPurchased}
       nickname={nickname}
