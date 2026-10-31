@@ -493,10 +493,10 @@ export default function AdminDictionaryPage() {
         </form>
 
         {showPreview && (
-          <div className="mb-8 max-w-[600px] rounded-[14px] p-4" style={{ backgroundColor: '#EADFD8' }}>
+          <div className="mb-8 max-w-[600px] rounded-[4px] p-4" style={{ backgroundColor: '#EADFD8' }}>
             <div className="flex flex-col gap-[14px]">
               {/* 헤더 블록 */}
-              <div className="overflow-hidden rounded-[14px] bg-white shadow-[0_1px_3px_rgba(35,28,23,0.06)]">
+              <div className="overflow-hidden rounded-[4px] bg-white shadow-[0_1px_3px_rgba(35,28,23,0.06)]">
                 <div
                   className="flex flex-wrap items-center gap-1.5 px-[18px] py-2.5 text-sm text-white md:px-6"
                   style={{ backgroundColor: previewColors.main }}
@@ -515,7 +515,7 @@ export default function AdminDictionaryPage() {
                       {previewTags.map((tag) => (
                         <span
                           key={tag}
-                          className="rounded-[8px] bg-brand-primary-light px-3 py-1 text-[14px] font-semibold text-brand-primary-hover"
+                          className="rounded-[4px] bg-brand-primary-light px-3 py-1 text-[14px] font-semibold text-brand-primary-hover"
                         >
                           #{tag}
                         </span>

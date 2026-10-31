@@ -77,14 +77,14 @@ export default function ShopProductGrid({ products }: Props) {
   const paged = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
 
   return (
-    <div className="rounded-[14px] bg-white p-[20px_18px] shadow-[0_1px_3px_rgba(35,28,23,0.06)] md:p-[26px_24px]">
+    <div className="rounded-[4px] border border-brand-line bg-white p-[20px_18px] md:p-[26px_24px]">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
         <input
           type="text"
           value={query}
           onChange={(e) => handleQueryChange(e.target.value)}
           placeholder="상품명으로 검색해보세요"
-          className="w-full rounded-[10px] border border-[#EADFD8] bg-white px-4 py-2.5 text-sm text-[#3A322C] outline-none focus:border-[#E5421F] sm:flex-1"
+          className="w-full rounded-[4px] border border-[#EADFD8] bg-white px-4 py-2.5 text-sm text-[#3A322C] outline-none focus:border-[#E5421F] sm:flex-1"
         />
         <div className="flex shrink-0 gap-1.5">
           {SORT_OPTIONS.map((opt) => (
@@ -92,7 +92,7 @@ export default function ShopProductGrid({ products }: Props) {
               key={opt.value}
               type="button"
               onClick={() => handleSortChange(opt.value)}
-              className={`rounded-[8px] px-3 py-2 text-xs font-semibold whitespace-nowrap transition-colors sm:text-sm ${
+              className={`rounded-[4px] px-3 py-2 text-xs font-semibold whitespace-nowrap transition-colors sm:text-sm ${
                 sort === opt.value
                   ? 'bg-[#E5421F] text-white'
                   : 'border border-[#EADFD8] text-[#6B605A] hover:border-[#E5421F] hover:text-[#E5421F]'
@@ -117,7 +117,7 @@ export default function ShopProductGrid({ products }: Props) {
                   key={p.id}
                   productId={p.id}
                   href={p.link_url}
-                  className="flex flex-col overflow-hidden rounded-[10px] border border-[#EADFD8] transition-shadow hover:shadow-[0_6px_16px_rgba(35,28,23,0.08)]"
+                  className="flex flex-col overflow-hidden rounded-[4px] border border-[#EADFD8] transition-shadow hover:shadow-[0_6px_16px_rgba(35,28,23,0.08)]"
                 >
                   <div className="relative aspect-square w-full bg-[#FFF1EA]">
                     <ImageThumbnail src={p.image_url} alt={p.title} className="h-full w-full object-cover" />
@@ -141,7 +141,7 @@ export default function ShopProductGrid({ products }: Props) {
                     {p.price_text && (
                       <p className="mt-auto text-sm font-bold text-brand-primary-hover">{p.price_text}</p>
                     )}
-                    <div className="mt-2 rounded-[6px] bg-brand-primary py-1.5 text-center text-xs font-semibold text-white">
+                    <div className="mt-2 rounded-[4px] bg-brand-primary py-1.5 text-center text-xs font-semibold text-white">
                       구매하러 가기
                     </div>
                   </div>
@@ -155,7 +155,7 @@ export default function ShopProductGrid({ products }: Props) {
                   type="button"
                   onClick={() => setPage((v) => Math.max(1, v - 1))}
                   disabled={currentPage <= 1}
-                  className="rounded-[8px] border border-[#EADFD8] px-3 py-1.5 text-sm font-semibold text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="rounded-[4px] border border-[#EADFD8] px-3 py-1.5 text-sm font-semibold text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   이전
                 </button>
@@ -164,7 +164,7 @@ export default function ShopProductGrid({ products }: Props) {
                   type="button"
                   onClick={() => setPage((v) => Math.min(totalPages, v + 1))}
                   disabled={currentPage >= totalPages}
-                  className="rounded-[8px] border border-[#EADFD8] px-3 py-1.5 text-sm font-semibold text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="rounded-[4px] border border-[#EADFD8] px-3 py-1.5 text-sm font-semibold text-[#6B605A] transition-colors hover:border-[#E5421F] hover:text-[#E5421F] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   다음
                 </button>

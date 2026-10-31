@@ -19,7 +19,7 @@ interface Props {
   subcategoriesByCategory: Record<string, ShopSubcategory[]>
 }
 
-const LINK_BASE = 'block rounded-[8px] px-3 py-2 text-sm transition-colors'
+const LINK_BASE = 'block rounded-[4px] px-3 py-2 text-sm transition-colors'
 const LINK_INACTIVE = 'font-medium text-[#6B605A] hover:bg-[#F1F5F8] hover:text-[#E5421F]'
 const LINK_ACTIVE = 'font-semibold text-[#E5421F] bg-[#EAF2FB]'
 
@@ -31,7 +31,7 @@ export default function ShopSidebar({ categories, subcategoriesByCategory }: Pro
 
   return (
     <aside className="w-full shrink-0 md:w-[240px]">
-      <nav className="flex flex-col gap-1 rounded-[14px] bg-white p-3 shadow-[0_1px_3px_rgba(35,28,23,0.06)] md:sticky md:top-4">
+      <nav className="flex flex-col gap-1 rounded-[4px] bg-white p-3 shadow-[0_1px_3px_rgba(35,28,23,0.06)] md:sticky md:top-4">
         <Link href="/shop" className={`${LINK_BASE} ${!currentCategorySlug ? LINK_ACTIVE : LINK_INACTIVE}`}>
           전체
         </Link>

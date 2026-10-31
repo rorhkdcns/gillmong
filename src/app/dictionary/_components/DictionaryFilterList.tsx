@@ -73,7 +73,7 @@ export default function DictionaryFilterList({ entries }: Props) {
   }
 
   return (
-    <div className="rounded-[14px] bg-white p-[20px_18px] shadow-[0_1px_3px_rgba(35,28,23,0.06)] md:p-[26px_24px]">
+    <div className="rounded-[4px] bg-white p-[20px_18px] shadow-[0_1px_3px_rgba(35,28,23,0.06)] md:p-[26px_24px]">
 
       {/* 검색 */}
       <input
@@ -81,7 +81,7 @@ export default function DictionaryFilterList({ entries }: Props) {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="궁금한 꿈을 검색해보세요 (예: 돼지꿈, 뱀꿈)"
-        className="w-full rounded-[10px] border border-[#EADFD8] bg-white px-4 py-2.5 text-sm text-[#3A322C] outline-none focus:border-[#E5421F]"
+        className="w-full rounded-[4px] border border-[#EADFD8] bg-white px-4 py-2.5 text-sm text-[#3A322C] outline-none focus:border-[#E5421F]"
       />
 
       {/* 초성 필터 */}
@@ -89,7 +89,7 @@ export default function DictionaryFilterList({ entries }: Props) {
         <button
           type="button"
           onClick={() => setCho(ALL_CHO)}
-          className={`rounded-[8px] px-3 py-1.5 text-sm font-semibold transition-colors ${
+          className={`rounded-[4px] px-3 py-1.5 text-sm font-semibold transition-colors ${
             cho === ALL_CHO
               ? 'bg-[#231C17] text-white'
               : 'border border-[#EADFD8] text-[#6B605A] hover:border-[#E5421F] hover:text-[#E5421F]'
@@ -106,7 +106,7 @@ export default function DictionaryFilterList({ entries }: Props) {
               type="button"
               disabled={disabled}
               onClick={() => setCho(c)}
-              className={`rounded-[8px] px-3 py-1.5 text-sm font-semibold transition-colors ${
+              className={`rounded-[4px] px-3 py-1.5 text-sm font-semibold transition-colors ${
                 disabled
                   ? 'cursor-not-allowed text-gray-300'
                   : active
@@ -142,7 +142,7 @@ export default function DictionaryFilterList({ entries }: Props) {
             {groupedByChoseong.map(({ group, items }, gi) => (
               <div key={group}>
                 <div className={gi === 0 ? 'mb-2' : 'mb-2 mt-7'}>
-                  <div className="rounded-[8px] bg-brand-ink px-3 py-[7px] text-sm font-bold text-white">
+                  <div className="rounded-[4px] bg-brand-ink px-3 py-[7px] text-sm font-bold text-white">
                     {group}
                   </div>
                 </div>

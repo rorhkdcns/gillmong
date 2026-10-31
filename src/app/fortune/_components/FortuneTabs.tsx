@@ -113,7 +113,7 @@ export default function FortuneTabs({ date, zodiacFortunes, starFortunes }: Prop
   const displayStar = selectedStar ?? autoStar
 
   return (
-    <div className="rounded-[14px] bg-white p-[20px_18px] shadow-[0_1px_3px_rgba(35,28,23,0.06)] md:p-[26px_24px]">
+    <div className="rounded-[4px] bg-white p-[20px_18px] shadow-[0_1px_3px_rgba(35,28,23,0.06)] md:p-[26px_24px]">
 
       {/* 탭 전환 */}
       <div className="mb-5 flex gap-1.5">
@@ -122,7 +122,7 @@ export default function FortuneTabs({ date, zodiacFortunes, starFortunes }: Prop
             key={t}
             type="button"
             onClick={() => setTab(t)}
-            className={`flex-1 rounded-[10px] px-4 py-2.5 text-sm font-semibold transition-colors ${
+            className={`flex-1 rounded-[4px] px-4 py-2.5 text-sm font-semibold transition-colors ${
               tab === t
                 ? 'bg-brand-ink text-white'
                 : 'border border-brand-line text-brand-ink-soft hover:border-brand-primary hover:text-brand-primary'
@@ -136,7 +136,7 @@ export default function FortuneTabs({ date, zodiacFortunes, starFortunes }: Prop
       {tab === 'zodiac' ? (
         <div>
           {/* 태어난 연도 입력 */}
-          <div className="mb-5 rounded-[10px] border border-brand-line p-3.5">
+          <div className="mb-5 rounded-[4px] border border-brand-line p-3.5">
             <div className="mb-2.5 flex items-center gap-2">
               <input
                 type="number"
@@ -144,7 +144,7 @@ export default function FortuneTabs({ date, zodiacFortunes, starFortunes }: Prop
                 value={birthYear}
                 onChange={(e) => { setBirthYear(e.target.value); setSelectedZodiac(null) }}
                 placeholder="태어난 연도 (예: 1992)"
-                className="w-40 rounded-[8px] border border-brand-line bg-white px-3 py-2 text-sm text-brand-ink outline-none focus:border-brand-primary"
+                className="w-40 rounded-[4px] border border-brand-line bg-white px-3 py-2 text-sm text-brand-ink outline-none focus:border-brand-primary"
               />
               <div className="flex gap-1">
                 {(['solar', 'lunar'] as const).map((c) => (
@@ -152,7 +152,7 @@ export default function FortuneTabs({ date, zodiacFortunes, starFortunes }: Prop
                     key={c}
                     type="button"
                     onClick={() => { setCalendarType(c); setSelectedZodiac(null) }}
-                    className={`rounded-[8px] px-3 py-2 text-xs font-semibold transition-colors ${
+                    className={`rounded-[4px] px-3 py-2 text-xs font-semibold transition-colors ${
                       calendarType === c
                         ? 'bg-brand-primary text-white'
                         : 'border border-brand-line text-brand-ink-soft hover:border-brand-primary hover:text-brand-primary'
@@ -169,7 +169,7 @@ export default function FortuneTabs({ date, zodiacFortunes, starFortunes }: Prop
                 <select
                   value={lunarMonth}
                   onChange={(e) => { setLunarMonth(e.target.value); setSelectedZodiac(null) }}
-                  className="rounded-[8px] border border-brand-line bg-white px-2.5 py-2 text-sm text-brand-ink outline-none focus:border-brand-primary"
+                  className="rounded-[4px] border border-brand-line bg-white px-2.5 py-2 text-sm text-brand-ink outline-none focus:border-brand-primary"
                 >
                   <option value="">음력 월</option>
                   {MONTHS.map((m) => <option key={m} value={m}>{m}월</option>)}
@@ -177,7 +177,7 @@ export default function FortuneTabs({ date, zodiacFortunes, starFortunes }: Prop
                 <select
                   value={lunarDay}
                   onChange={(e) => { setLunarDay(e.target.value); setSelectedZodiac(null) }}
-                  className="rounded-[8px] border border-brand-line bg-white px-2.5 py-2 text-sm text-brand-ink outline-none focus:border-brand-primary"
+                  className="rounded-[4px] border border-brand-line bg-white px-2.5 py-2 text-sm text-brand-ink outline-none focus:border-brand-primary"
                 >
                   <option value="">음력 일</option>
                   {DAYS.map((d) => <option key={d} value={d}>{d}일</option>)}
@@ -205,12 +205,12 @@ export default function FortuneTabs({ date, zodiacFortunes, starFortunes }: Prop
       ) : (
         <div>
           {/* 생일 입력 */}
-          <div className="mb-5 rounded-[10px] border border-brand-line p-3.5">
+          <div className="mb-5 rounded-[4px] border border-brand-line p-3.5">
             <div className="flex items-center gap-2">
               <select
                 value={starMonth}
                 onChange={(e) => { setStarMonth(e.target.value); setSelectedStar(null) }}
-                className="rounded-[8px] border border-brand-line bg-white px-2.5 py-2 text-sm text-brand-ink outline-none focus:border-brand-primary"
+                className="rounded-[4px] border border-brand-line bg-white px-2.5 py-2 text-sm text-brand-ink outline-none focus:border-brand-primary"
               >
                 <option value="">생일 월</option>
                 {MONTHS.map((m) => <option key={m} value={m}>{m}월</option>)}
@@ -218,7 +218,7 @@ export default function FortuneTabs({ date, zodiacFortunes, starFortunes }: Prop
               <select
                 value={starDay}
                 onChange={(e) => { setStarDay(e.target.value); setSelectedStar(null) }}
-                className="rounded-[8px] border border-brand-line bg-white px-2.5 py-2 text-sm text-brand-ink outline-none focus:border-brand-primary"
+                className="rounded-[4px] border border-brand-line bg-white px-2.5 py-2 text-sm text-brand-ink outline-none focus:border-brand-primary"
               >
                 <option value="">생일 일</option>
                 {DAYS.map((d) => <option key={d} value={d}>{d}일</option>)}
@@ -263,7 +263,7 @@ function FortuneGrid({
             key={item.key}
             type="button"
             onClick={() => onSelect(item.key)}
-            className={`flex flex-col items-center gap-1.5 rounded-[12px] border p-3 text-center transition-all ${
+            className={`flex flex-col items-center gap-1.5 rounded-[4px] border p-3 text-center transition-all ${
               active
                 ? 'border-brand-primary bg-brand-primary-light'
                 : 'border-brand-line bg-white hover:shadow-[0_20px_34px_rgba(35,28,23,0.12)]'
@@ -296,14 +296,14 @@ function FortuneContent({
 }) {
   if (!selectedKey) {
     return (
-      <div className="mt-5 rounded-[10px] border border-dashed border-brand-line px-4 py-8 text-center text-sm text-brand-ink-soft">
+      <div className="mt-5 rounded-[4px] border border-dashed border-brand-line px-4 py-8 text-center text-sm text-brand-ink-soft">
         {emptyHint}
       </div>
     )
   }
 
   return (
-    <div className="mt-5 rounded-[10px] border border-brand-line bg-brand-primary-light p-4">
+    <div className="mt-5 rounded-[4px] border border-brand-line bg-brand-primary-light p-4">
       <p className="mb-1.5 text-xs font-semibold text-brand-primary-hover">{date} · {selectedKey}</p>
       {content ? (
         <p className="text-sm leading-relaxed text-brand-ink md:text-base">{content}</p>

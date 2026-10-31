@@ -72,7 +72,7 @@ export default async function AffiliateProducts({ tags }: Props) {
   ).catch(() => {})
 
   return (
-    <section className="rounded-[14px] bg-white p-[20px_18px] shadow-[0_1px_3px_rgba(35,28,23,0.06)] md:p-[26px_24px]">
+    <section className="rounded-[4px] bg-white p-[20px_18px] shadow-[0_1px_3px_rgba(35,28,23,0.06)] md:p-[26px_24px]">
       <h2 className="mb-4 text-2xl font-medium text-[#231C17]">이런 상품은 어떠세요?</h2>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {products.map((p) => (
@@ -80,7 +80,7 @@ export default async function AffiliateProducts({ tags }: Props) {
             key={p.id}
             productId={p.id}
             href={p.link_url}
-            className="flex flex-col overflow-hidden rounded-[10px] border border-[#EADFD8] transition-shadow hover:shadow-[0_6px_16px_rgba(35,28,23,0.08)]"
+            className="flex flex-col overflow-hidden rounded-[4px] border border-[#EADFD8] transition-shadow hover:shadow-[0_6px_16px_rgba(35,28,23,0.08)]"
           >
             <div className="aspect-square w-full bg-[#FFF1EA]">
               <ImageThumbnail src={p.image_url} alt={p.title} className="h-full w-full object-cover" />

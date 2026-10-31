@@ -7,7 +7,7 @@ import { getVisibleSubcategories } from '@/lib/dictionary'
 import SiteFooter from '@/components/SiteFooter'
 import DictionaryFilterList, { type DictionaryFilterEntry } from '../../_components/DictionaryFilterList'
 
-const BLOCK_SHAPE = 'rounded-[14px] shadow-[0_1px_3px_rgba(35,28,23,0.06)] p-[20px_18px] md:p-[26px_24px]'
+const BLOCK_SHAPE = 'rounded-[4px] shadow-[0_1px_3px_rgba(35,28,23,0.06)] p-[20px_18px] md:p-[26px_24px]'
 
 async function getSubcategoryEntries(subSlug: string): Promise<DictionaryFilterEntry[]> {
   const admin = createAdminClient()

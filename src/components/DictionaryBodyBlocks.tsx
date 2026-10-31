@@ -2,7 +2,7 @@ import type { DictionaryBodyBlock } from '@/lib/dictionaryBody'
 import type { CategoryColorSet } from '@/lib/categoryColor'
 
 // 해몽 사전 페이지(대분류/상세) 공용 블록 스타일 (전역 --color-brand-page는 건드리지 않음)
-export const BLOCK_SHAPE = 'rounded-[14px] shadow-[0_1px_3px_rgba(35,28,23,0.06)] p-[20px_18px] md:p-[26px_24px]'
+export const BLOCK_SHAPE = 'rounded-[4px] shadow-[0_1px_3px_rgba(35,28,23,0.06)] p-[20px_18px] md:p-[26px_24px]'
 
 export default function DictionaryBodyBlocks({
   blocks,
@@ -38,7 +38,7 @@ export default function DictionaryBodyBlocks({
                 ) : (
                   <div key={j} className="flex flex-col gap-[12px]">
                     {child.items.map((item, k) => (
-                      <div key={k} className="overflow-hidden rounded-[10px] border border-[#EADFD8]">
+                      <div key={k} className="overflow-hidden rounded-[4px] border border-[#EADFD8]">
                         <div
                           className="p-[13px_18px] text-lg font-medium"
                           style={{ backgroundColor: colors.badgeBg, color: colors.badgeText }}

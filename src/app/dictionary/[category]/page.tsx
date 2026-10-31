@@ -300,7 +300,7 @@ async function EntryView({
         <div className="mx-auto flex max-w-[680px] flex-col gap-[14px]">
 
           {/* 1) 헤더 블록 */}
-          <div className="overflow-hidden rounded-[14px] bg-white shadow-[0_1px_3px_rgba(35,28,23,0.06)]">
+          <div className="overflow-hidden rounded-[4px] bg-white shadow-[0_1px_3px_rgba(35,28,23,0.06)]">
             <div
               className="flex flex-wrap items-center gap-1.5 px-[18px] py-2.5 text-sm text-white md:px-6"
               style={{ backgroundColor: colors.main }}
@@ -336,7 +336,7 @@ async function EntryView({
                   {entry.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-[8px] bg-brand-primary-light px-3 py-1 text-[14px] font-semibold text-brand-primary-hover"
+                      className="rounded-[4px] bg-brand-primary-light px-3 py-1 text-[14px] font-semibold text-brand-primary-hover"
                     >
                       #{tag}
                     </span>
@@ -357,7 +357,7 @@ async function EntryView({
             </p>
             <Link
               href="/#appraisal"
-              className="mt-4 inline-block w-full rounded-[10px] bg-[#E5421F] px-[30px] py-[14px] text-lg font-semibold text-white transition-transform hover:scale-[1.02] md:w-auto"
+              className="mt-4 inline-block w-full rounded-[4px] bg-[#E5421F] px-[30px] py-[14px] text-lg font-semibold text-white transition-transform hover:scale-[1.02] md:w-auto"
             >
               AI 해몽 받으러 가기
             </Link>
@@ -375,7 +375,7 @@ async function EntryView({
                   <Link
                     key={d.id}
                     href={`/dream/${d.id}`}
-                    className="flex items-center justify-between gap-3 rounded-[10px] bg-[#FFF1EA] px-5 py-4 text-base text-[#3A322C] transition-colors hover:bg-[#F0E6DF]"
+                    className="flex items-center justify-between gap-3 rounded-[4px] bg-[#FFF1EA] px-5 py-4 text-base text-[#3A322C] transition-colors hover:bg-[#F0E6DF]"
                   >
                     <span className="flex min-w-0 items-center gap-2">
                       <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-[3px] text-xs font-bold ${GRADE_INFO[d.grade as Grade]?.badgeBg ?? 'bg-gray-400'}`}>
@@ -401,7 +401,7 @@ async function EntryView({
                   <Link
                     key={e.slug}
                     href={`/dictionary/${e.slug}`}
-                    className="flex items-center justify-between gap-3 rounded-[10px] bg-[#FFF1EA] px-5 py-4 text-base text-[#3A322C] transition-colors hover:bg-[#F0E6DF]"
+                    className="flex items-center justify-between gap-3 rounded-[4px] bg-[#FFF1EA] px-5 py-4 text-base text-[#3A322C] transition-colors hover:bg-[#F0E6DF]"
                   >
                     <span className="truncate">{e.keyword} 해몽</span>
                     <ChevronRightIcon />

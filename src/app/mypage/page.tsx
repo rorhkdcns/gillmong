@@ -105,89 +105,86 @@ export default async function MyPage() {
       <main className="flex-1 px-4 py-8 md:px-6 md:py-12">
         <div className="mx-auto max-w-3xl space-y-4 md:space-y-6">
 
-          {/* 1. 프로필 */}
-          <section className="rounded-2xl border border-gray-200 bg-white p-5 md:p-8">
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              {/* 1줄: 프로필 이미지 + 닉네임 */}
+          {/* 1. 프로필 + 요약 */}
+          <section className="overflow-hidden rounded-[4px] bg-brand-ink text-white">
+            <div className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between md:p-8">
               <div className="flex min-w-0 items-center gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#231C17] text-xl font-bold text-white md:h-16 md:w-16 md:text-2xl">
+                <div className="font-display flex h-14 w-14 shrink-0 items-center justify-center rounded-[4px] bg-brand-gold text-2xl font-extrabold text-brand-ink md:h-16 md:w-16 md:text-3xl">
                   {nickname.charAt(0).toUpperCase()}
                 </div>
                 <div className="min-w-0">
-                  <p className="truncate text-xl font-bold text-[#231C17] md:text-2xl">{nickname}</p>
-                  <p className="mt-0.5 truncate text-sm text-[#6B605A]">@{username}</p>
+                  <p className="truncate text-xl font-bold md:text-2xl">{nickname}</p>
+                  <p className="mt-0.5 truncate text-sm text-white/60">@{username}</p>
                 </div>
               </div>
-              {/* 2줄(모바일) / 오른쪽(데스크탑): 버튼들 */}
-              <div className="flex shrink-0 items-center gap-2">
-                <a
-                  href="/mypage/edit"
-                  className="rounded-lg bg-[#231C17] px-4 py-2 text-sm font-medium text-white transition hover:brightness-90"
-                >
-                  정보 변경
-                </a>
+              <div className="flex shrink-0 flex-wrap items-center gap-2">
+                <a href="/mypage/edit" className="rounded-[3px] bg-white px-4 py-2 text-sm font-semibold text-brand-ink transition-opacity hover:opacity-90">정보 변경</a>
                 {showAdminBtn && (
-                  <a
-                    href="/admin"
-                    className="rounded-lg bg-[#C23A18] px-4 py-2 text-sm font-medium text-white transition hover:brightness-90"
-                  >
-                    관리자 페이지
-                  </a>
+                  <a href="/admin" className="rounded-[3px] bg-brand-primary px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-primary-hover">관리자 페이지</a>
                 )}
                 <LogoutButton />
               </div>
             </div>
+            <nav aria-label="내 활동 바로가기" className="grid grid-cols-4 divide-x divide-white/15 border-t border-white/15 text-center">
+              {[
+                { id: 'my-dreams', label: '등록', n: myDreamsItems.length },
+                { id: 'my-saved', label: '저장', n: savedItems.length },
+                { id: 'my-purchased', label: '구매', n: purchasedItems.length },
+                { id: 'my-sold', label: '판매', n: soldItems.length },
+              ].map((t) => (
+                <a key={t.id} href={`#${t.id}`} className="py-3.5 transition-colors hover:bg-white/10">
+                  <strong className="font-display block text-xl">{t.n}</strong>
+                  <span className="text-xs text-white/60">{t.label}</span>
+                </a>
+              ))}
+            </nav>
           </section>
 
-          {/* 2. 포인트 */}
-          <section className="rounded-2xl border border-gray-200 bg-white p-5 md:p-8">
-            {/* 포인트 타이틀 + 잔액 */}
+          {/* 2. 판매금액 */}
+          <section className="rounded-[4px] border border-brand-line bg-white p-5 md:p-8">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-xl font-extrabold text-[#231C17]">판매금액</h2>
+              <h2 className="text-lg font-bold text-brand-ink">판매금액</h2>
               <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold text-[#C23A18]">{pointBalance.toLocaleString()}</span>
-                <span className="text-base font-medium text-[#6B605A]">원</span>
+                <span className="font-display text-3xl font-extrabold text-brand-primary">{pointBalance.toLocaleString()}</span>
+                <span className="text-base font-medium text-brand-ink-soft">원</span>
               </div>
             </div>
 
-            {/* 충전 종료 안내 */}
             {pointBalance > 0 && (
-              <div className="mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-xs text-amber-700">
+              <div className="mb-4 rounded-[3px] border border-grade-d-bg bg-grade-d-bg/50 px-3 py-2.5 text-xs text-grade-d-fg">
                 보유 포인트 잔액은 구매 시 사용 가능합니다. 충전 서비스는 종료되었습니다.
               </div>
             )}
 
-            {/* 버튼 — 충전 버튼 제거, 출금 신청만 유지 */}
             <div className="mb-5">
-              <a href="/mypage/withdrawal" className="block w-full rounded-lg border border-[#231C17] bg-white py-2.5 text-center text-sm font-semibold text-[#231C17] transition-all hover:bg-[#231C17] hover:text-white">
+              <a href="/mypage/withdrawal" className="block w-full rounded-[3px] border-2 border-brand-ink bg-white py-2.5 text-center text-sm font-bold text-brand-ink transition-colors hover:bg-brand-ink hover:text-white">
                 출금 신청
               </a>
             </div>
 
-            {/* 포인트 내역 탭 */}
             <PointTabs />
           </section>
 
           {/* 3. 내가 등록한 꿈 */}
-          <DreamListSection title="내가 등록한 꿈" items={myDreamsItems} />
+          <div id="my-dreams" className="scroll-mt-20"><DreamListSection title="내가 등록한 꿈" items={myDreamsItems} /></div>
 
           {/* 4. 내가 저장한 꿈 */}
-          <DreamListSection title="내가 저장한 꿈" items={savedItems} />
+          <div id="my-saved" className="scroll-mt-20"><DreamListSection title="내가 저장한 꿈" items={savedItems} /></div>
 
           {/* 5. 구매한 꿈 */}
-          <DreamListSection title="구매한 꿈" items={purchasedItems} />
+          <div id="my-purchased" className="scroll-mt-20"><DreamListSection title="구매한 꿈" items={purchasedItems} /></div>
 
           {/* 5-1. 결제 주문 내역 (에스크로) */}
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           <EscrowOrders orders={escrowOrders as any} />
 
           {/* 6. 판매 현황 */}
-          <DreamListSection title="판매 현황" items={soldItems} />
+          <div id="my-sold" className="scroll-mt-20"><DreamListSection title="판매 현황" items={soldItems} /></div>
 
           {/* 7. 1:1 문의 내역 */}
-          <section className="rounded-2xl border border-gray-200 bg-white p-5 md:p-8">
+          <section className="rounded-[4px] border border-brand-line bg-white p-5 md:p-8">
             <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-xl font-extrabold text-[#231C17]">1:1 문의 내역</h2>
+              <h2 className="text-lg font-bold text-brand-ink">1:1 문의 내역</h2>
               <a href="/inquiry" className="text-sm font-medium text-[#9A8F88] hover:underline">+ 문의하기</a>
             </div>
             {myInquiries.length === 0 ? (
